@@ -23,6 +23,7 @@ class Search extends Component {
             on: false,
             value: null,
         };
+
     }
 
     show(val) {
@@ -43,7 +44,10 @@ class Search extends Component {
         return (
             <View>
                 <View>
-                    <TextInput/>
+                    <TextInput keyboardType='web-search' returnKeyType='search'
+                               placeholder='请输入搜索内容' numberOfLines={1} >
+                    </TextInput>
+                    <Text ></Text>
                 </View>
                 (this.state.on)?
                 <View>
