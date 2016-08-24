@@ -43,7 +43,7 @@ class Search extends Component {
         return (
             <View>
                 <View>
-
+                    <TextInput/>
                 </View>
                 (this.state.on)?
                 <View>
