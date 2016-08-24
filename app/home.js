@@ -19,9 +19,9 @@ class Home extends Component {
 
     render() {
         return (
-            <View style={styles.flex} >
+            <View style={styles.flex}>
                 <Header></Header>
-                <MyList title="一线城市楼市退烧 有房源一夜跌价160万" navigator={this.props.navigator} ></MyList>
+                <MyList title="一线城市楼市退烧 有房源一夜跌价160万" navigator={this.props.navigator}></MyList>
                 <MyList title="上海市民称墓地太贵买不起 买房存骨灰" navigator={this.props.navigator}></MyList>
                 <MyList title="朝鲜再发视频:摧毁青瓦台 一切化作灰烬" navigator={this.props.navigator}></MyList>
                 <MyList title="生活大爆炸人物原型都好牛逼" navigator={this.props.navigator}></MyList>

@@ -5,14 +5,14 @@
  */
 
 
-'use strict'
+'use strict';
 
 import React, {Component} from 'react';
 import {
     AppRegistry,
 } from 'react-native';
 
-import App from './app'
+import App from './app';
 
 class DemoProject extends Component {
     render() {

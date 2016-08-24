@@ -1,7 +1,7 @@
 /**
  * Created by raojia on 16/8/22.
  */
-'use strict'
+'use strict';
 
 import React, {Component} from 'react';
 import {
@@ -13,7 +13,6 @@ import {
 
 
 class MyList extends Component {
-
     constructor(props) {
         super(props);
         this.state = {
@@ -21,7 +20,6 @@ class MyList extends Component {
             user: null,
         };
     }
-
     _pressButton() {
         const {navigator}  =  this.props;  //等价于 const navigator = this.props.navigator;
         const self = this;
@@ -58,12 +56,10 @@ class MyList extends Component {
     }
 }
 
-
 const USER_MODELS = {
     1: {name: 'mot', age: 23},
     2: {name: '晴明大大', age: 25}
 };
-
 
 class Detail extends Component {
     constructor(props) {
@@ -72,14 +68,12 @@ class Detail extends Component {
             id: null
         };
     }
-
     componentDidMount() {
         //这里获取从FirstPageComponent传递过来的参数: id
         this.setState({
             id: this.props.id
         });
     }
-
     _pressButton() {
         const {navigator} = this.props;
         if (this.props.getUser) {
@@ -91,7 +85,6 @@ class Detail extends Component {
             navigator.pop();
         }
     }
-
     render() {
         return (
             <ScrollView style={styles.flex}>
@@ -101,7 +94,6 @@ class Detail extends Component {
         );
     }
 }
-
 
 const styles = StyleSheet.create({
     flex: {
