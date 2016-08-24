@@ -1,7 +1,7 @@
 /**
  * Created by raojia on 16/8/22.
  */
-'use strict'
+'use strict';
 
 import React, {Component} from 'react';
 import {
@@ -14,7 +14,6 @@ import {
 import Header from './header';
 import MyList from './myList';
 import NewsList from './newsList';
-
 
 class Home extends Component {
 
