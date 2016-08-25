@@ -33,8 +33,10 @@ module.exports = {
         ],
         "no-empty": 0,
         "comma-dangle": 0,
+        "no-undef": 0,
         "no-unused-vars": 0,
         "no-console": 0,
+
 
         "no-const-assign": 2,
         "no-dupe-class-members": 2,
