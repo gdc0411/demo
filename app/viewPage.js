@@ -19,7 +19,7 @@ class Button extends Component {
     constructor(props) {
         super(props);
     }
-    _handlePress =() => {
+    _handlePress = () => {
         if (this.props.enabled && this.props.onPress) {
             //按钮可以按,没有变灰,调用OnPress方法
             this.props.onPress();
@@ -45,8 +45,8 @@ class LikeCount extends Component {
         };
     }
 
-    _handleClick = ()=> {
-        this.setState({likes: this.state.likes + 1});
+    _handleClick = () => {
+        this.setState({ likes: this.state.likes + 1 });
     };
     render() {
         const thunbsUp = '\uD83D\uDC4D';
@@ -55,7 +55,7 @@ class LikeCount extends Component {
                 <TouchableOpacity onPress={this._handleClick} style={styles.likeButton}>
                     <Text style={styles.likesText}>{thunbsUp + 'Like'}</Text>
                 </TouchableOpacity>
-                <Text style={styles.likesText}>{this.state.likes+'人赞过'}</Text>
+                <Text style={styles.likesText}>{this.state.likes + '人赞过'}</Text>
             </View>
         );
     }
@@ -84,8 +84,8 @@ class ProgressBar extends Component {
         //当前进度
         var progressBarSize = (fractionalPostion / (PAGES - 1)) * this.props.size;
         return (
-            <View style={[styles.progressBarContainer, {width: this.props.size}]}>
-                <View style={[styles.progressBar, {width: progressBarSize}]}/>
+            <View style={[styles.progressBarContainer, { width: this.props.size }]}>
+                <View style={[styles.progressBar, { width: progressBarSize }]}/>
             </View>
         );
     }
@@ -107,18 +107,18 @@ export default class ViewPage extends Component {
 
     //这个回调会在页面切换完成后（当用户在页面间滑动）调用
     //回调参数中的event.nativeEvent对象
-    onPageSelected = (e)=> {
-        this.setState({pageIdx: e.nativeEvent.position});
+    onPageSelected = (e) => {
+        this.setState({ pageIdx: e.nativeEvent.position });
     };
 
     //当在页间切换时（不论是由于动画还是由于用户在页间滑动/拖拽）执行。回调参数中的event.nativeEvent对象会包含如下数据：
     // position 从左数起第一个当前可见的页面的下标
     // offset 一个在[0,1)（大于等于0，小于1）之间的范围，代表当前页面切换的状态。值x表示现在"position"所表示的页有(1 - x)的部分可见，而下一页有x的部分可见。
-    onPageScroll = (e)=> {
-        this.setState({progress: e.nativeEvent});
+    onPageScroll = (e) => {
+        this.setState({ progress: e.nativeEvent });
     };
 
-    onClick = ()=> {
+    onClick = () => {
         //alert('点击了');
         const {navigator} = this.props;
         if (navigator) {
@@ -142,7 +142,7 @@ export default class ViewPage extends Component {
         }
         //刷新
         this.setState({
-            pageIdx:page
+            pageIdx: page
         });
     }
 
@@ -159,7 +159,7 @@ export default class ViewPage extends Component {
                 pages.push(
                     <View key={i} style={pageStyle} collapsable={false}>
                         <Image style={styles.image}
-                               source={{uri: IMAGE_URIS[i % IMAGE_URIS.length]}}/>
+                            source={{ uri: IMAGE_URIS[i % IMAGE_URIS.length] }}/>
                         <LikeCount/>
                     </View>
                 );
@@ -167,7 +167,7 @@ export default class ViewPage extends Component {
                 pages.push(
                     <View key={i} style={pageStyle} collapsable={false}>
                         <Image style={styles.image}
-                               source={{uri: IMAGE_URIS[i % IMAGE_URIS.length]}}/>
+                            source={{ uri: IMAGE_URIS[i % IMAGE_URIS.length] }}/>
                         <LikeCount/>
                     </View>
                     /*<TouchableOpacity onPress={this.onClick} style={styles.startupButton}>
@@ -186,27 +186,27 @@ export default class ViewPage extends Component {
                     initialPage={0}
                     onPageScroll={this.onPageScroll}
                     onPageSelected={this.onPageSelected}
-                    ref={viewPager=> {
+                    ref={viewPager => {
                         this.viewPager = viewPager;
-                    }}>
+                    } }>
                     {pages}
                 </ViewPagerAndroid>
                 <View style={styles.buttons}>
                     {animationEnabled ?
-                        <Button text='关闭动画' enabled={true} onPress={()=>this.setState({animationEnabled: false})}/>
+                        <Button text='关闭动画' enabled={true} onPress={() => this.setState({ animationEnabled: false }) }/>
                         :
-                        <Button text='打开动画' enabled={true} onPress={()=>this.setState({animationEnabled: true})}/>
+                        <Button text='打开动画' enabled={true} onPress={() => this.setState({ animationEnabled: true }) }/>
                     }
                 </View>
                 <View style={styles.buttons}>
-                    <Button text='首页' enabled={pageIdx > 0} onPress={()=>this.go(0)}/>
-                    <Button text='上翻' enabled={pageIdx > 0} onPress={()=>this.move(-1)}/>
+                    <Button text='首页' enabled={pageIdx > 0} onPress={() => this.go(0) }/>
+                    <Button text='上翻' enabled={pageIdx > 0} onPress={() => this.move(-1) }/>
 
-                    <Text style={styles.buttonText}>页:{pageIdx + 1}/{PAGES}</Text>
+                    <Text style={styles.buttonText}>页: {pageIdx + 1}/{PAGES}</Text>
                     <ProgressBar size={100} progress={this.state.progress}/>
 
-                    <Button text="下翻" enabled={pageIdx < PAGES - 1} onPress={()=>this.move(1)}/>
-                    <Button text="末页" enabled={pageIdx < PAGES - 1} onPress={()=>this.go(PAGES - 1)}/>
+                    <Button text="下翻" enabled={pageIdx < PAGES - 1} onPress={() => this.move(1) }/>
+                    <Button text="末页" enabled={pageIdx < PAGES - 1} onPress={() => this.go(PAGES - 1) }/>
 
                 </View>
             </View>
