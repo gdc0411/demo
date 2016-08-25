@@ -14,9 +14,10 @@ import {
 import Header from './header';
 import MyList from './myList';
 import NewsList from './newsList';
+import Search from './search';
+
 
 class Home extends Component {
-
     render() {
         return (
             <View style={styles.flex}>
@@ -32,6 +33,7 @@ class Home extends Component {
                     '南京大学生发起亲吻陌生人活动 有女生献初吻-南京大学生发起亲吻陌生人活动 有女生献初吻-南京大学生发起亲吻陌生人活动 有女生献初吻',
                     '防总部署长江防汛:以防御98年量级大洪水为目标'
                 ]}></NewsList>
+
 
                 <View style={styles.container}>
                     <View style={[styles.item, styles.center]}>

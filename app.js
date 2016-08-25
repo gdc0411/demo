@@ -8,7 +8,9 @@ import {
     Navigator,
 } from 'react-native';
 
-import Home from './app/home';
+// import Home from './app/home';
+// import Home from './app/search';
+import Home from './app/viewPage';
 
 class App extends Component {
     render() {
@@ -20,7 +22,7 @@ class App extends Component {
                 //配置场景
                 configureScene={
                     (route) => {
-                        return Navigator.SceneConfigs.VerticalUpSwipeJump;
+                        return Navigator.SceneConfigs.FloatFromLeft;
                     }
                 }
                 renderScene={

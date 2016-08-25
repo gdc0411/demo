@@ -11,7 +11,6 @@ import {
     View,
 } from 'react-native';
 
-
 class MyList extends Component {
     constructor(props) {
         super(props);
