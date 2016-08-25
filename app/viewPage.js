@@ -19,14 +19,12 @@ class Button extends Component {
     constructor(props) {
         super(props);
     }
-
     _handlePress = ()=> {
         if (this.props.enabled && this.props.onPress) {
             //按钮可以按,没有变灰,调用OnPress方法
             this.props.onPress();
         }
-    }
-
+    };
     render() {
         //两个样式,第二个用来覆盖
         return (
@@ -49,8 +47,7 @@ class LikeCount extends Component {
 
     _handleClick = ()=> {
         this.setState({likes: this.state.likes + 1});
-    }
-
+    };
     render() {
         const thunbsUp = '\uD83D\uDC4D';
         return (
@@ -110,14 +107,14 @@ export default class ViewPage extends Component {
     //回调参数中的event.nativeEvent对象
     onPageSelected = (e)=> {
         this.setState({page: e.nativeEvent.position});
-    }
+    };
 
     //当在页间切换时（不论是由于动画还是由于用户在页间滑动/拖拽）执行。回调参数中的event.nativeEvent对象会包含如下数据：
     // position 从左数起第一个当前可见的页面的下标
     // offset 一个在[0,1)（大于等于0，小于1）之间的范围，代表当前页面切换的状态。值x表示现在"position"所表示的页有(1 - x)的部分可见，而下一页有x的部分可见。
     onPageScroll = (e)=> {
         this.setState({progress: e.nativeEvent});
-    }
+    };
 
     onClick = ()=> {
         //alert('点击了');
@@ -128,7 +125,7 @@ export default class ViewPage extends Component {
                 component: ViewPage,
             });
         }
-    }
+    };
 
     move(delta) {
         var page = this.state.page + delta;
