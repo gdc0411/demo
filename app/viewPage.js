@@ -19,7 +19,7 @@ class Button extends Component {
     constructor(props) {
         super(props);
     }
-    _handlePress = ()=> {
+    _handlePress =() => {
         if (this.props.enabled && this.props.onPress) {
             //按钮可以按,没有变灰,调用OnPress方法
             this.props.onPress();
@@ -69,7 +69,7 @@ const IMAGE_URIS = [
     'http://apod.nasa.gov/apod/image/1409/volcanicpillar_vetter_960.jpg',
     'http://apod.nasa.gov/apod/image/1409/m27_snyder_960.jpg',
     'http://apod.nasa.gov/apod/image/1409/PupAmulti_rot0.jpg',
-    'https://ss0.bdstatic.com/5aV1bjqh_Q23odCf/static/superman/img/logo/bd_logo1_31bdc765.png',
+    'http://static.flowerboys.cn/1453777625.jpg',
 ];
 
 
@@ -214,7 +214,6 @@ export default class ViewPage extends Component {
     }
 
 }
-
 
 const styles = StyleSheet.create({
     //Button Component
