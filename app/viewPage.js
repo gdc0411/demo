@@ -72,6 +72,7 @@ const IMAGE_URIS = [
     'https://ss0.bdstatic.com/5aV1bjqh_Q23odCf/static/superman/img/logo/bd_logo1_31bdc765.png',
 ];
 
+
 class ProgressBar extends Component {
     constructor(props) {
         super(props);
@@ -80,6 +81,7 @@ class ProgressBar extends Component {
     render() {
         //当前位置+偏移量
         var fractionalPostion = (this.props.progress.position + this.props.progress.offset);
+        //当前进度
         var progressBarSize = (fractionalPostion / (PAGES - 1)) * this.props.size;
         return (
             <View style={[styles.progressBarContainer, {width: this.props.size}]}>
@@ -94,10 +96,10 @@ export default class ViewPage extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            page: 0,
+            pageIdx: 0,
             animationEnabled: true,
             progress: {
-                postion: 0,
+                position: 0,
                 offset: 0,
             }
         };
@@ -106,7 +108,7 @@ export default class ViewPage extends Component {
     //这个回调会在页面切换完成后（当用户在页面间滑动）调用
     //回调参数中的event.nativeEvent对象
     onPageSelected = (e)=> {
-        this.setState({page: e.nativeEvent.position});
+        this.setState({pageIdx: e.nativeEvent.position});
     };
 
     //当在页间切换时（不论是由于动画还是由于用户在页间滑动/拖拽）执行。回调参数中的event.nativeEvent对象会包含如下数据：
@@ -128,7 +130,7 @@ export default class ViewPage extends Component {
     };
 
     move(delta) {
-        var page = this.state.page + delta;
+        var page = this.state.pageIdx + delta;
         this.go(page);
     }
 
@@ -139,7 +141,9 @@ export default class ViewPage extends Component {
             this.viewPager.setPageWithoutAnimation(page);
         }
         //刷新
-        this.setState({page});
+        this.setState({
+            pageIdx:page
+        });
     }
 
     render() {
@@ -173,12 +177,12 @@ export default class ViewPage extends Component {
             }
         }
 
-        var {page, animationEnabled} = this.state;
+        var {pageIdx, animationEnabled} = this.state;
 
         return (
             <View style={styles.container}>
                 <ViewPagerAndroid
-                    style={styles.viewPager}
+                    style={styles.flex}
                     initialPage={0}
                     onPageScroll={this.onPageScroll}
                     onPageSelected={this.onPageSelected}
@@ -195,14 +199,14 @@ export default class ViewPage extends Component {
                     }
                 </View>
                 <View style={styles.buttons}>
-                    <Button text='首页' enabled={page > 0} onPress={()=>this.go(0)}/>
-                    <Button text='上一张' enabled={page > 0} onPress={()=>this.move(-1)}/>
+                    <Button text='首页' enabled={pageIdx > 0} onPress={()=>this.go(0)}/>
+                    <Button text='上翻' enabled={pageIdx > 0} onPress={()=>this.move(-1)}/>
 
-                    <Text style={styles.buttonText}>页:{page + 1}/{PAGES}</Text>
+                    <Text style={styles.buttonText}>页:{pageIdx + 1}/{PAGES}</Text>
                     <ProgressBar size={100} progress={this.state.progress}/>
 
-                    <Button text="下一张" enabled={page < PAGES - 1} onPress={()=>this.move(1)}/>
-                    <Button text="末页" enabled={page < PAGES - 1} onPress={()=>this.go(PAGES - 1)}/>
+                    <Button text="下翻" enabled={pageIdx < PAGES - 1} onPress={()=>this.move(1)}/>
+                    <Button text="末页" enabled={pageIdx < PAGES - 1} onPress={()=>this.go(PAGES - 1)}/>
 
                 </View>
             </View>
@@ -283,7 +287,7 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#ff0000',
     },
-    viewPager: {
+    flex: {
         flex: 1,
     },
 
