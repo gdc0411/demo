@@ -17,12 +17,13 @@ class App extends Component {
         let defaultName = 'Home';
         let defaultComponent = Home;
         return (
+            
             <Navigator
                 initialRoute={{name: defaultName, component: defaultComponent}}
                 //配置场景
-                configureScene={
+                configureScene={                    
                     (route) => {
-                        return Navigator.SceneConfigs.FloatFromLeft;
+                        return Navigator.SceneConfigs.FloatFromLeft;                        
                     }
                 }
                 renderScene={
