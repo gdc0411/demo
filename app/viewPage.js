@@ -3,7 +3,7 @@
  */
 'use strict';
 
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import {
     View,
     StyleSheet,
@@ -12,8 +12,8 @@ import {
     TouchableOpacity,
     TouchableWithoutFeedback,
     ViewPagerAndroid,
+    WebView,
 } from 'react-native';
-
 
 
 class Button extends Component {
@@ -86,7 +86,7 @@ class ProgressBar extends Component {
         var progressBarSize = (fractionalPostion / (PAGES - 1)) * this.props.size;
         return (
             <View style={[styles.progressBarContainer, { width: this.props.size }]}>
-                <View style={[styles.progressBar, { width: progressBarSize }]}/>
+                <View style={[styles.progressBar, { width: progressBarSize }]} />
             </View>
         );
     }
@@ -137,7 +137,7 @@ export default class ViewPage extends Component {
 
     go(page) {
         if (this.state.animationEnabled) {
-            this.viewPager.setPage(page);
+            this.viewPager.setPage(page);            
         } else {
             this.viewPager.setPageWithoutAnimation(page);
         }
@@ -160,16 +160,16 @@ export default class ViewPage extends Component {
                 pages.push(
                     <View key={i} style={pageStyle} collapsable={false}>
                         <Image style={styles.image}
-                            source={{ uri: IMAGE_URIS[i % IMAGE_URIS.length] }}/>
-                        <LikeCount/>
+                            source={{ uri: IMAGE_URIS[i % IMAGE_URIS.length] }} />
+                        <LikeCount />
                     </View>
                 );
             } else {  //最后一个viewpage,加了一个返回首页
                 pages.push(
                     <View key={i} style={pageStyle} collapsable={false}>
                         <Image style={styles.image}
-                            source={{ uri: IMAGE_URIS[i % IMAGE_URIS.length] }}/>
-                        <LikeCount/>
+                            source={{ uri: IMAGE_URIS[i % IMAGE_URIS.length] }} />
+                        <LikeCount />
                     </View>
                     /*<TouchableOpacity onPress={this.onClick} style={styles.startupButton}>
                      <Text style={styles.likesText}>{thunbsUp + '启动首页'}</Text>
@@ -194,20 +194,20 @@ export default class ViewPage extends Component {
                 </ViewPagerAndroid>
                 <View style={styles.buttons}>
                     {animationEnabled ?
-                        <Button text='关闭动画' enabled={true} onPress={() => this.setState({ animationEnabled: false }) }/>
+                        <Button text='关闭动画' enabled={true} onPress={() => this.setState({ animationEnabled: false })} />
                         :
-                        <Button text='打开动画' enabled={true} onPress={() => this.setState({ animationEnabled: true }) }/>
+                        <Button text='打开动画' enabled={true} onPress={() => this.setState({ animationEnabled: true })} />
                     }
                 </View>
                 <View style={styles.buttons}>
-                    <Button text='首页' enabled={pageIdx > 0} onPress={() => this.go(0) }/>
-                    <Button text='上翻' enabled={pageIdx > 0} onPress={() => this.move(-1) }/>
+                    <Button text='首页' enabled={pageIdx > 0} onPress={() => this.go(0)} />
+                    <Button text='上翻' enabled={pageIdx > 0} onPress={() => this.move(-1)} />
 
                     <Text style={styles.buttonText}>页: {pageIdx + 1}/{PAGES}</Text>
-                    <ProgressBar size={100} progress={this.state.progress}/>
+                    <ProgressBar size={100} progress={this.state.progress} />
 
-                    <Button text="下翻" enabled={pageIdx < PAGES - 1} onPress={() => this.move(1) }/>
-                    <Button text="末页" enabled={pageIdx < PAGES - 1} onPress={() => this.go(PAGES - 1) }/>
+                    <Button text="下翻" enabled={pageIdx < PAGES - 1} onPress={() => this.move(1)} />
+                    <Button text="末页" enabled={pageIdx < PAGES - 1} onPress={() => this.go(PAGES - 1)} />
 
                 </View>
             </View>
