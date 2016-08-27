@@ -12,7 +12,7 @@ import {
 } from 'react-native';
 
 import Header from './header';
-import MyList from './myList';
+import MyList from './transpara';
 import NewsList from './newsList';
 import Search from './search';
 

@@ -10,7 +10,7 @@ import {
 
 // import Home from './app/home';
 // import Home from './app/search';
-import Home from './app/listView02';
+import Home from './app/asyncStore';
 
 class App extends Component {
     render() {
