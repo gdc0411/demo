@@ -1,7 +1,7 @@
 /**
  * Created by raojia on 16/8/22.
  */
-'use strict'
+'use strict';
 
 import React, {Component} from 'react';
 import {

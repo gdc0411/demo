@@ -10,7 +10,7 @@ import {
 
 // import Home from './app/home';
 // import Home from './app/search';
-import Home from './app/viewPage';
+import Home from './app/listView02';
 
 class App extends Component {
     render() {
@@ -18,7 +18,7 @@ class App extends Component {
         let defaultComponent = Home;
         return (
             
-            <Navigator
+            <Navigator 
                 initialRoute={{name: defaultName, component: defaultComponent}}
                 //配置场景
                 configureScene={                    
