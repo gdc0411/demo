@@ -2,6 +2,9 @@
  * AsyncStorage Demo
  * 
  */
+
+'use strict';
+
 import React, { Component } from 'react';
 import {
     AppRegistry,
@@ -109,12 +112,6 @@ class Item extends Component {
         url: 'https://gss0.bdstatic.com/5eR1dDebRNRTm2_p8IuM_a/res/img/richanglogo168_24.png',
         title: '默认标题',
     };
-
-    /**
-     * 属性类型
-     * 
-     * @static
-     */
     static propTypes = {
         url: React.PropTypes.string.isRequired,
         title: React.PropTypes.string.isRequired,
@@ -252,13 +249,6 @@ class List extends Component {
         }
     }
 
-
-
-    /**
-     * 
-     * 
-     * @returns
-     */
     render() {
         var list = [];
         console.log('Cart渲染');

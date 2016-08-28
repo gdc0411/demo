@@ -17,7 +17,7 @@ import {
 
 const REQUEST_URL = 'https://raw.githubusercontent.com/facebook/react-native/master/docs/MoviesExample.json';
 
-export default class ViewInfo extends Component {
+export default class ListView03 extends Component {
     constructor(props) {
         super(props);
         this.state = {

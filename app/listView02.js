@@ -16,7 +16,7 @@ import {
 
 var REQUEST_URL = 'https://raw.githubusercontent.com/facebook/react-native/master/docs/MoviesExample.json';
 
-class listView02 extends Component {
+export default class listView02 extends Component {
 
     constructor(props) {
         super(props);
@@ -118,5 +118,3 @@ const styles = StyleSheet.create({
         fontSize: 14,
     },
 });
-
-export default listView02;

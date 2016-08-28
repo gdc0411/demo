@@ -9,6 +9,7 @@ import {
     Text,
     PixelRatio,
     View,
+    ScrollView,
 } from 'react-native';
 
 

@@ -16,7 +16,7 @@ import {
 
 var REQUEST_URL = 'https://raw.githubusercontent.com/facebook/react-native/master/docs/MoviesExample.json';
 
-class listView01 extends Component {
+export default class listView01 extends Component {
 
     constructor(props) {
         super(props);
@@ -43,7 +43,7 @@ class listView01 extends Component {
     _renderLoadingView() {
         return (
             <View style={styles.container} >
-                <Text>正在从网络中获取数据……</Text>
+                <Text>从网络中加载影片数据中...</Text>
             </View>);
     }
 
@@ -117,4 +117,3 @@ const styles = StyleSheet.create({
 });
 
 
-export default listView01;

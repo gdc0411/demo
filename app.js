@@ -12,9 +12,7 @@ import {
 
 } from 'react-native';
 
-// import Home from './app/home';
-// import Home from './app/search';
-import Home from './app/asyncStore';
+import Home from './app/viewPage';
 
 class App extends Component {
 
@@ -48,7 +46,8 @@ class App extends Component {
             }
             if (top.ref && top.ref.handleBack) {
                 // 路由或组件上决定这个界面自行处理back键
-                //return top.ref.handleBack();
+                // TODO： 处理Back键路由栈返回卡顿明显
+                return top.ref.handleBack();
             }
 
             navigator.pop();

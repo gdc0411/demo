@@ -13,8 +13,14 @@ import {
     TouchableWithoutFeedback,
     ViewPagerAndroid,
     WebView,
+    Navigator,
 } from 'react-native';
 
+import newsUI from './newsUI';
+import shop from './asyncStore';
+import list01 from './listView01';
+import list02 from './listView02';
+import scrollView from './scrollView';
 
 class Button extends Component {
     constructor(props) {
@@ -119,29 +125,61 @@ export default class ViewPage extends Component {
         this.setState({ progress: e.nativeEvent });
     };
 
-    onClick = () => {
-        //alert('点击了');
+    onClick = (key) => {
         const {navigator} = this.props;
         if (navigator) {
-            navigator.push({
-                name: 'ViewPage',
-                component: ViewPage,
-            });
+            switch (key) {
+                case 0:
+                    navigator.push({
+                        name: 'newsUI',
+                        component: newsUI,
+                    });
+                    break;
+                case 1:
+                    navigator.push({
+                        name: 'shop',
+                        component: shop,
+                    });
+                    break;
+                case 2:
+                    navigator.push({
+                        name: 'list01',
+                        component: list01,
+                    });
+                    break;
+                case 3:
+                    navigator.push({
+                        name: 'list02',
+                        component: list02,
+                    });
+                    break;
+                case 4:
+                    navigator.push({
+                        name: 'scrollView',
+                        component: scrollView,
+                    });
+                    break;
+                default:
+                    navigator.push({
+                        name: 'shop',
+                        component: shop,
+                    });
+                    break;
+            }
         }
     };
 
-    move(delta) {
+    move = (delta) => {
         var page = this.state.pageIdx + delta;
         this.go(page);
-    }
+    };
 
-    go(page) {
+    go = (page) => {
         if (this.state.animationEnabled) {
-            this.viewPager.setPage(page);            
+            this.viewPager.setPage(page);
         } else {
             this.viewPager.setPageWithoutAnimation(page);
         }
-        //刷新
         this.setState({
             pageIdx: page
         });
@@ -150,35 +188,24 @@ export default class ViewPage extends Component {
     render() {
         const thunbsUp = '\uD83D\uDC4D';
         var pages = [];
-        for (var i = 0; i < PAGES; i++) {
-            var pageStyle = {
+        for (let i = 0; i < PAGES; i++) {
+            let pageStyle = {
                 backgroundColor: BGCOLOR[i % BGCOLOR.length],
                 alignItems: 'center',
                 padding: 20,
             };
-            if (i < PAGES - 1) { //前面几个viewpage
-                pages.push(
-                    <View key={i} style={pageStyle} collapsable={false}>
+            pages.push(
+                <View key={i} style={pageStyle} collapsable={false}>
+                    <TouchableOpacity onPress={(key)=>this.onClick(i)} >
                         <Image style={styles.image}
                             source={{ uri: IMAGE_URIS[i % IMAGE_URIS.length] }} />
-                        <LikeCount />
-                    </View>
-                );
-            } else {  //最后一个viewpage,加了一个返回首页
-                pages.push(
-                    <View key={i} style={pageStyle} collapsable={false}>
-                        <Image style={styles.image}
-                            source={{ uri: IMAGE_URIS[i % IMAGE_URIS.length] }} />
-                        <LikeCount />
-                    </View>
-                    /*<TouchableOpacity onPress={this.onClick} style={styles.startupButton}>
-                     <Text style={styles.likesText}>{thunbsUp + '启动首页'}</Text>
-                     </TouchableOpacity>*/
-                );
-            }
+                    </TouchableOpacity>
+                    <LikeCount />
+                </View>
+            );
         }
 
-        var {pageIdx, animationEnabled} = this.state;
+        let {pageIdx, animationEnabled} = this.state;
 
         return (
             <View style={styles.container}>
@@ -194,20 +221,20 @@ export default class ViewPage extends Component {
                 </ViewPagerAndroid>
                 <View style={styles.buttons}>
                     {animationEnabled ?
-                        <Button text='关闭动画' enabled={true} onPress={() => this.setState({ animationEnabled: false })} />
+                        <Button text='关闭动画' enabled={true} onPress={() => this.setState({ animationEnabled: false }) } />
                         :
-                        <Button text='打开动画' enabled={true} onPress={() => this.setState({ animationEnabled: true })} />
+                        <Button text='打开动画' enabled={true} onPress={() => this.setState({ animationEnabled: true }) } />
                     }
                 </View>
                 <View style={styles.buttons}>
-                    <Button text='首页' enabled={pageIdx > 0} onPress={() => this.go(0)} />
-                    <Button text='上翻' enabled={pageIdx > 0} onPress={() => this.move(-1)} />
+                    <Button text='首页' enabled={pageIdx > 0} onPress={() => this.go(0) } />
+                    <Button text='上翻' enabled={pageIdx > 0} onPress={() => this.move(-1) } />
 
                     <Text style={styles.buttonText}>页: {pageIdx + 1}/{PAGES}</Text>
                     <ProgressBar size={100} progress={this.state.progress} />
 
-                    <Button text="下翻" enabled={pageIdx < PAGES - 1} onPress={() => this.move(1)} />
-                    <Button text="末页" enabled={pageIdx < PAGES - 1} onPress={() => this.go(PAGES - 1)} />
+                    <Button text="下翻" enabled={pageIdx < PAGES - 1} onPress={() => this.move(1) } />
+                    <Button text="末页" enabled={pageIdx < PAGES - 1} onPress={() => this.go(PAGES - 1) } />
 
                 </View>
             </View>
