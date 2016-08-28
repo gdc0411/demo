@@ -7,11 +7,11 @@ import {
     AppRegistry,
     StyleSheet,
     Text,
-    WebView,
     ScrollView,
     Image,
     AsyncStorage,
     TouchableOpacity,
+    BackAndroid,
     View,
 } from 'react-native';
 
@@ -159,8 +159,7 @@ class List extends Component {
         const {navigator} = this.props;
         if (navigator) {
             navigator.push({
-                name: 'PurchaseOrder',
-                component: PurchaseOrder,
+                name: 'PurchaseOrder', component: PurchaseOrder,
                 params: {
                     //返回更新购物车
                     updateCart: function (b) {
@@ -177,7 +176,7 @@ class List extends Component {
      * 添加到购物车
      * @param {any} data 商品数据
      */
-    _addToCart(data) {
+    _addToCart = (data) => {
         let _self = this;
 
         AsyncStorage.setItem('SP-' + this._getGUID() + '-SP', JSON.stringify(data), function (err) {
@@ -191,7 +190,7 @@ class List extends Component {
                 count: _self.state.count + 1,
             });
         });
-    }
+    };
 
     /**
      * 获得全局ID的方法
@@ -269,12 +268,12 @@ class List extends Component {
                     <View style={styles.row} key={i} >
                         <Item title={goodsData[i].title}
                             url={goodsData[i].url}
-                            press={this._addToCart.bind(this, goodsData[i]) }
+                            press={ (data) => this._addToCart(goodsData[i]) }
                             />
 
                         <Item title={goodsData[parseInt(i) + 1].title}
                             url={goodsData[parseInt(i) + 1].url}
-                            press={this._addToCart.bind(this, goodsData[parseInt(i) + 1]) }
+                            press={ (data) => this._addToCart(goodsData[parseInt(i) + 1]) }
                             />
                     </View>
                 );
@@ -310,6 +309,7 @@ class PurchaseOrder extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            
             price: 0,
             data: [],
             operated: false,
@@ -320,18 +320,20 @@ class PurchaseOrder extends Component {
         //获得本组件的指针，提供给匿名函数
         let _self = this;
 
+        //异步拿到全部的Keys
         AsyncStorage.getAllKeys(function (err, keys) {
             if (err) {
                 //TODO:处理错误
                 console.error(err);
-                return;
+                return false;
             }
-            //keys是字符串数组
+
+            //根据Keys读取全部数据，放入this.state.data
             AsyncStorage.multiGet(keys, function (err, result) {
                 if (err) {
                     //TODO:处理错误
                     console.error(err);
-                    return;
+                    return false;
                 }
                 //得到的结构是二位数组
                 let arr = [];
@@ -354,6 +356,7 @@ class PurchaseOrder extends Component {
     _clearChart = () => {
         let _self = this;
 
+        //异步清除全部数据，并更新state
         AsyncStorage.clear(function (err) {
             if (err) {
                 //TODO:处理错误
@@ -369,16 +372,20 @@ class PurchaseOrder extends Component {
         });
     }
 
-    _backBuy = () => {
+    /**
+     * 返回购物界面
+     */
+    handleBack = () => {
         const {navigator} = this.props;
         const {updateCart} = this.props;
-        if (this.state.operated && updateCart ) {
+        if (this.state.operated && updateCart) {
             //更新列表状态，渲染
             console.log('回调更新状态');
             updateCart(false);
         }
         if (navigator) {
             navigator.pop();
+            return true;
         }
     }
 
@@ -407,7 +414,7 @@ class PurchaseOrder extends Component {
                 {list}
                 <Text style={styles.btn} >支付{str} </Text>
                 <Text style={styles.clear} onPress={this._clearChart} >清空购物车</Text>
-                <Text style={styles.clear} onPress={this._backBuy} >返回</Text>
+                <Text style={styles.clear} onPress={this.handleBack} >返回</Text>
             </ScrollView>
         );
     }
