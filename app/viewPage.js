@@ -21,6 +21,7 @@ import shop from './asyncStore';
 import list01 from './listView01';
 import list02 from './listView02';
 import scrollView from './scrollView';
+import netStatus from './netStatus';
 
 class Button extends Component {
     constructor(props) {
@@ -155,8 +156,8 @@ export default class ViewPage extends Component {
                     break;
                 case 4:
                     navigator.push({
-                        name: 'scrollView',
-                        component: scrollView,
+                        name: 'netStatus',
+                        component: netStatus,
                     });
                     break;
                 default:
@@ -196,7 +197,7 @@ export default class ViewPage extends Component {
             };
             pages.push(
                 <View key={i} style={pageStyle} collapsable={false}>
-                    <TouchableOpacity onPress={(key)=>this.onClick(i)} >
+                    <TouchableOpacity onPress={(key) => this.onClick(i) } >
                         <Image style={styles.image}
                             source={{ uri: IMAGE_URIS[i % IMAGE_URIS.length] }} />
                     </TouchableOpacity>
@@ -214,9 +215,7 @@ export default class ViewPage extends Component {
                     initialPage={0}
                     onPageScroll={this.onPageScroll}
                     onPageSelected={this.onPageSelected}
-                    ref={viewPager => {
-                        this.viewPager = viewPager;
-                    } }>
+                    ref={viewPager => { this.viewPager = viewPager; } }>
                     {pages}
                 </ViewPagerAndroid>
                 <View style={styles.buttons}>
