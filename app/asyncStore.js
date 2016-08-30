@@ -1,6 +1,6 @@
 /**
  * AsyncStorage Demo
- * 
+ *
  */
 
 'use strict';
@@ -15,10 +15,11 @@ import {
     AsyncStorage,
     TouchableOpacity,
     BackAndroid,
+    Dimensions,
     View,
 } from 'react-native';
 
-import Dimensions from 'Dimensions';
+// import Dimensions from 'Dimensions';
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
@@ -69,9 +70,7 @@ const goodsData = [
 ];
 
 /**
- * 
  * 购物车组件类
- * 
  * @export 外部入口
  * @class shoppingCart
  * @extends {Component}
@@ -79,7 +78,7 @@ const goodsData = [
 export default class shoppingCart extends Component {
     /**
      * Creates an instance of shoppingCart.
-     * 
+     *
      * @param {any} props
      */
     constructor(props) {
@@ -99,13 +98,13 @@ export default class shoppingCart extends Component {
 
 
 /**
- * 列表项目组件 
+ * 列表项目组件
  * @class Item 组件名
  * @extends {Component}
  */
 class Item extends Component {
     /**
-     * 默认属性 
+     * 默认属性
      * @static
      */
     static defaultProps = {
@@ -134,7 +133,6 @@ class Item extends Component {
 
 /**
  * 列表组件
- * 
  * @class List
  * @extends {Component}
  */
@@ -224,7 +222,7 @@ class List extends Component {
     }
 
     /**
-     * 渲染之前回调， 
+     * 渲染之前回调，
      * @param {any} nextProps
      * @param {any} nextState
      */
@@ -299,7 +297,7 @@ class PurchaseOrder extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            
+
             price: 0,
             data: [],
             operated: false,
@@ -485,8 +483,8 @@ const styles = StyleSheet.create({
     list: {
         justifyContent: 'flex-start',
         flexDirection: 'row',
-        flexWrap: 'wrap'
-    },
+        flexWrap: 'wrap',
+        },
     container: {
 
         flex: 1,

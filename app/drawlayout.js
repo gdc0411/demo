@@ -13,7 +13,7 @@ import {
 } from 'react-native';
 
 
-class DrawerLayout extends Component {
+export default class DrawerLayout extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -38,4 +38,3 @@ class DrawerLayout extends Component {
     }
 }
 
-module.exports = DrawerLayout;

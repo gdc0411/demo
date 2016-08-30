@@ -12,7 +12,7 @@ import {
 
 } from 'react-native';
 
-import Home from './app/swiper';
+import Home from './app/viewPage';
 
 class App extends Component {
 

@@ -32,11 +32,11 @@ const renderPagination = (index, total, context) => {
 class MySwiper extends Component {
     render() {
         return (
-            <View>
-                <Swiper style={styles.wrapper} height={200} horizontal={true} autoplay={false}>
+            <View style={{flex:1}} >
+                <Swiper style={styles.wrapper} height={240} autoplay={false}>
                     <View style={styles.slide}>
-                        <TouchableOpacity onPress={this.props.press} >
-                            <Image resizeMode='cover' style={styles.img} source={{ uri: 'http://c.hiphotos.baidu.com/image/w%3D310/sign=0dff10a81c30e924cfa49a307c096e66/7acb0a46f21fbe096194ceb468600c338644ad43.jpg' }} >
+                        <TouchableOpacity style={{flex:1}} onPress={this.props.press} >
+                            <Image resizeMode='contain' style={styles.img} source={{ uri: 'http://c.hiphotos.baidu.com/image/w%3D310/sign=0dff10a81c30e924cfa49a307c096e66/7acb0a46f21fbe096194ceb468600c338644ad43.jpg' }} >
                                 <Text numberOfLines={1} style={styles.item_text}>测试一下</Text>
                             </Image>
                         </TouchableOpacity>

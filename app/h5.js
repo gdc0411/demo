@@ -4,8 +4,8 @@ import {
     WebView,
     View,
     Text,
+    Dimensions,
 } from 'react-native';
-import Dimensions from 'Dimensions';
 
 const M = Dimensions.get('window').width;
 const H = Dimensions.get('window').height;
