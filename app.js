@@ -9,7 +9,7 @@ import {
     Platform,
     BackAndroid,
     ToastAndroid,
-
+    
 } from 'react-native';
 
 import Home from './app/viewPage';
