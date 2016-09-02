@@ -1,0 +1,49 @@
+# OSX
+#
+.DS_Store
+
+# Xcode
+#
+build/
+*.pbxuser
+!default.pbxuser
+*.mode1v3
+!default.mode1v3
+*.mode2v3
+!default.mode2v3
+*.perspectivev3
+!default.perspectivev3
+xcuserdata
+*.xccheckout
+*.moved-aside
+DerivedData
+*.hmap
+*.ipa
+*.xcuserstate
+project.xcworkspace
+
+# Android/IJ
+#
+.idea
+.gradle
+*.iml
+gradlew
+gradlew.bat
+local.properties
+android/build
+android/app/build
+android/gradle
+android/keystores
+
+# node.js
+#
+node_modules/
+npm-debug.log
+
+
+# RN project
+.vscode
+ios
+tsconfig.json
+.buckconfig
+.flowconfig
