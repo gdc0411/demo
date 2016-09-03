@@ -1,10 +1,8 @@
 package com.demoproject;
 
 import android.app.Application;
-import android.util.Log;
 
 import com.facebook.react.ReactApplication;
-import com.facebook.react.ReactInstanceManager;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
@@ -14,9 +12,9 @@ import java.util.List;
 
 public class MainApplication extends Application implements ReactApplication {
 
-    private static final RJPackage rjPackage = new RJPackage();
+    private static final RJReactPackage rjPackage = new RJReactPackage();
 
-    public static RJPackage getRjPackage() {
+    public static RJReactPackage getRjPackage() {
         return rjPackage;
     }
 

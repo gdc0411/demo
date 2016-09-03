@@ -8,7 +8,9 @@ import {
     Image,
     Text,
     TouchableOpacity,
+    DeviceEventEmitter,
     NativeModules,
+    Platform,
 } from 'react-native';
 import Swiper from 'react-native-swiper';
 
@@ -32,10 +34,42 @@ const renderPagination = (index, total, context) => {
 
 class MySwiper extends Component {
 
+    constructor(props) {
+        super(props);
+        this.state = {
+            phoneNum: null,
+        };
+    }
+
+
     //调用原生方法
     _handlePress = (para) => {
-        NativeModules.RJNativeModule.callNative(para);
+        if (Platform.OS === 'android') {
+            //NativeModules.RJNativeModule.callNative(para); //不带回调
+            NativeModules.RJNativeModule.callNativeWithResult(para);  //带回调
+        }
     }
+
+    componentWillMount() {
+        if (Platform.OS === 'android') {
+            DeviceEventEmitter.addListener('AndroidToRNMessage', this._handleAndroidMessage);
+        }
+    }
+    componentWillUnmount() {
+        if (Platform.OS === 'android') {
+            DeviceEventEmitter.removeListener('AndroidToRNMessage', this._handleAndroidMessage);
+        }
+    }
+
+    //获得Android侧的参数回调
+    _handleAndroidMessage = (para) => {
+        // alert(para);
+        console.log(para);
+        this.setState({
+            phoneNum: para,
+        });
+    }
+
 
     render() {
         return (
@@ -55,7 +89,9 @@ class MySwiper extends Component {
                         <Text style={styles.text}>And simple</Text>
                     </View>
                 </Swiper>
-
+                <View>
+                    <Text >手机号：{this.state.phoneNum} </Text>
+                </View>
             </View >
         );
     }

@@ -11,6 +11,7 @@ import java.util.Collections;
 import java.util.List;
 
 /**
+ *
  * Created by raojia on 16/9/2.
  */
 public class RJReactPackage implements ReactPackage {
