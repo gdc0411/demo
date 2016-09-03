@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * Created by raojia on 16/9/2.
  */
-public class RJPackage implements ReactPackage {
+public class RJReactPackage implements ReactPackage {
 
     private RJNativeModule rjNativeModule;
 
