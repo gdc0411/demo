@@ -17,7 +17,7 @@ import com.facebook.react.modules.core.DeviceEventManagerModule;
  */
 public class RJNativeModule extends ReactContextBaseJavaModule {
 
-    private ReactApplicationContext mContext;
+    private final ReactApplicationContext mContext;
 
     public RJNativeModule(ReactApplicationContext reactContext) {
         super(reactContext);
@@ -64,7 +64,7 @@ public class RJNativeModule extends ReactContextBaseJavaModule {
         Intent intent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
         Bundle bundle = new Bundle();
         mContext.startActivityForResult(intent,1,bundle);
-        Log.i("饶佳的测试","成功调起");
+        Log.i("消息机制","成功调起");
 
     }
 

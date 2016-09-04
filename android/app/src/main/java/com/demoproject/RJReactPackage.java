@@ -11,7 +11,6 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- *
  * Created by raojia on 16/9/2.
  */
 public class RJReactPackage implements ReactPackage {
@@ -25,8 +24,14 @@ public class RJReactPackage implements ReactPackage {
     @Override
     public List<NativeModule> createNativeModules(ReactApplicationContext reactContext) {
         List<NativeModule> modules = new ArrayList<NativeModule>();
+
         rjNativeModule = new RJNativeModule(reactContext);
         modules.add(rjNativeModule);
+        modules.add(new CallbackModule(reactContext));
+        modules.add(new PromiseModule(reactContext));
+        modules.add(new EmbedModule(reactContext));
+        modules.add(new ConstModule(reactContext));
+
         return modules;
     }
 
