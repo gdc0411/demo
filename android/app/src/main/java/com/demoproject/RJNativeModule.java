@@ -42,10 +42,10 @@ public class RJNativeModule extends ReactContextBaseJavaModule {
      */
     @ReactMethod
     public void callNative(String msg) {
+
         Toast.makeText(mContext, msg, Toast.LENGTH_SHORT).show();
 
         Intent intent = new Intent(mContext, VodSDKActivity.class);
-
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
         mContext.startActivity(intent);

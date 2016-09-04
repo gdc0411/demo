@@ -2,7 +2,6 @@
  * AsyncStorage Demo
  *
  */
-
 'use strict';
 
 import React, { Component } from 'react';
@@ -297,7 +296,6 @@ class PurchaseOrder extends Component {
     constructor(props) {
         super(props);
         this.state = {
-
             price: 0,
             data: [],
             operated: false,

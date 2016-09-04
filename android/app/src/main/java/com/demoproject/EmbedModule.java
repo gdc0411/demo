@@ -81,7 +81,7 @@ public class EmbedModule extends ReactContextBaseJavaModule implements ActivityE
     /**
      * 发送RN消息
      *
-     * @param msg
+     * @param msg 消息
      */
     public void sendMsgToRN(String msg) {
         mContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class).emit("EmbedMessage", msg);

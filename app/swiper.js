@@ -1,6 +1,9 @@
 /**
  * 开源轮播组件
  */
+
+'use strict';
+
 import React, {Component} from 'react';
 import {
     StyleSheet,
@@ -12,7 +15,45 @@ import {
     NativeModules,
     Platform,
 } from 'react-native';
+
 import Swiper from 'react-native-swiper';
+
+import KenBurnsView from './nativeView01';
+
+class Native01 extends Component {
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            picName: 'pic01',
+        };
+    }
+
+    _switch = (name) => {
+        this.setState({
+            picName: name,
+        });
+    }
+
+    render() {
+        let {picName} = this.state;
+        return (
+            <View style={{ flex: 1 }} >
+                <KenBurnsView picName={picName} style={{ flex: 1 }} />
+                <View style={{
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    margin: 20,
+                }} >
+                    <TouchableOpacity onPress={(name) => this._switch('pic01') } ><Text>图片01</Text></TouchableOpacity>
+                    <TouchableOpacity onPress={(name) => this._switch('pic02') } ><Text>图片02</Text></TouchableOpacity>
+                    <TouchableOpacity onPress={(name) => this._switch('pic03') } ><Text>图片03</Text></TouchableOpacity>
+                </View >
+            </View >
+        );
+    }
+}
+
 
 const renderPagination = (index, total, context) => {
     return (
@@ -54,18 +95,19 @@ class MySwiper extends Component {
      */
     _handlePress = (key) => {
         if (Platform.OS === 'android') {
+
             let _self = this;
+            const {navigator} = this.props;
 
             switch (key) {
                 case 1: //方案一：消息机制
                     para = '调用Native方法！';
-                    //NativeModules.RJNativeModule.callNative(para); //不带回调
+                    NativeModules.RJNativeModule.callNative(para); //不带回调
                     //NativeModules.RJNativeModule.callNativeWithResult(para);  //带回调
-                    NativeModules.EmbedModule.embedCallWithResult('Embed方案调用！'); //带回调
+                    // NativeModules.EmbedModule.embedCallWithResult('Embed方案调用！'); //带回调
                     break;
 
                 case 2: //方案二：回调函数
-
                     NativeModules.CallbackModule.callbackTest(
                         (x, y, z) => { _self.setState({ callBackResult: x, callBackMsg: y, callBackCode: z }); },
                         (errMsg) => { _self.setState({ callBackMsg: errMsg, }); }
@@ -81,8 +123,13 @@ class MySwiper extends Component {
                         });
                     break;
 
-                case 4:
-
+                case 4: //使用原生组件               
+                    alert('进入RN混合界面');
+                    if (navigator) {
+                        navigator.push({
+                            name: 'Native01', component: Native01,
+                        });
+                    }
                     break;
 
                 default:
@@ -92,7 +139,6 @@ class MySwiper extends Component {
 
         }
     }
-
 
     componentWillMount() {
         if (Platform.OS === 'android') {
@@ -139,6 +185,11 @@ class MySwiper extends Component {
                     <View style={styles.slide3}>
                         <TouchableOpacity style={{ flex: 1 }} onPress={(para) => this._handlePress(3) } >
                             <Text style={styles.text}>Prmoise Call</Text>
+                        </TouchableOpacity>
+                    </View>
+                    <View style={styles.slide3}>
+                        <TouchableOpacity style={{ flex: 1 }} onPress={(para) => this._handlePress(4) } >
+                            <Text style={styles.text}>Native View Call</Text>
                         </TouchableOpacity>
                     </View>
                 </Swiper>

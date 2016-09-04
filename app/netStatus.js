@@ -1,3 +1,9 @@
+/**
+ * 查看网络状态
+ */
+
+'use strict';
+
 import React, {Component} from 'react';
 import {
     StyleSheet,

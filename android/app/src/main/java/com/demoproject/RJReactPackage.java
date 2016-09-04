@@ -24,14 +24,12 @@ public class RJReactPackage implements ReactPackage {
     @Override
     public List<NativeModule> createNativeModules(ReactApplicationContext reactContext) {
         List<NativeModule> modules = new ArrayList<NativeModule>();
-
         rjNativeModule = new RJNativeModule(reactContext);
         modules.add(rjNativeModule);
         modules.add(new CallbackModule(reactContext));
         modules.add(new PromiseModule(reactContext));
         modules.add(new EmbedModule(reactContext));
         modules.add(new ConstModule(reactContext));
-
         return modules;
     }
 
@@ -42,6 +40,8 @@ public class RJReactPackage implements ReactPackage {
 
     @Override
     public List<ViewManager> createViewManagers(ReactApplicationContext reactContext) {
-        return Collections.emptyList();
+        List<ViewManager> viewManagers = new ArrayList<ViewManager>();
+        viewManagers.add(new KenBurnsViewManager());
+        return viewManagers;
     }
 }

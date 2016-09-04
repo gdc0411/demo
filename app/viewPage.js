@@ -1,4 +1,5 @@
 /**
+ * 购物车示例
  * Created by raojia on 16/8/24.
  */
 'use strict';

@@ -32,6 +32,7 @@ public class PromiseModule extends ReactContextBaseJavaModule {
      */
     @ReactMethod
     public void promiseTest(String msg, Promise promise) {
+
         try {
             Toast.makeText(mContext, msg, Toast.LENGTH_SHORT).show();
             String componentName = getCurrentActivity().getComponentName().toString();
