@@ -12,7 +12,7 @@ public class VodSDKActivity extends AppCompatActivity {
         setContentView(R.layout.activity_vod_sdk);
     }
 
-    public void onBack(View v){
+    public void onBack(View v) {
         finish();
     }
 

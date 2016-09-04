@@ -19,20 +19,52 @@ import {
 import Swiper from 'react-native-swiper';
 
 import KenBurnsView from './nativeView01';
+import CheckItemView from './nativeView02';
 
-class Native01 extends Component {
 
+/**
+ * 使用原生第三方控件
+ * @class NativeUI
+ * @extends {Component}
+ */
+class NativeUI extends Component {
     constructor(props) {
         super(props);
         this.state = {
             picName: 'pic01',
+            isChecked: false,
+            title: '推送设置',
+            desc: '推送设置已关闭',
         };
     }
 
-    _switch = (name) => {
+
+    /**
+     * 点击图片切换 
+     */
+    _onSwitch = (name) => {
         this.setState({
             picName: name,
         });
+    }
+
+
+    /**
+     * 点击设置
+     */
+    _onCheck = () => {
+        // alert('点击了');
+        if (this.state.isChecked) {
+            this.setState({
+                isChecked: false,
+                desc: '推送设置已关闭',
+            });
+        } else {
+            this.setState({
+                isChecked: true,
+                desc: '推送设置已开启',
+            });
+        }
     }
 
     render() {
@@ -45,10 +77,15 @@ class Native01 extends Component {
                     justifyContent: 'space-between',
                     margin: 20,
                 }} >
-                    <TouchableOpacity onPress={(name) => this._switch('pic01') } ><Text>图片01</Text></TouchableOpacity>
-                    <TouchableOpacity onPress={(name) => this._switch('pic02') } ><Text>图片02</Text></TouchableOpacity>
-                    <TouchableOpacity onPress={(name) => this._switch('pic03') } ><Text>图片03</Text></TouchableOpacity>
+                    <TouchableOpacity onPress={(name) => this._onSwitch('pic01') } ><Text>图片01</Text></TouchableOpacity>
+                    <TouchableOpacity onPress={(name) => this._onSwitch('pic02') } ><Text>图片02</Text></TouchableOpacity>
+                    <TouchableOpacity onPress={(name) => this._onSwitch('pic03') } ><Text>图片03</Text></TouchableOpacity>
                 </View >
+                <View >
+                    <TouchableOpacity onPress={this._onCheck}>
+                        <CheckItemView style={{ width: - 20, height: 68, marginTop: 10 }} desc={this.state.desc} title={this.state.title} isChecked={this.state.isChecked}/>
+                    </TouchableOpacity>
+                </View>
             </View >
         );
     }
@@ -127,7 +164,7 @@ class MySwiper extends Component {
                     alert('进入RN混合界面');
                     if (navigator) {
                         navigator.push({
-                            name: 'Native01', component: Native01,
+                            name: 'NativeUI', component: NativeUI,
                         });
                     }
                     break;

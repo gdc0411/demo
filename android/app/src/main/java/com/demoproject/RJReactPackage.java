@@ -23,7 +23,7 @@ public class RJReactPackage implements ReactPackage {
 
     @Override
     public List<NativeModule> createNativeModules(ReactApplicationContext reactContext) {
-        List<NativeModule> modules = new ArrayList<NativeModule>();
+        List<NativeModule> modules = new ArrayList<>();
         rjNativeModule = new RJNativeModule(reactContext);
         modules.add(rjNativeModule);
         modules.add(new CallbackModule(reactContext));
@@ -40,8 +40,9 @@ public class RJReactPackage implements ReactPackage {
 
     @Override
     public List<ViewManager> createViewManagers(ReactApplicationContext reactContext) {
-        List<ViewManager> viewManagers = new ArrayList<ViewManager>();
+        List<ViewManager> viewManagers = new ArrayList<>();
         viewManagers.add(new KenBurnsViewManager());
+        viewManagers.add(new CheckItemViewManager());
         return viewManagers;
     }
 }

@@ -10,11 +10,11 @@ import {
 } from 'react-native';
 
 var face = {
-    name: 'KenBurnsViewManager',
+    name: 'KenBurnsView',
     propTypes: {
         picName: PropTypes.string.isRequired,
         ...View.propTypes,
     }
 };
 
-export default requireNativeComponent('KenBurnsViewManager', face);
+export default requireNativeComponent('KenBurnsView', face);

@@ -18,7 +18,7 @@ public class KenBurnsViewManager extends SimpleViewManager<KenBurnsView> {
 
     @Override
     public String getName() {
-        return "KenBurnsViewManager";
+        return "KenBurnsView";
     }
 
     @Override
@@ -30,12 +30,12 @@ public class KenBurnsViewManager extends SimpleViewManager<KenBurnsView> {
         return kenBurnsView;
     }
 
-    @ReactProp(name="picName")
-    public void setPic(KenBurnsView view, String picName){
+    @ReactProp(name = "picName")
+    public void setPic(KenBurnsView view, String picName) {
         //根据名字获取资源ID
         Resources res = mContext.getResources();
         int picId = res.getIdentifier(picName, "drawable", mContext.getPackageName());
-        if(picId!=0) {
+        if (picId != 0) {
             Drawable drawable = mContext.getResources().getDrawable(picId);
             view.setImageDrawable(drawable);
         }
