@@ -12,7 +12,6 @@ import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
 
 /**
- *
  * Created by raojia on 16/9/2.
  */
 public class RJNativeModule extends ReactContextBaseJavaModule {
@@ -63,8 +62,8 @@ public class RJNativeModule extends ReactContextBaseJavaModule {
         Toast.makeText(mContext, msg, Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
         Bundle bundle = new Bundle();
-        mContext.startActivityForResult(intent,1,bundle);
-        Log.i("消息机制","成功调起");
+        mContext.startActivityForResult(intent, 1, bundle);
+        //Log.i("消息机制", "成功调起");
 
     }
 

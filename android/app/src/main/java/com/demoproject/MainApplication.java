@@ -12,14 +12,11 @@ import java.util.List;
 
 public class MainApplication extends Application implements ReactApplication {
 
-    private static final RJReactPackage rjPackage = new RJReactPackage();
-
-    public static RJReactPackage getRjPackage() {
-        return rjPackage;
-    }
-
+//    private static final RJReactPackage rjPackage = new RJReactPackage();
+//    public static RJReactPackage getRjPackage() {
+//        return rjPackage;
+//    }
     private final ReactNativeHost mReactNativeHost = new ReactNativeHost(this) {
-
 
         @Override
         protected boolean getUseDeveloperSupport() {
@@ -30,7 +27,7 @@ public class MainApplication extends Application implements ReactApplication {
         protected List<ReactPackage> getPackages() {
             return Arrays.<ReactPackage>asList(
                     new MainReactPackage(),
-                    rjPackage
+                    new RJReactPackage()
             );
         }
     };

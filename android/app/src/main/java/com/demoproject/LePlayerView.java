@@ -15,6 +15,9 @@ import android.widget.Toast;
 
 import com.demoproject.handler.GetDeviceInfo;
 import com.demoproject.utils.VideoLayoutParams;
+import com.facebook.react.ReactApplication;
+import com.facebook.react.bridge.ReactApplicationContext;
+import com.facebook.react.uimanager.ThemedReactContext;
 import com.lecloud.sdk.constant.PlayerEvent;
 import com.lecloud.sdk.constant.PlayerParams;
 import com.lecloud.sdk.videoview.IMediaDataVideoView;
@@ -32,8 +35,8 @@ public class LePlayerView extends RelativeLayout {
 
     public final static String DATA = "data";
 
-    private final Context mContext;
-    private Activity mActivity;
+    private final ThemedReactContext mContext;
+//    private final Activity mActivity;
 
     private IMediaDataVideoView videoView;
     VideoViewListener mVideoViewListener = new VideoViewListener() {
@@ -57,18 +60,14 @@ public class LePlayerView extends RelativeLayout {
      * 创建View
      */
     protected void createView() {
-        if (mContext instanceof Activity) {
-            mActivity = (Activity) mContext;
-        }
-        Log.i("饶佳测试","代码执行");
 
-        mActivity.getWindow().setFormat(PixelFormat.TRANSLUCENT);
-        mActivity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+//        mActivity.getWindow().setFormat(PixelFormat.TRANSLUCENT);
+//        mActivity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         View.inflate(mContext, R.layout.view_play_video, this);
 
         initData();
 
-        mHasSkin = false;//mActivity.getIntent().getBundleExtra(DATA).getBoolean("hasSkin");
+        mHasSkin = true;//mActivity.getIntent().getBundleExtra(DATA).getBoolean("hasSkin");
         mPano = false;//mActivity.getIntent().getBundleExtra(DATA).getBoolean("pano");
         initView();
     }
@@ -77,17 +76,19 @@ public class LePlayerView extends RelativeLayout {
      * 初始化数据
      */
     private void initData() {
-        Intent intent = mActivity.getIntent();
-        if (intent != null) {
-            mBundle = intent.getBundleExtra(DATA);
-            if (mBundle == null) {
-                Toast.makeText(mActivity, "no data", Toast.LENGTH_LONG).show();
-                return;
-            } else {
-                mPlayUrl = mBundle.getString("path");
-                mPlayMode = mBundle.getInt(PlayerParams.KEY_PLAY_MODE, -1);
-            }
-        }
+//        Intent intent = mActivity.getIntent();
+//        if (intent != null) {
+//            mBundle = intent.getBundleExtra(DATA);
+//            if (mBundle == null) {
+//                Toast.makeText(mActivity, "no data", Toast.LENGTH_LONG).show();
+//                return;
+//            } else {
+//                mPlayUrl = mBundle.getString("path");
+//                mPlayMode = mBundle.getInt(PlayerParams.KEY_PLAY_MODE, -1);
+//            }
+//        }
+        mPlayUrl = "http://cache.utovr.com/201601131107187320.mp4";
+        mPlayMode = -1;//PlayerParams.VALUE_PLAYER_VOD;
     }
 
 
@@ -132,25 +133,29 @@ public class LePlayerView extends RelativeLayout {
 
     public LePlayerView(Context context) {
         super(context);
-        mContext = context;
+        mContext = (ThemedReactContext) context;
+//        mActivity = mContext.getCurrentActivity();
         createView();
     }
 
     public LePlayerView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        mContext = context;
+        mContext = (ThemedReactContext) context;
+//        mActivity = mContext.getCurrentActivity();
         createView();
     }
 
     public LePlayerView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        mContext = context;
+        mContext = (ThemedReactContext) context;
+//        mActivity = mContext.getCurrentActivity();
         createView();
     }
 
     public LePlayerView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
-        mContext = context;
+        mContext = (ThemedReactContext) context;
+//        mActivity = mContext.getCurrentActivity();
         createView();
     }
 

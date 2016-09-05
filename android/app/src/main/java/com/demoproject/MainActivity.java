@@ -3,12 +3,18 @@ package com.demoproject;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.util.Log;
 
+import com.facebook.react.LifecycleState;
 import com.facebook.react.ReactActivity;
+import com.facebook.react.ReactInstanceManager;
+import com.facebook.react.ReactRootView;
+import com.facebook.react.modules.core.DefaultHardwareBackBtnHandler;
+import com.facebook.react.shell.MainReactPackage;
 
-public class MainActivity extends ReactActivity {
+public class MainActivity extends ReactActivity implements DefaultHardwareBackBtnHandler {
 
     /**
      * Returns the name of the main component registered from JavaScript.
@@ -19,62 +25,44 @@ public class MainActivity extends ReactActivity {
         return "DemoProject";
     }
 
+    private ReactInstanceManager mReactInstanceManager;
+    private ReactRootView mReactRootView;
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (1 != requestCode || RESULT_OK != resultCode) return;
-
-        Uri contactData = data.getData();
-
-        Cursor cursor = managedQuery(contactData, null, null, null, null);
-        cursor.moveToFirst();
-
-        String num = getContactPhone(cursor);
-
-        //Log.i("饶佳的测试",num);
-
-        //把num发给RN侧
-        MainApplication.getRjPackage().getRjNativeModule().sendMsgToRN(num);
-
-    }
-
-
-    private String getContactPhone(Cursor cursor) {
-        int phoneColum = cursor.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER);
-        int phoneNum = cursor.getInt(phoneColum);
-        String result = "";
-        if (phoneNum > 0) {
-            //获得联系人的ID号
-            int idColumn = cursor.getColumnIndex(ContactsContract.Contacts._ID);
-            String contactId = cursor.getString(idColumn);
-            // 获得联系人电话的cursor
-            Cursor phone = getContentResolver().query(
-                    ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
-                    null,
-                    ContactsContract.CommonDataKinds.Phone.CONTACT_ID + "=" + contactId, null, null
-            );
-            if (phone.moveToFirst()) {
-                for (; !phone.isAfterLast(); phone.moveToNext()) {
-                    int index = phone.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER);
-                    int typeindex = phone.getColumnIndex(ContactsContract.CommonDataKinds.Phone.TYPE);
-                    int phone_type = phone.getInt(typeindex);
-                    String phoneNumber = phone.getString(index);
-                    result = phoneNumber;
-//                  switch (phone_type) {//此处请看下方注释
-//                  case 2:
-//                      result = phoneNumber;
-//                      break;
+//    @Override
+//    protected void onCreate(Bundle savedInstanceState) {
+//        super.onCreate(savedInstanceState);
+//        mReactRootView = new ReactRootView(this);
+//        mReactInstanceManager = ReactInstanceManager.builder()
+//                .setApplication(getApplication())
+//                .setBundleAssetName("index.android.bundle")
+//                .setJSMainModuleName("index.android")
+//                .addPackage(new MainReactPackage())
+//                .addPackage(new RJReactPackage()) // <--- add fab package here
+//                .setUseDeveloperSupport(BuildConfig.DEBUG)
+//                .setInitialLifecycleState(LifecycleState.RESUMED)
+//                .build();
 //
-//                  default:
-//                      break;
-//                  }
-                }
-                if (!phone.isClosed()) {
-                    phone.close();
-                }
-            }
-        }
-        return result;
-    }
+//        mReactRootView.startReactApplication(mReactInstanceManager, "DemoProject", null);
+//        setContentView(mReactRootView);
+//    }
+
+//    @Override
+//    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//        if (1 != requestCode || RESULT_OK != resultCode) return;
+//
+//        Uri contactData = data.getData();
+//
+//        Cursor cursor = managedQuery(contactData, null, null, null, null);
+//        cursor.moveToFirst();
+//
+//        String num = getContactPhone(cursor);
+//
+//        //Log.i("饶佳的测试",num);
+//
+//        //把num发给RN侧
+//        //MainApplication.getRjPackage().getRjNativeModule().sendMsgToRN(num);
+//
+//    }
+
 }

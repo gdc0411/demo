@@ -66,16 +66,57 @@ public class EmbedModule extends ReactContextBaseJavaModule implements ActivityE
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (1 != requestCode || RESULT_OK != resultCode) return;
 
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy年MM月dd日 HH:mm:ss ");
-        Date curDate = new Date(System.currentTimeMillis());//获取当前时间
-        String str = formatter.format(curDate);
+//        SimpleDateFormat formatter = new SimpleDateFormat("yyyy年MM月dd日 HH:mm:ss ");
+//        Date curDate = new Date(System.currentTimeMillis());//获取当前时间
+//        String str = formatter.format(curDate);
 
-        sendMsgToRN("来自嵌入式的回调结果！当前时间：" + str);
+        Uri contactData = data.getData();
+        Cursor cursor = mContext.getContentResolver().query(contactData, null, null, null, null);
+        cursor.moveToFirst();
+        String num = getContactPhone(cursor);
+        sendMsgToRN("来自嵌入式的回调结果！电话号码为：" + num);
     }
 
     @Override
     public void onNewIntent(Intent intent) {
+    }
 
+
+    private String getContactPhone(Cursor cursor) {
+        int phoneColum = cursor.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER);
+        int phoneNum = cursor.getInt(phoneColum);
+        String result = "";
+        if (phoneNum > 0) {
+            //获得联系人的ID号
+            int idColumn = cursor.getColumnIndex(ContactsContract.Contacts._ID);
+            String contactId = cursor.getString(idColumn);
+            // 获得联系人电话的cursor
+            Cursor phone = mContext.getContentResolver().query(
+                    ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
+                    null,
+                    ContactsContract.CommonDataKinds.Phone.CONTACT_ID + "=" + contactId, null, null
+            );
+            if (phone.moveToFirst()) {
+                for (; !phone.isAfterLast(); phone.moveToNext()) {
+                    int index = phone.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER);
+                    int typeindex = phone.getColumnIndex(ContactsContract.CommonDataKinds.Phone.TYPE);
+                    int phone_type = phone.getInt(typeindex);
+                    String phoneNumber = phone.getString(index);
+                    result = phoneNumber;
+//                  switch (phone_type) {//此处请看下方注释
+//                  case 2:
+//                      result = phoneNumber;
+//                      break;
+//                  default:
+//                      break;
+//                  }
+                }
+                if (!phone.isClosed()) {
+                    phone.close();
+                }
+            }
+        }
+        return result;
     }
 
     /**

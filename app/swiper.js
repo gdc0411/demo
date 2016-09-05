@@ -152,12 +152,13 @@ class MySwiper extends Component {
             let _self = this;
             const {navigator} = this.props;
 
+            let para = '调用Native方法！';
+
             switch (key) {
-                case 1: //方案一：消息机制
-                    para = '调用Native方法！';
-                    NativeModules.RJNativeModule.callNative(para); //不带回调
+                case 1: //方案一：消息机制                    
+                    //NativeModules.RJNativeModule.callNative(para); //不带回调
                     //NativeModules.RJNativeModule.callNativeWithResult(para);  //带回调
-                    // NativeModules.EmbedModule.embedCallWithResult('Embed方案调用！'); //带回调
+                    NativeModules.EmbedModule.embedCallWithResult('Embed方案调用！'); //带回调
                     break;
 
                 case 2: //方案二：回调函数
