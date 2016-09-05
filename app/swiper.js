@@ -20,7 +20,7 @@ import Swiper from 'react-native-swiper';
 
 import KenBurnsView from './nativeView01';
 import CheckItemView from './nativeView02';
-
+import LePlayerView from './lePlayerView';
 
 /**
  * 使用原生第三方控件
@@ -40,7 +40,7 @@ class NativeUI extends Component {
 
 
     /**
-     * 点击图片切换 
+     * 点击图片切换
      */
     _onSwitch = (name) => {
         this.setState({
@@ -87,6 +87,22 @@ class NativeUI extends Component {
                     </TouchableOpacity>
                 </View>
             </View >
+        );
+    }
+}
+
+/**
+ * 整合乐视播放SDK
+ * @class LePlayerUI
+ * @extends {Component}
+ */
+class LePlayerUI extends Component {
+
+    render() {
+        return (
+            <View style={{ flex: 1 }} >
+                <LePlayerUI />
+            </View>
         );
     }
 }
@@ -160,11 +176,20 @@ class MySwiper extends Component {
                         });
                     break;
 
-                case 4: //使用原生组件               
+                case 4: //使用原生组件
                     alert('进入RN混合界面');
                     if (navigator) {
                         navigator.push({
                             name: 'NativeUI', component: NativeUI,
+                        });
+                    }
+                    break;
+
+                case 5: //使用乐视原生SDK播放组件
+                    alert('进入RN混合界面');
+                    if (navigator) {
+                        navigator.push({
+                            name: 'LePlayerUI', component: LePlayerUI,
                         });
                     }
                     break;
@@ -227,6 +252,11 @@ class MySwiper extends Component {
                     <View style={styles.slide3}>
                         <TouchableOpacity style={{ flex: 1 }} onPress={(para) => this._handlePress(4) } >
                             <Text style={styles.text}>Native View Call</Text>
+                        </TouchableOpacity>
+                    </View>
+                    <View style={styles.slide3}>
+                        <TouchableOpacity style={{ flex: 1 }} onPress={(para) => this._handlePress(5) } >
+                            <Text style={styles.text}>LePlayer SDK Call</Text>
                         </TouchableOpacity>
                     </View>
                 </Swiper>
