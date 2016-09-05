@@ -101,7 +101,7 @@ class LePlayerUI extends Component {
     render() {
         return (
             <View style={{ flex: 1 }} >
-                <LePlayerUI />
+                <LePlayerView />
             </View>
         );
     }
