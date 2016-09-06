@@ -102,7 +102,7 @@ class LePlayerUI extends Component {
     render() {
         return (
             <View>
-                <LeVideoView style={{ flex: 1 }} />
+                <LeVideoView dataSource="http://cache.utovr.com/201601131107187320.mp4" style={{ flex: 1 }} />
             </View>
         );
     }
@@ -188,7 +188,7 @@ class MySwiper extends Component {
                     break;
 
                 case 5: //使用乐视原生SDK播放组件
-                    alert('进入RN混合界面');
+                    //alert('进入RN混合界面');
                     if (navigator) {
                         navigator.push({
                             name: 'LePlayerUI', component: LePlayerUI,

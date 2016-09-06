@@ -10,6 +10,7 @@ import {
 var face = {
     name: 'LeVideoView',
     propTypes: {
+        dataSource: PropTypes.string.isRequired,
         ...View.propTypes,
     }
 };

@@ -25,4 +25,7 @@ public class LePlayerViewManager extends SimpleViewManager<LePlayerView> {
         LePlayerView lePlayerView = new LePlayerView(mContext);
         return lePlayerView;
     }
+
+
+
 }

@@ -67,6 +67,7 @@ public class LePlayerView extends RelativeLayout {
 
         mHasSkin = false;//mActivity.getIntent().getBundleExtra(DATA).getBoolean("hasSkin");
         mPano = false;//mActivity.getIntent().getBundleExtra(DATA).getBoolean("pano");
+        
         initView();
     }
 
