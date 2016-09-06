@@ -21,6 +21,7 @@ import Swiper from 'react-native-swiper';
 import KenBurnsView from './nativeView01';
 import CheckItemView from './nativeView02';
 import LePlayerView from './lePlayerView';
+import LeVideoView from './leVideoView';
 
 /**
  * 使用原生第三方控件
@@ -100,8 +101,8 @@ class LePlayerUI extends Component {
 
     render() {
         return (
-            <View style={{ flex: 1 }} >
-                <LePlayerView />
+            <View>
+                <LeVideoView style={{ flex: 1 }} />
             </View>
         );
     }
@@ -155,7 +156,7 @@ class MySwiper extends Component {
             let para = '调用Native方法！';
 
             switch (key) {
-                case 1: //方案一：消息机制                    
+                case 1: //方案一：消息机制
                     //NativeModules.RJNativeModule.callNative(para); //不带回调
                     //NativeModules.RJNativeModule.callNativeWithResult(para);  //带回调
                     NativeModules.EmbedModule.embedCallWithResult('Embed方案调用！'); //带回调

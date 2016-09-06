@@ -24,9 +24,6 @@ import com.lecloud.sdk.videoview.IMediaDataVideoView;
 import com.lecloud.sdk.videoview.VideoViewListener;
 import com.lecloud.sdk.videoview.base.BaseMediaDataVideoView;
 import com.lecloud.sdk.videoview.vod.VodVideoView;
-import com.lecloud.skin.videoview.pano.vod.PanoVodVideoView;
-import com.lecloud.skin.videoview.pano.vod.UIPanoVodVideoView;
-import com.lecloud.skin.videoview.vod.UIVodVideoView;
 
 /**
  * Created by raojia on 16/9/5.
@@ -64,10 +61,11 @@ public class LePlayerView extends RelativeLayout {
 //        mActivity.getWindow().setFormat(PixelFormat.TRANSLUCENT);
 //        mActivity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         View.inflate(mContext, R.layout.view_play_video, this);
+        //videoView = (BaseMediaDataVideoView) this.findViewById(R.id.videoView);
 
         initData();
 
-        mHasSkin = true;//mActivity.getIntent().getBundleExtra(DATA).getBoolean("hasSkin");
+        mHasSkin = false;//mActivity.getIntent().getBundleExtra(DATA).getBoolean("hasSkin");
         mPano = false;//mActivity.getIntent().getBundleExtra(DATA).getBoolean("pano");
         initView();
     }
@@ -102,7 +100,7 @@ public class LePlayerView extends RelativeLayout {
 //                break;
 //            }
             case PlayerParams.VALUE_PLAYER_VOD: {
-                videoView = mHasSkin ? (mPano ? new UIPanoVodVideoView(mContext) : new UIVodVideoView(mContext)) : (mPano ? new PanoVodVideoView(mContext) : new VodVideoView(mContext));
+                //videoView = mHasSkin ? (mPano ? new UIPanoVodVideoView(mContext) : new UIVodVideoView(mContext)) : (mPano ? new PanoVodVideoView(mContext) : new VodVideoView(mContext));
                 break;
             }
 //            case PlayerParams.VALUE_PLAYER_ACTION_LIVE: {
@@ -128,6 +126,7 @@ public class LePlayerView extends RelativeLayout {
         } else {
             videoView.setDataSource(mBundle);
         }
+
     }
 
 
