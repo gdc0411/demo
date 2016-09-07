@@ -18,7 +18,7 @@ public class LeVideoViewManager extends SimpleViewManager<BaseMediaDataVideoView
 
     private ThemedReactContext mContext;
     private BaseMediaDataVideoView videoView;
-//    private String mPlayUrl = "http://cache.utovr.com/201601131107187320.mp4";
+    private String mPlayUrl = "http://cache.utovr.com/201601131107187320.mp4";
 
     VideoViewListener mVideoViewListener = new VideoViewListener() {
         @Override
@@ -39,8 +39,7 @@ public class LeVideoViewManager extends SimpleViewManager<BaseMediaDataVideoView
         mContext = reactContext;
         videoView = new BaseMediaDataVideoView(mContext);
         videoView.setLayoutParams(VideoLayoutParams.computeContainerSize(mContext, 16, 9));
-        videoView.setVideoViewListener(mVideoViewListener);
-//        videoView.setDataSource(mPlayUrl);
+        //videoView.setDataSource(mPlayUrl);
         return videoView;
     }
 
@@ -48,6 +47,7 @@ public class LeVideoViewManager extends SimpleViewManager<BaseMediaDataVideoView
     public void setDataSource( BaseMediaDataVideoView view, String playUrl ){
         if(!TextUtils.isEmpty(playUrl) ) {
             view.setDataSource(playUrl);
+            view.setVideoViewListener(mVideoViewListener);
         }
     }
 
