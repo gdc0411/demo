@@ -80,7 +80,7 @@ class NativeUI extends Component {
                 }} >
                     <TouchableOpacity onPress={(name) => this._onSwitch('pic01') } ><Text>图片01</Text></TouchableOpacity>
                     <TouchableOpacity onPress={(name) => this._onSwitch('pic02') } ><Text>图片02</Text></TouchableOpacity>
-                    <TouchableOpacity onPress={(name) => this._onSwitch('pic03') } ><Text>图片03</Text></TouchableOpacity>
+                    <TouchableOpacity onPress={(name) => this._onSwitch('pic03') } ><Text>图片03</Text></TouchableOpacity>                    
                 </View >
                 <View >
                     <TouchableOpacity onPress={this._onCheck}>
