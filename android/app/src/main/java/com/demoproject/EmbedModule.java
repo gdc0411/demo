@@ -1,5 +1,6 @@
 package com.demoproject;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
@@ -62,8 +63,10 @@ public class EmbedModule extends ReactContextBaseJavaModule implements ActivityE
 
     }
 
+
+
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    public void onActivityResult(Activity activity, int requestCode, int resultCode, Intent data) {
         if (1 != requestCode || RESULT_OK != resultCode) return;
 
 //        SimpleDateFormat formatter = new SimpleDateFormat("yyyy年MM月dd日 HH:mm:ss ");
