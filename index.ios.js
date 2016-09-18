@@ -10,7 +10,9 @@ import {
     AppRegistry,
 } from 'react-native';
 
-import App from './app';
+// import App from './app';
+import App from './redux_app/reduxDemo01';
+
 
 class DemoProject extends Component {
   render() {
