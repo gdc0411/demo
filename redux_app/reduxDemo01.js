@@ -57,6 +57,7 @@ const mapStateToProps = (state) => {
     };
 };
 
+
 //连接Redux
 let Counter01 = connect(mapStateToProps)(__Counter01);
 let Counter02 = connect(mapStateToProps)(__Counter02);
