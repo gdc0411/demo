@@ -19,10 +19,12 @@ export const trigger = (name, data) => {
 
 
 export const remove = (name, handler) => {
-    const listeners = event[name];
-    //最终会把listeners里中的handler删掉
-    //find是找出不等于handler的所有
-    event[name] = listeners.find(
-        v => v !== handler
-    );
+    if (!events[name]) {
+        const listeners = events[name];
+        //最终会把listeners里中的handler删掉
+        //find是找出不等于handler的所有
+        events[name] = listeners.find(
+            v => v !== handler
+        );
+    }
 };

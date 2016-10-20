@@ -12,7 +12,7 @@ import {
 } from 'react-native';
 
 import { setValue, getValue } from './count';
-import { on } from './event';
+import { on, remove, trigger } from './event';
 
 class SimpleReduxApp extends Component {
     render() {
@@ -32,19 +32,28 @@ class Counter1 extends Component {
         this.state = {
             counter: getValue(),
         };
+
+        //创建事件监听handler
+        this.handler = ((value) => {
+            this.setState({
+                counter: value
+            });
+        }).bind(this);
+    }
+
+    /**
+     * 注册事件监听
+     */
+    componentDidMount() {
+        on('counter-changed', this.handler);
     }
 
 
     /**
-     * 注册事件监听
-     * @memberOf Counter1
+     * 删除事件监听
      */
-    componentDidMount() {
-        on('counter-changed', ((value) => {
-            this.setState({
-                counter: value
-            });
-        }).bind(this));
+    componentWillUnmount() {
+        remove('counter-changed', this.handler);
     }
 
 
@@ -58,28 +67,47 @@ class Counter1 extends Component {
     }
 
     addCounter() {
-        setValue(getValue() + 1);
+        let value = getValue() + 1;
+        setValue(value);
+        //触发事件
+        trigger('counter-changed', value);
+
         this.setState({
-            counter: getValue()
+            counter: value
         });
     }
 }
 
 class Counter2 extends Component {
     constructor(props) {
-        super(props);//这一句不能省略，照抄即可
+        super(props);
         this.state = {
             counter: getValue(),
         };
-    }
 
-    componentDidMount() {
-        on('counter-changed', ((value) => {
+        //创建事件监听handler
+        this.handler = ((value) => {
             this.setState({
                 counter: value
             });
-        }).bind(this));
+        }).bind(this);
     }
+
+    /**
+     * 注册事件监听
+     */
+    componentDidMount() {
+        on('counter-changed', this.handler);
+    }
+
+
+    /**
+     * 删除事件监听
+     */
+    componentWillUnmount() {
+        remove('counter-changed', this.handler);
+    }
+
 
     render() {
         return (
@@ -91,9 +119,13 @@ class Counter2 extends Component {
     }
 
     addCounter() {
-        setValue(getValue() + 1);
+        let value = getValue() + 1;
+        setValue(value);
+        //触发事件
+        trigger('counter-changed', value);
+        //修改state
         this.setState({
-            counter: getValue()
+            counter: value
         });
     }
 }
