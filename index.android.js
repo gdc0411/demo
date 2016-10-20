@@ -6,8 +6,8 @@ import {
 } from 'react-native';
 
 //import App from './app';
-
-import App from './app/simpleRedux/app';
+//import App from './app/simpleRedux/app';
+import App from './app/simpleRedux2/app';
 
 
 class DemoProject extends Component {
