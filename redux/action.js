@@ -1,7 +1,6 @@
 /**
  * Action
  */
-
 'use strict';
 
 /**
