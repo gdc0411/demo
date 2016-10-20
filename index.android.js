@@ -6,7 +6,8 @@ import {
 } from 'react-native';
 
 //import App from './app';
-import App from './redux_app/reduxDemo01';
+
+import App from './app/simpleRedux/app';
 
 
 class DemoProject extends Component {
@@ -16,6 +17,5 @@ class DemoProject extends Component {
         );
     }
 }
-
 
 AppRegistry.registerComponent('DemoProject', () => DemoProject);

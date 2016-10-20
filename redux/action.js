@@ -5,7 +5,7 @@
 'use strict';
 
 /**
-* Action Creator 
+* Action Creator
 * @param {any} number
 */
 export const plus = (number) => ({
