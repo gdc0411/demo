@@ -56,10 +56,6 @@ const mapStateToProps = state => {
     };
 };
 
-App.propTypes = {
-    value: PropTypes.number.isRequired,
-    dispatch: PropTypes.func.isRequired
-};
 
 //连接Redux
 export default connect(mapStateToProps)(App);
