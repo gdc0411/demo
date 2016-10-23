@@ -1,0 +1,31 @@
+/**
+ * Redux Demo 01
+ * 应用中所有的 state 都以一个对象树的形式储存在一个单一的 store 中。
+ * 惟一改变 state 的办法是触发 action，一个描述发生什么的对象。
+ * 为了描述 action 如何改变 state 树，你需要编写 reducers。
+ */
+
+import React, { Component } from 'react';
+import {
+    StyleSheet,
+    Text,
+    View,
+} from 'react-native';
+import { Provider } from 'react-redux';
+
+import configureStore from './store/configureStore';
+import App from './containers/App';
+
+const store = configureStore();
+
+class ReduxDemo01 extends Component {
+    render() {
+        return (
+            <Provider store={store} >
+                <App />
+            </Provider>
+        );
+    }
+}
+
+export default ReduxDemo01;
