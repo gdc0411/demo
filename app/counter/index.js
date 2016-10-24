@@ -6,11 +6,6 @@
  */
 
 import React, { Component } from 'react';
-import {
-    StyleSheet,
-    Text,
-    View,
-} from 'react-native';
 
 import configureStore from './store/configureStore';
 import App from './containers/App';
