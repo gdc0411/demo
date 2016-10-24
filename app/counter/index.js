@@ -12,6 +12,12 @@ import App from './containers/App';
 
 const store = configureStore();
 
+/**
+ * 根组件，负责store和根reducer创建和关联
+ * 
+ * @class ReduxDemo01
+ * @extends {Component}
+ */
 class ReduxDemo01 extends Component {
     render() {
         return (

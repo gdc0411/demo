@@ -57,6 +57,11 @@ if (process.env.NODE_ENV !== 'production') {
     middleware.push(createLogger());
 }
 
+/**
+ * 创建store状态树，并关联reducer，加入middleware中间件
+ * 
+ * @param {any} preloadedState
+ */
 const configureStore = preloadedState => createStore(
     rootReducer,
     preloadedState,

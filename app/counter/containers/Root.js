@@ -5,10 +5,7 @@
  * 为了描述 action 如何改变 state 树，你需要编写 reducers。
  */
 import React, { Component } from 'react';
-import {
-    View
-} from 'react-native';
-
+import { View, Text } from 'react-native';
 import { connect } from 'react-redux';
 
 /**
@@ -17,6 +14,11 @@ import { connect } from 'react-redux';
 import Counter01 from '../componets/Counter01';
 import Counter02 from '../componets/Counter02';
 
+/**
+ * 根容器组件，负责控制木偶组件
+ * @class Root
+ * @extends {Component}
+ */
 class Root extends Component {
 
     render() {

@@ -7,6 +7,12 @@ import {
 import { match } from 'react-router';
 import routesConfig from '../routes';
 
+/**
+ * 
+ * 路由容器组件，装载具体页面
+ * @class PageContainer
+ * @extends {Component}
+ */
 class PageContainer extends Component {
     componentWillMount() {
         this.doMatch(this.props);

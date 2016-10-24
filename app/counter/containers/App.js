@@ -13,6 +13,11 @@ const INITIAL_ROUTE = {
     location: '/',
 };
 
+/**
+ * 路由组件
+ * @class App
+ * @extends {Component}
+ */
 class App extends Component {
 
     configureScene = route => {
@@ -33,6 +38,7 @@ class App extends Component {
             rootBackAndroid={this.onBackAndroid}
             />
     );
+    
     render() {
         const { store } = this.props;
         return (
