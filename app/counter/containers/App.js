@@ -38,11 +38,11 @@ class App extends Component {
             rootBackAndroid={this.onBackAndroid}
             />
     );
-    
+
     render() {
         const { store } = this.props;
         return (
-            <Provider store={store} key="provider">
+            <Provider store={store} key="provider" >
                 <Navigator
                     ref="navigator"
                     initialRoute={INITIAL_ROUTE}
