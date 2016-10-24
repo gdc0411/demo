@@ -1,61 +1,52 @@
-/**
- * Redux Demo 01
- * 应用中所有的 state 都以一个对象树的形式储存在一个单一的 store 中。
- * 惟一改变 state 的办法是触发 action，一个描述发生什么的对象。
- * 为了描述 action 如何改变 state 树，你需要编写 reducers。
- */
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
 import {
-    StyleSheet,
-    Text,
-    View,
+    Navigator,
+    PropTypes,
+    Platform,
+    BackAndroid,
 } from 'react-native';
-import { connect } from 'react-redux';
+import { Provider } from 'react-redux';
 
-/** 
- * 加载应用所需角色
-*/
-import Counter01 from '../componets/Counter01';
-import Counter02 from '../componets/Counter02';
+import PageContainer from './PageContainer';
+
+const INITIAL_ROUTE = {
+    location: '/',
+};
 
 class App extends Component {
 
+    configureScene = route => {
+        if (route.configure) {
+            return route.configure;
+        }
+        if (Platform.OS === 'ios') {
+            return Navigator.SceneConfigs.PushFromRight;
+        }
+        return Navigator.SceneConfigs.FloatFromBottomAndroid;
+    };
+
+    renderScene = (route, navigator) => (
+        <PageContainer
+            extraProps={route.extraProps}
+            location={route.location}
+            navigator={navigator}
+            rootBackAndroid={this.onBackAndroid}
+            />
+    );
     render() {
-        const { dispatch, value } = this.props;
+        const { store } = this.props;
         return (
-            (this.props.getState) ?
-                <View style={styles.container} >
-                    <Text>加载Store...</Text>
-                </View>
-                :
-                <View style={styles.container} >
-                    <Counter01 value={value} dispatch={dispatch} />
-                    <Counter01 value={value} dispatch={dispatch} />
-                    <Counter02 value={value} dispatch={dispatch} />
-                </View>
+            <Provider store={store} key="provider">
+                <Navigator
+                    ref="navigator"
+                    initialRoute={INITIAL_ROUTE}
+                    configureScene={this.configureScene}
+                    renderScene={this.renderScene}
+                    />
+            </Provider>
         );
     }
 }
 
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-});
 
-
-//配置Map映射表，拿到自己关心的数据
-const mapStateToProps = state => {
-    //state.xxx必须与reducer同名
-    const { calculate } = state;
-    const { value } = calculate;
-    return { 
-        value 
-    };
-};
-
-
-//连接Redux
-export default connect(mapStateToProps)(App);
+export default App;
