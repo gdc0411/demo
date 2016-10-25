@@ -4,6 +4,7 @@
 
 # Xcode
 #
+npm-debug.log.*
 build/
 *.pbxuser
 !default.pbxuser
