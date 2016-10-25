@@ -17,10 +17,8 @@
     "react-timer-mixin": "^0.13.3"
   },
   "devDependencies": {
-    "redux-logger": "^2.7.0",
-    "react-native-debugger-open": "^0.3.0",
     "react-native-mock": "^0.2.3",
-    "remote-redux-devtools": "^0.5.1",
+    "redux-logger": "^2.7.0",
     "typescript": "1.8.10"
   }
 }
