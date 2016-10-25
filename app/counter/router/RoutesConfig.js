@@ -3,14 +3,12 @@
 */
 import React, { Component } from 'react';
 import { Route } from 'react-router';
-
-import Index from './containers/Root';
-
+import home from '../containers/home';
 
 export default module.exports = {
     path: '/',
     indexRoute: {
-        component: Index,
+        component: home,
     },
     // childRoutes: [
     //     {

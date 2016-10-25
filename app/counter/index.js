@@ -8,20 +8,20 @@
 import React, { Component } from 'react';
 
 import configureStore from './store/configureStore';
-import App from './containers/App';
+import Router from './router/Router';
 
 const store = configureStore();
 
 /**
  * 根组件，负责store和根reducer创建和关联
- * 
+ *
  * @class ReduxDemo01
  * @extends {Component}
  */
 class ReduxDemo01 extends Component {
     render() {
         return (
-            <App store={store} />
+            <Router store={store} />
         );
     }
 }

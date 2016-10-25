@@ -5,10 +5,11 @@ import {
 } from 'react-native';
 
 import { match } from 'react-router';
-import routesConfig from '../routes';
+//加载路由配置
+import RoutesConfig from './RoutesConfig';
 
 /**
- * 
+ *
  * 路由容器组件，装载具体页面
  * @class PageContainer
  * @extends {Component}
@@ -26,7 +27,7 @@ class PageContainer extends Component {
         const { location } = props;
         match({
             location,
-            routes: routesConfig,
+            routes: RoutesConfig,
         }, (err, redirectLocation, renderProps) => {
             this.setState({ routerState: renderProps });
         });
@@ -52,8 +53,5 @@ class PageContainer extends Component {
         return <View />;
     }
 }
-
-
-
 
 export default PageContainer;

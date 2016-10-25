@@ -15,10 +15,10 @@ const INITIAL_ROUTE = {
 
 /**
  * 路由组件
- * @class App
+ * @class router
  * @extends {Component}
  */
-class App extends Component {
+class Router extends Component {
 
     configureScene = route => {
         if (route.configure) {
@@ -55,4 +55,4 @@ class App extends Component {
 }
 
 
-export default App;
+export default Router;

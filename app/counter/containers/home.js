@@ -15,11 +15,11 @@ import Counter01 from '../componets/Counter01';
 import Counter02 from '../componets/Counter02';
 
 /**
- * 根容器组件，负责控制木偶组件
+ * 首页的根容器组件，负责控制首页内的木偶组件
  * @class Root
  * @extends {Component}
  */
-class Root extends Component {
+class home extends Component {
 
     render() {
         const { dispatch, value } = this.props;
@@ -51,4 +51,4 @@ const mapStateToProps = state => {
 
 
 //连接Redux
-export default connect(mapStateToProps)(Root);
+export default connect(mapStateToProps)(home);
