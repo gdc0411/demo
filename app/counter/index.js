@@ -6,6 +6,7 @@
  */
 
 import React, { Component } from 'react';
+//import DevToolsApp from 'remotedev-app';
 
 import configureStore from './store/configureStore';
 import Router from './router/Router';

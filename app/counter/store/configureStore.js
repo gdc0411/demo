@@ -2,7 +2,6 @@
 import { Platform } from 'react-native';
 import {createStore, combineReducers, applyMiddleware, compose} from 'redux';
 import thunk from 'redux-thunk';
-import devTools from 'remote-redux-devtools';
 import createLogger from 'redux-logger';  //日志工具
 
 //导入所有的reducer
@@ -20,8 +19,8 @@ const enhancer = compose(
         // other store enhancers if any
     ),
     global.reduxNativeDevTools ?
-        global.reduxNativeDevTools(/*options*/) :
-        noop => noop
+      global.reduxNativeDevTools(/*options*/) :
+      noop => noop
 );
 
 /**
@@ -34,10 +33,10 @@ const configureStore = preloadedState => createStore(
     enhancer
 );
 
-// If you have other enhancers & middlewares
-// update the store after creating / changing to allow devTools to use them
-if (global.reduxNativeDevTools) {
+  // If you have other enhancers & middlewares
+  // update the store after creating / changing to allow devTools to use them
+  if (global.reduxNativeDevTools) {
     global.reduxNativeDevTools.updateStore(configureStore);
-}
+  }
 
 export default configureStore;
