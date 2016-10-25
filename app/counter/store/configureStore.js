@@ -7,7 +7,7 @@ import createLogger from 'redux-logger';  //日志工具
 //导入所有的reducer
 import rootReducer from '../reducers/reducer';
 
-
+const dev_env = (process.env.NODE_ENV !== 'production');
 const middleware = [thunk];
 // if (process.env.NODE_ENV !== 'production') {
 //     middleware.push(createLogger());
@@ -18,9 +18,9 @@ const enhancer = compose(
         ...middleware
         // other store enhancers if any
     ),
-    global.reduxNativeDevTools ?
-      global.reduxNativeDevTools(/*options*/) :
-      noop => noop
+    (global.reduxNativeDevTools) && dev_env ?
+        global.reduxNativeDevTools(/*options*/) :
+        noop => noop
 );
 
 /**
@@ -33,10 +33,10 @@ const configureStore = preloadedState => createStore(
     enhancer
 );
 
-  // If you have other enhancers & middlewares
-  // update the store after creating / changing to allow devTools to use them
-  if (global.reduxNativeDevTools) {
+// If you have other enhancers & middlewares
+// update the store after creating / changing to allow devTools to use them
+if (global.reduxNativeDevTools && dev_env) {
     global.reduxNativeDevTools.updateStore(configureStore);
-  }
+}
 
 export default configureStore;
