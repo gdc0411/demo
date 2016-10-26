@@ -5,6 +5,7 @@ import {
     Text,
     View,
 } from 'react-native';
+import { connect } from 'react-redux';
 
 import { plus } from '../actions/action';
 
@@ -15,14 +16,19 @@ class Counter01 extends Component {
     }
 
     render() {
-        const { dispatch, value } = this.props;
+        const { value } = this.props;
         return (
             <View style={{ flexDirection: 'row' }} >
-                <Text style={{ fontSize: 20, marginRight: 20 }} >计数器：{this.props.value}</Text>
-                <Text style={{ fontSize: 20 }} onPress={() => this.handleClick()} >点击 +1</Text>
+                <Text style={{ fontSize: 20, marginRight: 20 }} >计数器：{value}</Text>
+                <Text style={{ fontSize: 20 }} onPress={() => this.handleClick() } >点击 +1</Text>
             </View>
         );
     }
 }
 
-export default Counter01;
+const mapStateToProps = state => {
+    const { value } = state.calculate;
+    return { value };
+};
+
+export default connect(mapStateToProps)(Counter01);

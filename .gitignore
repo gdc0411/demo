@@ -45,6 +45,5 @@ npm-debug.log
 # RN project
 .vscode
 ios
-tsconfig.json
 .buckconfig
 .flowconfig

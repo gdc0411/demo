@@ -5,6 +5,7 @@ import {
     Text,
     View,
 } from 'react-native';
+import { connect } from 'react-redux';
 
 import { plus } from '../actions/action';
 
@@ -25,4 +26,9 @@ class Counter02 extends Component {
     }
 }
 
-export default Counter02;
+const mapStateToProps = state => {
+    const { value } = state.calculate;
+    return { value };
+};
+
+export default connect(mapStateToProps)(Counter02);

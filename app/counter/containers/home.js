@@ -5,7 +5,11 @@
  * 为了描述 action 如何改变 state 树，你需要编写 reducers。
  */
 import React, { Component } from 'react';
-import { View, Text } from 'react-native';
+import {
+    View,
+    Text,
+    Image,
+} from 'react-native';
 import { connect } from 'react-redux';
 
 /**
@@ -22,7 +26,7 @@ import Counter02 from '../componets/Counter02';
 class home extends Component {
 
     render() {
-        const { dispatch, value } = this.props;
+        const { value } = this.props;
         return (
             (this.props.getState) ?
                 <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }} >
@@ -30,9 +34,10 @@ class home extends Component {
                 </View>
                 :
                 <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }} >
-                    <Counter01 value={value} dispatch={dispatch} />
-                    <Counter01 value={value} dispatch={dispatch} />
-                    <Counter02 value={value} dispatch={dispatch} />
+                    <Image  style={{ height: 180, width: 200, }} source={require('../asserts/images/lecloud.png') } resizeMode="contain" />
+                    <Counter01 value={value} />
+                    <Counter01 value={value} />
+                    <Counter02 value={value} />
                 </View>
         );
     }
