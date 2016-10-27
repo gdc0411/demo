@@ -18,12 +18,15 @@ import com.demoproject.utils.VideoLayoutParams;
 import com.facebook.react.ReactApplication;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.uimanager.ThemedReactContext;
-import com.lecloud.sdk.constant.PlayerEvent;
-import com.lecloud.sdk.constant.PlayerParams;
-import com.lecloud.sdk.videoview.IMediaDataVideoView;
-import com.lecloud.sdk.videoview.VideoViewListener;
-import com.lecloud.sdk.videoview.base.BaseMediaDataVideoView;
-import com.lecloud.sdk.videoview.vod.VodVideoView;
+import com.letv.android.client.sdk.constant.PlayerEvent;
+import com.letv.android.client.sdk.constant.PlayerParams;
+import com.letv.android.client.sdk.videoview.IMediaDataVideoView;
+import com.letv.android.client.sdk.videoview.VideoViewListener;
+import com.letv.android.client.sdk.videoview.base.BaseMediaDataVideoView;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 
 /**
  * Created by raojia on 16/9/5.
@@ -37,12 +40,21 @@ public class LePlayerView extends RelativeLayout {
 
     private IMediaDataVideoView videoView;
     VideoViewListener mVideoViewListener = new VideoViewListener() {
-
         @Override
         public void onStateResult(int event, Bundle bundle) {
             handleVideoInfoEvent(event, bundle);// 处理视频信息事件
             handlePlayerEvent(event, bundle);// 处理播放器事件
             handleLiveEvent(event, bundle);// 处理直播类事件,如果是点播，则这些事件不会回调
+
+        }
+        @Override
+        public String onGetVideoRateList(LinkedHashMap<String, String> map) {
+            for(Map.Entry<String,String> rates:map.entrySet()){
+                if(rates.getValue().equals("高清")){
+                    return rates.getKey();
+                }
+            }
+            return "";
         }
     };
 
