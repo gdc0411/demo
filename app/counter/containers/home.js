@@ -18,7 +18,7 @@ import { connect } from 'react-redux';
 import Counter01 from '../componets/Counter01';
 import Counter02 from '../componets/Counter02';
 import LeVideoView from '../componets/LeVideoView';
-import NativeVideoView from '../componets/nativeVideo';
+//import LeVideoView from '../componets/NativeVideo';
 
 /**
  * 首页的根容器组件，负责控制首页内的木偶组件
@@ -36,13 +36,13 @@ class home extends Component {
                 </View>
                 :
                 <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }} >
+                    <View style={{ height: 180, width: 320, backgroundColor: '#000000'  }} >
+                        <LeVideoView dataSource='http://cache.utovr.com/201601131107187320.mp4' />
+                    </View>
                     <Image  style={{ height: 180, width: 200, }} source={require('../asserts/images/lecloud.png') } resizeMode="contain" />
                     <Counter01 value={value} />
                     <Counter01 value={value} />
                     <Counter02 value={value} />
-                    <View style={{height: 300, width: 400}} >
-                        <LeVideoView dataSource="http://cache.utovr.com/201601131107187320.mp4" />
-                    </View>
                 </View>
         );
     }

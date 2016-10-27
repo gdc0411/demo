@@ -14,6 +14,8 @@ import codePush from "react-native-code-push";
 //import App from './app/simpleRedux3/app';
 import App from './app/counter/index';
 
+const enableHotUpdate = true;
+
 class DemoProject extends Component {
 
     codePushStatusDidChange(status) {
@@ -41,25 +43,26 @@ class DemoProject extends Component {
     }
 
     componentDidMount() {
-        console.log('组件加载后执行');
-
-        //访问慢,不稳定
-        codePush.checkForUpdate().then((update) => {
-            if (!update) {
-                Alert.alert("提示", "已更新到最新版本!", [{
-                    text: "Ok", onPress: () => {
-                        console.log("点了OK");
-                    }
-                }]);
-            } else {
-                Alert.alert("提示", "有新的版本！", [{
-                    text: "更新", onPress: () => {
-                        console.log("点了更新");
-                    }
-                }]);
-                codePush.sync({ updateDialog: true, installMode: codePush.InstallMode.IMMEDIATE });
-            }
-        });
+        if (enableHotUpdate) {
+            console.log('组件加载后执行');
+            //访问慢,不稳定
+            codePush.checkForUpdate().then((update) => {
+                if (!update) {
+                    Alert.alert("提示", "已更新到最新版本!", [{
+                        text: "Ok", onPress: () => {
+                            console.log("点了OK");
+                        }
+                    }]);
+                } else {
+                    Alert.alert("提示", "有新的版本！", [{
+                        text: "更新", onPress: () => {
+                            console.log("点了更新");
+                        }
+                    }]);
+                    codePush.sync({ updateDialog: true, installMode: codePush.InstallMode.IMMEDIATE });
+                }
+            });
+        }
     }
 
     render() {
@@ -69,6 +72,8 @@ class DemoProject extends Component {
     }
 }
 
-DemoProject = codePush(DemoProject);
+if (enableHotUpdate) {
+    DemoProject = codePush(DemoProject);
+}
 
 AppRegistry.registerComponent('DemoProject', () => DemoProject);

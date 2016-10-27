@@ -1,10 +1,13 @@
 package com.demoproject;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.PixelFormat;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.RelativeLayout;
@@ -31,23 +34,24 @@ import com.letv.android.client.skin.videoview.vod.UICPVodVideoView;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-
 /**
  * Created by raojia on 16/9/6.
  */
-public class LeVideoViewManager extends SimpleViewManager<CPVodVideoView> {
+public class LeVideoViewManager extends SimpleViewManager<CPVodVideoView> implements View.OnTouchListener {
+    private static final String REACT_CLASS = "LeVideoView";
 
     private ThemedReactContext mContext;
-
     private CPVodVideoView videoView;
+
     VideoViewListener mVideoViewListener = new VideoViewListener() {
         @Override
         public void onStateResult(int event, Bundle bundle) {
             handleVideoInfoEvent(event, bundle);// 处理视频信息事件
             handlePlayerEvent(event, bundle);// 处理播放器事件
             handleLiveEvent(event, bundle);// 处理直播类事件,如果是点播，则这些事件不会回调
-
+            //onInterceptAdEvent(event, bundle);//处理广告事件的
         }
+
         @Override
         public String onGetVideoRateList(LinkedHashMap<String, String> map) {
             for (Map.Entry<String, String> rates : map.entrySet()) {
@@ -59,43 +63,24 @@ public class LeVideoViewManager extends SimpleViewManager<CPVodVideoView> {
         }
     };
 
-    private String mPlayUrl;
-    private Bundle mBundle;
-    private int mPlayMode;
-    private boolean mHasSkin;
-    private boolean mPano;
-
     @Override
     public String getName() {
-        return "LeVideoView";
+        return REACT_CLASS;
     }
 
     @Override
-    protected CPVodVideoView createViewInstance(ThemedReactContext reactContext) {
+    protected CPVodVideoView createViewInstance(final ThemedReactContext reactContext) {
         mContext = reactContext;
-
-        mPlayUrl = "http://cache.utovr.com/201601131107187320.mp4";
-        mPlayMode = PlayerParams.VALUE_PLAYER_VOD;
-        mHasSkin = false;
-        mPano = false;
-
         videoView = new CPVodVideoView(mContext.getBaseContext());
-
-        //videoView.setVideoViewListener(mVideoViewListener);
-
-        LayoutInflater inflater = LayoutInflater.from(mContext.getBaseContext());
-        RelativeLayout videoContainer = (RelativeLayout) inflater.inflate(R.layout.view_play_video, null);
-
-        videoView.setLayoutParams(VideoLayoutParams.computeContainerSize(mContext, 16, 9));
-
-        videoView.setDataSource(mPlayUrl);
-
+        videoView.setVideoViewListener(mVideoViewListener);
+        videoView.setOnTouchListener(this);
         return videoView;
     }
 
 
     @ReactProp(name = "dataSource")
     public void setDataSource(CPVodVideoView view, String playUrl) {
+        Log.d("setDataSource -------", "setDataSource : " + playUrl + " : " + playUrl.equals("\"\""));
         if (!TextUtils.isEmpty(playUrl)) {
             view.setDataSource(playUrl);
             view.setVideoViewListener(mVideoViewListener);
@@ -107,6 +92,7 @@ public class LeVideoViewManager extends SimpleViewManager<CPVodVideoView> {
      * 处理播放器本身事件，具体事件可以参见IPlayer类
      */
     private void handlePlayerEvent(int state, Bundle bundle) {
+        Log.d("handlePlayerEvent", "state " + state + " bundle " + bundle);
         switch (state) {
             case PlayerEvent.PLAY_VIDEOSIZE_CHANGED:
                 /**
@@ -133,13 +119,19 @@ public class LeVideoViewManager extends SimpleViewManager<CPVodVideoView> {
      * 处理直播类事件
      */
     private void handleLiveEvent(int state, Bundle bundle) {
+        Log.d("handleLiveEvent", "state " + state + " bundle " + bundle);
     }
 
     /**
      * 处理视频信息类事件
      */
     private void handleVideoInfoEvent(int state, Bundle bundle) {
+        Log.d("handleVideoInfoEvent", "state " + state + " bundle " + bundle);
     }
 
 
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+        return false;
+    }
 }

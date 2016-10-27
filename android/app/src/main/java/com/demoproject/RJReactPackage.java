@@ -43,7 +43,6 @@ public class RJReactPackage implements ReactPackage {
         List<ViewManager> viewManagers = new ArrayList<>();
         viewManagers.add(new KenBurnsViewManager());
         viewManagers.add(new CheckItemViewManager());
-        viewManagers.add(new LePlayerViewManager());
         viewManagers.add(new LeVideoViewManager());
         return viewManagers;
     }
