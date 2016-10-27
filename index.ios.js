@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 
 // import App from './app';
-import App from './redux_app/reduxDemo01';
+import App from './app/counter/index';
 
 
 class DemoProject extends Component {
