@@ -120,9 +120,9 @@ android {
         main {
             manifest.srcFile 'src/main/AndroidManifest.xml'
             java.srcDirs = ['src/main/java']
-            resources.srcDirs = ['src/main']
-            aidl.srcDirs = ['src/main']
-            renderscript.srcDirs = ['src/main']
+            resources.srcDirs = ['src']
+            aidl.srcDirs = ['src']
+            renderscript.srcDirs = ['src']
             res.srcDirs = ['res']
             assets.srcDirs = ['assets']
             //jniLibs.srcDirs = ['libs']  //设置目标的so存放路径
@@ -160,12 +160,12 @@ android {
 
 dependencies {
     compile project(':react-native-code-push')
-    compile project(':LePlayerSkin')
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'com.android.support:appcompat-v7:23.0.1'
     compile 'com.facebook.react:react-native:+'
     // From node_modules
     compile 'com.flaviofaria:kenburnsview:1.0.7'
+    compile project(':LePlayerSkin')
 }
 
 // Run this once to be able to run the application with BUCK

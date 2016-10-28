@@ -48,18 +48,13 @@ class DemoProject extends Component {
             //访问慢,不稳定
             codePush.checkForUpdate().then((update) => {
                 if (!update) {
-                    Alert.alert("提示", "已更新到最新版本!", [{
-                        text: "Ok", onPress: () => {
-                            console.log("点了OK");
-                        }
-                    }]);
+                    // Alert.alert("提示", "已是到最新版本!", [{
+                    //     text: "Ok", onPress: () => {
+                    //         console.log("点了OK");
+                    //     }
+                    // }]);
                 } else {
-                    Alert.alert("提示", "有新的版本！", [{
-                        text: "更新", onPress: () => {
-                            console.log("点了更新");
-                        }
-                    }]);
-                    codePush.sync({ updateDialog: true, installMode: codePush.InstallMode.IMMEDIATE });
+                    //codePush.sync({ updateDialog: true, installMode: codePush.InstallMode.IMMEDIATE });
                 }
             });
         }

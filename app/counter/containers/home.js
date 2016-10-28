@@ -36,7 +36,7 @@ class home extends Component {
                 </View>
                 :
                 <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }} >
-                    <View style={{ height: 180, width: 320, backgroundColor: '#000000'  }} >
+                    <View style={{ height: 180, width: 320, backgroundColor: '#000000'  }}  >
                         <LeVideoView dataSource='http://cache.utovr.com/201601131107187320.mp4' />
                     </View>
                     <Image  style={{ height: 180, width: 200, }} source={require('../asserts/images/lecloud.png') } resizeMode="contain" />

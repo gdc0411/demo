@@ -76,4 +76,5 @@ public class CheckItemView extends RelativeLayout {
         tv_title.setText(title);
     }
 
+
 }

@@ -26,6 +26,7 @@ public class MainApplication extends Application implements ReactApplication {
 //        return rjPackage;
 //    }
 
+    //获取当前进程名字
     public static String getProcessName(Context cxt, int pid) {
         ActivityManager am = (ActivityManager) cxt.getSystemService(Context.ACTIVITY_SERVICE);
         List<ActivityManager.RunningAppProcessInfo> runningApps = am.getRunningAppProcesses();
@@ -60,22 +61,50 @@ public class MainApplication extends Application implements ReactApplication {
             } catch (IllegalAccessException e) {
                 e.printStackTrace();
             }
+
+            //设置域名LeCloudPlayerConfig.HOST_DEFAULT代表国内版
             SharedPreferences preferences = getSharedPreferences("host", Context.MODE_PRIVATE);
             int host = preferences.getInt("host", LeCloudPlayerConfig.HOST_DEFAULT);
             try {
-//            	LeCloudPlayerConfig.setHostType(host);
+            	LeCloudPlayerConfig.setHostType(host);
                 LeCloudPlayerConfig.init(getApplicationContext());
                 LeCloudPlayerConfig.setmInitCmfListener(new OnInitCmfListener() {
                     @Override
-                    public void onCdeStartSuccess() {}
+                    public void onCdeStartSuccess() {
+                        //cde启动成功
+                        Log.d("onCdeStartSuccess","onCdeStartSuccess -------");
+
+                    }
                     @Override
-                    public void onCdeStartFail() {}
+                    public void onCdeStartFail() {
+                        //cde启动失败
+                        //如果使用remote版本则可能是remote下载失败
+                        //如果使用普通版本，则可能是so文件加载失败导致
+                        Log.d("onCdeStartFail","onCdeStartFail -------");
+
+                    }
                     @Override
-                    public void onCmfCoreInitSuccess() {}
+                    public void onCmfCoreInitSuccess() {
+                        //cde启动成功可以开始播放
+                        Log.d("onCmfCoreInitSuccess","onCmfCoreInitSuccess -------");
+
+                    }
                     @Override
-                    public void onCmfCoreInitFail() {}
+                    public void onCmfCoreInitFail() {
+                        //不包含cde的播放框架需要处理
+                        Log.d("onCmfCoreInitFail","onCmfCoreInitFail -------");
+                    }
                     @Override
-                    public void onCmfDisconnected() {}
+                    public void onCmfDisconnected() {
+                        //cde服务断开，会导致播放失败，重启一次服务
+                        Log.d("onCmfDisconnected","onCmfDisconnected -------");
+
+                        try {
+                            LeCloudPlayerConfig.init(getApplicationContext());
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
                 });
             } catch (Exception e) {
                 // assets目录中必须放三个文件，否则报错
@@ -102,6 +131,7 @@ public class MainApplication extends Application implements ReactApplication {
                     new MainReactPackage(),
                     new CodePush(BuildConfig.CODEPUSH_KEY, getApplicationContext(), BuildConfig.DEBUG),
                     new RJReactPackage()
+
             );
         }
     };
