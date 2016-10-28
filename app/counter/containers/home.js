@@ -18,6 +18,8 @@ import { connect } from 'react-redux';
 import Counter01 from '../componets/Counter01';
 import Counter02 from '../componets/Counter02';
 import LeVideoView from '../componets/LeVideoView';
+import CheckItemView from '../componets/nativeView02';
+
 //import LeVideoView from '../componets/NativeVideo';
 
 /**
@@ -36,15 +38,16 @@ class home extends Component {
                 </View>
                 :
                 <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }} >
-                    <View style={{ height: 180, width: 320, backgroundColor: '#000000'  }}  >
-                        <LeVideoView dataSource='http://cache.utovr.com/201601131107187320.mp4' />
-                    </View>
+                    <LeVideoView style={{ height: 180, width: 320, backgroundColor: '#eeffee'  }} dataSource='http://cache.utovr.com/201601131107187320.mp4' />
                     <Image  style={{ height: 180, width: 200, }} source={require('../asserts/images/lecloud.png') } resizeMode="contain" />
                     <Counter01 value={value} />
                     <Counter01 value={value} />
                     <Counter02 value={value} />
                 </View>
         );
+        //
+        //                        <CheckItemView style={{ width: - 20, height: 68, marginTop: 10 }} desc={'描述'} title={'标题'} isChecked={true}/>
+
     }
 }
 

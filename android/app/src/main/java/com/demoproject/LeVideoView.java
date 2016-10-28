@@ -66,7 +66,6 @@ public class LeVideoView extends RelativeLayout {
     //初始化RelativeLayout
     private void initView(ThemedReactContext context) {
         View.inflate(context, R.layout.video_play, this);
-
         Context ctx = context.getBaseContext();
         switch (mPlayMode) {
             case PlayerParams.VALUE_PLAYER_LIVE: {
@@ -74,7 +73,6 @@ public class LeVideoView extends RelativeLayout {
                 break;
             }
             case PlayerParams.VALUE_PLAYER_VOD: {
-//                  videoView = new SaasVodVideoView(this);
                 videoView = mHasSkin ? (mPano ? new UICPPanoVodVideoView(ctx) : new UICPVodVideoView(ctx)) : new CPVodVideoView(ctx);
                 break;
             }

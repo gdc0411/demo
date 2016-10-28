@@ -19,7 +19,7 @@ public class CheckItemViewManager extends SimpleViewManager<CheckItemView> {
     @Override
     protected CheckItemView createViewInstance(ThemedReactContext reactContext) {
         mContext = reactContext;
-        CheckItemView checkItemView = new CheckItemView(mContext);
+        CheckItemView checkItemView = new CheckItemView(reactContext);
         checkItemView.setTitle("设置名");
         checkItemView.setDesc("设置值");
         return checkItemView;
