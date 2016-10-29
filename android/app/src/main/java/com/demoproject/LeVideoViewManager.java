@@ -100,24 +100,27 @@ public class LeVideoViewManager extends SimpleViewManager<LeVideoView> {
 
     @ReactProp(name = PROP_URI)
     public void setDataSource(final LeVideoView videoView, @Nullable String uri) {
-        //未知播放类型则为URL
-        videoView.setDataSource(uri);
+        if (uri != null && !uri.trim().equals(""))
+            videoView.setDataSource(uri);
     }
 
     @ReactProp(name = PROP_SRC)
     public void setDataSource(final LeVideoView videoView, @Nullable ReadableMap src) {
-        int playMode = src.getInt(PROP_PLAY_MODE);
+        if (src == null) {
+            return;
+        }
+        int playMode = src.hasKey(PROP_PLAY_MODE) ? src.getInt(PROP_PLAY_MODE) : -1;
         Bundle bundle;
         switch (playMode) {
             case PlayerParams.VALUE_PLAYER_VOD:
                 bundle = new Bundle();
                 bundle.putInt(PlayerParams.KEY_PLAY_MODE, PlayerParams.VALUE_PLAYER_VOD);
-                bundle.putString(PlayerParams.KEY_PLAY_UUID, src.getString(PROP_SRC_VOD_UUID));
-                bundle.putString(PlayerParams.KEY_PLAY_VUID, src.getString(PROP_SRC_VOD_VUID));
-                bundle.putString(PlayerParams.KEY_PLAY_BUSINESSLINE, src.getString(PROP_SRC_VOD_BUSINESSLINE));
-                bundle.putBoolean("saas", src.getBoolean(PROP_SRC_VOD_SAAS));
-                bundle.putBoolean("pano", src.getBoolean(PROP_SRC_IS_PANO));
-                bundle.putBoolean("hasSkin", src.getBoolean(PROP_SRC_HAS_SKIN));
+                bundle.putString(PlayerParams.KEY_PLAY_UUID, src.hasKey(PROP_SRC_VOD_UUID) ? src.getString(PROP_SRC_VOD_UUID):"");
+                bundle.putString(PlayerParams.KEY_PLAY_VUID, src.hasKey(PROP_SRC_VOD_UUID) ?src.getString(PROP_SRC_VOD_VUID):"");
+                bundle.putString(PlayerParams.KEY_PLAY_BUSINESSLINE, src.hasKey(PROP_SRC_VOD_UUID) ?src.getString(PROP_SRC_VOD_BUSINESSLINE):"102");
+                bundle.putBoolean("saas", !src.hasKey(PROP_SRC_VOD_SAAS) || src.getBoolean(PROP_SRC_VOD_SAAS));
+                bundle.putBoolean("pano", src.hasKey(PROP_SRC_IS_PANO) && src.getBoolean(PROP_SRC_IS_PANO));
+                bundle.putBoolean("hasSkin", src.hasKey(PROP_SRC_HAS_SKIN) && src.getBoolean(PROP_SRC_HAS_SKIN));
 
                 videoView.setDataSource(bundle);
                 break;
@@ -128,14 +131,14 @@ public class LeVideoViewManager extends SimpleViewManager<LeVideoView> {
             case PlayerParams.VALUE_PLAYER_ACTION_LIVE:
                 bundle = new Bundle();
                 bundle.putInt(PlayerParams.KEY_PLAY_MODE, PlayerParams.VALUE_PLAYER_ACTION_LIVE);
-                bundle.putString(PlayerParams.KEY_PLAY_ACTIONID, src.getString(PROP_SRC_ALIVE_ACTIONID));
-                bundle.putBoolean(PlayerParams.KEY_PLAY_USEHLS, src.getBoolean(PROP_SRC_ALIVE_IS_USEHLS));
-                bundle.putString(PlayerParams.KEY_PLAY_CUSTOMERID, src.getString(PROP_SRC_ALIVE_CUSTOMERID));
-                bundle.putString(PlayerParams.KEY_PLAY_BUSINESSLINE, src.getString(PROP_SRC_ALIVE_BUSINESSLINE));
-                bundle.putString(PlayerParams.KEY_ACTION_CUID, src.getString(PROP_SRC_ALIVE_CUID));
-                bundle.putString(PlayerParams.KEY_ACTION_UTOKEN, src.getString(PROP_SRC_ALIVE_UTIOKEN));
-                bundle.putBoolean("pano", src.getBoolean(PROP_SRC_IS_PANO));
-                bundle.putBoolean("hasSkin", src.getBoolean(PROP_SRC_HAS_SKIN));
+                bundle.putString(PlayerParams.KEY_PLAY_ACTIONID,  src.hasKey(PROP_SRC_VOD_UUID) ?src.getString(PROP_SRC_ALIVE_ACTIONID):"A2016062700000gx");
+                bundle.putBoolean(PlayerParams.KEY_PLAY_USEHLS, src.hasKey(PROP_SRC_ALIVE_IS_USEHLS) && src.getBoolean(PROP_SRC_ALIVE_IS_USEHLS));
+                bundle.putString(PlayerParams.KEY_PLAY_CUSTOMERID,  src.hasKey(PROP_SRC_ALIVE_CUSTOMERID) ?src.getString(PROP_SRC_ALIVE_CUSTOMERID):"838389");
+                bundle.putString(PlayerParams.KEY_PLAY_BUSINESSLINE,  src.hasKey(PROP_SRC_ALIVE_BUSINESSLINE) ?src.getString(PROP_SRC_ALIVE_BUSINESSLINE):"102");
+                bundle.putString(PlayerParams.KEY_ACTION_CUID,  src.hasKey(PROP_SRC_ALIVE_CUID) ?src.getString(PROP_SRC_ALIVE_CUID):"");
+                bundle.putString(PlayerParams.KEY_ACTION_UTOKEN,  src.hasKey(PROP_SRC_ALIVE_UTIOKEN) ?src.getString(PROP_SRC_ALIVE_UTIOKEN):"");
+                bundle.putBoolean("pano", src.hasKey(PROP_SRC_IS_PANO) && src.getBoolean(PROP_SRC_IS_PANO));
+                bundle.putBoolean("hasSkin", src.hasKey(PROP_SRC_HAS_SKIN) && src.getBoolean(PROP_SRC_HAS_SKIN));
 
                 videoView.setDataSource(bundle);
                 break;
@@ -146,6 +149,7 @@ public class LeVideoViewManager extends SimpleViewManager<LeVideoView> {
                 //未知播放类型则为URL
                 break;
         }
+
     }
 
     @ReactProp(name = PROP_PAUSED, defaultBoolean = false)
