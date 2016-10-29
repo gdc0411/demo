@@ -131,8 +131,6 @@ public class LeVideoView extends RelativeLayout implements LifecycleEventListene
     };
 
     private int mPlayMode = PlayerParams.VALUE_PLAYER_VOD;
-
-    private String mPlayUrl;
     private boolean mHasSkin = false; //是否有皮肤
     private boolean mPano = false;  //是否全景
 
@@ -145,7 +143,7 @@ public class LeVideoView extends RelativeLayout implements LifecycleEventListene
         mThemedReactContext.addLifecycleEventListener(this);
 
         //创建播放器及监听
-        initializeMediaPlayerIfNeeded();
+        //initializeMediaPlayerIfNeeded();
         //setSurfaceTextureListener(this);
 
         //创建播放更新进度线程
@@ -166,6 +164,7 @@ public class LeVideoView extends RelativeLayout implements LifecycleEventListene
 
     private void initializeMediaPlayerIfNeeded() {
         if (mMediaPlayer == null) {
+
             mMediaPlayerValid = false;
             //创建播放器和播放容器
             View.inflate(mThemedReactContext, R.layout.video_play, this);
@@ -216,15 +215,25 @@ public class LeVideoView extends RelativeLayout implements LifecycleEventListene
      */
     public void setDataSource(Bundle bundle) {
         Log.d("setDataSource -------", "Bundle : " + bundle);
+        if (bundle == null) return;
+
         mMediaPlayerValid = false;
         mVideoDuration = 0;
         mVideoBufferedDuration = 0;
 
-        initializeMediaPlayerIfNeeded();
-        mMediaPlayer.resetPlayer();
+        mPlayMode = (bundle.containsKey(LeVideoViewManager.PROP_PLAY_MODE) ? bundle.getInt(LeVideoViewManager.PROP_PLAY_MODE) : -1);
+        mPano = (bundle.containsKey(LeVideoViewManager.PROP_SRC_IS_PANO) && bundle.getBoolean(LeVideoViewManager.PROP_SRC_IS_PANO));
+        mHasSkin = (bundle.containsKey(LeVideoViewManager.PROP_SRC_HAS_SKIN) && bundle.getBoolean(LeVideoViewManager.PROP_SRC_HAS_SKIN));
 
-        if (mMediaPlayer != null && bundle != null) {
-            mMediaPlayer.setDataSource(bundle);
+        initializeMediaPlayerIfNeeded();
+
+        if (mMediaPlayer != null) {
+            mMediaPlayer.resetPlayer();
+
+            if (bundle.containsKey("path"))
+                mMediaPlayer.setDataSource(bundle.getString("path"));
+            else
+                mMediaPlayer.setDataSource(bundle);
             mMediaPlayer.setVideoViewListener(mVideoViewListener);
 
             WritableMap event = Arguments.createMap();
@@ -233,30 +242,6 @@ public class LeVideoView extends RelativeLayout implements LifecycleEventListene
         }
     }
 
-    /**
-     * 传入播放URL
-     *
-     * @param playUrl url
-     * @return
-     */
-    public void setDataSource(String playUrl) {
-        Log.d("setDataSource -------", "playUrl : " + playUrl);
-        mMediaPlayerValid = false;
-        mVideoDuration = 0;
-        mVideoBufferedDuration = 0;
-
-        initializeMediaPlayerIfNeeded();
-        mMediaPlayer.resetPlayer();
-
-        if (mMediaPlayer != null && !TextUtils.isEmpty(playUrl)) {
-            mMediaPlayer.setDataSource(playUrl);
-            mMediaPlayer.setVideoViewListener(mVideoViewListener);
-
-            WritableMap event = Arguments.createMap();
-            event.putString(LeVideoViewManager.PROP_SRC, playUrl);
-            mEventEmitter.receiveEvent(getId(), Events.EVENT_LOAD_START.toString(), event);
-        }
-    }
 
     /**
      * Process prepared.
@@ -318,7 +303,6 @@ public class LeVideoView extends RelativeLayout implements LifecycleEventListene
                 mEventEmitter.receiveEvent(getId(), Events.EVENT_BUFFER_PERCENT.toString(), Arguments.createMap());
                 break;
 
-            default:
         }
         return false;
     }
@@ -513,7 +497,7 @@ public class LeVideoView extends RelativeLayout implements LifecycleEventListene
      * 处理广告类事件
      */
     private void handleAdEvent(int state, Bundle bundle) {
-        Log.d("handleVideoInfoEvent", "onInterceptAdEvent:state " + state + " bundle " + bundle);
+        Log.d("handleAdEvent", "handleAdEvent:state " + state + " bundle " + bundle);
         switch (state) {
 
             case PlayerEvent.VIEW_PREPARE_AD_SURFACE:

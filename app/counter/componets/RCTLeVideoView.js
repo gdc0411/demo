@@ -133,9 +133,8 @@ export default class Video extends Component {
         const nativeProps = Object.assign({}, this.props);
         Object.assign(nativeProps, {
             style: [styles.base, nativeProps.style],
-            uri: uri,
             src: {
-                playMode: source.playMode || 0,
+                playMode: source.playMode || -1,                                
                 uuid: source.uuid,
                 vuid: source.vuid,
                 businessline: source.businessline,
@@ -146,7 +145,8 @@ export default class Video extends Component {
                 cuid: source.cuid,
                 utoken: source.utoken,
                 pano: source.pano || false,
-                hasSkin: source.hasSkin || false,                
+                hasSkin: source.hasSkin || false,     
+                uri: uri,           
             },
             onVideoLoadStart: this._onLoadStart,
             onVideoLoad: this._onLoad,

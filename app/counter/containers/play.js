@@ -59,16 +59,17 @@ class VideoPlayer extends Component {
         const flexRemaining = (1 - this.getCurrentTimePercentage()) * 100;
 
         //网络地址
-        const uri = "http://cache.utovr.com/201601131107187320.mp4";
+        const uri = { uri: "http://cache.utovr.com/201601131107187320.mp4", pano: false, hasSkin: false };
         //标准点播
-        const vod = { playMode: 10000, uuid: "838389", vuid: "200271100", businessline: "102", saas: true, pano: false, hasSkin: false };
+        const vod = { playMode: 10000, uuid: "838389", vuid: "200271100", businessline: "102", saas: true, pano: false, hasSkin: true };
         //活动直播
         const live = { playMode: 10002, actionId: "A2016062700000gx", usehls: false, customerId: "838389", businessline: "102", cuid: "", utoken: "", pano: false, hasSkin: false };
 
         return (
             <View style={styles.container}>
                 <TouchableOpacity style={styles.fullScreen} onPress={() => { this.setState({ paused: !this.state.paused }); } }>
-                    <RCTLeVideoView source={vod}
+                    <RCTLeVideoView
+                        source={vod}
                         style={styles.fullScreen}
                         paused={this.state.paused}
                         volume={this.state.volume}
