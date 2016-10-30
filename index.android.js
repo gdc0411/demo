@@ -14,7 +14,7 @@ import codePush from "react-native-code-push";
 //import App from './app/simpleRedux3/app';
 import App from './app/counter/index';
 
-const enableHotUpdate = true;
+const enableHotUpdate = false;
 
 class DemoProject extends Component {
 
@@ -48,7 +48,7 @@ class DemoProject extends Component {
             //访问慢,不稳定
             codePush.checkForUpdate().then((update) => {
                 if (!update) {
-                    // Alert.alert("提示", "已是到最新版本!", [{
+                    // Alert.alert("提示", "已是最新版本!", [{
                     //     text: "Ok", onPress: () => {
                     //         console.log("点了OK");
                     //     }

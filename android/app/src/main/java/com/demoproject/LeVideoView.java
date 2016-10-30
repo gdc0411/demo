@@ -1,19 +1,18 @@
+/*************************************************************************
+ * Description: 乐视视频播放组件
+ * Author: raojia
+ * Mail: raojia@le.com
+ * Created Time: 2016-10-30
+ ************************************************************************/
 package com.demoproject;
 
 import android.content.Context;
-import android.graphics.PixelFormat;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.text.TextUtils;
-import android.util.AttributeSet;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.WindowManager;
 
 
-import android.widget.MediaController;
 import android.widget.RelativeLayout;
 
 import com.demoproject.utils.VideoLayoutParams;
@@ -41,22 +40,24 @@ import com.letv.android.client.skin.videoview.vod.UICPVodVideoView;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-
 /**
  * The type Le video view.
  */
 public class LeVideoView extends RelativeLayout implements LifecycleEventListener {
 
     public enum Events {
-        EVENT_LOAD_START("onVideoLoadStart"),
+        EVENT_LOAD_SOURCE("onSourceLoad"),
         EVENT_LOAD("onVideoLoad"),
         EVENT_ERROR("onVideoError"),
         EVENT_PROGRESS("onVideoProgress"),
+        EVENT_PAUSE("onVideoPause"),
+        EVENT_RESUME("onVideoResume"),
         EVENT_SEEK("onVideoSeek"),
+        EVENT_SEEK_COMPLETE("onVideoSeekComplete"),
         EVENT_END("onVideoEnd"),
-        EVENT_STALLED("onPlaybackStalled"),
-        EVENT_RESUME("onPlaybackResume"),
-        EVENT_READY_FOR_DISPLAY("onReadyForDisplay"),
+        EVENT_BUFFER_START("onBufferStart"),
+        EVENT_BUFFER_END("onBufferEnd"),
+        EVENT_VIDEO_RENDING_START("onVideoRendingStart"),
         EVENT_BUFFER_PERCENT("onBufferPercent");
 
         private final String mName;
@@ -71,17 +72,12 @@ public class LeVideoView extends RelativeLayout implements LifecycleEventListene
         }
     }
 
-    public static final String EVENT_PROP_FAST_FORWARD = "canPlayFastForward";
-    public static final String EVENT_PROP_SLOW_FORWARD = "canPlaySlowForward";
-    public static final String EVENT_PROP_SLOW_REVERSE = "canPlaySlowReverse";
-    public static final String EVENT_PROP_REVERSE = "canPlayReverse";
-    public static final String EVENT_PROP_STEP_FORWARD = "canStepForward";
-    public static final String EVENT_PROP_STEP_BACKWARD = "canStepBackward";
     public static final String EVENT_PROP_DURATION = "duration";
     public static final String EVENT_PROP_PLAYABLE_DURATION = "playableDuration";
     public static final String EVENT_PROP_CURRENT_TIME = "currentTime";
     public static final String EVENT_PROP_SEEK_TIME = "seekTime";
     public static final String EVENT_PROP_NATURALSIZE = "naturalSize";
+    public static final String EVENT_PROP_VIDEO_BUFF = "videobuff";
     public static final String EVENT_PROP_WIDTH = "width";
     public static final String EVENT_PROP_HEIGHT = "height";
     public static final String EVENT_PROP_ORIENTATION = "orientation";
@@ -92,23 +88,26 @@ public class LeVideoView extends RelativeLayout implements LifecycleEventListene
     private ThemedReactContext mThemedReactContext;
     private RCTEventEmitter mEventEmitter;
 
-    private Handler mProgressUpdateHandler = new Handler();
-    private Runnable mProgressUpdateRunnable = null;
-    private IMediaDataVideoView mMediaPlayer;
-
-
+    ///播放器
+    private IMediaDataVideoView mLePlayer;
+    /// 播放器状态
+    private int mPlayMode = PlayerParams.VALUE_PLAYER_VOD;
+    private boolean mHasSkin = false; //是否有皮肤
+    private boolean mPano = false;  //是否全景
+    // 可用状态，prepared, started, paused，completed 时为true
+    private boolean mLePlayerValid = false;
+    // 暂停状态
     private boolean mPaused = false;
-    private float mRate = 1.0f;
-
-    private boolean mMediaPlayerValid = false; // True if mMediaPlayer is in prepared, started, paused or completed state.
 
     private long mVideoDuration = 0;
     private int mVideoBufferedDuration = 0;
+    // 是否播放完毕
     private boolean isCompleted = false;
-
+    // 是否在缓冲加载状态
+    private boolean isSeeking = false;
 
     /**
-     * The M video view listener.
+     * 播放器回调函数
      */
     VideoViewListener mVideoViewListener = new VideoViewListener() {
         @Override
@@ -130,10 +129,13 @@ public class LeVideoView extends RelativeLayout implements LifecycleEventListene
         }
     };
 
-    private int mPlayMode = PlayerParams.VALUE_PLAYER_VOD;
-    private boolean mHasSkin = false; //是否有皮肤
-    private boolean mPano = false;  //是否全景
+    // 进度更新线程
+    private Handler mProgressUpdateHandler = new Handler();
+    private Runnable mProgressUpdateRunnable = null;
 
+    /*
+    * 构造函数
+    */
     public LeVideoView(ThemedReactContext context) {
         super(context);
         mThemedReactContext = context;
@@ -143,16 +145,17 @@ public class LeVideoView extends RelativeLayout implements LifecycleEventListene
         mThemedReactContext.addLifecycleEventListener(this);
 
         //创建播放器及监听
-        //initializeMediaPlayerIfNeeded();
+        //initLePlayerIfNeeded();
         //setSurfaceTextureListener(this);
 
         //创建播放更新进度线程
         mProgressUpdateRunnable = new Runnable() {
             @Override
             public void run() {
-                if (mMediaPlayerValid && !isCompleted) {
+                if (mLePlayerValid && !mPaused && !isSeeking && !isCompleted) {
                     WritableMap event = Arguments.createMap();
-                    event.putDouble(EVENT_PROP_CURRENT_TIME, mMediaPlayer.getCurrentPosition() / 1000.0);
+                    event.putDouble(EVENT_PROP_CURRENT_TIME, mLePlayer.getCurrentPosition() / 1000.0);
+                    event.putDouble(EVENT_PROP_DURATION, mVideoDuration / 1000.0);
                     event.putDouble(EVENT_PROP_PLAYABLE_DURATION, mVideoBufferedDuration / 1000.0); //TODO:mBufferUpdateRunnable
                     mEventEmitter.receiveEvent(getId(), Events.EVENT_PROGRESS.toString(), event);
                 }
@@ -162,47 +165,49 @@ public class LeVideoView extends RelativeLayout implements LifecycleEventListene
         mProgressUpdateHandler.post(mProgressUpdateRunnable);
     }
 
-    private void initializeMediaPlayerIfNeeded() {
-        if (mMediaPlayer == null) {
+    // 创建播放器及监听
+    private void initLePlayerIfNeeded() {
+        if (mLePlayer == null) {
 
-            mMediaPlayerValid = false;
+            mLePlayerValid = false;
             //创建播放器和播放容器
             View.inflate(mThemedReactContext, R.layout.video_play, this);
             Context ctx = mThemedReactContext.getBaseContext();
             switch (mPlayMode) {
                 case PlayerParams.VALUE_PLAYER_LIVE: {
-                    mMediaPlayer = mHasSkin ? (mPano ? new UICPPanoLiveVideoView(ctx) : new UICPLiveVideoView(ctx)) : new CPLiveVideoView(ctx);
+                    mLePlayer = mHasSkin ? (mPano ? new UICPPanoLiveVideoView(ctx) : new UICPLiveVideoView(ctx)) : new CPLiveVideoView(ctx);
                     break;
                 }
                 case PlayerParams.VALUE_PLAYER_VOD: {
-                    mMediaPlayer = mHasSkin ? (mPano ? new UICPPanoVodVideoView(ctx) : new UICPVodVideoView(ctx)) : new CPVodVideoView(ctx);
+                    mLePlayer = mHasSkin ? (mPano ? new UICPPanoVodVideoView(ctx) : new UICPVodVideoView(ctx)) : new CPVodVideoView(ctx);
                     break;
                 }
                 case PlayerParams.VALUE_PLAYER_ACTION_LIVE: {
-                    mMediaPlayer = mHasSkin ? (mPano ? new UICPPanoActionLiveVideoView(ctx) : new UICPActionLiveVideoView(ctx)) : new CPActionLiveVideoView(ctx);
+                    mLePlayer = mHasSkin ? (mPano ? new UICPPanoActionLiveVideoView(ctx) : new UICPActionLiveVideoView(ctx)) : new CPActionLiveVideoView(ctx);
                     break;
                 }
                 default:
-                    mMediaPlayer = new BaseMediaDataVideoView(ctx);
+                    mLePlayer = new BaseMediaDataVideoView(ctx);
                     break;
             }
             //将播放器放入容器
             RelativeLayout videoContainer = (RelativeLayout) findViewById(R.id.videoContainer);
-            videoContainer.addView((View) mMediaPlayer, VideoLayoutParams.computeContainerSize(mThemedReactContext, 16, 9));
+            videoContainer.addView((View) mLePlayer, VideoLayoutParams.computeContainerSize(mThemedReactContext, 16, 9));
+
             //设置播放器监听器
-            mMediaPlayer.setVideoViewListener(mVideoViewListener);
-            //mMediaPlayer.setDataSource("http://cache.utovr.com/201601131107187320.mp4");
+            mLePlayer.setVideoViewListener(mVideoViewListener);
+            //mLePlayer.setDataSource("http://cache.utovr.com/201601131107187320.mp4");
         }
     }
 
 
     /**
-     * Cleanup media player resources.
+     * 销毁播放器，释放资源
      */
     public void cleanupMediaPlayerResources() {
-        if (mMediaPlayer != null) {
-            mMediaPlayerValid = false;
-            mMediaPlayer.stopAndRelease();
+        if (mLePlayer != null) {
+            mLePlayerValid = false;
+            mLePlayer.stopAndRelease();
         }
     }
 
@@ -217,7 +222,7 @@ public class LeVideoView extends RelativeLayout implements LifecycleEventListene
         Log.d("setDataSource -------", "Bundle : " + bundle);
         if (bundle == null) return;
 
-        mMediaPlayerValid = false;
+        mLePlayerValid = false;
         mVideoDuration = 0;
         mVideoBufferedDuration = 0;
 
@@ -225,52 +230,45 @@ public class LeVideoView extends RelativeLayout implements LifecycleEventListene
         mPano = (bundle.containsKey(LeVideoViewManager.PROP_SRC_IS_PANO) && bundle.getBoolean(LeVideoViewManager.PROP_SRC_IS_PANO));
         mHasSkin = (bundle.containsKey(LeVideoViewManager.PROP_SRC_HAS_SKIN) && bundle.getBoolean(LeVideoViewManager.PROP_SRC_HAS_SKIN));
 
-        initializeMediaPlayerIfNeeded();
+        initLePlayerIfNeeded();
 
-        if (mMediaPlayer != null) {
-            mMediaPlayer.resetPlayer();
+        if (mLePlayer != null) {
+            mLePlayer.resetPlayer();
 
             if (bundle.containsKey("path"))
-                mMediaPlayer.setDataSource(bundle.getString("path"));
+                mLePlayer.setDataSource(bundle.getString("path"));
             else
-                mMediaPlayer.setDataSource(bundle);
-            mMediaPlayer.setVideoViewListener(mVideoViewListener);
+                mLePlayer.setDataSource(bundle);
+            mLePlayer.setVideoViewListener(mVideoViewListener);
 
             WritableMap event = Arguments.createMap();
             event.putString(LeVideoViewManager.PROP_SRC, bundle.toString());
-            mEventEmitter.receiveEvent(getId(), Events.EVENT_LOAD_START.toString(), event);
+            mEventEmitter.receiveEvent(getId(), Events.EVENT_LOAD_SOURCE.toString(), event);
         }
     }
 
 
     /**
-     * Process prepared.
+     * 处理播放器准备完成事件
      */
-    public void processPrepared() {
+    public void processPrepared(int what, Bundle bundle) {
 
-        mMediaPlayerValid = true;
-        mVideoDuration = mMediaPlayer.getDuration();
+        mLePlayerValid = true;
+        mVideoDuration = mLePlayer.getDuration();
 
         WritableMap naturalSize = Arguments.createMap();
-        naturalSize.putInt(EVENT_PROP_WIDTH, mMediaPlayer.getVideoWidth());
-        naturalSize.putInt(EVENT_PROP_HEIGHT, mMediaPlayer.getVideoHeight());
-        if (mMediaPlayer.getVideoWidth() > mMediaPlayer.getVideoHeight())
+        naturalSize.putInt(EVENT_PROP_WIDTH, mLePlayer.getVideoWidth());
+        naturalSize.putInt(EVENT_PROP_HEIGHT, mLePlayer.getVideoHeight());
+        //Log.d("视频尺寸", "长度" + mVideoDuration + "宽" + mLePlayer.getVideoWidth() + "高" + mLePlayer.getVideoHeight());
+        if (mLePlayer.getVideoWidth() > mLePlayer.getVideoHeight())
             naturalSize.putString(EVENT_PROP_ORIENTATION, "landscape");
         else
             naturalSize.putString(EVENT_PROP_ORIENTATION, "portrait");
 
         WritableMap event = Arguments.createMap();
         event.putDouble(EVENT_PROP_DURATION, mVideoDuration / 1000.0);
-        event.putDouble(EVENT_PROP_CURRENT_TIME, mMediaPlayer.getCurrentPosition() / 1000.0);
+        event.putDouble(EVENT_PROP_CURRENT_TIME, mLePlayer.getCurrentPosition() / 1000.0);
         event.putMap(EVENT_PROP_NATURALSIZE, naturalSize);
-        // TODO: Actually check if you can.
-        event.putBoolean(EVENT_PROP_FAST_FORWARD, true);
-        event.putBoolean(EVENT_PROP_SLOW_FORWARD, true);
-        event.putBoolean(EVENT_PROP_SLOW_REVERSE, true);
-        event.putBoolean(EVENT_PROP_REVERSE, true);
-        event.putBoolean(EVENT_PROP_FAST_FORWARD, true);
-        event.putBoolean(EVENT_PROP_STEP_BACKWARD, true);
-        event.putBoolean(EVENT_PROP_STEP_FORWARD, true);
         mEventEmitter.receiveEvent(getId(), Events.EVENT_LOAD.toString(), event);
 
         applyModifiers();
@@ -278,64 +276,108 @@ public class LeVideoView extends RelativeLayout implements LifecycleEventListene
     }
 
     /**
-     * Process player info boolean.
+     * 处理视频信息事件.
      *
-     * @param what  the what
-     * @param extra the extra
+     * @param what   the what
+     * @param bundle the extra
      * @return the boolean
      */
-    public boolean processPlayerInfo(int what, int extra) {
-        switch (what) {
-            case StatusCode.PLAY_INFO_BUFFERING_START:
-                //缓冲开始
-                mEventEmitter.receiveEvent(getId(), Events.EVENT_STALLED.toString(), Arguments.createMap());
-                break;
-            case StatusCode.PLAY_INFO_BUFFERING_END:
-                //缓冲结束
-                mEventEmitter.receiveEvent(getId(), Events.EVENT_RESUME.toString(), Arguments.createMap());
-                break;
-            case StatusCode.PLAY_INFO_VIDEO_RENDERING_START:
-                //渲染第一帧完成
-                mEventEmitter.receiveEvent(getId(), Events.EVENT_READY_FOR_DISPLAY.toString(), Arguments.createMap());
-                break;
-            case StatusCode.PLAY_INFO_VIDEO_BUFFERPERCENT:
-                //视频缓冲时的进度，开始转圈
-                mEventEmitter.receiveEvent(getId(), Events.EVENT_BUFFER_PERCENT.toString(), Arguments.createMap());
-                break;
+    public boolean processPlayerInfo(int what, Bundle bundle) {
+        int statusCode = (bundle != null && bundle.containsKey(PlayerParams.KEY_RESULT_STATUS_CODE)) ?
+                bundle.getInt(PlayerParams.KEY_RESULT_STATUS_CODE) : -1;
 
+        switch (statusCode) {
+            case StatusCode.PLAY_INFO_BUFFERING_START://500004
+                //缓冲开始
+                isSeeking = true;
+                mEventEmitter.receiveEvent(getId(), Events.EVENT_BUFFER_START.toString(), null);
+                break;
+            case StatusCode.PLAY_INFO_BUFFERING_END://500005
+                //缓冲结束
+                mEventEmitter.receiveEvent(getId(), Events.EVENT_BUFFER_END.toString(), null);
+                break;
+            case StatusCode.PLAY_INFO_VIDEO_RENDERING_START://500006
+                //渲染第一帧完成
+                mEventEmitter.receiveEvent(getId(), Events.EVENT_VIDEO_RENDING_START.toString(), null);
+                break;
+            case StatusCode.PLAY_INFO_VIDEO_BUFFERPERCENT://600006
+                //视频缓冲时的进度，开始转圈
+                WritableMap event = Arguments.createMap();
+                event.putDouble(EVENT_PROP_VIDEO_BUFF, bundle.containsKey(EVENT_PROP_VIDEO_BUFF) ? bundle.getInt(EVENT_PROP_VIDEO_BUFF) : 0);
+                mEventEmitter.receiveEvent(getId(), Events.EVENT_BUFFER_PERCENT.toString(), event);
+                break;
         }
+        return false;
+    }
+
+    /**
+     * 处理视频开始缓冲事件.
+     *
+     * @param what   the what
+     * @param bundle the extra
+     * @return the boolean
+     */
+    public boolean processPlayerLoading(int what, Bundle bundle) {
+        //视频缓冲时的进度，开始转圈
+        isSeeking = true;
+
+        WritableMap event = Arguments.createMap();
+        event.putDouble(EVENT_PROP_VIDEO_BUFF, (bundle != null && bundle.containsKey(EVENT_PROP_VIDEO_BUFF)) ? bundle.getInt(EVENT_PROP_VIDEO_BUFF) : 0);
+        mEventEmitter.receiveEvent(getId(), Events.EVENT_BUFFER_PERCENT.toString(), event);
+        return false;
+    }
+
+    /**
+     * 处理视频Seek完毕
+     *
+     * @param what   the what
+     * @param bundle the extra
+     * @return the boolean
+     */
+    public boolean processSeekComplete(int what, Bundle bundle) {
+        //视频缓冲时的进度，开始转圈
+        mEventEmitter.receiveEvent(getId(), Events.EVENT_SEEK_COMPLETE.toString(), null);
         return false;
     }
 
     /**
      * Process buffering update.
      *
-     * @param percent the percent
+     * @param what   the what
+     * @param bundle the extra
+     * @return the boolean
      */
-    public void processBufferingUpdate(int percent) {
-        mVideoBufferedDuration = percent;
+    public void processBufferingUpdate(int what, Bundle bundle) {
+        // 正常播放状态
+        isSeeking = false;
+
+        mVideoBufferedDuration = bundle.getInt(PlayerParams.KEY_PLAY_BUFFERPERCENT);
         //mVideoBufferedDuration = (int) Math.round((double) (mVideoDuration * percent) / 100.0);
     }
 
     /**
-     * Process completion.
+     * 处理播放完成事件
+     *
+     * @param what   the what
+     * @param bundle the extra
+     * @return the boolean
      */
-    public void processCompletion() {
+    public void processCompletion(int what, Bundle bundle) {
         isCompleted = true;
         mEventEmitter.receiveEvent(getId(), Events.EVENT_END.toString(), null);
     }
 
     /**
-     * Process player error boolean.
+     * 播放器出错
      *
-     * @param what  the what
-     * @param extra the extra
+     * @param what   the what
+     * @param bundle the extra
      * @return the boolean
      */
-    public boolean processPlayerError(int what, int extra) {
+    public boolean processPlayerError(int what, Bundle bundle) {
         WritableMap error = Arguments.createMap();
         error.putInt(EVENT_PROP_WHAT, what);
-        error.putInt(EVENT_PROP_EXTRA, extra);
+        error.putInt(EVENT_PROP_EXTRA, -1);
         WritableMap event = Arguments.createMap();
         event.putMap(EVENT_PROP_ERROR, error);
         mEventEmitter.receiveEvent(getId(), Events.EVENT_ERROR.toString(), event);
@@ -343,48 +385,61 @@ public class LeVideoView extends RelativeLayout implements LifecycleEventListene
     }
 
     /**
-     * Seek to.
+     * 视频Seek到某一位置
      *
      * @param msec the msec
      */
     public void seekTo(int msec) {
 
-        if (mMediaPlayerValid) {
+        if (mLePlayerValid) {
+
             WritableMap event = Arguments.createMap();
-            event.putDouble(EVENT_PROP_CURRENT_TIME, mMediaPlayer.getCurrentPosition() / 1000.0);
+            event.putDouble(EVENT_PROP_CURRENT_TIME, mLePlayer.getCurrentPosition() / 1000.0);
             event.putDouble(EVENT_PROP_SEEK_TIME, msec / 1000.0);
             mEventEmitter.receiveEvent(getId(), Events.EVENT_SEEK.toString(), event);
 
-            mMediaPlayer.seekTo(msec);
+            mLePlayer.seekTo(msec);
             if (isCompleted && mVideoDuration != 0 && msec < mVideoDuration) {
                 isCompleted = false;
+                mLePlayer.retry();
             }
         }
     }
 
     /**
-     * Sets paused modifier.
+     * 设置视频暂停和启动
      *
-     * @param paused the paused
+     * @param paused paused
      */
     public void setPausedModifier(final boolean paused) {
         mPaused = paused;
-        if (!mMediaPlayerValid) {
+        if (!mLePlayerValid) {
             return;
         }
+
         if (mPaused) {
-            if (mMediaPlayer.isPlaying()) {
-                mMediaPlayer.onPause();
+            if (mLePlayer.isPlaying()) {
+                mLePlayer.onPause();
+
+                WritableMap event = Arguments.createMap();
+                event.putDouble(EVENT_PROP_DURATION, mVideoDuration / 1000.0);
+                event.putDouble(EVENT_PROP_CURRENT_TIME, mLePlayer.getCurrentPosition() / 1000.0);
+                mEventEmitter.receiveEvent(getId(), Events.EVENT_PAUSE.toString(), event);
             }
         } else {
-            if (!mMediaPlayer.isPlaying()) {
-                mMediaPlayer.onStart();
+            if (!mLePlayer.isPlaying()) {
+                mLePlayer.onStart();
+
+                WritableMap event = Arguments.createMap();
+                event.putDouble(EVENT_PROP_DURATION, mVideoDuration / 1000.0);
+                event.putDouble(EVENT_PROP_CURRENT_TIME, mLePlayer.getCurrentPosition() / 1000.0);
+                mEventEmitter.receiveEvent(getId(), Events.EVENT_RESUME.toString(), event);
             }
         }
     }
 
     /**
-     * Apply modifiers.
+     * 根据当前状态设置播放器
      */
     public void applyModifiers() {
         setPausedModifier(mPaused);
@@ -395,8 +450,17 @@ public class LeVideoView extends RelativeLayout implements LifecycleEventListene
      * 处理播放器本身事件，具体事件可以参见IPlayer类
      */
     private void handlePlayerEvent(int state, Bundle bundle) {
-        Log.d("handlePlayerEvent", "state " + state + " bundle " + bundle);
+        boolean handled = false;
+        String event = "";
         switch (state) {
+
+            case PlayerEvent.PLAY_INIT:
+                // 播放器初始化
+                handled = true;
+                event = "PLAY_INIT";
+
+                //processPlayerInit(PlayerEvent.PLAY_INIT, bundle);
+                break;
 
             case PlayerEvent.PLAY_VIDEOSIZE_CHANGED:
                 /**
@@ -404,44 +468,72 @@ public class LeVideoView extends RelativeLayout implements LifecycleEventListene
                  * 如果不按照视频的比例进行显示的话，(以surfaceView为例子)内容会填充整个surfaceView。
                  * 意味着你的surfaceView显示的内容有可能是拉伸的
                  */
+                handled = true;
+                event = "PLAY_VIDEOSIZE_CHANGED";
+
+                //processVideoSizeChanged(PlayerEvent.PLAY_VIDEOSIZE_CHANGED, bundle);
                 break;
 
             case PlayerEvent.PLAY_PREPARED: //播放器准备完毕
                 // 播放器准备完成
-                processPrepared();
+                handled = true;
+                event = "PLAY_PREPARED";
+
+                processPrepared(PlayerEvent.PLAY_PREPARED, bundle);
                 break;
 
             case PlayerEvent.PLAY_INFO:
                 // 获取播放器状态
-                processPlayerInfo(bundle.getInt(PlayerParams.KEY_RESULT_STATUS_CODE), 0);
+                handled = true;
+                event = "PLAY_INFO";
+
+                processPlayerInfo(PlayerEvent.PLAY_INFO, bundle);
                 break;
 
             case PlayerEvent.PLAY_LOADINGSTART:
                 // 开始缓冲视频
-                processPlayerInfo(StatusCode.PLAY_INFO_BUFFERING_START, 0);
+                handled = true;
+                event = "PLAY_LOADINGSTART";
+
+                processPlayerLoading(PlayerEvent.PLAY_LOADINGSTART, bundle);
                 break;
 
             case PlayerEvent.PLAY_BUFFERING:
                 // 获取视频加载值
-                processBufferingUpdate(bundle.getInt(PlayerParams.KEY_PLAY_BUFFERPERCENT));
+                handled = true;
+                event = "PLAY_BUFFERING";
+
+                processBufferingUpdate(PlayerEvent.PLAY_BUFFERING, bundle);
                 break;
 
-            case PlayerEvent.PLAY_SEEK_COMPLETE:
+            case PlayerEvent.PLAY_SEEK_COMPLETE: //209
                 // 用户跳转完毕
+                handled = true;
+                event = "PLAY_SEEK_COMPLETE";
+
+                processSeekComplete(PlayerEvent.PLAY_SEEK_COMPLETE, bundle);
                 break;
 
 
-            case PlayerEvent.PLAY_COMPLETION:
+            case PlayerEvent.PLAY_COMPLETION://202
                 // 播放完毕
-                processCompletion();
+                handled = true;
+                event = "PLAY_COMPLETION";
+
+                processCompletion(PlayerEvent.PLAY_COMPLETION, bundle);
                 break;
 
 
-            case PlayerEvent.PLAY_ERROR:
+            case PlayerEvent.PLAY_ERROR://205
                 //播放出错
-                processPlayerError(PlayerEvent.PLAY_ERROR, 0);
+                handled = true;
+                event = "PLAY_ERROR";
+
+                processPlayerError(PlayerEvent.PLAY_ERROR, bundle);
 
         }
+        if (handled)
+            Log.d("播放器事件", "event " + event + " state " + state + " bundle " + bundle);
     }
 
 
@@ -449,100 +541,131 @@ public class LeVideoView extends RelativeLayout implements LifecycleEventListene
      * 处理直播类事件
      */
     private void handleLiveEvent(int state, Bundle bundle) {
-        Log.d("handleLiveEvent", "handleLiveEvent:state " + state + " bundle " + bundle);
+        boolean handled = false;
+        String event = "";
         switch (state) {
 
             case PlayerEvent.MEDIADATA_LIVE:
                 // 处理媒资返回直播对应数据
+                handled = true;
+                event = "MEDIADATA_LIVE";
+
                 break;
 
             case PlayerEvent.MEDIADATA_ACTION:
                 // 处理媒资返回活动直播对应数据
+                handled = true;
+                event = "MEDIADATA_ACTION";
+
                 break;
 
             case PlayerEvent.MEDIADATA_GET_PLAYURL:
                 // 处理调度返回（直播、活动直播）对应数据
+                handled = true;
+                event = "MEDIADATA_GET_PLAYURL";
+
                 break;
 
         }
+        if (handled)
+            Log.d("直播事件", "event " + event + " state " + state + " bundle " + bundle);
     }
 
     /**
      * 处理视频信息类事件
      */
     private void handleVideoInfoEvent(int state, Bundle bundle) {
-        Log.d("handleVideoInfoEvent", "handleVideoInfoEvent:state " + state + " bundle " + bundle);
+        boolean handled = false;
+        String event = "";
         switch (state) {
 
             case PlayerEvent.VIEW_PREPARE_VIDEO_SURFACE:
                 // 添加了视频播放器SurfaceView
+                handled = true;
+                event = "VIEW_PREPARE_VIDEO_SURFACE";
+
                 break;
 
-            case PlayerEvent.MEDIADATA_LIVE:
-                // 处理媒资返回直播对应数据
-                break;
+            case PlayerEvent.VIEW_PREPARE_AD_SURFACE:
+                // 添加了广告播放器SurfaceView
+                handled = true;
+                event = "VIEW_PREPARE_AD_SURFACE";
 
-            case PlayerEvent.MEDIADATA_ACTION:
-                // 处理媒资返回活动直播对应数据
                 break;
 
             case PlayerEvent.MEDIADATA_GET_PLAYURL:
                 // 处理调度返回（直播、活动直播）对应数据
+                handled = true;
+                event = "MEDIADATA_GET_PLAYURL";
+
                 break;
 
         }
+        if (handled)
+            Log.d("视频信息事件", "event " + event + " state " + state + " bundle " + bundle);
     }
 
     /**
      * 处理广告类事件
      */
     private void handleAdEvent(int state, Bundle bundle) {
-        Log.d("handleAdEvent", "handleAdEvent:state " + state + " bundle " + bundle);
+        boolean handled = false;
+        String event = "";
         switch (state) {
-
-            case PlayerEvent.VIEW_PREPARE_AD_SURFACE:
-                // 添加了广告播放器SurfaceView
-                break;
 
             case PlayerEvent.AD_START:
                 // 广告开始播放
+                handled = true;
+                event = "AD_START";
+
                 break;
 
             case PlayerEvent.AD_COMPLETE:
                 // 广告结束播放
+                handled = true;
+                event = "AD_COMPLETE";
+
                 break;
 
             case PlayerEvent.AD_PROGRESS:
                 // 广告播放进度
+                handled = true;
+                event = "AD_PROGRESS";
+
                 break;
 
             case PlayerEvent.AD_ERROR:
                 // 广告播放错误
+                handled = true;
+                event = "AD_ERROR";
+
                 break;
 
             default:
                 break;
         }
+        if (handled)
+            Log.d("广告事件", "event " + event + " state " + state + " bundle " + bundle);
     }
 
     @Override
     public void onHostResume() {
-        if (mMediaPlayer != null) {
-            mMediaPlayer.onResume();
+        if (mLePlayer != null) {
+            mLePlayer.onResume();
         }
     }
 
     @Override
     public void onHostPause() {
-        if (mMediaPlayer != null) {
-            mMediaPlayer.onPause();
+        if (mLePlayer != null) {
+            mLePlayer.onPause();
         }
     }
 
     @Override
     public void onHostDestroy() {
-        if (mMediaPlayer != null) {
-            mMediaPlayer.onDestroy();
+        if (mLePlayer != null) {
+            mLePlayer.onDestroy();
         }
     }
 }

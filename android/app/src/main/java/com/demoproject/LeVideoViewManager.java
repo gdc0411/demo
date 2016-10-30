@@ -1,3 +1,9 @@
+/*************************************************************************
+ * Description: 乐视视频播放组件
+ * Author: raojia
+ * Mail: raojia@le.com
+ * Created Time: 2016-10-30
+ ************************************************************************/
 package com.demoproject;
 
 import android.os.Bundle;
@@ -91,11 +97,6 @@ public class LeVideoViewManager extends SimpleViewManager<LeVideoView> {
 //                "ScaleAspectFit", Integer.toString(ScalableType.FIT_CENTER.ordinal()),
 //                "ScaleAspectFill", Integer.toString(ScalableType.CENTER_CROP.ordinal())
 //        );
-//    }
-
-//    @ReactProp(name = PROP_PLAY_MODE)
-//    public void setDataPlayMode(final LeVideoView videoView, int playMode) {
-//        videoView.setPlayMode(playMode);
 //    }
 
 
