@@ -41,7 +41,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
- * The type Le video view.
+ * Created by JiaRao on 2016/31/10.
  */
 public class LeVideoView extends RelativeLayout implements LifecycleEventListener {
 

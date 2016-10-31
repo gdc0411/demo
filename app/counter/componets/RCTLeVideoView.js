@@ -1,5 +1,5 @@
 /*************************************************************************
- * Description: 乐视云SDK播放RN组件
+ * Description: SDK组件
  * Author: raojia
  * Mail: raojia@le.com
  * Created Time: 2016-10-30
@@ -22,7 +22,7 @@ const styles = StyleSheet.create({
 });
 
 /**
- * 封装LeSDK播放器 
+ * 封装LeSDK播放器
  * @export
  * @class Video
  * @extends {Component}
@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
 export default class Video extends Component {
 
     /**
-     * 设置组件别名     
+     * 设置组件别名
      * @param {any} component 组件名
      * @memberOf Video
      */
@@ -39,7 +39,7 @@ export default class Video extends Component {
     };
 
     /**
-     * 设置封装属性映射为Native属性     
+     * 设置封装属性映射为Native属性
      * @param {any} nativeProps 原生属性
      * @memberOf Video
      */
@@ -47,7 +47,7 @@ export default class Video extends Component {
         this._root.setNativeProps(nativeProps);
     }
 
-    /** 
+    /**
      * 设置视频seek到某一时间点
      * @param {any} time 时间点
      * @memberOf Video
@@ -160,7 +160,7 @@ export default class Video extends Component {
      * @param {any} event 原生回调句柄
      * @memberOf Video
      */
-    _onStartBuffer = (event) => {        
+    _onStartBuffer = (event) => {
         if (this.props.onStartBuffer) {
             this.props.onStartBuffer(event.nativeEvent);
         }

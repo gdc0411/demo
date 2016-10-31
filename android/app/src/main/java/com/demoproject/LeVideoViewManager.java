@@ -20,7 +20,7 @@ import java.util.Map;
 import javax.annotation.Nullable;
 
 /**
- * Created by LizaRao on 2016/21/10.
+ * Created by JiaRao on 2016/31/10.
  */
 public class LeVideoViewManager extends SimpleViewManager<LeVideoView> {
 

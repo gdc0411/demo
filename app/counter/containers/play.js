@@ -1,5 +1,5 @@
 /*************************************************************************
- * Description: 乐视云SDK播放RN组件实例
+ * Description: SDK组件示例
  * Author: raojia
  * Mail: raojia@le.com
  * Created Time: 2016-10-30
@@ -44,7 +44,7 @@ class VideoPlayer extends Component {
 
     /**
      * 获得视频当前播放百分比
-     * @returns     
+     * @returns
      * @memberOf VideoPlayer
      */
     getCurrentTimePercentage() {
@@ -59,7 +59,7 @@ class VideoPlayer extends Component {
     /**
      * 渲染声音，设置声音
      * @param {any} volume 声音
-     * @returns     
+     * @returns
      * @memberOf VideoPlayer
      */
     renderVolumeControl(volume) {
@@ -81,7 +81,7 @@ class VideoPlayer extends Component {
         //网络地址
         const uri = { uri: "http://cache.utovr.com/201601131107187320.mp4", pano: false, hasSkin: false };
         //标准点播
-        //const vod = { playMode: 10000, uuid: "838389", vuid: "200271100", businessline: "102", saas: true, pano: false, hasSkin: false }; //Demo示例，有广告 
+        //const vod = { playMode: 10000, uuid: "838389", vuid: "200271100", businessline: "102", saas: true, pano: false, hasSkin: false }; //Demo示例，有广告
         const vod = { playMode: 10000, uuid: "847695", vuid: "200323369", businessline: "102", saas: true, pano: false, hasSkin: false }; //乐视云测试数据
         //const vod = { playMode: 10000, uuid: "841215", vuid: "300184109", businessline: "102", saas: true, pano: false, hasSkin: false };  //川台数据
         //活动直播
@@ -90,9 +90,8 @@ class VideoPlayer extends Component {
         return (
             <View style={styles.container}>
                 <TouchableOpacity style={styles.fullScreen} onPress={() => { this.setState({ paused: !this.state.paused }); } }>
-                    <RCTLeVideoView
+                    <RCTLeVideoView style={styles.fullScreen}
                         source={vod}
-                        style={styles.fullScreen}
                         paused={this.state.paused}
                         seek={this.state.seek}
                         onLoadSource={(data) => { this.setState({ sourceInfo: `视频源: ${data.src}` }); } }
