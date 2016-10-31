@@ -153,10 +153,12 @@ public class LeVideoViewManager extends SimpleViewManager<LeVideoView> {
 
     }
 
+
     @ReactProp(name = PROP_PAUSED, defaultBoolean = false)
     public void setPaused(final LeVideoView videoView, final boolean paused) {
         videoView.setPausedModifier(paused);
     }
+
 
     @ReactProp(name = PROP_SEEK)
     public void setSeek(final LeVideoView videoView, final float seek) {

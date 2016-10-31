@@ -68,6 +68,17 @@ export default class Video extends Component {
     };
 
     /**
+     * 处理获取播放器尺寸的事件
+     * @param {any} event 原生回调句柄
+     * @memberOf Video
+     */
+    _onSizeChange = (event) => {
+        if (this.props.onSizeChange) {
+            this.props.onSizeChange(event.nativeEvent);
+        }
+    };
+
+    /**
      * 处理视频准备完成的事件
      * @param {any} event 原生回调句柄
      * @memberOf Video
@@ -178,6 +189,17 @@ export default class Video extends Component {
     };
 
     /**
+     * 处理视频总体缓存进度的事件
+     * @param {any} event 原生回调句柄
+     * @memberOf Video
+     */
+    _onPlayablePercent = (event) => {
+        if (this.props.onPlayablePercent) {
+            this.props.onPlayablePercent(event.nativeEvent);
+        }
+    };
+
+    /**
      * 处理视频渲染第一帧完成的事件
      * @param {any} event 原生回调句柄
      * @memberOf Video
@@ -196,6 +218,106 @@ export default class Video extends Component {
     _onBuffPercent = (event) => {
         if (this.props.onBufferPercent) {
             this.props.onBufferPercent(event.nativeEvent);
+        }
+    };
+
+
+    /**
+     * 处理广告开始的事件
+     * @param {any} event 原生回调句柄
+     * @memberOf Video
+     */
+    _onAdStart = (event) => {
+        if (this.props.onAdStart) {
+            this.props.onAdStart(event.nativeEvent);
+        }
+    };
+
+    /**
+     * 处理广告完成的事件
+     * @param {any} event 原生回调句柄
+     * @memberOf Video
+     */
+    _onAdComplete = (event) => {
+        if (this.props.onAdComplete) {
+            this.props.onAdComplete(event.nativeEvent);
+        }
+    };
+
+    /**
+     * 处理广告正在播放的事件
+     * @param {any} event 原生回调句柄
+     * @memberOf Video
+     */
+    _onAdProgress = (event) => {
+        if (this.props.onAdProgress) {
+            this.props.onAdProgress(event.nativeEvent);
+        }
+    };
+
+    /**
+     * 处理广告出错的事件
+     * @param {any} event 原生回调句柄
+     * @memberOf Video
+     */
+    _onAdError = (event) => {
+        if (this.props.onAdError) {
+            this.props.onAdError(event.nativeEvent);
+        }
+    };
+
+    /**
+     * 处理获取媒资点播数据事件
+     * @param {any} event 原生回调句柄
+     * @memberOf Video
+     */
+    _onMMSVodLoad = (event) => {
+        if (this.props.onMMSVodLoad) {
+            this.props.onMMSVodLoad(event.nativeEvent);
+        }
+    };
+
+    /**
+     * 处理获取媒资直播数据事件
+     * @param {any} event 原生回调句柄
+     * @memberOf Video
+     */
+    _onMMSLiveLoad = (event) => {
+        if (this.props.onMMSLiveLoad) {
+            this.props.onMMSLiveLoad(event.nativeEvent);
+        }
+    };
+
+    /**
+     * 处理获取媒资活动直播数据事件
+     * @param {any} event 原生回调句柄
+     * @memberOf Video
+     */
+    _onMMSActionLoad = (event) => {
+        if (this.props.onMMSActionLoad) {
+            this.props.onMMSActionLoad(event.nativeEvent);
+        }
+    };
+
+    /**
+     * 处理获取调度服务返回的数据（直播、点播等）事件
+     * @param {any} event 原生回调句柄
+     * @memberOf Video
+     */
+    _onMMSPlayURLLoad = (event) => {
+        if (this.props.onMMSPlayURLLoad) {
+            this.props.onMMSPlayURLLoad(event.nativeEvent);
+        }
+    };
+
+    /**
+     * 处理其他未定义的事件
+     * @param {any} event 原生回调句柄
+     * @memberOf Video
+     */
+    _onOtherEvent = (event) => {
+        if (this.props.onOtherEvent) {
+            this.props.onOtherEvent(event.nativeEvent);
         }
     };
 
@@ -228,6 +350,7 @@ export default class Video extends Component {
             onSourceLoad: this._onLoadSource,
             /*播放相关*/
             onVideoLoad: this._onLoad,
+            onVideoSizeChange: this._onSizeChange,
             onVideoError: this._onError,
             onVideoProgress: this._onProgress,
             onVideoSeek: this._onSeek,
@@ -235,11 +358,24 @@ export default class Video extends Component {
             onVideoEnd: this._onEnd,
             onVideoPause: this._onPause,
             onVideoResume: this._onResume,
+            onVideoRendingStart: this._onStartRending,
+            onVideoBufferPercent: this._onPlayablePercent,
+            /*媒资相关*/
+            onMediaVodLoad: this._onMMSVodLoad,
+            onMediaLiveLoad: this._onMMSLiveLoad,
+            onMediaActionLoad: this._onMMSActionLoad,
+            onMediaPlayURLLoad: this._onMMSPlayURLLoad,
+            /*广告相关*/
+            onAdvertStart: this._onAdStart,
+            onAdvertProgress: this._onAdProgress,
+            onAdvertComplete: this._onAdComplete,
+            onAdvertError: this._onAdError,
             /*缓冲相关*/
             onBufferStart: this._onStartBuffer,
             onBufferEnd: this._onEndBuffer,
-            onVideoRendingStart: this._onStartRending,
             onBufferPercent: this._onBuffPercent,
+            /*其他事件相关*/
+            onOtherEventInfo: this._onOtherEvent,
         });
 
         return (
@@ -264,6 +400,8 @@ Video.propTypes = {
 
     /* 数据源设置完毕回调 */
     onLoadSource: PropTypes.func,
+    /* 视频尺寸获得回调 */
+    onSizeChange: PropTypes.func,
     /* 播放加载完成回调 */
     onLoad: PropTypes.func,
     /* 播放错误回调 */
@@ -282,6 +420,8 @@ Video.propTypes = {
     onResume: PropTypes.func,
     /* 播放码率设置改变回调 */
     onPlaybackRateChange: PropTypes.func,
+    /* 播放总体缓冲进度回调 */
+    onPlayablePercent: PropTypes.func,
 
     /* 缓冲开始 */
     onStartBuffer: PropTypes.func,
@@ -291,6 +431,21 @@ Video.propTypes = {
     onStartRending: PropTypes.func,
     /* 视频缓冲进度，百分比 */
     onBuffPercent: PropTypes.func,
+
+    /*媒资相关*/
+    onMMSVodLoad: PropTypes.func,
+    onMMSLiveLoad: PropTypes.func,
+    onMMSActionLoad: PropTypes.func,
+    onMMSPlayURLLoad: PropTypes.func,
+
+    /*广告相关*/
+    onAdStart: PropTypes.func,
+    onAdProgress: PropTypes.func,
+    onAdComplete: PropTypes.func,
+    onAdError: PropTypes.func,
+
+    /*其他事件*/
+    onOtherEvent: PropTypes.func,
 
     /* Required by react-native */
     scaleX: PropTypes.number,

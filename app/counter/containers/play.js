@@ -25,6 +25,9 @@ class VideoPlayer extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            /* 视频真实尺寸 */
+            width: -1,
+            height: -1,
             /* 暂停/播放状态 */
             paused: false,
             /* 跳转 */
@@ -35,10 +38,19 @@ class VideoPlayer extends Component {
             duration: 0.0,
             /* 视频当前时间点 */
             currentTime: 0.0,
+            /* 视频已缓冲百分比 */
+            buffPercent: 0,
+
             /* 播放源信息 */
             sourceInfo: '',
+            /* 视频信息 */
+            videoInfo: '',
+            /* 媒资信息 */
+            mediaInfo: '',
             /* 事件信息 */
             eventInfo: '',
+            /* 广告信息 */
+            advertInfo: '',
         };
     }
 
@@ -81,8 +93,8 @@ class VideoPlayer extends Component {
         //网络地址
         const uri = { uri: "http://cache.utovr.com/201601131107187320.mp4", pano: false, hasSkin: false };
         //标准点播
-        //const vod = { playMode: 10000, uuid: "838389", vuid: "200271100", businessline: "102", saas: true, pano: false, hasSkin: false }; //Demo示例，有广告
-        const vod = { playMode: 10000, uuid: "847695", vuid: "200323369", businessline: "102", saas: true, pano: false, hasSkin: false }; //乐视云测试数据
+        const vod = { playMode: 10000, uuid: "838389", vuid: "200271100", businessline: "102", saas: true, pano: false, hasSkin: false }; //Demo示例，有广告
+        //const vod = { playMode: 10000, uuid: "847695", vuid: "200323369", businessline: "102", saas: true, pano: false, hasSkin: false }; //乐视云测试数据
         //const vod = { playMode: 10000, uuid: "841215", vuid: "300184109", businessline: "102", saas: true, pano: false, hasSkin: false };  //川台数据
         //活动直播
         const live = { playMode: 10002, actionId: "A2016062700000gx", usehls: false, customerId: "838389", businessline: "102", cuid: "", utoken: "", pano: false, hasSkin: false };
@@ -95,8 +107,10 @@ class VideoPlayer extends Component {
                         paused={this.state.paused}
                         seek={this.state.seek}
                         onLoadSource={(data) => { this.setState({ sourceInfo: `视频源: ${data.src}` }); } }
+                        onSizeChange={(data) => { this.setState({ width: data.width, height: data.height, videoInfo: `实际宽高:${data.width}，${data.height}` }); } }
                         onLoad={(data) => { this.setState({ duration: data.duration, eventInfo: 'Player准备完毕' }); } }
                         onProgress={(data) => { this.setState({ currentTime: data.currentTime, eventInfo: `播放中…… ${data.currentTime}/${data.duration}` }); } }
+                        onPlayablePercent = {(data) => { this.setState({ buffPercent: data.bufferpercent }); } }
                         onStartBuffer={() => { this.setState({ eventInfo: '缓冲开始！' }); } }
                         onBufferPercent={(data) => { this.setState({ eventInfo: `缓冲中…… ${data.videobuff}%` }); } }
                         onEndBuffer={() => { this.setState({ eventInfo: '缓冲完毕！' }); } }
@@ -105,6 +119,13 @@ class VideoPlayer extends Component {
                         onSeekComplete={(data) => { this.setState({ eventInfo: `跳转完毕！` }); } }
                         onPause={(data) => { this.setState({ eventInfo: `暂停…… ${data.currentTime}/${data.duration}` }); } }
                         onEnd={() => { this.setState({ eventInfo: '播放完毕！' }); } }
+                        onAdStart={() => { this.setState({ advertInfo: '广告开始！' }); } }
+                        onAdProgress={(data) => { this.setState({ advertInfo: `广告播放中……倒计时${data.AdTime}` }); } }
+                        onAdComplete={() => { this.setState({ advertInfo: `广告结束！` }); } }
+                        onMMSVodLoad={(data) => { this.setState({ mediaInfo: `点播媒资：status_code=${data.status_code},data=${data.data},http_code=${data.http_code}` }); } }
+                        onMMSLiveLoad={(data) => { this.setState({ mediaInfo: `直播媒资：${data}` }); } }
+                        onMMSActionLoad={(data) => { this.setState({ mediaInfo: `活动直播：${data}` }); } }
+                        onMMSPlayURLLoad={(data) => { this.setState({ mediaInfo: `媒资调度：${data}` }); } }
                         />
                 </TouchableOpacity>
 
@@ -116,8 +137,23 @@ class VideoPlayer extends Component {
                             </Text>
                         </View>
                         <View style={styles.bufferDisplay}>
+                            <Text style={[styles.DisplayOption, { color: 'blue' }]}>
+                                {this.state.videoInfo}
+                            </Text>
+                        </View>
+                        <View style={styles.bufferDisplay}>
+                            <Text style={[styles.DisplayOption, { color: 'red' }]}>
+                                {this.state.eventInfo} 已缓冲{this.state.buffPercent}%
+                            </Text>
+                        </View>
+                        <View style={styles.bufferDisplay}>
                             <Text style={[styles.DisplayOption, { color: 'green' }]}>
-                                {this.state.eventInfo}
+                                {this.state.advertInfo}
+                            </Text>
+                        </View>
+                        <View style={styles.bufferDisplay}>
+                            <Text style={[styles.DisplayOption, { color: 'yellow' }]}>
+                                {this.state.mediaInfo}
                             </Text>
                         </View>
                     </View>
@@ -173,7 +209,7 @@ const styles = StyleSheet.create({
         backgroundColor: "transparent",
         borderRadius: 5,
         position: 'absolute',
-        bottom: 60,
+        bottom: 100,
         left: 20,
         right: 20,
     },
@@ -187,6 +223,10 @@ const styles = StyleSheet.create({
         height: 20,
         backgroundColor: '#cccccc',
     },
+    innerProgressBuffered: {
+        height: 20,
+        backgroundColor: '#cfe2f3',
+    },
     innerProgressRemaining: {
         height: 20,
         backgroundColor: '#2C2C2C',
@@ -196,7 +236,7 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
         borderRadius: 4,
         overflow: 'hidden',
-        paddingBottom: 15,
+        paddingBottom: 20,
     },
     bufferDisplay: {
         flex: 1,
