@@ -6,7 +6,9 @@
  ************************************************************************/
 package com.demoproject;
 
+import android.app.Activity;
 import android.content.Context;
+import android.graphics.PixelFormat;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
@@ -14,6 +16,7 @@ import android.util.Log;
 import android.view.View;
 
 
+import android.view.WindowManager;
 import android.widget.RelativeLayout;
 
 import com.demoproject.utils.VideoLayoutParams;
@@ -225,11 +228,15 @@ public class LeVideoView extends RelativeLayout implements LifecycleEventListene
     // 创建播放器及监听
     private void initLePlayerIfNeeded() {
         if (mLeVideoView == null) {
-
             mLePlayerValid = false;
+
             //创建播放器和播放容器
             View.inflate(mThemedReactContext, R.layout.video_play, this);
             Context ctx = mThemedReactContext.getBaseContext();
+
+            ((Activity)ctx).getWindow().setFormat(PixelFormat.TRANSLUCENT);
+            ((Activity)ctx).getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
             switch (mPlayMode) {
                 case PlayerParams.VALUE_PLAYER_LIVE: {
                     mLeVideoView = mHasSkin ? (mPano ? new UICPPanoLiveVideoView(ctx)
@@ -410,10 +417,7 @@ public class LeVideoView extends RelativeLayout implements LifecycleEventListene
         } else {
             if (!mLeVideoView.isPlaying()) {//播放中
 
-                if(isSeeking)
-                    mLeVideoView.retry();
-                else
-                    mLeVideoView.onStart();
+                mLeVideoView.onStart();
 
                 WritableMap event = Arguments.createMap();
                 event.putDouble(EVENT_PROP_DURATION, mVideoDuration / 1000.0);
@@ -472,7 +476,7 @@ public class LeVideoView extends RelativeLayout implements LifecycleEventListene
         WritableMap naturalSize = Arguments.createMap();
         naturalSize.putInt(EVENT_PROP_WIDTH, mLeVideoView.getVideoWidth());
         naturalSize.putInt(EVENT_PROP_HEIGHT, mLeVideoView.getVideoHeight());
-        //Log.d("视频尺寸", "长度" + mVideoDuration + "宽" + mLeVideoView.getVideoWidth() + "高" + mLeVideoView.getVideoHeight());
+
         if (mLeVideoView.getVideoWidth() > mLeVideoView.getVideoHeight())
             naturalSize.putString(EVENT_PROP_ORIENTATION, "landscape");
         else
@@ -484,6 +488,7 @@ public class LeVideoView extends RelativeLayout implements LifecycleEventListene
         event.putMap(EVENT_PROP_NATURALSIZE, naturalSize);
         mEventEmitter.receiveEvent(getId(), Events.EVENT_LOAD.toString(), event);
 
+        // 执行播放器控制
         applyModifiers();
 
     }
@@ -565,6 +570,7 @@ public class LeVideoView extends RelativeLayout implements LifecycleEventListene
      * @return boolean
      */
     public void processVideoSizeChanged(int what, Bundle bundle) {
+
         WritableMap event = Arguments.createMap();
         event.putInt(EVENT_PROP_WIDTH, (bundle != null && bundle.containsKey(PlayerParams.KEY_WIDTH)) ? bundle.getInt(PlayerParams.KEY_WIDTH) : -1);
         event.putInt(EVENT_PROP_HEIGHT, (bundle != null && bundle.containsKey(PlayerParams.KEY_HEIGHT)) ? bundle.getInt(PlayerParams.KEY_HEIGHT) : -1);
@@ -998,6 +1004,7 @@ public class LeVideoView extends RelativeLayout implements LifecycleEventListene
         if (mLeVideoView != null) {
             cleanupMediaPlayerResources();
             //cleanupLayoutState(this);
+            mLeVideoView.onDestroy();
         }
     }
 }
