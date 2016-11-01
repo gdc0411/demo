@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
 
+import com.demoproject.handler.CrashHandler;
 import com.facebook.react.ReactApplication;
 import com.letv.android.client.sdk.config.LeCloudPlayerConfig;
 import com.letv.android.client.sdk.listener.OnInitCmfListener;

@@ -1,5 +1,8 @@
 package com.demoproject;
 
+import android.content.Context;
+
+import com.letv.android.client.sdk.player.IPlayer;
 import com.letv.android.client.sdk.videoview.base.BaseMediaDataVideoView;
 
 /**
@@ -7,4 +10,12 @@ import com.letv.android.client.sdk.videoview.base.BaseMediaDataVideoView;
  */
 
 public class LeBaseMediaDataVideoView extends BaseMediaDataVideoView {
+    public LeBaseMediaDataVideoView(Context context) {
+        super(context);
+    }
+
+    public IPlayer getPlayer() {
+        return player;
+    }
+
 }

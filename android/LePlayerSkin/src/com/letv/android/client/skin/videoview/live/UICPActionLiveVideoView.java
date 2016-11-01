@@ -1,6 +1,7 @@
 package com.letv.android.client.skin.videoview.live;
 
 import com.letv.android.client.cp.sdk.player.live.CPActionLivePlayer;
+import com.letv.android.client.sdk.player.IPlayer;
 
 import android.content.Context;
 
@@ -15,4 +16,9 @@ public class UICPActionLiveVideoView extends UIActionLiveVideoView{
     protected void initPlayer() {
         player = new CPActionLivePlayer(context);
     }
+
+    public IPlayer getPlayer() {
+        return player;
+    }
+
 }

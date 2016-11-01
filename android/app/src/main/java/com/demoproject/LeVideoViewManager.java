@@ -60,6 +60,8 @@ public class LeVideoViewManager extends SimpleViewManager<LeVideoView> {
     public static final String PROP_PAUSED = "paused";
     // 快进方法
     public static final String PROP_SEEK = "seek";
+    // 切换码率
+    public static final String PROP_RATE = "rate";
 
 
     @Override
@@ -162,7 +164,12 @@ public class LeVideoViewManager extends SimpleViewManager<LeVideoView> {
 
     @ReactProp(name = PROP_SEEK)
     public void setSeek(final LeVideoView videoView, final float seek) {
-        videoView.seekTo(Math.round(seek * 1000.0f));
+        videoView.seekTo(seek);
+    }
+
+    @ReactProp(name = PROP_RATE)
+    public void setRate(final LeVideoView videoView, final String rate) {
+        videoView.setRate(rate);
     }
 
 }

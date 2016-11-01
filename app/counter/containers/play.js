@@ -32,6 +32,8 @@ class VideoPlayer extends Component {
             paused: false,
             /* 跳转 */
             seek: 0,
+            /* 播放码率 */
+            rate: '',
             /* 播放音量 */
             volume: 1,
             /* 视频总长度 */
@@ -45,6 +47,8 @@ class VideoPlayer extends Component {
             sourceInfo: '',
             /* 视频信息 */
             videoInfo: '',
+            /* 码率列表信息 */
+            ratesInfo: [],
             /* 媒资信息 */
             mediaInfo: '',
             /* 事件信息 */
@@ -52,6 +56,55 @@ class VideoPlayer extends Component {
             /* 广告信息 */
             advertInfo: '',
         };
+
+        this.onRateListLoad = this.onRateListLoad.bind(this);
+    }
+
+
+    /**
+     * 获得视频可选的码率
+     * @param {any} data
+     * @memberOf VideoPlayer
+     */
+    onRateListLoad(data) {
+        var arr = data.rateList;
+        this.setState({ ratesInfo: arr });
+        //alert(this.state.ratesInfo);
+        for (var i = 0; i < arr.length; i++) {
+            console.log(`key:${arr[i].key},value:${arr[i].value}`);
+        }
+    }
+
+    /**
+     * 渲染码率控件，设置码率
+     * @param {any} volume 码率
+     * @returns
+     * @memberOf VideoPlayer
+     */
+    renderRateControl(rate) {
+        const isSelected = (this.state.rate == rate);
+        let rateName = '';
+        switch (rate) {
+            case '21':
+                rateName = ' 标清 ';
+                break;
+            case '13':
+                rateName = ' 高清 ';
+                break;
+            case '22':
+                rateName = ' 超清 ';
+                break;
+            default:
+                break;
+        }
+        // if( this.state.ratesInfo.length > 0 ) alert(this.state.ratesInfo );
+        return (
+            <TouchableOpacity onPress={() => { this.setState({ rate: rate }); } }>
+                <Text style={[styles.controlOption, { fontWeight: isSelected ? "bold" : "normal" }]}>
+                    {rateName}
+                </Text>
+            </TouchableOpacity>
+        );
     }
 
     /**
@@ -67,25 +120,6 @@ class VideoPlayer extends Component {
         }
     }
 
-
-    /**
-     * 渲染声音，设置声音
-     * @param {any} volume 声音
-     * @returns
-     * @memberOf VideoPlayer
-     */
-    renderVolumeControl(volume) {
-        const isSelected = (this.state.volume == volume);
-
-        return (
-            <TouchableOpacity onPress={() => { this.setState({ volume: volume }); } }>
-                <Text style={[styles.controlOption, { fontWeight: isSelected ? "bold" : "normal" }]}>
-                    {volume * 100}%
-                </Text>
-            </TouchableOpacity>
-        );
-    }
-
     render() {
         const flexCompleted = this.getCurrentTimePercentage() * 100;
         const flexRemaining = (1 - this.getCurrentTimePercentage()) * 100;
@@ -93,9 +127,10 @@ class VideoPlayer extends Component {
         //网络地址
         const uri = { uri: "http://cache.utovr.com/201601131107187320.mp4", pano: false, hasSkin: false };
         //标准点播
-        const vod = { playMode: 10000, uuid: "838389", vuid: "200271100", businessline: "102", saas: true, pano: false, hasSkin: false }; //Demo示例，有广告
-        //const vod = { playMode: 10000, uuid: "847695", vuid: "200323369", businessline: "102", saas: true, pano: false, hasSkin: false }; //乐视云测试数据
+        //const vod = { playMode: 10000, uuid: "838389", vuid: "200271100", businessline: "102", saas: true, pano: false, hasSkin: false }; //Demo示例，有广告
+        const vod = { playMode: 10000, uuid: "847695", vuid: "200323369", businessline: "102", saas: true, pano: false, hasSkin: false }; //乐视云测试数据
         //const vod = { playMode: 10000, uuid: "841215", vuid: "300184109", businessline: "102", saas: true, pano: false, hasSkin: false };  //川台数据
+        // const vod = { playMode: 10000, uuid: "819108", vuid: "200644549", businessline: "102", saas: true, pano: false, hasSkin: false };  //川台数据,艳秋提供带广告
         //活动直播
         const live = { playMode: 10002, actionId: "A2016062700000gx", usehls: false, customerId: "838389", businessline: "102", cuid: "", utoken: "", pano: false, hasSkin: false };
 
@@ -106,8 +141,10 @@ class VideoPlayer extends Component {
                         source={vod}
                         paused={this.state.paused}
                         seek={this.state.seek}
+                        rate={this.state.rate}
                         onLoadSource={(data) => { this.setState({ sourceInfo: `视频源: ${data.src}` }); } }
                         onSizeChange={(data) => { this.setState({ width: data.width, height: data.height, videoInfo: `实际宽高:${data.width}，${data.height}` }); } }
+                        onRateLoad={this.onRateListLoad}
                         onLoad={(data) => { this.setState({ duration: data.duration, eventInfo: 'Player准备完毕' }); } }
                         onProgress={(data) => { this.setState({ currentTime: data.currentTime, eventInfo: `播放中…… ${data.currentTime}/${data.duration}` }); } }
                         onPlayablePercent = {(data) => { this.setState({ buffPercent: data.bufferpercent }); } }
@@ -118,6 +155,7 @@ class VideoPlayer extends Component {
                         onSeek={(data) => { this.setState({ eventInfo: `跳转到……${data.currentTime}+${data.seekTime}` }); } }
                         onSeekComplete={(data) => { this.setState({ eventInfo: `跳转完毕！` }); } }
                         onPause={(data) => { this.setState({ eventInfo: `暂停…… ${data.currentTime}/${data.duration}` }); } }
+                        onResume={(data) => { this.setState({ eventInfo: `恢复播放…… ${data.currentTime}/${data.duration}` }); } }
                         onEnd={() => { this.setState({ eventInfo: '播放完毕！' }); } }
                         onAdStart={() => { this.setState({ advertInfo: '广告开始！' }); } }
                         onAdProgress={(data) => { this.setState({ advertInfo: `广告播放中……倒计时${data.AdTime}` }); } }
@@ -138,7 +176,8 @@ class VideoPlayer extends Component {
                         </View>
                         <View style={styles.bufferDisplay}>
                             <Text style={[styles.DisplayOption, { color: 'blue' }]}>
-                                {this.state.videoInfo}
+                                {this.state.videoInfo} -
+                                {this.state.rateListInfo}
                             </Text>
                         </View>
                         <View style={styles.bufferDisplay}>
@@ -162,9 +201,9 @@ class VideoPlayer extends Component {
                 <View style={styles.controls}>
                     <View style={styles.generalControls}>
                         <View style={styles.volumeControl}>
-                            {this.renderVolumeControl(0.5) }
-                            {this.renderVolumeControl(1) }
-                            {this.renderVolumeControl(1.5) }
+                            {this.renderRateControl('21') }
+                            {this.renderRateControl('13') }
+                            {this.renderRateControl('22') }
                         </View>
                     </View>
 
@@ -256,7 +295,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         borderRadius: 4,
         overflow: 'hidden',
-        paddingBottom: 10,
+        paddingBottom: 20,
     },
     rateControl: {
         flex: 1,
@@ -276,7 +315,7 @@ const styles = StyleSheet.create({
     },
     controlOption: {
         alignSelf: 'center',
-        fontSize: 11,
+        fontSize: 12,
         color: "white",
         paddingLeft: 2,
         paddingRight: 2,

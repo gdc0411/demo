@@ -56,6 +56,16 @@ export default class Video extends Component {
         this.setNativeProps({ seek: time });
     };
 
+
+    /**
+     * 设置视频码率切换到某一值
+     * @param {any} value 码率值
+     * @memberOf Video
+     */
+    rate = (value) => {
+        this.setNativeProps({ rate: value });
+    };
+
     /**
      * 处理数据源加载完成事件
      * @param {any} event 原生回调句柄
@@ -75,6 +85,17 @@ export default class Video extends Component {
     _onSizeChange = (event) => {
         if (this.props.onSizeChange) {
             this.props.onSizeChange(event.nativeEvent);
+        }
+    };
+
+    /**
+     * 处理获取可选码率的事件
+     * @param {any} event 原生回调句柄
+     * @memberOf Video
+     */
+    _onRateLoad = (event) => {
+        if (this.props.onRateLoad) {
+            this.props.onRateLoad(event.nativeEvent);
         }
     };
 
@@ -185,6 +206,17 @@ export default class Video extends Component {
     _onEndBuffer = (event) => {
         if (this.props.onEndBuffer) {
             this.props.onEndBuffer(event.nativeEvent);
+        }
+    };
+
+    /**
+     * 处理码率切换完成的事件
+     * @param {any} event 原生回调句柄
+     * @memberOf Video
+     */
+    _onRateChange = (event) => {
+        if (this.props.onRateChange) {
+            this.props.onRateChange(event.nativeEvent);
         }
     };
 
@@ -351,6 +383,7 @@ export default class Video extends Component {
             /*播放相关*/
             onVideoLoad: this._onLoad,
             onVideoSizeChange: this._onSizeChange,
+            onVideoRateLoad: this._onRateLoad,
             onVideoError: this._onError,
             onVideoProgress: this._onProgress,
             onVideoSeek: this._onSeek,
@@ -360,6 +393,7 @@ export default class Video extends Component {
             onVideoResume: this._onResume,
             onVideoRendingStart: this._onStartRending,
             onVideoBufferPercent: this._onPlayablePercent,
+            onVideoRateChange: this._onRateChange,
             /*媒资相关*/
             onMediaVodLoad: this._onMMSVodLoad,
             onMediaLiveLoad: this._onMMSLiveLoad,
@@ -393,6 +427,8 @@ Video.propTypes = {
     src: PropTypes.object,
     /* 跳转到时间点 */
     seek: PropTypes.number,
+    /* 设置视频码率 */
+    rate: PropTypes.string,
 
     /* 组件属性 */
     /* 暂停或播放 */
@@ -404,6 +440,9 @@ Video.propTypes = {
     onSizeChange: PropTypes.func,
     /* 播放加载完成回调 */
     onLoad: PropTypes.func,
+    /* 可选码率列表加载完成回调 */
+    onRateLoad: PropTypes.func,
+
     /* 播放错误回调 */
     onError: PropTypes.func,
     /* 播放进行回调 */
@@ -422,6 +461,8 @@ Video.propTypes = {
     onPlaybackRateChange: PropTypes.func,
     /* 播放总体缓冲进度回调 */
     onPlayablePercent: PropTypes.func,
+    /* 播放码率切换的回调 */
+    onRateChange: PropTypes.func,
 
     /* 缓冲开始 */
     onStartBuffer: PropTypes.func,
@@ -461,5 +502,6 @@ const RCTLeVideoView = requireNativeComponent('RCTLeVideoView', Video, {
     nativeOnly: {
         src: true,
         seek: true,
+        rate: true,
     },
 });
