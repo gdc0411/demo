@@ -151,6 +151,17 @@ class VideoPlayer extends Component {
         );
     }
 
+    renderBrightnessControl(brightness) {
+        const isSelected = (this.state.brightness == brightness);
+        return (
+            <TouchableOpacity onPress={() => { this.setState({ brightness: brightness }); } }>
+                <Text style={[styles.controlOption, { fontWeight: isSelected ? "bold" : "normal" }]}>
+                    {brightness}%
+                </Text>
+            </TouchableOpacity>
+        );
+    }
+
     /**
      * 获得视频当前播放百分比
      * @returns
@@ -187,7 +198,7 @@ class VideoPlayer extends Component {
                         seek={this.state.seek}
                         rate={this.state.rate}
                         volume={this.state.volume}
-                        borderRadius={this.state.brightness}
+                        brightness={this.state.brightness}
                         onSourceLoad={(data) => { this.setState({ sourceInfo: `视频源: ${data.src}` }); } }
                         onLoad={this.onLoad}
                         onProgress={(data) => { this.setState({ currentTime: data.currentTime, eventInfo: `播放中…… ${data.currentTime}/${data.duration}` }); } }
@@ -204,10 +215,6 @@ class VideoPlayer extends Component {
                         onAdStart={() => { this.setState({ advertInfo: '广告开始！' }); } }
                         onAdProgress={(data) => { this.setState({ advertInfo: `广告播放中……倒计时${data.AdTime}` }); } }
                         onAdComplete={() => { this.setState({ advertInfo: `广告结束！` }); } }
-                        onMMSVodLoad={(data) => { this.setState({ mediaInfo: `点播媒资：status_code=${data.status_code},data=${data.data},http_code=${data.http_code}` }); } }
-                        onMMSLiveLoad={(data) => { this.setState({ mediaInfo: `直播媒资：${data}` }); } }
-                        onMMSActionLoad={(data) => { this.setState({ mediaInfo: `活动直播：${data}` }); } }
-                        onMMSPlayURLLoad={(data) => { this.setState({ mediaInfo: `媒资调度：${data}` }); } }
                         />
                 </TouchableOpacity>
 
@@ -220,8 +227,7 @@ class VideoPlayer extends Component {
                         </View>
                         <View style={styles.bufferDisplay}>
                             <Text style={[styles.DisplayOption, { color: 'yellow' }]}>
-                                {this.state.videoInfo} -
-                                {this.state.rateListInfo}
+                                {this.state.videoInfo}
                             </Text>
                         </View>
                         <View style={styles.bufferDisplay}>
@@ -232,11 +238,6 @@ class VideoPlayer extends Component {
                         <View style={styles.bufferDisplay}>
                             <Text style={[styles.DisplayOption, { color: 'green' }]}>
                                 {this.state.advertInfo}
-                            </Text>
-                        </View>
-                        <View style={styles.bufferDisplay}>
-                            <Text style={[styles.DisplayOption, { color: 'blue' }]}>
-                                {this.state.mediaInfo}
                             </Text>
                         </View>
                     </View>
@@ -255,6 +256,12 @@ class VideoPlayer extends Component {
                         {this.renderVolumeControl(40) }
                         {this.renderVolumeControl(60) }
                         {this.renderVolumeControl(100) }
+                    </View>
+
+                    <View style={styles.volumeControl}>
+                        {this.renderBrightnessControl(55) }
+                        {this.renderBrightnessControl(155) }
+                        {this.renderBrightnessControl(255) }
                     </View>
 
                     <View style={styles.trackingControls}>
@@ -338,6 +345,7 @@ const styles = StyleSheet.create({
         color: "white",
         paddingLeft: 2,
         paddingRight: 2,
+        paddingBottom: 20,
         lineHeight: 12,
     },
     generalControls: {

@@ -81,8 +81,7 @@ public class ScreenBrightnessManager {
         }
 
         Window localWindow = activity.getWindow();
-        WindowManager.LayoutParams localLayoutParams = localWindow
-                .getAttributes();
+        WindowManager.LayoutParams localLayoutParams = localWindow.getAttributes();
         float f = paramInt / 255.0F;
         localLayoutParams.screenBrightness = f;
         localWindow.setAttributes(localLayoutParams);
