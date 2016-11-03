@@ -1,4 +1,4 @@
-package com.demoproject;
+package com.demoproject.sample;
 
 import com.facebook.react.bridge.Callback;
 import com.facebook.react.bridge.ReactApplicationContext;

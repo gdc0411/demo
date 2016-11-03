@@ -1,9 +1,8 @@
-package com.demoproject;
+package com.demoproject.sample;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.provider.ContactsContract;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.facebook.react.bridge.ReactApplicationContext;

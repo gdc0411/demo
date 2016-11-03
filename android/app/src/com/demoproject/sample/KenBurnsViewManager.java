@@ -1,9 +1,10 @@
-package com.demoproject;
+package com.demoproject.sample;
 
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.DrawableWrapper;
 
+import com.demoproject.R;
 import com.facebook.react.uimanager.SimpleViewManager;
 import com.facebook.react.uimanager.ThemedReactContext;
 import com.facebook.react.uimanager.annotations.ReactProp;

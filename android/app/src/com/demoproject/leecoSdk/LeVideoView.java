@@ -4,7 +4,7 @@
  * Mail: raojia@le.com
  * Created Time: 2016-10-30
  ************************************************************************/
-package com.demoproject;
+package com.demoproject.leecoSdk;
 
 import android.app.Activity;
 import android.content.Context;
@@ -19,14 +19,13 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.RelativeLayout;
 
-import com.demoproject.utils.VideoLayoutParams;
+import com.demoproject.R;
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.LifecycleEventListener;
 import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.uimanager.ThemedReactContext;
 import com.facebook.react.uimanager.events.RCTEventEmitter;
-import com.letv.android.client.sdk.api.md.entity.live.Stream;
 import com.letv.android.client.sdk.constant.PlayerEvent;
 import com.letv.android.client.sdk.constant.PlayerParams;
 import com.letv.android.client.sdk.constant.StatusCode;
@@ -52,7 +51,7 @@ import java.util.Map;
 public class LeVideoView extends RelativeLayout implements LifecycleEventListener {
 
     public enum Events {
-        EVENT_LOAD_SOURCE("onSourceLoad"), // 传入数据源
+        EVENT_LOAD_SOURCE("onVideoSourceLoad"), // 传入数据源
         EVENT_CHANGESIZE("onVideoSizeChange"), // 视频真实宽高
         EVENT_LOAD_RATE("onVideoRateLoad"), // 视频码率列表
         EVENT_LOAD("onVideoLoad"), // 播放器准备完毕
@@ -205,7 +204,7 @@ public class LeVideoView extends RelativeLayout implements LifecycleEventListene
         mThemedReactContext.addLifecycleEventListener(this);
 
         //创建播放器及监听
-        //initLePlayerIfNeeded();
+        initLePlayerIfNeeded();
         //setSurfaceTextureListener(this);
 
         //创建播放更新进度线程
@@ -655,7 +654,8 @@ public class LeVideoView extends RelativeLayout implements LifecycleEventListene
     public void processMediaVodLoad(int what, Bundle bundle) {
         WritableMap event = Arguments.createMap();
         event.putInt(EVENT_PROP_STAT_CODE, (bundle != null && bundle.containsKey(EVENT_PROP_STAT_CODE)) ? bundle.getInt(EVENT_PROP_STAT_CODE) : -1);
-        event.putString(EVENT_PROP_RET_DATA, (bundle != null && bundle.containsKey(EVENT_PROP_RET_DATA)) ? bundle.getString(EVENT_PROP_RET_DATA) : "");
+        event.putString(EVENT_PROP_RET_DATA,"");
+//        event.putString(EVENT_PROP_RET_DATA, (bundle != null && bundle.containsKey(EVENT_PROP_RET_DATA)) ? bundle.getString(EVENT_PROP_RET_DATA) : "");
         event.putInt(EVENT_PROP_HTTP_CODE, (bundle != null && bundle.containsKey(EVENT_PROP_HTTP_CODE)) ? bundle.getInt(EVENT_PROP_HTTP_CODE) : -1);
         mEventEmitter.receiveEvent(getId(), Events.EVENT_MEDIA_VOD.toString(), event);
     }
@@ -924,7 +924,6 @@ public class LeVideoView extends RelativeLayout implements LifecycleEventListene
             case PlayerEvent.AD_TIME:  // 广告？？？？  7004
                 handled = true;
                 event = "AD_TIME";
-
                 break;
 
             case PlayerEvent.AD_START:  // 广告开始播放 7005

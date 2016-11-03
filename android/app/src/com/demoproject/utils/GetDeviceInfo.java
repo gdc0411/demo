@@ -1,4 +1,4 @@
-package com.demoproject.handler;
+package com.demoproject.utils;
 
 import android.content.Context;
 import android.view.WindowManager;

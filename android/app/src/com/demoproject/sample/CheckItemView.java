@@ -1,4 +1,4 @@
-package com.demoproject;
+package com.demoproject.sample;
 
 import android.content.Context;
 import android.util.AttributeSet;
@@ -6,6 +6,8 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import com.demoproject.R;
 
 /**
  * Created by LizaRao on 2016/9/5.

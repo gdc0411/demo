@@ -4,7 +4,7 @@
  * Mail: raojia@le.com
  * Created Time: 2016-10-30
  ************************************************************************/
-package com.demoproject;
+package com.demoproject.leecoSdk;
 
 import android.os.Bundle;
 

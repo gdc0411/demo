@@ -1,5 +1,13 @@
 package com.demoproject;
 
+import com.demoproject.leecoSdk.LeVideoViewManager;
+import com.demoproject.sample.CallbackModule;
+import com.demoproject.sample.CheckItemViewManager;
+import com.demoproject.sample.ConstModule;
+import com.demoproject.sample.EmbedModule;
+import com.demoproject.sample.KenBurnsViewManager;
+import com.demoproject.sample.PromiseModule;
+import com.demoproject.sample.RJNativeModule;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.bridge.JavaScriptModule;
 import com.facebook.react.bridge.NativeModule;
@@ -44,6 +52,8 @@ public class RJReactPackage implements ReactPackage {
         viewManagers.add(new KenBurnsViewManager());
         viewManagers.add(new CheckItemViewManager());
         viewManagers.add(new LeVideoViewManager());
+//        viewManagers.add(new VideoViewManager());
+
         return viewManagers;
     }
 }

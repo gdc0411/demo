@@ -1,9 +1,9 @@
-package com.demoproject.utils;
+package com.demoproject.leecoSdk;
 
 import android.content.Context;
 import android.widget.RelativeLayout;
 
-import com.demoproject.handler.GetDeviceInfo;
+import com.demoproject.utils.GetDeviceInfo;
 
 
 /**

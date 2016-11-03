@@ -1,8 +1,10 @@
-package com.demoproject;
+package com.demoproject.sample;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+
+import com.demoproject.R;
 
 public class VodSDKActivity extends AppCompatActivity {
 
