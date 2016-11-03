@@ -66,6 +66,25 @@ export default class Video extends Component {
         this.setNativeProps({ rate: value });
     };
 
+
+    /**
+     * 设置视频音量百分比（0-100）
+     * @param {any} percent 音量
+     * @memberOf Video
+     */
+    volume = (percent) => {
+        this.setNativeProps({ volume: percent });
+    };
+
+    /**
+     * 设置视频音量百分比（0-100）
+     * @param {any} percent 音量
+     * @memberOf Video
+     */
+    brightness = (value) => {
+        this.setNativeProps({ brightness: value });
+    };
+
     /**
      * 处理数据源加载完成事件
      * @param {any} event 原生回调句柄
@@ -429,6 +448,10 @@ Video.propTypes = {
     seek: PropTypes.number,
     /* 设置视频码率 */
     rate: PropTypes.string,
+    /* 设置音量百分比 */
+    volume: PropTypes.number,
+    /* 设置亮度值0-255 */
+    brightness: PropTypes.number,
 
     /* 组件属性 */
     /* 暂停或播放 */
@@ -500,8 +523,6 @@ Video.propTypes = {
 
 const RCTLeVideoView = requireNativeComponent('RCTLeVideoView', Video, {
     nativeOnly: {
-        src: true,
-        seek: true,
-        rate: true,
+        src: true, seek: true, rate: true, volume: true, brightness: true,
     },
 });

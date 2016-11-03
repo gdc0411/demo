@@ -6,6 +6,7 @@
  ************************************************************************/
 package com.demoproject.leecoSdk;
 
+import android.app.Activity;
 import android.os.Bundle;
 
 import com.facebook.react.bridge.ReadableMap;
@@ -63,6 +64,15 @@ public class LeVideoViewManager extends SimpleViewManager<LeVideoView> {
     // 切换码率
     public static final String PROP_RATE = "rate";
 
+    // 音量调节
+    private static final String PROP_VOLUME = "volume";
+
+    // 屏幕亮度调节
+    private static final String PROP_BRIGHTNESS = "brightness";
+
+
+    private ThemedReactContext mReactContext;
+
 
     @Override
     public String getName() {
@@ -71,7 +81,8 @@ public class LeVideoViewManager extends SimpleViewManager<LeVideoView> {
 
     @Override
     protected LeVideoView createViewInstance(ThemedReactContext reactContext) {
-        return new LeVideoView(reactContext);
+        mReactContext = reactContext;
+        return new LeVideoView(mReactContext);
     }
 
     @Override
@@ -171,6 +182,16 @@ public class LeVideoViewManager extends SimpleViewManager<LeVideoView> {
     @ReactProp(name = PROP_RATE)
     public void setRate(final LeVideoView videoView, final String rate) {
         videoView.setRate(rate);
+    }
+
+    @ReactProp(name = PROP_VOLUME)
+    public void setVolume(final LeVideoView videoView, final int volume) {
+        videoView.setVolume(volume);
+    }
+
+    @ReactProp(name = PROP_BRIGHTNESS)
+    public void setBrightness(final LeVideoView videoView, final int brightness) {
+        videoView.setScreenBrightness((Activity) mReactContext.getBaseContext(), brightness);
     }
 
 }

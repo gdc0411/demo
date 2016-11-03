@@ -41,7 +41,6 @@ public class MainActivity extends ReactActivity implements DefaultHardwareBackBt
     @Override
     protected void onPause() {
         super.onPause();
-
     }
 
     @Override

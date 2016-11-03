@@ -35,7 +35,9 @@ class VideoPlayer extends Component {
             /* 播放码率 */
             rate: '',
             /* 播放音量 */
-            volume: 1,
+            volume: 50,
+            /* 屏幕亮度 */
+            brightness: 50,
             /* 视频总长度 */
             duration: 0.0,
             /* 视频当前时间点 */
@@ -89,14 +91,19 @@ class VideoPlayer extends Component {
         // alert('水印 target:'+(data.waterMarks)[0].target);
         // alert('水印 pos:'+(data.waterMarks)[0].pos);
 
+        // alert('音量：' + data.volume);
+        // alert('亮度：' + data.brightness);
+
         this.setState({
+            volume: data.volume,
+            brightness: data.brightness,
             duration: data.duration,
             width: data.naturalSize.width,
             height: data.naturalSize.height,
             ratesInfo: data.rateList,
             eventInfo: 'Player准备完毕',
             videoInfo: `片名：${data.title} 长度：${data.duration} 宽高:${data.naturalSize.width}，${data.naturalSize.height} \n`
-            + `码率：${ratesStr} 默认：${data.defaultRate} \n`
+            + `码率：${ratesStr} 默认：${data.defaultRate} \n音量：${data.volume} 亮度:${data.brightness} `
         });
 
     }
@@ -128,6 +135,17 @@ class VideoPlayer extends Component {
             <TouchableOpacity onPress={() => { this.setState({ rate: rate }); } }>
                 <Text style={[styles.controlOption, { fontWeight: isSelected ? "bold" : "normal" }]}>
                     {rateName}
+                </Text>
+            </TouchableOpacity>
+        );
+    }
+
+    renderVolumeControl(volume) {
+        const isSelected = (this.state.volume == volume);
+        return (
+            <TouchableOpacity onPress={() => { this.setState({ volume: volume }); } }>
+                <Text style={[styles.controlOption, { fontWeight: isSelected ? "bold" : "normal" }]}>
+                    {volume}%
                 </Text>
             </TouchableOpacity>
         );
@@ -168,6 +186,8 @@ class VideoPlayer extends Component {
                         paused={this.state.paused}
                         seek={this.state.seek}
                         rate={this.state.rate}
+                        volume={this.state.volume}
+                        borderRadius={this.state.brightness}
                         onSourceLoad={(data) => { this.setState({ sourceInfo: `视频源: ${data.src}` }); } }
                         onLoad={this.onLoad}
                         onProgress={(data) => { this.setState({ currentTime: data.currentTime, eventInfo: `播放中…… ${data.currentTime}/${data.duration}` }); } }
@@ -199,7 +219,7 @@ class VideoPlayer extends Component {
                             </Text>
                         </View>
                         <View style={styles.bufferDisplay}>
-                            <Text style={[styles.DisplayOption, { color: 'blue' }]}>
+                            <Text style={[styles.DisplayOption, { color: 'yellow' }]}>
                                 {this.state.videoInfo} -
                                 {this.state.rateListInfo}
                             </Text>
@@ -215,7 +235,7 @@ class VideoPlayer extends Component {
                             </Text>
                         </View>
                         <View style={styles.bufferDisplay}>
-                            <Text style={[styles.DisplayOption, { color: 'yellow' }]}>
+                            <Text style={[styles.DisplayOption, { color: 'blue' }]}>
                                 {this.state.mediaInfo}
                             </Text>
                         </View>
@@ -229,6 +249,12 @@ class VideoPlayer extends Component {
                             {this.renderRateControl('13') }
                             {this.renderRateControl('22') }
                         </View>
+                    </View>
+
+                    <View style={styles.volumeControl}>
+                        {this.renderVolumeControl(40) }
+                        {this.renderVolumeControl(60) }
+                        {this.renderVolumeControl(100) }
                     </View>
 
                     <View style={styles.trackingControls}>
@@ -330,6 +356,7 @@ const styles = StyleSheet.create({
         flex: 1,
         flexDirection: 'row',
         justifyContent: 'center',
+        paddingBottom: 20,
     },
     resizeModeControl: {
         flex: 1,
