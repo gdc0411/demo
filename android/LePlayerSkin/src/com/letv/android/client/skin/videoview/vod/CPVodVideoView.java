@@ -14,7 +14,6 @@ public class CPVodVideoView extends VodVideoView {
         super(context);
     }
 
-
     @Override
     protected void initPlayer() {
         player = new CPVodPlayer(context);

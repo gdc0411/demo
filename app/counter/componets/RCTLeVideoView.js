@@ -71,9 +71,9 @@ export default class Video extends Component {
      * @param {any} event 原生回调句柄
      * @memberOf Video
      */
-    _onLoadSource = (event) => {
-        if (this.props.onLoadSource) {
-            this.props.onLoadSource(event.nativeEvent);
+    _onSourceLoad = (event) => {
+        if (this.props.onSourceLoad) {
+            this.props.onSourceLoad(event.nativeEvent);
         }
     };
 
@@ -379,7 +379,7 @@ export default class Video extends Component {
                 uri: uri,
             },
             /* 回调函数赋值 */
-            onSourceLoad: this._onLoadSource,
+            onVideoSourceLoad: this._onSourceLoad,
             /*播放相关*/
             onVideoLoad: this._onLoad,
             onVideoSizeChange: this._onSizeChange,
@@ -435,7 +435,7 @@ Video.propTypes = {
     paused: PropTypes.bool,
 
     /* 数据源设置完毕回调 */
-    onLoadSource: PropTypes.func,
+    onSourceLoad: PropTypes.func,
     /* 视频尺寸获得回调 */
     onSizeChange: PropTypes.func,
     /* 播放加载完成回调 */

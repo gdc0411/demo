@@ -118,8 +118,8 @@ android {
 
     sourceSets {
         main {
-            manifest.srcFile 'src/main/AndroidManifest.xml'
-            java.srcDirs = ['src/main/java']
+            manifest.srcFile 'AndroidManifest.xml'
+            java.srcDirs = ['src']
             resources.srcDirs = ['src']
             aidl.srcDirs = ['src']
             renderscript.srcDirs = ['src']
@@ -159,13 +159,13 @@ android {
 }
 
 dependencies {
-    compile project(':react-native-code-push')
     compile fileTree(include: ['*.jar'], dir: 'libs')
+    compile project(':react-native-code-push')
+    compile project(':LePlayerSkin')
     compile 'com.android.support:appcompat-v7:23.0.1'
     compile 'com.facebook.react:react-native:+'
     // From node_modules
     compile 'com.flaviofaria:kenburnsview:1.0.7'
-    compile project(':LePlayerSkin')
 }
 
 // Run this once to be able to run the application with BUCK

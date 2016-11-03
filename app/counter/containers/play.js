@@ -57,22 +57,48 @@ class VideoPlayer extends Component {
             advertInfo: '',
         };
 
-        this.onRateListLoad = this.onRateListLoad.bind(this);
+        this.onLoad = this.onLoad.bind(this);
     }
 
 
     /**
-     * 获得视频可选的码率
+     * 获得视频和播放器初始信息
      * @param {any} data
      * @memberOf VideoPlayer
      */
-    onRateListLoad(data) {
-        var arr = data.rateList;
-        this.setState({ ratesInfo: arr });
-        //alert(this.state.ratesInfo);
+    onLoad(data) {
+
+        let ratesStr = '';
+        var arr = data.rateList; //获得码率列表
+        // alert(this.state.ratesInfo);
         for (var i = 0; i < arr.length; i++) {
-            console.log(`key:${arr[i].key},value:${arr[i].value}`);
+            ratesStr += `{${arr[i].rateKey},${arr[i].rateValue}}`;
         }
+
+        // 查看使用可以把下面注释去掉 raojia 2016/11/3
+        // //logo
+        // alert('logo pic:'+data.logo.pic);
+        // alert('logo target:'+data.logo.target);
+        // alert('logo pos:'+data.logo.pos);
+        // //loading
+        // alert('loading pic:'+data.loading.pic);
+        // alert('loading target:'+data.loading.target);
+        // alert('loading pos:'+data.loading.pos);
+        // //waterMark
+        // alert('水印 pic:'+(data.waterMarks)[0].pic);
+        // alert('水印 target:'+(data.waterMarks)[0].target);
+        // alert('水印 pos:'+(data.waterMarks)[0].pos);
+
+        this.setState({
+            duration: data.duration,
+            width: data.naturalSize.width,
+            height: data.naturalSize.height,
+            ratesInfo: data.rateList,
+            eventInfo: 'Player准备完毕',
+            videoInfo: `片名：${data.title} 长度：${data.duration} 宽高:${data.naturalSize.width}，${data.naturalSize.height} \n`
+            + `码率：${ratesStr} 默认：${data.defaultRate} \n`
+        });
+
     }
 
     /**
@@ -129,7 +155,7 @@ class VideoPlayer extends Component {
         //标准点播
         //const vod = { playMode: 10000, uuid: "838389", vuid: "200271100", businessline: "102", saas: true, pano: false, hasSkin: false }; //Demo示例，有广告
         const vod = { playMode: 10000, uuid: "847695", vuid: "200323369", businessline: "102", saas: true, pano: false, hasSkin: false }; //乐视云测试数据
-        //const vod = { playMode: 10000, uuid: "841215", vuid: "300184109", businessline: "102", saas: true, pano: false, hasSkin: false };  //川台数据
+        //  const vod = { playMode: 10000, uuid: "841215", vuid: "300184109", businessline: "102", saas: true, pano: false, hasSkin: false };  //川台数据
         // const vod = { playMode: 10000, uuid: "819108", vuid: "200644549", businessline: "102", saas: true, pano: false, hasSkin: false };  //川台数据,艳秋提供带广告
         //活动直播
         const live = { playMode: 10002, actionId: "A2016062700000gx", usehls: false, customerId: "838389", businessline: "102", cuid: "", utoken: "", pano: false, hasSkin: false };
@@ -142,10 +168,8 @@ class VideoPlayer extends Component {
                         paused={this.state.paused}
                         seek={this.state.seek}
                         rate={this.state.rate}
-                        onLoadSource={(data) => { this.setState({ sourceInfo: `视频源: ${data.src}` }); } }
-                        onSizeChange={(data) => { this.setState({ width: data.width, height: data.height, videoInfo: `实际宽高:${data.width}，${data.height}` }); } }
-                        onRateLoad={this.onRateListLoad}
-                        onLoad={(data) => { this.setState({ duration: data.duration, eventInfo: 'Player准备完毕' }); } }
+                        onSourceLoad={(data) => { this.setState({ sourceInfo: `视频源: ${data.src}` }); } }
+                        onLoad={this.onLoad}
                         onProgress={(data) => { this.setState({ currentTime: data.currentTime, eventInfo: `播放中…… ${data.currentTime}/${data.duration}` }); } }
                         onPlayablePercent = {(data) => { this.setState({ buffPercent: data.bufferpercent }); } }
                         onStartBuffer={() => { this.setState({ eventInfo: '缓冲开始！' }); } }
@@ -208,7 +232,7 @@ class VideoPlayer extends Component {
                     </View>
 
                     <View style={styles.trackingControls}>
-                        <TouchableOpacity onPress={() => { this.setState({ seek: this.state.currentTime + 50 }); } }>
+                        <TouchableOpacity onPress={() => { this.setState({ seek: this.state.currentTime + 30 }); } }>
                             <View style={styles.progress}>
                                 <View style={[styles.innerProgressCompleted, { flex: flexCompleted }]} />
                                 <View style={[styles.innerProgressRemaining, { flex: flexRemaining }]} />

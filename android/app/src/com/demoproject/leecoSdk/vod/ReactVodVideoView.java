@@ -352,13 +352,13 @@ public class ReactVodVideoView extends CPVodVideoView {
     }
 
 
-//    @Override
-//    protected void onInterceptVodMediaDataSuccess(int event, Bundle bundle) {
-//        Log.d(TAG, "媒资信息事件：event " + event + " bundle " + bundle);
-//        super.onInterceptVodMediaDataSuccess(event, bundle);
-//
-//        processVodMediaDataSuccess(event, bundle);
-//    }
+    @Override
+    protected void onInterceptVodMediaDataSuccess(int event, Bundle bundle) {
+        Log.d(TAG, "媒资信息事件：event " + event + " bundle " + bundle);
+        super.onInterceptVodMediaDataSuccess(event, bundle);
+
+        processVodMediaDataSuccess(event, bundle);
+    }
 
 
     @Override

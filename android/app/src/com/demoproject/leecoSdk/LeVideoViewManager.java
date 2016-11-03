@@ -167,6 +167,7 @@ public class LeVideoViewManager extends SimpleViewManager<LeVideoView> {
         videoView.seekTo(seek);
     }
 
+
     @ReactProp(name = PROP_RATE)
     public void setRate(final LeVideoView videoView, final String rate) {
         videoView.setRate(rate);
