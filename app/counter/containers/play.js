@@ -15,6 +15,10 @@ import {
     View,
     Dimensions,
 } from 'react-native';
+import { connect } from 'react-redux';
+import {bindActionCreators} from 'redux';
+
+import * as playActions from '../actions/playAction';
 
 //取得屏幕宽高
 const {height: SCREEN_HEIGHT, width: SCREEN_WIDTH} = Dimensions.get('window');
@@ -35,7 +39,7 @@ class VideoPlayer extends Component {
             /* 播放码率 */
             rate: '',
             /* 播放音量 */
-            volume: 50,
+            volume: 20,
             /* 屏幕亮度 */
             brightness: 50,
             /* 视频总长度 */
@@ -71,10 +75,14 @@ class VideoPlayer extends Component {
     onLoad(data) {
 
         let ratesStr = '';
+        // alert(this.props.params.source);
+
         var arr = data.rateList; //获得码率列表
         // alert(this.state.ratesInfo);
-        for (var i = 0; i < arr.length; i++) {
-            ratesStr += `{${arr[i].rateKey},${arr[i].rateValue}}`;
+        if (arr instanceof Array && arr.length > 0) {
+            for (var i = 0; i < arr.length; i++) {
+                ratesStr += `{${arr[i].rateKey},${arr[i].rateValue}}`;
+            }
         }
 
         // 查看使用可以把下面注释去掉 raojia 2016/11/3
@@ -105,7 +113,6 @@ class VideoPlayer extends Component {
             videoInfo: `片名：${data.title} 长度：${data.duration} 宽高:${data.naturalSize.width}，${data.naturalSize.height} \n`
             + `码率：${ratesStr} 默认：${data.defaultRate} \n音量：${data.volume} 亮度:${data.brightness} `
         });
-
     }
 
     /**
@@ -175,25 +182,54 @@ class VideoPlayer extends Component {
         }
     }
 
+    componentDidMount() {
+        //alert(this.props.datasource);
+    }
+
+    getFormatDatasource(key) {
+        let source;
+        switch (key) {
+            case '1': //点播 乐视云测试数据
+                source = { playMode: 10000, uuid: "847695", vuid: "200323369", businessline: "102", saas: true, pano: false, hasSkin: false };
+                break;
+
+            case '2': //点播 川台数据
+                source = { playMode: 10000, uuid: "841215", vuid: "300184109", businessline: "102", saas: true, pano: false, hasSkin: false };
+                break;
+
+            case '3': //点播  川台数据,艳秋提供带广告
+                source = { playMode: 10000, uuid: "819108", vuid: "200644549", businessline: "102", saas: true, pano: false, hasSkin: false };
+                break;
+
+            case '4': //点播 Demo示例，有广告
+                source = { playMode: 10000, uuid: "838389", vuid: "200271100", businessline: "102", saas: true, pano: false, hasSkin: false }; //
+                break;
+
+            case '5': //活动直播
+                source = { playMode: 10002, actionId: "A2016062700000gx", usehls: false, customerId: "838389", businessline: "102", cuid: "", utoken: "", pano: false, hasSkin: false };
+                break;
+
+            default: //网络或本地地址
+                source = { uri: "http://cache.utovr.com/201601131107187320.mp4", pano: false, hasSkin: false };
+                break;
+        }
+        // alert(source);
+        return source;
+    }
+
+
     render() {
         const flexCompleted = this.getCurrentTimePercentage() * 100;
         const flexRemaining = (1 - this.getCurrentTimePercentage()) * 100;
 
-        //网络地址
-        const uri = { uri: "http://cache.utovr.com/201601131107187320.mp4", pano: false, hasSkin: false };
-        //标准点播
-        //const vod = { playMode: 10000, uuid: "838389", vuid: "200271100", businessline: "102", saas: true, pano: false, hasSkin: false }; //Demo示例，有广告
-        const vod = { playMode: 10000, uuid: "847695", vuid: "200323369", businessline: "102", saas: true, pano: false, hasSkin: false }; //乐视云测试数据
-        //  const vod = { playMode: 10000, uuid: "841215", vuid: "300184109", businessline: "102", saas: true, pano: false, hasSkin: false };  //川台数据
-        // const vod = { playMode: 10000, uuid: "819108", vuid: "200644549", businessline: "102", saas: true, pano: false, hasSkin: false };  //川台数据,艳秋提供带广告
-        //活动直播
-        const live = { playMode: 10002, actionId: "A2016062700000gx", usehls: false, customerId: "838389", businessline: "102", cuid: "", utoken: "", pano: false, hasSkin: false };
+        const { src } = this.props.params;
+        const source = this.getFormatDatasource(src);
 
         return (
             <View style={styles.container}>
                 <TouchableOpacity style={styles.fullScreen} onPress={() => { this.setState({ paused: !this.state.paused }); } }>
                     <RCTLeVideoView style={styles.fullScreen}
-                        source={vod}
+                        source={source}
                         paused={this.state.paused}
                         seek={this.state.seek}
                         rate={this.state.rate}
@@ -273,6 +309,7 @@ class VideoPlayer extends Component {
                         </TouchableOpacity>
                     </View>
                 </View>
+
             </View >
         );
     }
@@ -383,4 +420,16 @@ const styles = StyleSheet.create({
 });
 
 
-export default VideoPlayer;
+//配置Map映射表，拿到自己关心的数据
+const mapStateToProps = state => ({
+    //state.xxx必须与reducer同名
+    datasource: state.play.datasource,
+});
+
+
+const mapDispatchToProps = dispatch => ({
+    actions: bindActionCreators(playActions, dispatch)
+});
+
+//连接Redux
+export default connect(mapStateToProps, mapDispatchToProps)(VideoPlayer);

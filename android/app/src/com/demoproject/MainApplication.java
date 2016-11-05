@@ -7,6 +7,8 @@ import android.content.SharedPreferences;
 import android.util.Log;
 
 import com.demoproject.handler.CrashHandler;
+import com.demoproject.leecoSdk.watermark.Constant;
+import com.demoproject.utils.LogUtils;
 import com.facebook.react.ReactApplication;
 import com.letv.android.client.sdk.config.LeCloudPlayerConfig;
 import com.letv.android.client.sdk.listener.OnInitCmfListener;
@@ -21,6 +23,8 @@ import java.util.Arrays;
 import java.util.List;
 
 public class MainApplication extends Application implements ReactApplication {
+
+    public static final String TAG = Constant.TAG;
 
 //    private static final RJReactPackage rjPackage = new RJReactPackage();
 //    public static RJReactPackage getRjPackage() {
@@ -44,6 +48,7 @@ public class MainApplication extends Application implements ReactApplication {
     @Override
     public void onCreate() {
         super.onCreate();
+        Log.d(TAG, LogUtils.getTraceInfo() + "Application start-------");
         String processName = getProcessName(this, android.os.Process.myPid());
         if (getApplicationInfo().packageName.equals(processName)) {
             //TODO CrashHandler是一个抓取崩溃log的工具类（可选）
@@ -52,7 +57,7 @@ public class MainApplication extends Application implements ReactApplication {
                 Class<?> clazzRuntime = Class.forName("dalvik.system.VMRuntime", false, ClassLoader.getSystemClassLoader());
                 Method methodGetRuntime = clazzRuntime.getDeclaredMethod("getRuntime");
                 Method methodIs64Bit = clazzRuntime.getDeclaredMethod("is64Bit");
-                Log.d("guan", "VM bits " + methodIs64Bit.invoke(methodGetRuntime.invoke(null)));
+                Log.d(TAG, "VM bits " + methodIs64Bit.invoke(methodGetRuntime.invoke(null)));
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
             } catch (NoSuchMethodException e) {
@@ -67,48 +72,55 @@ public class MainApplication extends Application implements ReactApplication {
             SharedPreferences preferences = getSharedPreferences("host", Context.MODE_PRIVATE);
             int host = preferences.getInt("host", LeCloudPlayerConfig.HOST_DEFAULT);
             try {
-            	LeCloudPlayerConfig.setHostType(host);
+                LeCloudPlayerConfig.setHostType(host);
                 LeCloudPlayerConfig.init(getApplicationContext());
                 LeCloudPlayerConfig.setmInitCmfListener(new OnInitCmfListener() {
                     @Override
                     public void onCdeStartSuccess() {
                         //cde启动成功
-                        Log.d("onCdeStartSuccess","onCdeStartSuccess -------");
+                        Log.d(TAG, LogUtils.getTraceInfo() + "onCdeStartSuccess -------");
 
                     }
+
                     @Override
                     public void onCdeStartFail() {
                         //cde启动失败
                         //如果使用remote版本则可能是remote下载失败
                         //如果使用普通版本，则可能是so文件加载失败导致
-                        Log.d("onCdeStartFail","onCdeStartFail -------");
+                        Log.d(TAG, LogUtils.getTraceInfo() + "onCdeStartFail -------");
 
                     }
+
                     @Override
                     public void onCmfCoreInitSuccess() {
                         //cde启动成功可以开始播放
-                        Log.d("onCmfCoreInitSuccess","onCmfCoreInitSuccess -------");
+                        Log.d(TAG, LogUtils.getTraceInfo() + "onCmfCoreInitSuccess -------");
 
                     }
+
                     @Override
                     public void onCmfCoreInitFail() {
                         //不包含cde的播放框架需要处理
-                        Log.d("onCmfCoreInitFail","onCmfCoreInitFail -------");
+                        Log.d(TAG, LogUtils.getTraceInfo() + "onCmfCoreInitFail -------");
                     }
+
                     @Override
                     public void onCmfDisconnected() {
                         //cde服务断开，会导致播放失败，重启一次服务
-                        Log.d("onCmfDisconnected","onCmfDisconnected -------");
+                        Log.d(TAG, LogUtils.getTraceInfo() + "onCmfDisconnected -------");
 
                         try {
                             LeCloudPlayerConfig.init(getApplicationContext());
+                            Log.d(TAG, LogUtils.getTraceInfo() + "LeCloudPlayerConfig init -------");
                         } catch (Exception e) {
+                            Log.e(TAG, LogUtils.getTraceInfo() + "LeCloudPlayerConfig exceptiong -------" + e);
                             e.printStackTrace();
                         }
                     }
                 });
             } catch (Exception e) {
                 // assets目录中必须放三个文件，否则报错
+                Log.e(TAG, "cde服务启动报错 exceptiong -------" + e);
                 e.printStackTrace();
             }
         }

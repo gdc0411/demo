@@ -19,6 +19,7 @@ public class VideoLayoutParams {
         params.width = width;
         params.height = height;
         params.addRule(RelativeLayout.CENTER_IN_PARENT);
+
         return params;
     }
 }

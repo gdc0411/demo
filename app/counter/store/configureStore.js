@@ -9,6 +9,7 @@ import rootReducer from '../reducers/reducer';
 
 const dev_env = (process.env.NODE_ENV !== 'production');
 const middleware = [thunk];
+// 用log显示Action变化
 // if (process.env.NODE_ENV !== 'production') {
 //     middleware.push(createLogger());
 // }
@@ -18,6 +19,7 @@ const enhancer = compose(
         ...middleware
         // other store enhancers if any
     ),
+    //使用RND Tools调试
     (global.reduxNativeDevTools) && dev_env ?
         global.reduxNativeDevTools(/*options*/) :
         noop => noop
@@ -33,8 +35,10 @@ const configureStore = preloadedState => createStore(
     enhancer
 );
 
+
 // If you have other enhancers & middlewares
 // update the store after creating / changing to allow devTools to use them
+//使用RND Tools调试
 if (global.reduxNativeDevTools && dev_env) {
     global.reduxNativeDevTools.updateStore(configureStore);
 }

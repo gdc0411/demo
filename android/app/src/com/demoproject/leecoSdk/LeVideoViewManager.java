@@ -8,7 +8,10 @@ package com.demoproject.leecoSdk;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 
+import com.demoproject.leecoSdk.watermark.Constant;
+import com.demoproject.utils.LogUtils;
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.common.MapBuilder;
 import com.facebook.react.uimanager.SimpleViewManager;
@@ -25,54 +28,91 @@ import javax.annotation.Nullable;
  */
 public class LeVideoViewManager extends SimpleViewManager<LeVideoView> {
 
+    //定义日志
+    public static final String TAG = Constant.TAG;
+
     // 组件名
-    public static final String REACT_CLASS = "RCTLeVideoView";
+    private static final String REACT_CLASS = "RCTLeVideoView";
 
-
-    //播放器模式
+    /**
+     * T播放器模式
+     */
     public static final String PROP_PLAY_MODE = PlayerParams.KEY_PLAY_MODE;
 
-    //URI数据源：本地或者在线
-    //复杂数据源
+    /**
+     * URI数据源：本地或者在线  复杂数据源
+     */
     public static final String PROP_SRC = "src";
-
-    //URI地址
+    /**
+     * URI地址
+     */
     public static final String PROP_URI = "uri";
 
     //点播模式
+    /**
+     * The constant PROP_SRC_VOD_UUID.
+     */
     public static final String PROP_SRC_VOD_UUID = PlayerParams.KEY_PLAY_UUID;
+    /**
+     * The constant PROP_SRC_VOD_VUID.
+     */
     public static final String PROP_SRC_VOD_VUID = PlayerParams.KEY_PLAY_VUID;
+    /**
+     * The constant PROP_SRC_VOD_BUSINESSLINE.
+     */
     public static final String PROP_SRC_VOD_BUSINESSLINE = PlayerParams.KEY_PLAY_BUSINESSLINE;
+    /**
+     * The constant PROP_SRC_VOD_SAAS.
+     */
     public static final String PROP_SRC_VOD_SAAS = "saas";
 
+
     //活动直播模式
+    /**
+     * The constant PROP_SRC_ALIVE_ACTIONID.
+     */
     public static final String PROP_SRC_ALIVE_ACTIONID = PlayerParams.KEY_PLAY_ACTIONID;
+    /**
+     * The constant PROP_SRC_ALIVE_CUSTOMERID.
+     */
     public static final String PROP_SRC_ALIVE_CUSTOMERID = PlayerParams.KEY_PLAY_CUSTOMERID;
+    /**
+     * The constant PROP_SRC_ALIVE_BUSINESSLINE.
+     */
     public static final String PROP_SRC_ALIVE_BUSINESSLINE = PlayerParams.KEY_PLAY_BUSINESSLINE;
+    /**
+     * The constant PROP_SRC_ALIVE_CUID.
+     */
     public static final String PROP_SRC_ALIVE_CUID = PlayerParams.KEY_ACTION_CUID;
+    /**
+     * The constant PROP_SRC_ALIVE_UTIOKEN.
+     */
     public static final String PROP_SRC_ALIVE_UTIOKEN = PlayerParams.KEY_ACTION_UTOKEN;
+    /**
+     * The constant PROP_SRC_ALIVE_IS_USEHLS.
+     */
     public static final String PROP_SRC_ALIVE_IS_USEHLS = PlayerParams.KEY_PLAY_USEHLS;
-    //是否全景
+    /**
+     * 是否全景
+     */
     public static final String PROP_SRC_IS_PANO = "pano";
-    //是否有皮肤
+    /**
+     * 是否有皮肤
+     */
     public static final String PROP_SRC_HAS_SKIN = "hasSkin";
 
     // 暂停方法
-    public static final String PROP_PAUSED = "paused";
+    private static final String PROP_PAUSED = "paused";
     // 快进方法
-    public static final String PROP_SEEK = "seek";
+    private static final String PROP_SEEK = "seek";
     // 切换码率
-    public static final String PROP_RATE = "rate";
-
+    private static final String PROP_RATE = "rate";
     // 音量调节
     private static final String PROP_VOLUME = "volume";
-
     // 屏幕亮度调节
     private static final String PROP_BRIGHTNESS = "brightness";
 
-
     private ThemedReactContext mReactContext;
-
 
     @Override
     public String getName() {
@@ -87,15 +127,16 @@ public class LeVideoViewManager extends SimpleViewManager<LeVideoView> {
 
     @Override
     public void onDropViewInstance(LeVideoView videoView) {
-        super.onDropViewInstance(videoView);
+        Log.d(TAG, LogUtils.getTraceInfo() + "生命周期事件 onDropViewInstance 调起！");
         videoView.cleanupMediaPlayerResources();
+        super.onDropViewInstance(videoView);
     }
 
     @Override
     @Nullable
     public Map getExportedCustomDirectEventTypeConstants() {
         MapBuilder.Builder builder = MapBuilder.builder();
-        for (LeVideoView.Events event : LeVideoView.Events.values()) {
+        for (Events event : Events.values()) {
             builder.put(event.toString(), MapBuilder.of("registrationName", event.toString()));
         }
         return builder.build();
@@ -113,6 +154,12 @@ public class LeVideoViewManager extends SimpleViewManager<LeVideoView> {
 //    }
 
 
+    /**
+     * 设置播放器数据源.
+     *
+     * @param videoView the video view
+     * @param src       the src
+     */
     @ReactProp(name = PROP_SRC)
     public void setDataSource(final LeVideoView videoView, @Nullable ReadableMap src) {
         if (src == null) {
@@ -157,7 +204,7 @@ public class LeVideoViewManager extends SimpleViewManager<LeVideoView> {
                 //未知播放类型则为URI
                 bundle = new Bundle();
                 bundle.putInt(PlayerParams.KEY_PLAY_MODE, PlayerParams.VALUE_PLAYER_VOD);
-                bundle.putString("path", src.hasKey(PROP_URI) ? src.getString(PROP_URI) :"http://cache.utovr.com/201601131107187320.mp4");
+                bundle.putString("path", src.hasKey(PROP_URI) ? src.getString(PROP_URI) : "http://cache.utovr.com/201601131107187320.mp4");
                 bundle.putBoolean("pano", src.hasKey(PROP_SRC_IS_PANO) && src.getBoolean(PROP_SRC_IS_PANO));
                 bundle.putBoolean("hasSkin", src.hasKey(PROP_SRC_HAS_SKIN) && src.getBoolean(PROP_SRC_HAS_SKIN));
                 videoView.setDataSource(bundle);
@@ -167,28 +214,58 @@ public class LeVideoViewManager extends SimpleViewManager<LeVideoView> {
     }
 
 
+    /**
+     * 设置播放器暂停或播放
+     *
+     * @param videoView the video view
+     * @param paused    the paused
+     */
     @ReactProp(name = PROP_PAUSED, defaultBoolean = false)
     public void setPaused(final LeVideoView videoView, final boolean paused) {
         videoView.setPausedModifier(paused);
     }
 
 
-    @ReactProp(name = PROP_SEEK)
+    /**
+     * 设置播放器跳转到某一时间点
+     *
+     * @param videoView the video view
+     * @param seek      the seek
+     */
+    @ReactProp(name = PROP_SEEK, defaultFloat = 0)
     public void setSeek(final LeVideoView videoView, final float seek) {
         videoView.seekTo(seek);
     }
 
 
+    /**
+     * 设置播放器码率
+     *
+     * @param videoView the video view
+     * @param rate      the rate
+     */
     @ReactProp(name = PROP_RATE)
     public void setRate(final LeVideoView videoView, final String rate) {
         videoView.setRate(rate);
     }
 
+    /**
+     * 调节音量
+     *
+     * @param videoView the video view
+     * @param volume    the volume
+     */
     @ReactProp(name = PROP_VOLUME)
     public void setVolume(final LeVideoView videoView, final int volume) {
         videoView.setVolume(volume);
     }
 
+    /**
+     * 调节亮度
+     *
+     * @param videoView  the video view
+     * @param brightness the brightness
+     */
     @ReactProp(name = PROP_BRIGHTNESS)
     public void setBrightness(final LeVideoView videoView, final int brightness) {
         videoView.setScreenBrightness((Activity) mReactContext.getBaseContext(), brightness);

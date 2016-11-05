@@ -6,21 +6,20 @@
  */
 'use strict';
 
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 import {
     View,
     Text,
     Image,
+    TouchableOpacity,
 } from 'react-native';
+import {bindActionCreators} from 'redux';
 import { connect } from 'react-redux';
 
-/**
- * 加载应用所需角色
-*/
-import Counter01 from '../componets/Counter01';
-import Counter02 from '../componets/Counter02';
-import RCTLeVideoView from '../componets/RCTLeVideoView';
-//import LeVideoView from '../componets/NativeVideo';
+import * as calcActions from '../actions/calcAction';
+
+import Counter from '../componets/Counter';
+import PlayItem from '../componets/PlayItem';
 
 /**
  * 首页的根容器组件，负责控制首页内的木偶组件
@@ -28,9 +27,42 @@ import RCTLeVideoView from '../componets/RCTLeVideoView';
  * @extends {Component}
  */
 class home extends Component {
+    //跳转到播放页
+    skipToPlayer = (source) => {
+        const {navigator} = this.props;
+        // this.props.actions.play(source);      
+        navigator.push({ location: '/play/' + source, });
+    }
+
+    //加
+    operatePlus = (data) => {
+        this.props.actions.plus(data);
+    }
+    //减
+    operateMinus = (data) => {
+        this.props.actions.minus(data);
+    }
+    //乘
+    operateTimes = (data) => {
+        this.props.actions.times(data);
+    }
+    //除
+    operateDivide = (data) => {
+        this.props.actions.divide(data);
+    }
 
     render() {
         const { value } = this.props;
+
+        const img1 = "../asserts/images/lecloud.png";
+        const img2 = "../asserts/images/rmb.jpg";
+        const img3 = "../asserts/images/rmb.jpg";
+
+        let plusPara = 1;
+        let minusPara = 2;
+        let timesPara = 2;
+        let dividePara = 2;
+
         return (
             (this.props.getState) ?
                 <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }} >
@@ -38,28 +70,32 @@ class home extends Component {
                 </View>
                 :
                 <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }} >
-                    <RCTLeVideoView style={{ height: 180, width: 320, backgroundColor: '#eeffee'  }} dataSource='http://cache.utovr.com/201601131107187320.mp4' />
-                    <Image  style={{ height: 180, width: 200, }} source={require('../asserts/images/lecloud.png') } resizeMode="contain" />
-                    <Counter01 value={value} />
-                    <Counter01 value={value} />
-                    <Counter02 value={value} />
-                </View>
+                    <PlayItem source={0} imgUrl={img1} onPlay={this.skipToPlayer}  />
+                    <PlayItem source={1} imgUrl={img2} onPlay={this.skipToPlayer}  />
+                    <PlayItem source={2} imgUrl={img2} onPlay={this.skipToPlayer}  />                    
+
+                    <Counter value={value} para={plusPara} oper={`加`} onChange={this.operatePlus} />
+                    <Counter value={value} para={minusPara} oper={`减`} onChange={this.operateMinus} />
+                    <Counter value={value} para={timesPara} oper={`乘`} onChange={this.operateTimes} />
+                    <Counter value={value} para={dividePara} oper={`除`} onChange={this.operateDivide} />
+                </View >
         );
 
     }
 }
 
 
-//配置Map映射表，拿到自己关心的数据
-const mapStateToProps = state => {
-    //state.xxx必须与reducer同名
-    const { calculate } = state;
-    const { value } = calculate;
-    return {
-        value
-    };
-};
 
+//配置Map映射表，拿到自己关心的数据
+const mapStateToProps = state => ({
+    //state.xxx必须与reducer同名
+    value: state.calculate.value,
+});
+
+
+const mapDispatchToProps = dispatch => ({
+    actions: bindActionCreators(calcActions, dispatch)
+});
 
 //连接Redux
-export default connect(mapStateToProps)(home);
+export default connect(mapStateToProps, mapDispatchToProps)(home);

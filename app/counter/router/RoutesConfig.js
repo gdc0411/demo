@@ -3,17 +3,18 @@
 */
 import React, { Component } from 'react';
 import { Route } from 'react-router';
-import home from '../containers/play';
+import home from '../containers/home';
+import play from '../containers/play';
 
 export default module.exports = {
     path: '/',
     indexRoute: {
         component: home,
     },
-    // childRoutes: [
-    //     {
-    //         path: '/article/:id',
-    //         component: Article
-    //     },
-    // ],
+    childRoutes: [
+        {
+            path: '/play/:src',
+            component: play
+        },
+    ],
 };

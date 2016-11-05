@@ -6,9 +6,14 @@
  ************************************************************************/
 package com.demoproject.leecoSdk;
 
+import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 
-import com.demoproject.leecoSdk.vod.ReactVodVideoView;
+
+import com.demoproject.leecoSdk.vod.ReactCPVodVideoView;
+import com.demoproject.leecoSdk.watermark.Constant;
+import com.demoproject.utils.LogUtils;
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.common.MapBuilder;
 import com.facebook.react.uimanager.SimpleViewManager;
@@ -23,47 +28,54 @@ import javax.annotation.Nullable;
 /**
  * Created by JiaRao on 2016/31/10.
  */
-public class VideoViewManager extends SimpleViewManager<ReactVodVideoView> {
+public class VideoViewManager extends SimpleViewManager<ReactCPVodVideoView> {
+
+    //定义日志
+    public static final String TAG = Constant.TAG;
 
     // 组件名
-    public static final String REACT_CLASS = "RCTLeVideoView";
-
+    private static final String REACT_CLASS = "RCTLeVideoView";
 
     //播放器模式
-    public static final String PROP_PLAY_MODE = PlayerParams.KEY_PLAY_MODE;
+    private static final String PROP_PLAY_MODE = PlayerParams.KEY_PLAY_MODE;
 
     //URI数据源：本地或者在线
     //复杂数据源
-    public static final String PROP_SRC = "src";
+    private static final String PROP_SRC = "src";
 
     //URI地址
-    public static final String PROP_URI = "uri";
+    private static final String PROP_URI = "uri";
 
     //点播模式
-    public static final String PROP_SRC_VOD_UUID = PlayerParams.KEY_PLAY_UUID;
-    public static final String PROP_SRC_VOD_VUID = PlayerParams.KEY_PLAY_VUID;
-    public static final String PROP_SRC_VOD_BUSINESSLINE = PlayerParams.KEY_PLAY_BUSINESSLINE;
-    public static final String PROP_SRC_VOD_SAAS = "saas";
+    private static final String PROP_SRC_VOD_UUID = PlayerParams.KEY_PLAY_UUID;
+    private static final String PROP_SRC_VOD_VUID = PlayerParams.KEY_PLAY_VUID;
+    private static final String PROP_SRC_VOD_BUSINESSLINE = PlayerParams.KEY_PLAY_BUSINESSLINE;
+    private static final String PROP_SRC_VOD_SAAS = "saas";
 
     //活动直播模式
-    public static final String PROP_SRC_ALIVE_ACTIONID = PlayerParams.KEY_PLAY_ACTIONID;
-    public static final String PROP_SRC_ALIVE_CUSTOMERID = PlayerParams.KEY_PLAY_CUSTOMERID;
-    public static final String PROP_SRC_ALIVE_BUSINESSLINE = PlayerParams.KEY_PLAY_BUSINESSLINE;
-    public static final String PROP_SRC_ALIVE_CUID = PlayerParams.KEY_ACTION_CUID;
-    public static final String PROP_SRC_ALIVE_UTIOKEN = PlayerParams.KEY_ACTION_UTOKEN;
-    public static final String PROP_SRC_ALIVE_IS_USEHLS = PlayerParams.KEY_PLAY_USEHLS;
+    private static final String PROP_SRC_ALIVE_ACTIONID = PlayerParams.KEY_PLAY_ACTIONID;
+    private static final String PROP_SRC_ALIVE_CUSTOMERID = PlayerParams.KEY_PLAY_CUSTOMERID;
+    private static final String PROP_SRC_ALIVE_BUSINESSLINE = PlayerParams.KEY_PLAY_BUSINESSLINE;
+    private static final String PROP_SRC_ALIVE_CUID = PlayerParams.KEY_ACTION_CUID;
+    private static final String PROP_SRC_ALIVE_UTIOKEN = PlayerParams.KEY_ACTION_UTOKEN;
+    private static final String PROP_SRC_ALIVE_IS_USEHLS = PlayerParams.KEY_PLAY_USEHLS;
     //是否全景
-    public static final String PROP_SRC_IS_PANO = "pano";
+    private static final String PROP_SRC_IS_PANO = "pano";
     //是否有皮肤
-    public static final String PROP_SRC_HAS_SKIN = "hasSkin";
+    private static final String PROP_SRC_HAS_SKIN = "hasSkin";
 
     // 暂停方法
-    public static final String PROP_PAUSED = "paused";
+    private static final String PROP_PAUSED = "paused";
     // 快进方法
-    public static final String PROP_SEEK = "seek";
+    private static final String PROP_SEEK = "seek";
     // 切换码率
-    public static final String PROP_RATE = "rate";
+    private static final String PROP_RATE = "rate";
+    // 音量调节
+    private static final String PROP_VOLUME = "volume";
+    // 屏幕亮度调节
+    private static final String PROP_BRIGHTNESS = "brightness";
 
+    private ThemedReactContext mReactContext;
 
     @Override
     public String getName() {
@@ -71,12 +83,14 @@ public class VideoViewManager extends SimpleViewManager<ReactVodVideoView> {
     }
 
     @Override
-    protected ReactVodVideoView createViewInstance(ThemedReactContext reactContext) {
-        return new ReactVodVideoView(reactContext);
+    protected ReactCPVodVideoView createViewInstance(ThemedReactContext reactContext) {
+        mReactContext = reactContext;
+        return new ReactCPVodVideoView(mReactContext);
     }
 
     @Override
-    public void onDropViewInstance(ReactVodVideoView videoView) {
+    public void onDropViewInstance(ReactCPVodVideoView videoView) {
+        Log.d(TAG, LogUtils.getTraceInfo() + "生命周期事件 onDropViewInstance 调起！");
         super.onDropViewInstance(videoView);
         videoView.cleanupMediaPlayerResources();
     }
@@ -85,7 +99,7 @@ public class VideoViewManager extends SimpleViewManager<ReactVodVideoView> {
     @Nullable
     public Map getExportedCustomDirectEventTypeConstants() {
         MapBuilder.Builder builder = MapBuilder.builder();
-        for (ReactVodVideoView.Events event : ReactVodVideoView.Events.values()) {
+        for (Events event : Events.values()) {
             builder.put(event.toString(), MapBuilder.of("registrationName", event.toString()));
         }
         return builder.build();
@@ -104,7 +118,7 @@ public class VideoViewManager extends SimpleViewManager<ReactVodVideoView> {
 
 
     @ReactProp(name = PROP_SRC)
-    public void setDataSource(final ReactVodVideoView videoView, @Nullable ReadableMap src) {
+    public void setDataSource(final ReactCPVodVideoView videoView, @Nullable ReadableMap src) {
         if (src == null) {
             return;
         }
@@ -158,19 +172,41 @@ public class VideoViewManager extends SimpleViewManager<ReactVodVideoView> {
 
 
     @ReactProp(name = PROP_PAUSED, defaultBoolean = false)
-    public void setPaused(final ReactVodVideoView videoView, final boolean paused) {
+    public void setPaused(final ReactCPVodVideoView videoView, final boolean paused) {
         videoView.setPausedModifier(paused);
     }
 
 
     @ReactProp(name = PROP_SEEK)
-    public void setSeek(final ReactVodVideoView videoView, final float seek) {
+    public void setSeek(final ReactCPVodVideoView videoView, final float seek) {
         videoView.seekTo(seek);
     }
 
     @ReactProp(name = PROP_RATE)
-    public void setRate(final ReactVodVideoView videoView, final String rate) {
+    public void setRate(final ReactCPVodVideoView videoView, final String rate) {
         videoView.setRate(rate);
+    }
+
+    /**
+     * 调节音量
+     *
+     * @param videoView the video view
+     * @param volume    the volume
+     */
+    @ReactProp(name = PROP_VOLUME)
+    public void setVolume(final ReactCPVodVideoView videoView, final int volume) {
+        videoView.setVolume(volume);
+    }
+
+    /**
+     * 调节亮度
+     *
+     * @param videoView  the video view
+     * @param brightness the brightness
+     */
+    @ReactProp(name = PROP_BRIGHTNESS)
+    public void setBrightness(final ReactCPVodVideoView videoView, final int brightness) {
+        videoView.setScreenBrightness((Activity) mReactContext.getBaseContext(), brightness);
     }
 
 }

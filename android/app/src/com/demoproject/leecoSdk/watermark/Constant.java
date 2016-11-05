@@ -5,4 +5,7 @@ package com.demoproject.leecoSdk.watermark;
  */
 
 public interface Constant {
+
+    String TAG = "DemoProject";
+
 }
