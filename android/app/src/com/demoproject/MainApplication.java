@@ -7,7 +7,7 @@ import android.content.SharedPreferences;
 import android.util.Log;
 
 import com.demoproject.handler.CrashHandler;
-import com.demoproject.leecoSdk.watermark.Constant;
+import com.demoproject.common.Constant;
 import com.demoproject.utils.LogUtils;
 import com.facebook.react.ReactApplication;
 import com.letv.android.client.sdk.config.LeCloudPlayerConfig;

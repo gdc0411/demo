@@ -228,7 +228,7 @@ class VideoPlayer extends Component {
         return (
             <View style={styles.container}>
                 <TouchableOpacity style={styles.fullScreen} onPress={() => { this.setState({ paused: !this.state.paused }); } }>
-                    <RCTLeVideoView style={styles.fullScreen}
+                    <RCTLeVideoView style={{width:SCREEN_WIDTH, height:160}}
                         source={source}
                         paused={this.state.paused}
                         seek={this.state.seek}
@@ -411,7 +411,7 @@ const styles = StyleSheet.create({
     },
     controlOption: {
         alignSelf: 'center',
-        fontSize: 12,
+        fontSize: 14,
         color: "white",
         paddingLeft: 2,
         paddingRight: 2,

@@ -10,7 +10,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
 
-import com.demoproject.leecoSdk.watermark.Constant;
+import com.demoproject.common.Constant;
 import com.demoproject.utils.LogUtils;
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.common.MapBuilder;

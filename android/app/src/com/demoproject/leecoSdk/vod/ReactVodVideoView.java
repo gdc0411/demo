@@ -15,7 +15,7 @@ import android.view.WindowManager;
 import com.demoproject.leecoSdk.Events;
 import com.demoproject.leecoSdk.LeVideoViewManager;
 
-import com.demoproject.leecoSdk.watermark.Constant;
+import com.demoproject.common.Constant;
 import com.demoproject.utils.LogUtils;
 import com.demoproject.utils.ScreenBrightnessManager;
 import com.facebook.react.bridge.Arguments;
@@ -24,7 +24,6 @@ import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.uimanager.ThemedReactContext;
 import com.facebook.react.uimanager.events.RCTEventEmitter;
 
-import com.letv.android.client.cp.sdk.player.vod.CPVodPlayer;
 import com.letv.android.client.sdk.api.md.entity.action.CoverConfig;
 import com.letv.android.client.sdk.api.md.entity.action.WaterConfig;
 import com.letv.android.client.sdk.api.md.entity.vod.VideoHolder;
@@ -33,6 +32,7 @@ import com.letv.android.client.sdk.constant.PlayerParams;
 import com.letv.android.client.sdk.constant.StatusCode;
 import com.letv.android.client.sdk.player.IAdPlayer;
 import com.letv.android.client.sdk.player.IMediaDataPlayer;
+import com.letv.android.client.sdk.videoview.VideoViewListener;
 import com.letv.android.client.sdk.videoview.vod.VodVideoView;
 
 
@@ -141,10 +141,10 @@ public class ReactVodVideoView extends VodVideoView {
 
     /*============================= 播放器構造函數 ===================================*/
 
-    public ReactVodVideoView(ThemedReactContext context) {
-        super(context.getBaseContext());
+    public ReactVodVideoView(Context context) {
+        super(((ThemedReactContext) context).getBaseContext());
 
-        mThemedReactContext = context;
+        mThemedReactContext = (ThemedReactContext) context;
         Context ctx = mThemedReactContext.getBaseContext();
 
         ((Activity) ctx).getWindow().setFormat(PixelFormat.TRANSLUCENT);
@@ -152,6 +152,9 @@ public class ReactVodVideoView extends VodVideoView {
 
         //创建与RN之间的回调
         mEventEmitter = mThemedReactContext.getJSModule(RCTEventEmitter.class);
+
+        //设置播放器监听器
+        setVideoViewListener(mVideoViewListener);
 
         //创建播放更新进度线程
         mProgressUpdateRunnable = new Runnable() {
@@ -177,6 +180,39 @@ public class ReactVodVideoView extends VodVideoView {
         mCurrentBrightness = ScreenBrightnessManager.getScreenBrightness(ctx);
 
     }
+
+    /**
+     * 播放器回调函数
+     */
+    VideoViewListener mVideoViewListener = new VideoViewListener() {
+        @Override
+        public void onStateResult(int event, Bundle bundle) {
+            handlePlayerEvent(event, bundle);// 处理播放器类事件
+            handleVideoInfoEvent(event, bundle);// 处理媒资类事件
+            handleAdEvent(event, bundle);//处理广告类事件
+            handleOtherEvent(event, bundle);//处理其他事件
+        }
+
+        @Override
+        public String onGetVideoRateList(LinkedHashMap<String, String> map) {
+//            mRateList = map;
+
+//            WritableMap rates = Arguments.createMap();
+//            String rateStr = "";
+//            for (Map.Entry<String, String> rate : map.entrySet()) {
+//                rates.putString(rate.getKey(), rate.getValue());
+//                rateStr += rate.getKey() + rate.getValue();
+//            }
+//
+//            WritableMap event = Arguments.createMap();
+//            event.putMap(EVENT_PROP_RATELIST, rates);
+            //改为由onLoad统一触发事件
+//            mEventEmitter.receiveEvent(getId(), Events.EVENT_LOAD_RATE.toString(), event);
+//            Log.d("视频码率", "event " + Events.EVENT_LOAD_RATE.toString() + " " + rateStr);
+
+            return "";
+        }
+    };
 
     /*============================= 播放器外部接口 ===================================*/
 
@@ -269,7 +305,7 @@ public class ReactVodVideoView extends VodVideoView {
             //mCurrentRate = mLePlayer.getLastRate();
 
             //切换码率
-            ((IMediaDataPlayer) player).setDataSourceByRate(mRateList.get(rate));
+            ((IMediaDataPlayer) player).setDataSourceByRate(rate);
 
             WritableMap event = Arguments.createMap();
             event.putString(EVENT_PROP_CURRENT_RATE, mCurrentRate);
@@ -863,9 +899,45 @@ public class ReactVodVideoView extends VodVideoView {
     @Override
     protected void notifyPlayerEvent(int state, Bundle bundle) {
         super.notifyPlayerEvent(state, bundle);
+    }
+
+    /**
+     * 处理视频信息类事件
+     */
+    @Override
+    protected void onInterceptVodMediaDataSuccess(int state, Bundle bundle) {
+        super.onInterceptVodMediaDataSuccess(state, bundle);
+    }
+
+
+    @Override
+    protected void onInterceptMediaDataError(int event, Bundle bundle) {
+        Log.d(TAG, "媒资信息事件：event " + event + " bundle " + bundle);
+        super.onInterceptMediaDataError(event, bundle);
+//
+//        mVideoLoading.hide();
+//        mWaterMarkView.hide();
+//        mNoticeView.processPlayerState(event, bundle);
+    }
+
+
+    /**
+     * 处理广告类事件
+     */
+    @Override
+    protected void onInterceptAdEvent(int state, Bundle bundle) {
+        super.onInterceptAdEvent(state, bundle);
+    }
+
+
+    /**
+     * 处理播放器事件，具体事件参见IPlayer类
+     */
+    private void handlePlayerEvent(int state, Bundle bundle) {
         boolean handled = false;
         String event = "";
         switch (state) {
+
             case PlayerEvent.PLAY_INIT: //200
                 // 播放器初始化
                 handled = true;
@@ -957,8 +1029,7 @@ public class ReactVodVideoView extends VodVideoView {
                 event = "VIEW_PREPARE_AD_SURFACE";
                 break;
 
-            default:
-                break;
+
         }
         if (handled)
             Log.d(TAG, LogUtils.getTraceInfo() + "播放器事件——— event " + event + " state " + state + " bundle " + bundle);
@@ -967,10 +1038,7 @@ public class ReactVodVideoView extends VodVideoView {
     /**
      * 处理视频信息类事件
      */
-    @Override
-    protected void onInterceptVodMediaDataSuccess(int state, Bundle bundle) {
-        super.onInterceptVodMediaDataSuccess(state, bundle);
-
+    private void handleVideoInfoEvent(int state, Bundle bundle) {
         boolean handled = false;
         String event = "";
         switch (state) {
@@ -1004,23 +1072,10 @@ public class ReactVodVideoView extends VodVideoView {
             Log.d(TAG, LogUtils.getTraceInfo() + "视频信息事件——— event " + event + " state " + state + " bundle " + bundle);
     }
 
-
-    @Override
-    protected void onInterceptMediaDataError(int event, Bundle bundle) {
-        Log.d(TAG, "媒资信息事件：event " + event + " bundle " + bundle);
-        super.onInterceptMediaDataError(event, bundle);
-//
-//        mVideoLoading.hide();
-//        mWaterMarkView.hide();
-//        mNoticeView.processPlayerState(event, bundle);
-    }
-
-
     /**
      * 处理广告类事件
      */
-    @Override
-    protected void onInterceptAdEvent(int state, Bundle bundle) {
+    private void handleAdEvent(int state, Bundle bundle) {
         boolean handled = false;
         String event = "";
         switch (state) {
@@ -1057,6 +1112,32 @@ public class ReactVodVideoView extends VodVideoView {
         }
         if (handled)
             Log.d(TAG, LogUtils.getTraceInfo() + "广告播放事件——— event " + event + " state " + state + " bundle " + bundle);
+    }
+
+    /**
+     * 处理其他类事件
+     */
+    private void handleOtherEvent(int state, Bundle bundle) {
+        boolean handled = false;
+        String event = "";
+        switch (state) {
+
+            case PlayerEvent.CDEEVENT_EVENT_CDE_LINK_SHELL_ERROR: // CDE连接命令出错 1
+                handled = true;
+                event = "CDEEVENT_EVENT_CDE_LINK_SHELL_ERROR";
+                processOtherEvent(state, bundle);
+                break;
+
+            case PlayerEvent.CDEEVENT_EVENT_CDE_READY: // CDE 准备完毕 2
+                handled = true;
+                event = "CDEEVENT_EVENT_CDE_READY";
+                processOtherEvent(state, bundle);
+                break;
+
+        }
+
+        if (handled)
+            Log.d(TAG, LogUtils.getTraceInfo() + "其他类事件——— event " + event + " state " + state + " bundle " + bundle);
     }
 
 

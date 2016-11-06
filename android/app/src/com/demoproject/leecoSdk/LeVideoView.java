@@ -22,7 +22,7 @@ import android.view.WindowManager;
 import android.widget.RelativeLayout;
 
 import com.demoproject.R;
-import com.demoproject.leecoSdk.watermark.Constant;
+import com.demoproject.common.Constant;
 import com.demoproject.utils.LogUtils;
 import com.demoproject.utils.ScreenBrightnessManager;
 import com.facebook.react.bridge.Arguments;
@@ -31,7 +31,6 @@ import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.uimanager.ThemedReactContext;
 import com.facebook.react.uimanager.events.RCTEventEmitter;
-import com.letv.android.client.cp.sdk.player.vod.CPVodPlayer;
 import com.letv.android.client.sdk.api.md.entity.action.CoverConfig;
 import com.letv.android.client.sdk.api.md.entity.action.WaterConfig;
 import com.letv.android.client.sdk.api.md.entity.vod.VideoHolder;
@@ -388,7 +387,6 @@ public class LeVideoView extends RelativeLayout implements LifecycleEventListene
             event.putString(EVENT_PROP_CURRENT_RATE, mCurrentRate);
             event.putString(EVENT_PROP_NEXT_RATE, rate);
             mEventEmitter.receiveEvent(getId(), Events.EVENT_RATE_CHANG.toString(), event);
-
         }
     }
 
