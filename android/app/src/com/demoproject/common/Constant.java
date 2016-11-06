@@ -1,4 +1,4 @@
-package com.demoproject.leecoSdk.watermark;
+package com.demoproject.common;
 
 /**
  * Created by LizaRao on 2016/11/6.
