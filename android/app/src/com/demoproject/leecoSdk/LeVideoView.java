@@ -166,24 +166,10 @@ public class LeVideoView extends RelativeLayout implements LifecycleEventListene
 
         @Override
         public String onGetVideoRateList(LinkedHashMap<String, String> map) {
-//            mRateList = map;
-
-//            WritableMap rates = Arguments.createMap();
-//            String rateStr = "";
-//            for (Map.Entry<String, String> rate : map.entrySet()) {
-//                rates.putString(rate.getKey(), rate.getValue());
-//                rateStr += rate.getKey() + rate.getValue();
-//            }
-//
-//            WritableMap event = Arguments.createMap();
-//            event.putMap(EVENT_PROP_RATELIST, rates);
-            //改为由onLoad统一触发事件
-//            mEventEmitter.receiveEvent(getId(), Events.EVENT_LOAD_RATE.toString(), event);
-//            Log.d("视频码率", "event " + Events.EVENT_LOAD_RATE.toString() + " " + rateStr);
-
-            return "";
+            return null;
         }
     };
+    ;
 
     // 进度更新线程
     private Handler mProgressUpdateHandler = new Handler();
@@ -203,7 +189,7 @@ public class LeVideoView extends RelativeLayout implements LifecycleEventListene
         mThemedReactContext.addLifecycleEventListener(this);
 
         //创建播放器及监听
-//        initLePlayerIfNeeded();
+        initLePlayerIfNeeded();
         //setSurfaceTextureListener(this);
 
         //创建播放更新进度线程
@@ -283,7 +269,7 @@ public class LeVideoView extends RelativeLayout implements LifecycleEventListene
             View.inflate(mThemedReactContext, R.layout.video_play, this);
             RelativeLayout videoContainer = (RelativeLayout) findViewById(R.id.videoContainer);
             videoContainer.addView((View) mLeVideoView, VideoLayoutParams.computeContainerSize(mThemedReactContext, 16, 9));
-            videoContainer.bringToFront();
+//            videoContainer.bringToFront();
 
             //设置播放器监听器
             mLeVideoView.setVideoViewListener(mVideoViewListener);
@@ -325,7 +311,7 @@ public class LeVideoView extends RelativeLayout implements LifecycleEventListene
             else
                 mLeVideoView.setDataSource(bundle);
 
-            mLeVideoView.setVideoViewListener(mVideoViewListener);
+//            mLeVideoView.setVideoViewListener(mVideoViewListener);
 
             WritableMap event = Arguments.createMap();
             event.putString(LeVideoViewManager.PROP_SRC, bundle.toString());
@@ -512,8 +498,11 @@ public class LeVideoView extends RelativeLayout implements LifecycleEventListene
         if (mLeVideoView != null) {
             Log.d(TAG, LogUtils.getTraceInfo() + "控件清理 cleanupMediaPlayerResources 调起！");
             mLePlayerValid = false;
-            if(mLeVideoView.isPlaying()) mLeVideoView.stopAndRelease();
+            ((View) mLeVideoView).getParent().clearChildFocus((View) mLeVideoView);
+            if (mLeVideoView.isPlaying()) mLeVideoView.stopAndRelease();
+
             mLeVideoView = null;
+
         }
     }
 
@@ -790,6 +779,7 @@ public class LeVideoView extends RelativeLayout implements LifecycleEventListene
     public boolean processMediaVodLoad(int what, Bundle bundle) {
 
         VideoHolder videoHolder = bundle.getParcelable(PlayerParams.KEY_RESULT_DATA);
+        if (videoHolder == null) return false;
 
         mMediaStatusCode = bundle.getInt(EVENT_PROP_STAT_CODE);
         mMediaHttpCode = bundle.getInt(EVENT_PROP_HTTP_CODE);
@@ -1158,9 +1148,11 @@ public class LeVideoView extends RelativeLayout implements LifecycleEventListene
         if (mLeVideoView != null) {
             Log.d(TAG, LogUtils.getTraceInfo() + "生命周期事件 onHostPause 调起！");
             saveLastPostion();
+//            mLeVideoView.stopAndRelease();
             mLeVideoView.onPause();
         }
     }
+
 
     @Override
     public void onHostDestroy() {

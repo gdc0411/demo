@@ -30,7 +30,7 @@ class home extends Component {
     //跳转到播放页
     skipToPlayer = (source) => {
         const {navigator} = this.props;
-        // this.props.actions.play(source);      
+        // this.props.actions.play(source);
         navigator.push({ location: '/play/' + source, });
     }
 
@@ -72,7 +72,7 @@ class home extends Component {
                 <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }} >
                     <PlayItem source={0} imgUrl={img1} onPlay={this.skipToPlayer}  />
                     <PlayItem source={1} imgUrl={img2} onPlay={this.skipToPlayer}  />
-                    <PlayItem source={2} imgUrl={img2} onPlay={this.skipToPlayer}  />                    
+                    <PlayItem source={2} imgUrl={img2} onPlay={this.skipToPlayer}  />
 
                     <Counter value={value} para={plusPara} oper={`加`} onChange={this.operatePlus} />
                     <Counter value={value} para={minusPara} oper={`减`} onChange={this.operateMinus} />

@@ -184,6 +184,9 @@ class VideoPlayer extends Component {
 
     componentDidMount() {
         //alert(this.props.datasource);
+        // var today = new Date();
+        // alert("The time is: " + today.toString());
+        // setTimeout("showTime()", 5000);
     }
 
     getFormatDatasource(key) {
@@ -228,7 +231,7 @@ class VideoPlayer extends Component {
         return (
             <View style={styles.container}>
                 <TouchableOpacity style={styles.fullScreen} onPress={() => { this.setState({ paused: !this.state.paused }); } }>
-                    <RCTLeVideoView style={{width:SCREEN_WIDTH, height:160}}
+                    <RCTLeVideoView style={styles.fullScreen}
                         source={source}
                         paused={this.state.paused}
                         seek={this.state.seek}

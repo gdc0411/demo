@@ -52,8 +52,8 @@ public class RJReactPackage implements ReactPackage {
         List<ViewManager> viewManagers = new ArrayList<>();
         viewManagers.add(new KenBurnsViewManager());
         viewManagers.add(new CheckItemViewManager());
-//        viewManagers.add(new LeVideoViewManager());
-        viewManagers.add(new VideoViewManager());
+        viewManagers.add(new LeVideoViewManager());
+//        viewManagers.add(new VideoViewManager());
 
         return viewManagers;
     }
