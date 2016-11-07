@@ -23,6 +23,7 @@ import android.widget.RelativeLayout;
 
 import com.demoproject.R;
 import com.demoproject.common.Constant;
+import com.demoproject.leecoSdk.vod.UICPVodVideoView;
 import com.demoproject.utils.LogUtils;
 import com.demoproject.utils.ScreenBrightnessManager;
 import com.facebook.react.bridge.Arguments;
@@ -49,7 +50,7 @@ import com.letv.android.client.skin.videoview.pano.live.UICPPanoActionLiveVideoV
 import com.letv.android.client.skin.videoview.pano.live.UICPPanoLiveVideoView;
 import com.letv.android.client.skin.videoview.pano.vod.UICPPanoVodVideoView;
 import com.letv.android.client.skin.videoview.vod.CPVodVideoView;
-import com.letv.android.client.skin.videoview.vod.UICPVodVideoView;
+
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -169,7 +170,6 @@ public class LeVideoView extends RelativeLayout implements LifecycleEventListene
             return null;
         }
     };
-    ;
 
     // 进度更新线程
     private Handler mProgressUpdateHandler = new Handler();
@@ -189,7 +189,7 @@ public class LeVideoView extends RelativeLayout implements LifecycleEventListene
         mThemedReactContext.addLifecycleEventListener(this);
 
         //创建播放器及监听
-        initLePlayerIfNeeded();
+        //initLePlayerIfNeeded();
         //setSurfaceTextureListener(this);
 
         //创建播放更新进度线程
@@ -273,6 +273,7 @@ public class LeVideoView extends RelativeLayout implements LifecycleEventListene
 
             //设置播放器监听器
             mLeVideoView.setVideoViewListener(mVideoViewListener);
+
             //mLeVideoView.setDataSource("http://cache.utovr.com/201601131107187320.mp4");
         }
     }
@@ -300,7 +301,8 @@ public class LeVideoView extends RelativeLayout implements LifecycleEventListene
         initLePlayerIfNeeded();
 
         if (mLeVideoView != null) {
-            mLeVideoView.resetPlayer();
+//            mLeVideoView.resetPlayer();
+            mLeVideoView.stopAndRelease();
 
             mLastPosition = 0;
             mRateList = null;
@@ -311,11 +313,12 @@ public class LeVideoView extends RelativeLayout implements LifecycleEventListene
             else
                 mLeVideoView.setDataSource(bundle);
 
-//            mLeVideoView.setVideoViewListener(mVideoViewListener);
+            mLeVideoView.setVideoViewListener(mVideoViewListener);
 
             WritableMap event = Arguments.createMap();
             event.putString(LeVideoViewManager.PROP_SRC, bundle.toString());
             mEventEmitter.receiveEvent(getId(), Events.EVENT_LOAD_SOURCE.toString(), event);
+
         }
     }
 
@@ -366,6 +369,7 @@ public class LeVideoView extends RelativeLayout implements LifecycleEventListene
             //mCurrentRate = mLePlayer.getLastRate();
 
             //切换码率
+//            ((UICPVodVideoView)mLeVideoView).setDefination(rate);
             mLePlayer.setDataSourceByRate(rate);
 
 
