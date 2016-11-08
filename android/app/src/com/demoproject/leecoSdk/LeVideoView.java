@@ -173,7 +173,21 @@ public class LeVideoView extends RelativeLayout implements LifecycleEventListene
 
     // 进度更新线程
     private Handler mProgressUpdateHandler = new Handler();
-    private Runnable mProgressUpdateRunnable = null;
+    private Runnable mProgressUpdateRunnable = new Runnable() {
+
+        @Override
+        public void run() {
+            if (mLePlayerValid && !mPaused && !isSeeking && !isCompleted) {
+                WritableMap event = Arguments.createMap();
+                event.putDouble(EVENT_PROP_CURRENT_TIME, mLeVideoView.getCurrentPosition() / 1000.0);
+                event.putDouble(EVENT_PROP_DURATION, mVideoDuration / 1000.0);
+                event.putDouble(EVENT_PROP_PLAYABLE_DURATION, mVideoBufferedDuration / 1000.0); //TODO:mBufferUpdateRunnable
+                mEventEmitter.receiveEvent(getId(), Events.EVENT_PROGRESS.toString(), event);
+            }
+            mProgressUpdateHandler.postDelayed(mProgressUpdateRunnable, 250);
+        }
+    };
+
 
     /*============================= 播放器外部接口 ===================================*/
 
@@ -193,20 +207,21 @@ public class LeVideoView extends RelativeLayout implements LifecycleEventListene
         //setSurfaceTextureListener(this);
 
         //创建播放更新进度线程
-        mProgressUpdateRunnable = new Runnable() {
-            @Override
-            public void run() {
-                if (mLePlayerValid && !mPaused && !isSeeking && !isCompleted) {
-                    WritableMap event = Arguments.createMap();
-                    event.putDouble(EVENT_PROP_CURRENT_TIME, mLeVideoView.getCurrentPosition() / 1000.0);
-                    event.putDouble(EVENT_PROP_DURATION, mVideoDuration / 1000.0);
-                    event.putDouble(EVENT_PROP_PLAYABLE_DURATION, mVideoBufferedDuration / 1000.0); //TODO:mBufferUpdateRunnable
-                    mEventEmitter.receiveEvent(getId(), Events.EVENT_PROGRESS.toString(), event);
-                }
-                mProgressUpdateHandler.postDelayed(mProgressUpdateRunnable, 250);
-            }
-        };
-        mProgressUpdateHandler.post(mProgressUpdateRunnable);
+//        mProgressUpdateRunnable = new Runnable() {
+//
+//            @Override
+//            public void run() {
+//                if (mLePlayerValid && !mPaused && !isSeeking && !isCompleted) {
+//                    WritableMap event = Arguments.createMap();
+//                    event.putDouble(EVENT_PROP_CURRENT_TIME, mLeVideoView.getCurrentPosition() / 1000.0);
+//                    event.putDouble(EVENT_PROP_DURATION, mVideoDuration / 1000.0);
+//                    event.putDouble(EVENT_PROP_PLAYABLE_DURATION, mVideoBufferedDuration / 1000.0); //TODO:mBufferUpdateRunnable
+//                    mEventEmitter.receiveEvent(getId(), Events.EVENT_PROGRESS.toString(), event);
+//                }
+//                mProgressUpdateHandler.postDelayed(mProgressUpdateRunnable, 250);
+//            }
+//        };
+//        mProgressUpdateHandler.post(mProgressUpdateRunnable);
 
 
         //设置声音管理器
@@ -445,6 +460,9 @@ public class LeVideoView extends RelativeLayout implements LifecycleEventListene
 
                 mLeVideoView.onPause();
 
+                //暂停更新进度
+                mProgressUpdateHandler.removeCallbacks(mProgressUpdateRunnable);
+
                 WritableMap event = Arguments.createMap();
                 event.putDouble(EVENT_PROP_DURATION, mVideoDuration / 1000.0);
                 event.putDouble(EVENT_PROP_CURRENT_TIME, mLeVideoView.getCurrentPosition() / 1000.0);
@@ -456,6 +474,9 @@ public class LeVideoView extends RelativeLayout implements LifecycleEventListene
             if (!mLeVideoView.isPlaying()) {//播放中
 
                 mLeVideoView.onStart();
+
+                //启动更新进度
+                mProgressUpdateHandler.post(mProgressUpdateRunnable);
 
                 WritableMap event = Arguments.createMap();
                 event.putDouble(EVENT_PROP_DURATION, mVideoDuration / 1000.0);
