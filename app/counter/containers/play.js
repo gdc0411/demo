@@ -69,7 +69,7 @@ class VideoPlayer extends Component {
     }
 
 
-    componentDidMount() {
+    componentWillMount() {
         //alert(this.props.datasource);
         // var today = new Date();
         // alert("The time is: " + today.toString());
@@ -77,8 +77,6 @@ class VideoPlayer extends Component {
 
         const { src } = this.props.params;
         const newSource = this.getFormatDatasource(src);
-        console.log(newSource);
-
         this.setState({ source: newSource, });
     }
 

@@ -120,10 +120,10 @@ public class VideoViewManager extends SimpleViewManager<ReactCPVodVideoView> {
 
     @ReactProp(name = PROP_SRC)
     public void setDataSource(final ReactCPVodVideoView videoView, @Nullable ReadableMap src) {
-        if (src == null) {
+        if (src == null || !src.hasKey(PROP_PLAY_MODE) || src.getInt(PROP_PLAY_MODE) == -1 ) {
             return;
         }
-        int playMode = src.hasKey(PROP_PLAY_MODE) ? src.getInt(PROP_PLAY_MODE) : -1;
+        int playMode = src.getInt(PROP_PLAY_MODE);
         Bundle bundle;
         switch (playMode) {
             case PlayerParams.VALUE_PLAYER_VOD:
