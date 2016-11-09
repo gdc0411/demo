@@ -9,9 +9,10 @@ import android.view.View;
 import com.facebook.react.uimanager.SimpleViewManager;
 import com.facebook.react.uimanager.ThemedReactContext;
 import com.facebook.react.uimanager.annotations.ReactProp;
-import com.letv.android.client.sdk.constant.PlayerEvent;
-import com.letv.android.client.sdk.videoview.VideoViewListener;
-import com.letv.android.client.skin.videoview.vod.CPVodVideoView;
+import com.lecloud.sdk.constant.PlayerEvent;
+import com.lecloud.sdk.videoview.VideoViewListener;
+import com.letv.android.client.cp.sdk.videoview.vod.CPVodVideoView;
+
 
 import java.util.LinkedHashMap;
 import java.util.Map;

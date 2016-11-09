@@ -23,17 +23,16 @@ import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.uimanager.ThemedReactContext;
 import com.facebook.react.uimanager.events.RCTEventEmitter;
-
-import com.letv.android.client.sdk.api.md.entity.action.CoverConfig;
-import com.letv.android.client.sdk.api.md.entity.action.WaterConfig;
-import com.letv.android.client.sdk.api.md.entity.vod.VideoHolder;
-import com.letv.android.client.sdk.constant.PlayerEvent;
-import com.letv.android.client.sdk.constant.PlayerParams;
-import com.letv.android.client.sdk.constant.StatusCode;
-import com.letv.android.client.sdk.player.IAdPlayer;
-import com.letv.android.client.sdk.player.IMediaDataPlayer;
-import com.letv.android.client.sdk.videoview.VideoViewListener;
-import com.letv.android.client.sdk.videoview.vod.VodVideoView;
+import com.lecloud.sdk.api.md.entity.action.CoverConfig;
+import com.lecloud.sdk.api.md.entity.action.WaterConfig;
+import com.lecloud.sdk.api.md.entity.vod.VideoHolder;
+import com.lecloud.sdk.constant.PlayerEvent;
+import com.lecloud.sdk.constant.PlayerParams;
+import com.lecloud.sdk.constant.StatusCode;
+import com.lecloud.sdk.player.IAdPlayer;
+import com.lecloud.sdk.player.IMediaDataPlayer;
+import com.lecloud.sdk.videoview.VideoViewListener;
+import com.lecloud.sdk.videoview.vod.VodVideoView;
 
 
 import java.util.LinkedHashMap;

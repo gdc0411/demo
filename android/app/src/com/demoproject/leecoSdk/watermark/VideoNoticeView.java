@@ -12,13 +12,13 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.letv.android.client.sdk.api.md.entity.action.LiveInfo;
-import com.letv.android.client.sdk.api.status.ActionStatus;
-import com.letv.android.client.sdk.constant.PlayerEvent;
-import com.letv.android.client.sdk.constant.PlayerParams;
-import com.letv.android.client.sdk.constant.StatusCode;
-import com.letv.android.client.sdk.utils.NetworkUtils;
-import com.letv.android.client.skin.activity.FeedBackActivity;
+import com.lecloud.sdk.api.md.entity.action.LiveInfo;
+import com.lecloud.sdk.api.status.ActionStatus;
+import com.lecloud.sdk.constant.PlayerEvent;
+import com.lecloud.sdk.constant.PlayerParams;
+import com.lecloud.sdk.constant.StatusCode;
+import com.lecloud.sdk.utils.NetworkUtils;
+import com.lecloud.skin.activity.FeedBackActivity;
 
 
 public class VideoNoticeView extends RelativeLayout implements View.OnTouchListener{

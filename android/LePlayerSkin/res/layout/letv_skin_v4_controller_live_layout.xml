@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.letv.android.client.skin.ui.view.V4SmallLiveMediaController xmlns:android="http://schemas.android.com/apk/res/android"
+<com.lecloud.skin.ui.view.V4SmallLiveMediaController xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:background="@color/letv_skin_vnew_controller_background"
@@ -7,7 +7,7 @@
     android:paddingRight="5dp"
     >
 
-    <com.letv.android.client.skin.ui.view.V4LivePlayBtn
+    <com.lecloud.skin.ui.view.V4LivePlayBtn
         android:id="@+id/vnew_play_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -15,7 +15,7 @@
         android:layout_centerVertical="true"
         android:padding="5dp" />
 
-    <com.letv.android.client.skin.ui.view.V4ChgScreenBtn
+    <com.lecloud.skin.ui.view.V4ChgScreenBtn
         android:id="@+id/vnew_chg_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -59,4 +59,4 @@
 
     
 
-</com.letv.android.client.skin.ui.view.V4SmallLiveMediaController>
+</com.lecloud.skin.ui.view.V4SmallLiveMediaController>

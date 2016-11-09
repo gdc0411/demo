@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.letv.android.client.skin.ui.view.V4LiveSeekbar xmlns:android="http://schemas.android.com/apk/res/android"
+<com.lecloud.skin.ui.view.V4LiveSeekbar xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content" 
     >
@@ -27,4 +27,4 @@
         android:textColor="@color/letv_color_ffffffff"
         android:visibility="invisible" />
 
-</com.letv.android.client.skin.ui.view.V4LiveSeekbar>
+</com.lecloud.skin.ui.view.V4LiveSeekbar>

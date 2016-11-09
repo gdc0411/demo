@@ -29,6 +29,8 @@ class VideoPlayer extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            /** 数据源 */
+            source: -1,
             /* 视频真实尺寸 */
             width: -1,
             height: -1,
@@ -64,6 +66,20 @@ class VideoPlayer extends Component {
         };
 
         this.onLoad = this.onLoad.bind(this);
+    }
+
+
+    componentDidMount() {
+        //alert(this.props.datasource);
+        // var today = new Date();
+        // alert("The time is: " + today.toString());
+        // setTimeout("showTime()", 5000);
+
+        const { src } = this.props.params;
+        const newSource = this.getFormatDatasource(src);
+        console.log(newSource);
+
+        this.setState({ source: newSource, });
     }
 
 
@@ -182,13 +198,6 @@ class VideoPlayer extends Component {
         }
     }
 
-    componentDidMount() {
-        //alert(this.props.datasource);
-        // var today = new Date();
-        // alert("The time is: " + today.toString());
-        // setTimeout("showTime()", 5000);
-    }
-
     getFormatDatasource(key) {
         let source;
         switch (key) {
@@ -213,7 +222,7 @@ class VideoPlayer extends Component {
                 break;
 
             default: //网络或本地地址
-                source = { uri: "http://cache.utovr.com/201601131107187320.mp4", pano: false, hasSkin: false };
+                source = { playMode: 0, uri: "http://cache.utovr.com/201601131107187320.mp4", pano: false, hasSkin: false };
                 break;
         }
         // alert(source);
@@ -225,14 +234,11 @@ class VideoPlayer extends Component {
         const flexCompleted = this.getCurrentTimePercentage() * 100;
         const flexRemaining = (1 - this.getCurrentTimePercentage()) * 100;
 
-        const { src } = this.props.params;
-        const source = this.getFormatDatasource(src);
-
         return (
             <View style={styles.container}>
                 <TouchableOpacity style={styles.fullScreen} onPress={() => { this.setState({ paused: !this.state.paused }); } }>
                     <RCTLeVideoView style={styles.fullScreen}
-                        source={source}
+                        source={this.state.source}
                         paused={this.state.paused}
                         seek={this.state.seek}
                         rate={this.state.rate}

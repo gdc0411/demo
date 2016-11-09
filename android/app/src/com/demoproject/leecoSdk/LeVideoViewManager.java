@@ -17,7 +17,7 @@ import com.facebook.react.common.MapBuilder;
 import com.facebook.react.uimanager.SimpleViewManager;
 import com.facebook.react.uimanager.ThemedReactContext;
 import com.facebook.react.uimanager.annotations.ReactProp;
-import com.letv.android.client.sdk.constant.PlayerParams;
+import com.lecloud.sdk.constant.PlayerParams;
 
 import java.util.Map;
 
@@ -162,10 +162,11 @@ public class LeVideoViewManager extends SimpleViewManager<LeVideoView> {
      */
     @ReactProp(name = PROP_SRC)
     public void setDataSource(final LeVideoView videoView, @Nullable ReadableMap src) {
-        if (src == null) {
+        if (src == null || !src.hasKey(PROP_PLAY_MODE) || src.getInt(PROP_PLAY_MODE) == -1 ) {
             return;
         }
-        int playMode = src.hasKey(PROP_PLAY_MODE) ? src.getInt(PROP_PLAY_MODE) : -1;
+
+        int playMode = src.getInt(PROP_PLAY_MODE);
         Bundle bundle;
         switch (playMode) {
             case PlayerParams.VALUE_PLAYER_VOD:

@@ -55,4 +55,9 @@
 	<string name="ad">广告&#160;</string>
 	<string name="back_to_live">返回直播</string>
 	<string name="submit">提交</string>
+
+    <!--关于4g的新增提示，英文版需要同步-->
+    <string name="mobile_tip">您在使用运营商网络，继续观看会产生流量费用</string>
+    <string name="continue_play">继续观看</string>
+    <string name="cancel_play">取消观看</string>
 </resources>

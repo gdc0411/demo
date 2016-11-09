@@ -9,15 +9,14 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.demoproject.utils.ScreenUtils;
+import com.lecloud.sdk.api.md.entity.vod.VideoHolder;
+import com.lecloud.sdk.constant.PlayerEvent;
+import com.lecloud.sdk.constant.PlayerParams;
+import com.lecloud.sdk.constant.StatusCode;
+import com.lecloud.sdk.player.IMediaDataPlayer;
+import com.lecloud.sdk.player.IPlayer;
+import com.lecloud.sdk.videoview.vod.VodVideoView;
 import com.lecloud.skin.R;
-import com.letv.android.client.sdk.api.md.entity.vod.VideoHolder;
-import com.letv.android.client.sdk.constant.PlayerEvent;
-import com.letv.android.client.sdk.constant.PlayerParams;
-import com.letv.android.client.sdk.constant.StatusCode;
-import com.letv.android.client.sdk.player.IAdPlayer;
-import com.letv.android.client.sdk.player.IMediaDataPlayer;
-import com.letv.android.client.sdk.player.IPlayer;
-import com.letv.android.client.sdk.videoview.vod.VodVideoView;
 
 
 import java.util.ArrayList;

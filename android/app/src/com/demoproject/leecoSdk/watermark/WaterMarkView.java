@@ -5,7 +5,7 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.RelativeLayout;
 import com.demoproject.utils.PxUtils;
-import com.letv.android.client.sdk.api.md.entity.action.WaterConfig;
+import com.lecloud.sdk.api.md.entity.action.WaterConfig;
 
 import java.util.List;
 

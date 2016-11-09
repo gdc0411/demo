@@ -32,24 +32,25 @@ import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.uimanager.ThemedReactContext;
 import com.facebook.react.uimanager.events.RCTEventEmitter;
-import com.letv.android.client.sdk.api.md.entity.action.CoverConfig;
-import com.letv.android.client.sdk.api.md.entity.action.WaterConfig;
-import com.letv.android.client.sdk.api.md.entity.vod.VideoHolder;
-import com.letv.android.client.sdk.constant.PlayerEvent;
-import com.letv.android.client.sdk.constant.PlayerParams;
-import com.letv.android.client.sdk.constant.StatusCode;
-import com.letv.android.client.sdk.player.IAdPlayer;
-import com.letv.android.client.sdk.player.IMediaDataPlayer;
-import com.letv.android.client.sdk.videoview.IMediaDataVideoView;
-import com.letv.android.client.sdk.videoview.VideoViewListener;
-import com.letv.android.client.skin.videoview.live.CPActionLiveVideoView;
-import com.letv.android.client.skin.videoview.live.CPLiveVideoView;
+
+import com.lecloud.sdk.api.md.entity.action.CoverConfig;
+import com.lecloud.sdk.api.md.entity.action.WaterConfig;
+import com.lecloud.sdk.api.md.entity.vod.VideoHolder;
+import com.lecloud.sdk.constant.PlayerEvent;
+import com.lecloud.sdk.constant.PlayerParams;
+import com.lecloud.sdk.constant.StatusCode;
+import com.lecloud.sdk.player.IAdPlayer;
+import com.lecloud.sdk.player.IMediaDataPlayer;
+import com.lecloud.sdk.videoview.IMediaDataVideoView;
+import com.lecloud.sdk.videoview.VideoViewListener;
+import com.letv.android.client.cp.sdk.videoview.live.CPActionLiveVideoView;
+import com.letv.android.client.cp.sdk.videoview.live.CPLiveVideoView;
+import com.letv.android.client.cp.sdk.videoview.vod.CPVodVideoView;
 import com.letv.android.client.skin.videoview.live.UICPActionLiveVideoView;
 import com.letv.android.client.skin.videoview.live.UICPLiveVideoView;
-import com.letv.android.client.skin.videoview.pano.live.UICPPanoActionLiveVideoView;
-import com.letv.android.client.skin.videoview.pano.live.UICPPanoLiveVideoView;
-import com.letv.android.client.skin.videoview.pano.vod.UICPPanoVodVideoView;
-import com.letv.android.client.skin.videoview.vod.CPVodVideoView;
+import com.letv.android.client.skin.videoview.live.UICPPanoActionLiveVideoView;
+import com.letv.android.client.skin.videoview.live.UICPPanoLiveVideoView;
+import com.letv.android.client.skin.videoview.vod.UICPPanoVodVideoView;
 
 
 import java.util.LinkedHashMap;
@@ -203,7 +204,7 @@ public class LeVideoView extends RelativeLayout implements LifecycleEventListene
         mThemedReactContext.addLifecycleEventListener(this);
 
         //创建播放器及监听
-        //initLePlayerIfNeeded();
+        initLePlayerIfNeeded();
         //setSurfaceTextureListener(this);
 
         //创建播放更新进度线程
@@ -243,37 +244,37 @@ public class LeVideoView extends RelativeLayout implements LifecycleEventListene
             ((Activity) ctx).getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
             switch (mPlayMode) {
-                case PlayerParams.VALUE_PLAYER_LIVE: {
+                case PlayerParams.VALUE_PLAYER_LIVE:
                     mLeVideoView = mHasSkin ? (mPano ? new UICPPanoLiveVideoView(ctx)
                             : new UICPLiveVideoView(ctx))
                             : new CPLiveVideoView(ctx);
 
-                    mLePlayer = mHasSkin ? (mPano ? (IMediaDataPlayer) ((UICPPanoLiveVideoView) mLeVideoView).getPlayer()
-                            : (IMediaDataPlayer) ((UICPLiveVideoView) mLeVideoView).getPlayer())
-                            : (IMediaDataPlayer) ((CPLiveVideoView) mLeVideoView).getPlayer();
+//                    mLePlayer = mHasSkin ? (mPano ? (IMediaDataPlayer) ((UICPPanoLiveVideoView) mLeVideoView).getPlayer()
+//                            : (IMediaDataPlayer) ((UICPLiveVideoView) mLeVideoView).getPlayer())
+//                            : (IMediaDataPlayer) ((CPLiveVideoView) mLeVideoView).getPlayer();
                     break;
-                }
-                case PlayerParams.VALUE_PLAYER_VOD: {
+
+                case PlayerParams.VALUE_PLAYER_VOD:
                     mLeVideoView = mHasSkin ? (mPano ? new UICPPanoVodVideoView(ctx)
                             : new UICPVodVideoView(ctx))
                             : new CPVodVideoView(ctx);
 
-                    mLePlayer = mHasSkin ? (mPano ? (IMediaDataPlayer) ((UICPPanoVodVideoView) mLeVideoView).getPlayer()
-                            : (IMediaDataPlayer) ((UICPVodVideoView) mLeVideoView).getPlayer())
-                            : (IMediaDataPlayer) ((CPVodVideoView) mLeVideoView).getPlayer();
+//                    mLePlayer = mHasSkin ? (mPano ? (IMediaDataPlayer) ((UICPPanoVodVideoView) mLeVideoView).getPlayer()
+//                            : (IMediaDataPlayer) ((UICPVodVideoView) mLeVideoView).getPlayer())
+//                            : (IMediaDataPlayer) ((CPVodVideoView) mLeVideoView).getPlayer();
 
                     break;
-                }
-                case PlayerParams.VALUE_PLAYER_ACTION_LIVE: {
+
+                case PlayerParams.VALUE_PLAYER_ACTION_LIVE:
                     mLeVideoView = mHasSkin ? (mPano ? new UICPPanoActionLiveVideoView(ctx)
                             : new UICPActionLiveVideoView(ctx))
                             : new CPActionLiveVideoView(ctx);
 
-                    mLePlayer = mHasSkin ? (mPano ? (IMediaDataPlayer) ((UICPPanoActionLiveVideoView) mLeVideoView).getPlayer()
-                            : (IMediaDataPlayer) ((UICPActionLiveVideoView) mLeVideoView).getPlayer())
-                            : (IMediaDataPlayer) ((CPActionLiveVideoView) mLeVideoView).getPlayer();
+//                    mLePlayer = mHasSkin ? (mPano ? (IMediaDataPlayer) ((UICPPanoActionLiveVideoView) mLeVideoView).getPlayer()
+//                            : (IMediaDataPlayer) ((UICPActionLiveVideoView) mLeVideoView).getPlayer())
+//                            : (IMediaDataPlayer) ((CPActionLiveVideoView) mLeVideoView).getPlayer();
                     break;
-                }
+
                 default:
                     mLeVideoView = new LeBaseMediaDataVideoView(ctx);
                     mLePlayer = (IMediaDataPlayer) ((LeBaseMediaDataVideoView) mLePlayer).getPlayer();
@@ -313,11 +314,11 @@ public class LeVideoView extends RelativeLayout implements LifecycleEventListene
         mPano = (bundle.containsKey(LeVideoViewManager.PROP_SRC_IS_PANO) && bundle.getBoolean(LeVideoViewManager.PROP_SRC_IS_PANO));
         mHasSkin = (bundle.containsKey(LeVideoViewManager.PROP_SRC_HAS_SKIN) && bundle.getBoolean(LeVideoViewManager.PROP_SRC_HAS_SKIN));
 
-        initLePlayerIfNeeded();
+//        initLePlayerIfNeeded();
 
         if (mLeVideoView != null) {
-//            mLeVideoView.resetPlayer();
-            mLeVideoView.stopAndRelease();
+            mLeVideoView.resetPlayer();
+//            mLeVideoView.stopAndRelease();
 
             mLastPosition = 0;
             mRateList = null;
