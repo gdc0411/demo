@@ -443,6 +443,7 @@ public class LeVideoView extends RelativeLayout implements LifecycleEventListene
         }
     }
 
+
     /**
      * 设置视频暂停和启动
      *
@@ -524,9 +525,7 @@ public class LeVideoView extends RelativeLayout implements LifecycleEventListene
         if (mLeVideoView != null) {
             Log.d(TAG, LogUtils.getTraceInfo() + "控件清理 cleanupMediaPlayerResources 调起！");
             mLePlayerValid = false;
-            ((View) mLeVideoView).getParent().clearChildFocus((View) mLeVideoView);
             if (mLeVideoView.isPlaying()) mLeVideoView.stopAndRelease();
-
             mLeVideoView = null;
 
         }

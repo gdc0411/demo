@@ -111,29 +111,34 @@ public class VideoTextureView extends TextureView implements TextureView.Surface
         }
     }
 
-    private void initializeMediaPlayer(Context context) {
-        if (mMediaPlayer == null) {
-            mMediaPlayer = new CPVodPlayer(context);
+//    private void initializeMediaPlayer(Context context) {
+//        if (mMediaPlayer == null) {
+//            mMediaPlayer = new CPVodPlayer(context);
+//
+////            mMediaPlayer.setOnMediaDataPlayerListener(this);
+//            setSurfaceTextureListener(this);
+//        } else {
+//            mMediaPlayer.reset();
+//        }
+//    }
 
-//            mMediaPlayer.setOnMediaDataPlayerListener(this);
-            setSurfaceTextureListener(this);
-        } else {
-            mMediaPlayer.reset();
-        }
-    }
 
-
-    public void setDataSource(@NonNull Context context, @NonNull String path ) throws IOException {
-        initializeMediaPlayer(context);
+    public void setDataSource(@NonNull Context context, @NonNull String path )  {
+//        initializeMediaPlayer(context);
         mMediaPlayer.setDataSource(path);
     }
 
 
-    public void setDataSource(@NonNull Context context, @NonNull Bundle bundle ) throws IOException {
-        initializeMediaPlayer(context);
+    public void setDataSource(@NonNull Context context, @NonNull Bundle bundle )  {
+//        initializeMediaPlayer(context);
         mMediaPlayer.setDataSourceByMediaData(bundle);
     }
 
+
+    public void setDataSourceByRate(@NonNull Context context, @NonNull String rate) {
+//        initializeMediaPlayer(context);
+        mMediaPlayer.setDataSourceByRate(rate);
+    }
 
 
     public void setScalableType(ScalableType scalableType) {
