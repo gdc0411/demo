@@ -204,7 +204,7 @@ public class LeVideoView extends RelativeLayout implements LifecycleEventListene
         mThemedReactContext.addLifecycleEventListener(this);
 
         //创建播放器及监听
-        initLePlayerIfNeeded();
+//        initLePlayerIfNeeded();
         //setSurfaceTextureListener(this);
 
         //创建播放更新进度线程
@@ -314,7 +314,7 @@ public class LeVideoView extends RelativeLayout implements LifecycleEventListene
         mPano = (bundle.containsKey(LeVideoViewManager.PROP_SRC_IS_PANO) && bundle.getBoolean(LeVideoViewManager.PROP_SRC_IS_PANO));
         mHasSkin = (bundle.containsKey(LeVideoViewManager.PROP_SRC_HAS_SKIN) && bundle.getBoolean(LeVideoViewManager.PROP_SRC_HAS_SKIN));
 
-//        initLePlayerIfNeeded();
+        initLePlayerIfNeeded();
 
         if (mLeVideoView != null) {
             mLeVideoView.resetPlayer();
