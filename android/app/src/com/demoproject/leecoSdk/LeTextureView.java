@@ -10,9 +10,9 @@ import android.util.AttributeSet;
 import android.view.Surface;
 import android.view.TextureView;
 
-
-import com.lecloud.app.openappdev.R;
-import com.lecloud.app.openappdev.utils.LogUtils;
+import com.demoproject.R;
+import com.demoproject.utils.LogUtils;
+import com.lecloud.sdk.player.IMediaDataActionPlayer;
 import com.lecloud.sdk.player.IMediaDataPlayer;
 
 
@@ -123,6 +123,9 @@ public class LeTextureView extends TextureView implements TextureView.SurfaceTex
         mMediaPlayer.setDataSourceByMediaData(bundle);
     }
 
+    public void setDataSourceByLiveId(@NonNull Context context, @NonNull String liveId) {
+        ((IMediaDataActionPlayer)this.mMediaPlayer).setDataSourceByLiveId(liveId);
+    }
 
     public void setDataSourceByRate(@NonNull Context context, @NonNull String rate) {
         mMediaPlayer.setDataSourceByRate(rate);

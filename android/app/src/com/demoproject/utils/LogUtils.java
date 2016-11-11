@@ -6,6 +6,7 @@ package com.demoproject.utils;
 
 public class LogUtils {
 
+    public static final String TAG = "DemoProject";
 
     public static String getTraceInfo() {
         StringBuilder sb = new StringBuilder();

@@ -10,41 +10,40 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
 
-
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.common.MapBuilder;
 import com.facebook.react.uimanager.SimpleViewManager;
 import com.facebook.react.uimanager.ThemedReactContext;
 import com.facebook.react.uimanager.annotations.ReactProp;
-import com.lecloud.app.openappdev.utils.LogUtils;
+import com.demoproject.utils.LogUtils;
 import com.lecloud.sdk.constant.PlayerParams;
 
 import java.util.Map;
 
 import javax.annotation.Nullable;
 
-import static com.lecloud.app.openappdev.utils.LogUtils.TAG;
-import static com.lecloud.app.openappdev.leecoSdk.Constants.PROP_BRIGHTNESS;
-import static com.lecloud.app.openappdev.leecoSdk.Constants.PROP_PAUSED;
-import static com.lecloud.app.openappdev.leecoSdk.Constants.PROP_PLAY_MODE;
-import static com.lecloud.app.openappdev.leecoSdk.Constants.PROP_RATE;
-import static com.lecloud.app.openappdev.leecoSdk.Constants.PROP_SEEK;
-import static com.lecloud.app.openappdev.leecoSdk.Constants.PROP_SRC;
-import static com.lecloud.app.openappdev.leecoSdk.Constants.PROP_SRC_ALIVE_ACTIONID;
-import static com.lecloud.app.openappdev.leecoSdk.Constants.PROP_SRC_ALIVE_BUSINESSLINE;
-import static com.lecloud.app.openappdev.leecoSdk.Constants.PROP_SRC_ALIVE_CUID;
-import static com.lecloud.app.openappdev.leecoSdk.Constants.PROP_SRC_ALIVE_CUSTOMERID;
-import static com.lecloud.app.openappdev.leecoSdk.Constants.PROP_SRC_ALIVE_IS_USEHLS;
-import static com.lecloud.app.openappdev.leecoSdk.Constants.PROP_SRC_ALIVE_UTIOKEN;
-import static com.lecloud.app.openappdev.leecoSdk.Constants.PROP_SRC_HAS_SKIN;
-import static com.lecloud.app.openappdev.leecoSdk.Constants.PROP_SRC_IS_PANO;
-import static com.lecloud.app.openappdev.leecoSdk.Constants.PROP_SRC_VOD_BUSINESSLINE;
-import static com.lecloud.app.openappdev.leecoSdk.Constants.PROP_SRC_VOD_SAAS;
-import static com.lecloud.app.openappdev.leecoSdk.Constants.PROP_SRC_VOD_UUID;
-import static com.lecloud.app.openappdev.leecoSdk.Constants.PROP_SRC_VOD_VUID;
-import static com.lecloud.app.openappdev.leecoSdk.Constants.PROP_URI;
-import static com.lecloud.app.openappdev.leecoSdk.Constants.PROP_VOLUME;
-import static com.lecloud.app.openappdev.leecoSdk.Constants.REACT_CLASS;
+import static com.demoproject.leecoSdk.Constants.PROP_BRIGHTNESS;
+import static com.demoproject.leecoSdk.Constants.PROP_PAUSED;
+import static com.demoproject.leecoSdk.Constants.PROP_PLAY_MODE;
+import static com.demoproject.leecoSdk.Constants.PROP_RATE;
+import static com.demoproject.leecoSdk.Constants.PROP_SEEK;
+import static com.demoproject.leecoSdk.Constants.PROP_SRC;
+import static com.demoproject.leecoSdk.Constants.PROP_SRC_ALIVE_ACTIONID;
+import static com.demoproject.leecoSdk.Constants.PROP_SRC_ALIVE_BUSINESSLINE;
+import static com.demoproject.leecoSdk.Constants.PROP_SRC_ALIVE_CUID;
+import static com.demoproject.leecoSdk.Constants.PROP_SRC_ALIVE_CUSTOMERID;
+import static com.demoproject.leecoSdk.Constants.PROP_SRC_ALIVE_IS_USEHLS;
+import static com.demoproject.leecoSdk.Constants.PROP_SRC_ALIVE_UTIOKEN;
+import static com.demoproject.leecoSdk.Constants.PROP_SRC_HAS_SKIN;
+import static com.demoproject.leecoSdk.Constants.PROP_SRC_IS_PANO;
+import static com.demoproject.leecoSdk.Constants.PROP_SRC_VOD_BUSINESSLINE;
+import static com.demoproject.leecoSdk.Constants.PROP_SRC_VOD_SAAS;
+import static com.demoproject.leecoSdk.Constants.PROP_SRC_VOD_UUID;
+import static com.demoproject.leecoSdk.Constants.PROP_SRC_VOD_VUID;
+import static com.demoproject.leecoSdk.Constants.PROP_URI;
+import static com.demoproject.leecoSdk.Constants.PROP_VOLUME;
+import static com.demoproject.leecoSdk.Constants.REACT_CLASS;
+import static com.demoproject.utils.LogUtils.TAG;
 
 /**
  * Created by JiaRao on 2016/31/10.

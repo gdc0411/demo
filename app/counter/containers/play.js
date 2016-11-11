@@ -234,8 +234,8 @@ class VideoPlayer extends Component {
 
         return (
             <View style={styles.container}>
-                <TouchableOpacity style={styles.fullScreen} onPress={() => { this.setState({ paused: !this.state.paused }); } }>
-                    <RCTLeVideoView style={styles.fullScreen}
+                <TouchableOpacity style={[styles.fullScreen, { width: SCREEN_WIDTH, height: 180}]} onPress={() => { this.setState({ paused: !this.state.paused }); } }>
+                    <RCTLeVideoView style={[styles.fullScreen, { width: SCREEN_WIDTH, height: 180 }]}
                         source={this.state.source}
                         paused={this.state.paused}
                         seek={this.state.seek}
@@ -334,7 +334,6 @@ const styles = StyleSheet.create({
         position: 'absolute',
         top: 0,
         left: 0,
-        bottom: 0,
         right: 0,
     },
     controls: {

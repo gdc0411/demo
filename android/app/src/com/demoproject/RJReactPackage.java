@@ -1,8 +1,6 @@
 package com.demoproject;
 
-import com.demoproject.leecoSdk.LeVideoViewManager;
-import com.demoproject.leecoSdk.ReactVideoViewManager;
-import com.demoproject.leecoSdk.VideoViewManager;
+import com.demoproject.leecoSdk.LeReactPlayerManager;
 import com.demoproject.sample.CallbackModule;
 import com.demoproject.sample.CheckItemViewManager;
 import com.demoproject.sample.ConstModule;
@@ -55,7 +53,7 @@ public class RJReactPackage implements ReactPackage {
         viewManagers.add(new CheckItemViewManager());
 //        viewManagers.add(new LeVideoViewManager());
 //        viewManagers.add(new VideoViewManager());
-        viewManagers.add(new ReactVideoViewManager());
+        viewManagers.add(new LeReactPlayerManager());
 
         return viewManagers;
     }

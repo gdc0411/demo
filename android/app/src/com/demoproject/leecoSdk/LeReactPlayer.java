@@ -744,7 +744,7 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
 
         //获得默认码率和码率列表
         if (mRateList != null) mRateList.clear();
-        actionInfo.get
+        actionInfo.
         mRateList = liveInfo.getVtypes();
         mCurrentRate = mDefaultRate = liveInfo.getDefaultVtype();
 

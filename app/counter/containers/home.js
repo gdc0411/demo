@@ -73,6 +73,7 @@ class home extends Component {
                     <PlayItem source={0} imgUrl={img1} onPlay={this.skipToPlayer}  />
                     <PlayItem source={1} imgUrl={img2} onPlay={this.skipToPlayer}  />
                     <PlayItem source={2} imgUrl={img2} onPlay={this.skipToPlayer}  />
+                    <PlayItem source={4} imgUrl={img2} onPlay={this.skipToPlayer}  />
 
                     <Counter value={value} para={plusPara} oper={`加`} onChange={this.operatePlus} />
                     <Counter value={value} para={minusPara} oper={`减`} onChange={this.operateMinus} />

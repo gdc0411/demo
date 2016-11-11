@@ -1,6 +1,5 @@
 package com.demoproject.leecoSdk;
 
-import com.lecloud.app.openappdev.utils.LogUtils;
 import com.lecloud.sdk.constant.PlayerParams;
 import com.lecloud.sdk.player.IAdPlayer;
 

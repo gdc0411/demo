@@ -7,7 +7,6 @@ import android.content.SharedPreferences;
 import android.util.Log;
 
 import com.demoproject.handler.CrashHandler;
-import com.demoproject.common.Constant;
 import com.demoproject.utils.LogUtils;
 import com.facebook.react.ReactApplication;
 import com.lecloud.sdk.config.LeCloudPlayerConfig;
@@ -17,6 +16,8 @@ import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
 
+import static com.demoproject.utils.LogUtils.TAG;
+
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
@@ -24,7 +25,6 @@ import java.util.List;
 
 public class MainApplication extends Application implements ReactApplication {
 
-    public static final String TAG = Constant.TAG;
 
 //    private static final RJReactPackage rjPackage = new RJReactPackage();
 //    public static RJReactPackage getRjPackage() {
