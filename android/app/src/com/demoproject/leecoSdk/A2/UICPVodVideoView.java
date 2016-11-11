@@ -1,4 +1,4 @@
-package com.demoproject.leecoSdk.vod;
+package com.demoproject.leecoSdk.A2;
 
 import android.content.Context;
 

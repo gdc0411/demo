@@ -4,15 +4,16 @@
  * Mail: raojia@le.com
  * Created Time: 2016-10-30
  ************************************************************************/
-package com.demoproject.leecoSdk;
+package com.demoproject.leecoSdk.A2;
 
 import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
 
 
-import com.demoproject.leecoSdk.vod.ReactCPVodVideoView;
-import com.demoproject.common.Constant;
+import com.demoproject.leecoSdk.A2.ReactCPVodVideoView;
+import com.demoproject.leecoSdk.Events;
+import com.demoproject.leecoSdk.ScalableType;
 import com.demoproject.utils.LogUtils;
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.common.MapBuilder;
@@ -20,6 +21,9 @@ import com.facebook.react.uimanager.SimpleViewManager;
 import com.facebook.react.uimanager.ThemedReactContext;
 import com.facebook.react.uimanager.annotations.ReactProp;
 import com.lecloud.sdk.constant.PlayerParams;
+
+import static com.demoproject.leecoSdk.Constants.*;
+import static com.demoproject.utils.LogUtils.TAG;
 
 
 import java.util.Map;
@@ -31,50 +35,6 @@ import javax.annotation.Nullable;
  */
 public class VideoViewManager extends SimpleViewManager<ReactCPVodVideoView> {
 
-    //定义日志
-    public static final String TAG = Constant.TAG;
-
-    // 组件名
-    private static final String REACT_CLASS = "RCTLeVideoView";
-
-    //播放器模式
-    private static final String PROP_PLAY_MODE = PlayerParams.KEY_PLAY_MODE;
-
-    //URI数据源：本地或者在线
-    //复杂数据源
-    private static final String PROP_SRC = "src";
-
-    //URI地址
-    private static final String PROP_URI = "uri";
-
-    //点播模式
-    private static final String PROP_SRC_VOD_UUID = PlayerParams.KEY_PLAY_UUID;
-    private static final String PROP_SRC_VOD_VUID = PlayerParams.KEY_PLAY_VUID;
-    private static final String PROP_SRC_VOD_BUSINESSLINE = PlayerParams.KEY_PLAY_BUSINESSLINE;
-    private static final String PROP_SRC_VOD_SAAS = "saas";
-
-    //活动直播模式
-    private static final String PROP_SRC_ALIVE_ACTIONID = PlayerParams.KEY_PLAY_ACTIONID;
-    private static final String PROP_SRC_ALIVE_CUSTOMERID = PlayerParams.KEY_PLAY_CUSTOMERID;
-    private static final String PROP_SRC_ALIVE_BUSINESSLINE = PlayerParams.KEY_PLAY_BUSINESSLINE;
-    private static final String PROP_SRC_ALIVE_CUID = PlayerParams.KEY_ACTION_CUID;
-    private static final String PROP_SRC_ALIVE_UTIOKEN = PlayerParams.KEY_ACTION_UTOKEN;
-    private static final String PROP_SRC_ALIVE_IS_USEHLS = PlayerParams.KEY_PLAY_USEHLS;
-    //是否全景
-    private static final String PROP_SRC_IS_PANO = "pano";
-    //是否有皮肤
-    private static final String PROP_SRC_HAS_SKIN = "hasSkin";
-
-    // 暂停方法
-    private static final String PROP_PAUSED = "paused";
-    // 快进方法
-    private static final String PROP_SEEK = "seek";
-    // 切换码率
-    private static final String PROP_RATE = "rate";
-    // 音量调节
-    private static final String PROP_VOLUME = "volume";
-    // 屏幕亮度调节
-    private static final String PROP_BRIGHTNESS = "brightness";
 
     private ThemedReactContext mReactContext;
 
@@ -106,16 +66,16 @@ public class VideoViewManager extends SimpleViewManager<ReactCPVodVideoView> {
         return builder.build();
     }
 
-//    @Override
-//    @Nullable
-//    public Map getExportedViewConstants() {
-//        return MapBuilder.of(
-//                "ScaleNone", Integer.toString(ScalableType.LEFT_TOP.ordinal()),
-//                "ScaleToFill", Integer.toString(ScalableType.FIT_XY.ordinal()),
-//                "ScaleAspectFit", Integer.toString(ScalableType.FIT_CENTER.ordinal()),
-//                "ScaleAspectFill", Integer.toString(ScalableType.CENTER_CROP.ordinal())
-//        );
-//    }
+    @Override
+    @Nullable
+    public Map getExportedViewConstants() {
+        return MapBuilder.of(
+                "ScaleNone", Integer.toString(ScalableType.LEFT_TOP.ordinal()),
+                "ScaleToFill", Integer.toString(ScalableType.FIT_XY.ordinal()),
+                "ScaleAspectFit", Integer.toString(ScalableType.FIT_CENTER.ordinal()),
+                "ScaleAspectFill", Integer.toString(ScalableType.CENTER_CROP.ordinal())
+        );
+    }
 
 
     @ReactProp(name = PROP_SRC)

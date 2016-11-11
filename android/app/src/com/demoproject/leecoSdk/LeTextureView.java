@@ -1,49 +1,42 @@
 package com.demoproject.leecoSdk;
 
 import android.content.Context;
-import android.content.res.AssetFileDescriptor;
-import android.content.res.AssetManager;
 import android.content.res.TypedArray;
 import android.graphics.Matrix;
 import android.graphics.SurfaceTexture;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.annotation.RawRes;
 import android.util.AttributeSet;
 import android.view.Surface;
 import android.view.TextureView;
 
-import com.demoproject.R;
-import com.lecloud.sdk.listener.MediaDataPlayerListener;
-import com.lecloud.sdk.player.IMediaDataPlayer;
-import com.lecloud.sdk.player.vod.VodPlayer;
-import com.lecloud.sdk.videoview.VideoViewListener;
-import com.letv.android.client.cp.sdk.player.vod.CPVodPlayer;
 
-import java.io.FileDescriptor;
-import java.io.IOException;
-import java.util.Map;
+import com.lecloud.app.openappdev.R;
+import com.lecloud.app.openappdev.utils.LogUtils;
+import com.lecloud.sdk.player.IMediaDataPlayer;
+
 
 /**
  * Created by raojia on 2016/11/10.
  */
+public class LeTextureView extends TextureView implements TextureView.SurfaceTextureListener {
 
-public class VideoTextureView extends TextureView implements TextureView.SurfaceTextureListener {
+    //定义日志
+    public static final String TAG = LogUtils.TAG;
+
 
     protected IMediaDataPlayer mMediaPlayer;
     protected ScalableType mScalableType = ScalableType.NONE;
 
-    public VideoTextureView(Context context) {
+    public LeTextureView(Context context) {
         this(context, null);
     }
 
-    public VideoTextureView(Context context, AttributeSet attrs) {
+    public LeTextureView(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public VideoTextureView(Context context, AttributeSet attrs, int defStyle) {
+    public LeTextureView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
 
         if (attrs == null) {
@@ -62,6 +55,7 @@ public class VideoTextureView extends TextureView implements TextureView.Surface
 
     @Override
     public void onSurfaceTextureAvailable(SurfaceTexture surfaceTexture, int width, int height) {
+//        Log.i(TAG, LogUtils.getTraceInfo() + "onSurfaceTextureAvailable..." + surfaceTexture);
         Surface surface = new Surface(surfaceTexture);
         if (mMediaPlayer != null) {
             mMediaPlayer.setDisplay(surface);
@@ -70,19 +64,27 @@ public class VideoTextureView extends TextureView implements TextureView.Surface
 
     @Override
     public void onSurfaceTextureSizeChanged(SurfaceTexture surface, int width, int height) {
+//        Log.i(TAG, LogUtils.getTraceInfo() + "onSurfaceTextureSizeChanged..." + surface);
+
     }
 
     @Override
     public boolean onSurfaceTextureDestroyed(SurfaceTexture surface) {
+//        Log.i(TAG, LogUtils.getTraceInfo() + "onSurfaceTextureAvailable..." + surface);
+
         return false;
     }
 
     @Override
     public void onSurfaceTextureUpdated(SurfaceTexture surface) {
+//        Log.i(TAG, LogUtils.getTraceInfo() + "onSurfaceTextureUpdated..." + surface);
+
     }
 
     @Override
     protected void onDetachedFromWindow() {
+//        Log.i(TAG, LogUtils.getTraceInfo() + "onDetachedFromWindow...");
+
         super.onDetachedFromWindow();
         if (mMediaPlayer == null) {
             return;
@@ -111,32 +113,18 @@ public class VideoTextureView extends TextureView implements TextureView.Surface
         }
     }
 
-//    private void initializeMediaPlayer(Context context) {
-//        if (mMediaPlayer == null) {
-//            mMediaPlayer = new CPVodPlayer(context);
-//
-////            mMediaPlayer.setOnMediaDataPlayerListener(this);
-//            setSurfaceTextureListener(this);
-//        } else {
-//            mMediaPlayer.reset();
-//        }
-//    }
-
 
     public void setDataSource(@NonNull Context context, @NonNull String path )  {
-//        initializeMediaPlayer(context);
         mMediaPlayer.setDataSource(path);
     }
 
 
     public void setDataSource(@NonNull Context context, @NonNull Bundle bundle )  {
-//        initializeMediaPlayer(context);
         mMediaPlayer.setDataSourceByMediaData(bundle);
     }
 
 
     public void setDataSourceByRate(@NonNull Context context, @NonNull String rate) {
-//        initializeMediaPlayer(context);
         mMediaPlayer.setDataSourceByRate(rate);
     }
 

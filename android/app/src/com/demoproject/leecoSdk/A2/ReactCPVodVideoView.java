@@ -1,8 +1,7 @@
-package com.demoproject.leecoSdk.vod;
+package com.demoproject.leecoSdk.A2;
 
 import android.content.Context;
 
-import com.facebook.react.uimanager.ThemedReactContext;
 import com.letv.android.client.cp.sdk.player.vod.CPVodPlayer;
 
 /**

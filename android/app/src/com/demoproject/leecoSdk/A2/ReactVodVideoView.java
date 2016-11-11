@@ -1,4 +1,4 @@
-package com.demoproject.leecoSdk.vod;
+package com.demoproject.leecoSdk.A2;
 
 import android.app.Activity;
 import android.app.Service;
@@ -13,9 +13,7 @@ import android.util.Log;
 import android.view.WindowManager;
 
 import com.demoproject.leecoSdk.Events;
-import com.demoproject.leecoSdk.LeVideoViewManager;
 
-import com.demoproject.common.Constant;
 import com.demoproject.utils.LogUtils;
 import com.demoproject.utils.ScreenBrightnessManager;
 import com.facebook.react.bridge.Arguments;
@@ -29,10 +27,12 @@ import com.lecloud.sdk.api.md.entity.vod.VideoHolder;
 import com.lecloud.sdk.constant.PlayerEvent;
 import com.lecloud.sdk.constant.PlayerParams;
 import com.lecloud.sdk.constant.StatusCode;
-import com.lecloud.sdk.player.IAdPlayer;
 import com.lecloud.sdk.player.IMediaDataPlayer;
 import com.lecloud.sdk.videoview.VideoViewListener;
 import com.lecloud.sdk.videoview.vod.VodVideoView;
+
+import static com.demoproject.leecoSdk.Constants.*;
+import static com.demoproject.utils.LogUtils.TAG;
 
 
 import java.util.LinkedHashMap;
@@ -42,54 +42,6 @@ import java.util.Map;
  * Created by raojia on 2016/11/2.
  */
 public class ReactVodVideoView extends VodVideoView {
-
-    //定义日志
-    public static final String TAG = Constant.TAG;
-
-    //字段名
-    public static final String EVENT_PROP_TITLE = "title"; //视频标题
-    public static final String EVENT_PROP_DURATION = "duration"; //视频总长
-    public static final String EVENT_PROP_PLAYABLE_DURATION = "playableDuration"; //可播放时长
-    public static final String EVENT_PROP_PLAY_BUFFERPERCENT = PlayerParams.KEY_PLAY_BUFFERPERCENT; //二级进度长度百分比
-    public static final String EVENT_PROP_CURRENT_TIME = "currentTime"; //当前时长
-    public static final String EVENT_PROP_SEEK_TIME = "seekTime"; //跳转时间
-    public static final String EVENT_PROP_NATURALSIZE = "naturalSize"; //视频原始尺寸
-    public static final String EVENT_PROP_VIDEO_BUFF = PlayerParams.KEY_VIDEO_BUFFER;  //缓冲加载进度百分比
-    public static final String EVENT_PROP_RATELIST = "rateList";  //可选择的码率
-    public static final String EVENT_PROP_CURRENT_RATE = "currentRate"; //当前码率
-    public static final String EVENT_PROP_DEFAULT_RATE = "defaultRate"; //默认码率
-    public static final String EVENT_PROP_NEXT_RATE = "nextRate"; //下一个码率
-
-    private static final String EVENT_PROP_MMS_STATCODE = "statusCode";  //媒资返回状态码
-    private static final String EVENT_PROP_MMS_HTTPCODE = "httpCode"; //媒资返回HTTP状态码
-
-    public static final String EVENT_PROP_WIDTH = "width"; //视频宽度
-    public static final String EVENT_PROP_HEIGHT = "height"; //视频高度
-
-    public static final String EVENT_PROP_ORIENTATION = "orientation"; //视频方向
-    public static final String EVENT_PROP_AD_TIME = IAdPlayer.AD_TIME; //广告倒计时
-
-    public static final String EVENT_PROP_STAT_CODE = PlayerParams.KEY_RESULT_STATUS_CODE; //媒资状态码
-    public static final String EVENT_PROP_HTTP_CODE = PlayerParams.KEY_HTTP_CODE; //媒资http请求状态
-
-    public static final String EVENT_PROP_RATE_KEY = "rateKey";  //码率索引
-    public static final String EVENT_PROP_RATE_VALUE = "rateValue";  //码率值
-
-    private static final String EVENT_PROP_LOGO = "logo";  //logo属性
-    private static final String EVENT_PROP_LOAD = "loading";  //加载属性
-    private static final String EVENT_PROP_WMARKS = "waterMarks";  //水印
-
-    private static final String EVENT_PROP_PIC = "pic";  //图片地址
-    private static final String EVENT_PROP_TARGET = "target";  //目标URL
-    private static final String EVENT_PROP_POS = "pos";  //位置
-
-    private static final String EVENT_PROP_VOLUME = "volume";  //音量
-    private static final String EVENT_PROP_BRIGHTNESS = "brightness";  //亮度
-
-    public static final String EVENT_PROP_ERROR = "error";
-    public static final String EVENT_PROP_WHAT = "what";
-    public static final String EVENT_PROP_EXTRA = "extra";
-    public static final String EVENT_PROP_EVENT = "event";
 
     private ThemedReactContext mThemedReactContext;
     private RCTEventEmitter mEventEmitter;
@@ -231,9 +183,9 @@ public class ReactVodVideoView extends VodVideoView {
         mVideoDuration = 0;
         mVideoBufferedDuration = 0;
 
-        mPlayMode = (bundle.containsKey(LeVideoViewManager.PROP_PLAY_MODE) ? bundle.getInt(LeVideoViewManager.PROP_PLAY_MODE) : -1);
-        mPano = (bundle.containsKey(LeVideoViewManager.PROP_SRC_IS_PANO) && bundle.getBoolean(LeVideoViewManager.PROP_SRC_IS_PANO));
-        mHasSkin = (bundle.containsKey(LeVideoViewManager.PROP_SRC_HAS_SKIN) && bundle.getBoolean(LeVideoViewManager.PROP_SRC_HAS_SKIN));
+        mPlayMode = (bundle.containsKey(PROP_PLAY_MODE) ? bundle.getInt(PROP_PLAY_MODE) : -1);
+        mPano = (bundle.containsKey(PROP_SRC_IS_PANO) && bundle.getBoolean(PROP_SRC_IS_PANO));
+        mHasSkin = (bundle.containsKey(PROP_SRC_HAS_SKIN) && bundle.getBoolean(PROP_SRC_HAS_SKIN));
 
         if (player != null) {
             resetPlayer();
@@ -249,7 +201,7 @@ public class ReactVodVideoView extends VodVideoView {
 //            setDataSource(bundle);
 
             WritableMap event = Arguments.createMap();
-            event.putString(LeVideoViewManager.PROP_SRC, bundle.toString());
+            event.putString(PROP_SRC, bundle.toString());
             mEventEmitter.receiveEvent(getId(), Events.EVENT_LOAD_SOURCE.toString(), event);
         }
     }

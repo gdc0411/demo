@@ -1,4 +1,4 @@
-package com.demoproject.leecoSdk;
+package com.demoproject.leecoSdk.A1;
 
 import android.content.Context;
 

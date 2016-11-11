@@ -1,4 +1,4 @@
-package com.demoproject.leecoSdk;
+package com.demoproject.leecoSdk.A3;
 
 import android.os.Bundle;
 import android.text.TextUtils;

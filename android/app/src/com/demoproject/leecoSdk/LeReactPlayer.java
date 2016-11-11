@@ -1,9 +1,3 @@
-/*************************************************************************
- * Description: 乐视视频播放组件
- * Author: raojia
- * Mail: raojia@le.com
- * Created Time: 2016-10-30
- ************************************************************************/
 package com.demoproject.leecoSdk;
 
 import android.app.Activity;
@@ -15,15 +9,9 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.View;
-
-
 import android.view.WindowManager;
-import android.widget.RelativeLayout;
 
-import com.demoproject.R;
-import com.demoproject.common.Constant;
-import com.demoproject.leecoSdk.vod.UICPVodVideoView;
+
 import com.demoproject.utils.LogUtils;
 import com.demoproject.utils.ScreenBrightnessManager;
 import com.facebook.react.bridge.Arguments;
@@ -32,89 +20,39 @@ import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.uimanager.ThemedReactContext;
 import com.facebook.react.uimanager.events.RCTEventEmitter;
-
+import com.lecloud.sdk.api.md.entity.action.ActionInfo;
 import com.lecloud.sdk.api.md.entity.action.CoverConfig;
 import com.lecloud.sdk.api.md.entity.action.WaterConfig;
+import com.lecloud.sdk.api.md.entity.live.LiveInfo;
+import com.lecloud.sdk.api.md.entity.live.Stream;
 import com.lecloud.sdk.api.md.entity.vod.VideoHolder;
 import com.lecloud.sdk.constant.PlayerEvent;
 import com.lecloud.sdk.constant.PlayerParams;
 import com.lecloud.sdk.constant.StatusCode;
-import com.lecloud.sdk.player.IAdPlayer;
-import com.lecloud.sdk.player.IMediaDataPlayer;
-import com.lecloud.sdk.videoview.IMediaDataVideoView;
-import com.lecloud.sdk.videoview.VideoViewListener;
-import com.letv.android.client.cp.sdk.videoview.live.CPActionLiveVideoView;
-import com.letv.android.client.cp.sdk.videoview.live.CPLiveVideoView;
-import com.letv.android.client.cp.sdk.videoview.vod.CPVodVideoView;
-import com.letv.android.client.skin.videoview.live.UICPActionLiveVideoView;
-import com.letv.android.client.skin.videoview.live.UICPLiveVideoView;
-import com.letv.android.client.skin.videoview.live.UICPPanoActionLiveVideoView;
-import com.letv.android.client.skin.videoview.live.UICPPanoLiveVideoView;
-import com.letv.android.client.skin.videoview.vod.UICPPanoVodVideoView;
+import com.lecloud.sdk.listener.AdPlayerListener;
+import com.lecloud.sdk.listener.MediaDataPlayerListener;
+import com.lecloud.sdk.listener.OnPlayStateListener;
+import com.letv.android.client.cp.sdk.player.live.CPActionLivePlayer;
+import com.letv.android.client.cp.sdk.player.live.CPLivePlayer;
+import com.letv.android.client.cp.sdk.player.vod.CPVodPlayer;
+import com.letvcloud.cmf.MediaPlayer;
 
-
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
+import static com.demoproject.leecoSdk.Constants.*;
+
 /**
- * Created by JiaRao on 2016/31/10.
+ * Created by raojia on 2016/11/10.
  */
-public class LeVideoView extends RelativeLayout implements LifecycleEventListener {
 
-    //定义日志
-    public static final String TAG = Constant.TAG;
-
-    //字段名
-    public static final String EVENT_PROP_TITLE = "title"; //视频标题
-    public static final String EVENT_PROP_DURATION = "duration"; //视频总长
-    public static final String EVENT_PROP_PLAYABLE_DURATION = "playableDuration"; //可播放时长
-    public static final String EVENT_PROP_PLAY_BUFFERPERCENT = PlayerParams.KEY_PLAY_BUFFERPERCENT; //二级进度长度百分比
-    public static final String EVENT_PROP_CURRENT_TIME = "currentTime"; //当前时长
-    public static final String EVENT_PROP_SEEK_TIME = "seekTime"; //跳转时间
-    public static final String EVENT_PROP_NATURALSIZE = "naturalSize"; //视频原始尺寸
-    public static final String EVENT_PROP_VIDEO_BUFF = PlayerParams.KEY_VIDEO_BUFFER;  //缓冲加载进度百分比
-    public static final String EVENT_PROP_RATELIST = "rateList";  //可选择的码率
-    public static final String EVENT_PROP_CURRENT_RATE = "currentRate"; //当前码率
-    public static final String EVENT_PROP_DEFAULT_RATE = "defaultRate"; //默认码率
-    public static final String EVENT_PROP_NEXT_RATE = "nextRate"; //下一个码率
-
-    private static final String EVENT_PROP_MMS_STATCODE = "statusCode";  //媒资返回状态码
-    private static final String EVENT_PROP_MMS_HTTPCODE = "httpCode"; //媒资返回HTTP状态码
-
-    public static final String EVENT_PROP_WIDTH = "width"; //视频宽度
-    public static final String EVENT_PROP_HEIGHT = "height"; //视频高度
-
-    public static final String EVENT_PROP_ORIENTATION = "orientation"; //视频方向
-    public static final String EVENT_PROP_AD_TIME = IAdPlayer.AD_TIME; //广告倒计时
-
-    public static final String EVENT_PROP_STAT_CODE = PlayerParams.KEY_RESULT_STATUS_CODE; //媒资状态码
-    public static final String EVENT_PROP_HTTP_CODE = PlayerParams.KEY_HTTP_CODE; //媒资http请求状态
-
-    public static final String EVENT_PROP_RATE_KEY = "rateKey";  //码率索引
-    public static final String EVENT_PROP_RATE_VALUE = "rateValue";  //码率值
-
-    private static final String EVENT_PROP_LOGO = "logo";  //logo属性
-    private static final String EVENT_PROP_LOAD = "loading";  //加载属性
-    private static final String EVENT_PROP_WMARKS = "waterMarks";  //水印
-
-    private static final String EVENT_PROP_PIC = "pic";  //图片地址
-    private static final String EVENT_PROP_TARGET = "target";  //目标URL
-    private static final String EVENT_PROP_POS = "pos";  //位置
-
-    private static final String EVENT_PROP_VOLUME = "volume";  //音量
-    private static final String EVENT_PROP_BRIGHTNESS = "brightness";  //亮度
-
-    public static final String EVENT_PROP_ERROR = "error";
-    public static final String EVENT_PROP_WHAT = "what";
-    public static final String EVENT_PROP_EXTRA = "extra";
-    public static final String EVENT_PROP_EVENT = "event";
+public class LeReactPlayer extends LeTextureView implements LifecycleEventListener, MediaDataPlayerListener,
+        OnPlayStateListener, AdPlayerListener, MediaPlayer.OnVideoRotateListener {
 
     private ThemedReactContext mThemedReactContext;
     private RCTEventEmitter mEventEmitter;
-
-    /// 播放器
-    private IMediaDataVideoView mLeVideoView;
-    private IMediaDataPlayer mLePlayer;
 
     // 设备信息
     private final AudioManager mAudioManager;
@@ -154,24 +92,6 @@ public class LeVideoView extends RelativeLayout implements LifecycleEventListene
     private boolean isCompleted = false;   // 是否播放完毕
     private boolean isSeeking = false;  // 是否在缓冲加载状态
 
-    /**
-     * 播放器回调函数
-     */
-    VideoViewListener mVideoViewListener = new VideoViewListener() {
-        @Override
-        public void onStateResult(int event, Bundle bundle) {
-            handlePlayerEvent(event, bundle);// 处理播放器类事件
-            handleVideoInfoEvent(event, bundle);// 处理媒资类事件
-            handleAdEvent(event, bundle);//处理广告类事件
-            handleOtherEvent(event, bundle);//处理其他事件
-        }
-
-        @Override
-        public String onGetVideoRateList(LinkedHashMap<String, String> map) {
-            return null;
-        }
-    };
-
     // 进度更新线程
     private Handler mProgressUpdateHandler = new Handler();
     private Runnable mProgressUpdateRunnable = new Runnable() {
@@ -180,7 +100,7 @@ public class LeVideoView extends RelativeLayout implements LifecycleEventListene
         public void run() {
             if (mLePlayerValid && !mPaused && !isSeeking && !isCompleted) {
                 WritableMap event = Arguments.createMap();
-                event.putDouble(EVENT_PROP_CURRENT_TIME, mLeVideoView.getCurrentPosition() / 1000.0);
+                event.putDouble(EVENT_PROP_CURRENT_TIME, getCurrentPosition() / 1000.0);
                 event.putDouble(EVENT_PROP_DURATION, mVideoDuration / 1000.0);
                 event.putDouble(EVENT_PROP_PLAYABLE_DURATION, mVideoBufferedDuration / 1000.0); //TODO:mBufferUpdateRunnable
                 mEventEmitter.receiveEvent(getId(), Events.EVENT_PROGRESS.toString(), event);
@@ -190,12 +110,9 @@ public class LeVideoView extends RelativeLayout implements LifecycleEventListene
     };
 
 
-    /*============================= 播放器外部接口 ===================================*/
+    /*============================= 播放器构造 ===================================*/
 
-    /*
-    * 构造函数
-    */
-    public LeVideoView(ThemedReactContext context) {
+    public LeReactPlayer(ThemedReactContext context) {
         super(context);
         mThemedReactContext = context;
 
@@ -203,27 +120,9 @@ public class LeVideoView extends RelativeLayout implements LifecycleEventListene
         mEventEmitter = mThemedReactContext.getJSModule(RCTEventEmitter.class);
         mThemedReactContext.addLifecycleEventListener(this);
 
-        //创建播放器及监听
+        setSurfaceTextureListener(this);
+
 //        initLePlayerIfNeeded();
-        //setSurfaceTextureListener(this);
-
-        //创建播放更新进度线程
-//        mProgressUpdateRunnable = new Runnable() {
-//
-//            @Override
-//            public void run() {
-//                if (mLePlayerValid && !mPaused && !isSeeking && !isCompleted) {
-//                    WritableMap event = Arguments.createMap();
-//                    event.putDouble(EVENT_PROP_CURRENT_TIME, mLeVideoView.getCurrentPosition() / 1000.0);
-//                    event.putDouble(EVENT_PROP_DURATION, mVideoDuration / 1000.0);
-//                    event.putDouble(EVENT_PROP_PLAYABLE_DURATION, mVideoBufferedDuration / 1000.0); //TODO:mBufferUpdateRunnable
-//                    mEventEmitter.receiveEvent(getId(), Events.EVENT_PROGRESS.toString(), event);
-//                }
-//                mProgressUpdateHandler.postDelayed(mProgressUpdateRunnable, 250);
-//            }
-//        };
-//        mProgressUpdateHandler.post(mProgressUpdateRunnable);
-
 
         //设置声音管理器
         mAudioManager = (AudioManager) context.getSystemService(Service.AUDIO_SERVICE);
@@ -235,7 +134,7 @@ public class LeVideoView extends RelativeLayout implements LifecycleEventListene
 
     // 创建播放器及监听
     private void initLePlayerIfNeeded() {
-        if (mLeVideoView == null) {
+        if (mMediaPlayer == null) {
             mLePlayerValid = false;
 
             Context ctx = mThemedReactContext.getBaseContext();
@@ -244,55 +143,35 @@ public class LeVideoView extends RelativeLayout implements LifecycleEventListene
             ((Activity) ctx).getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
             switch (mPlayMode) {
-                case PlayerParams.VALUE_PLAYER_LIVE:
-                    mLeVideoView = mHasSkin ? (mPano ? new UICPPanoLiveVideoView(ctx)
-                            : new UICPLiveVideoView(ctx))
-                            : new CPLiveVideoView(ctx);
-
-//                    mLePlayer = mHasSkin ? (mPano ? (IMediaDataPlayer) ((UICPPanoLiveVideoView) mLeVideoView).getPlayer()
-//                            : (IMediaDataPlayer) ((UICPLiveVideoView) mLeVideoView).getPlayer())
-//                            : (IMediaDataPlayer) ((CPLiveVideoView) mLeVideoView).getPlayer();
+                case PlayerParams.VALUE_PLAYER_LIVE: //直播机位
+                    mMediaPlayer = new CPLivePlayer(ctx);
                     break;
 
-                case PlayerParams.VALUE_PLAYER_VOD:
-                    mLeVideoView = mHasSkin ? (mPano ? new UICPPanoVodVideoView(ctx)
-                            : new UICPVodVideoView(ctx))
-                            : new CPVodVideoView(ctx);
-
-//                    mLePlayer = mHasSkin ? (mPano ? (IMediaDataPlayer) ((UICPPanoVodVideoView) mLeVideoView).getPlayer()
-//                            : (IMediaDataPlayer) ((UICPVodVideoView) mLeVideoView).getPlayer())
-//                            : (IMediaDataPlayer) ((CPVodVideoView) mLeVideoView).getPlayer();
-
+                case PlayerParams.VALUE_PLAYER_VOD: //云点播
+                    mMediaPlayer = new CPVodPlayer(ctx);
                     break;
 
-                case PlayerParams.VALUE_PLAYER_ACTION_LIVE:
-                    mLeVideoView = mHasSkin ? (mPano ? new UICPPanoActionLiveVideoView(ctx)
-                            : new UICPActionLiveVideoView(ctx))
-                            : new CPActionLiveVideoView(ctx);
-
-//                    mLePlayer = mHasSkin ? (mPano ? (IMediaDataPlayer) ((UICPPanoActionLiveVideoView) mLeVideoView).getPlayer()
-//                            : (IMediaDataPlayer) ((UICPActionLiveVideoView) mLeVideoView).getPlayer())
-//                            : (IMediaDataPlayer) ((CPActionLiveVideoView) mLeVideoView).getPlayer();
+                case PlayerParams.VALUE_PLAYER_ACTION_LIVE: //云直播
+                    mMediaPlayer = new CPActionLivePlayer(ctx);
                     break;
 
-                default:
-                    mLeVideoView = new LeBaseMediaDataVideoView(ctx);
-                    mLePlayer = (IMediaDataPlayer) ((LeBaseMediaDataVideoView) mLePlayer).getPlayer();
+                case PlayerParams.VALUE_PLAYER_MOBILE_LIVE: //移动直播
+                    /* 暂不支持 */
                     break;
+
             }
 
-            //将播放器放入容器
-            View.inflate(mThemedReactContext, R.layout.video_play, this);
-            RelativeLayout videoContainer = (RelativeLayout) findViewById(R.id.videoContainer);
-            videoContainer.addView((View) mLeVideoView, VideoLayoutParams.computeContainerSize(mThemedReactContext, 16, 9));
-//            videoContainer.bringToFront();
-
             //设置播放器监听器
-            mLeVideoView.setVideoViewListener(mVideoViewListener);
+            mMediaPlayer.setOnMediaDataPlayerListener(this);
+            mMediaPlayer.setOnAdPlayerListener(this);
+            mMediaPlayer.setOnPlayStateListener(this);
+            mMediaPlayer.setOnVideoRotateListener(this);
 
-            //mLeVideoView.setDataSource("http://cache.utovr.com/201601131107187320.mp4");
         }
     }
+
+
+    /*============================= 播放器外部接口 ===================================*/
 
     /**
      * 设置数据源
@@ -300,7 +179,7 @@ public class LeVideoView extends RelativeLayout implements LifecycleEventListene
      * @param bundle 数据源包
      * @return
      */
-    public void setDataSource(Bundle bundle) {
+    public void setSrc(Bundle bundle) {
 
         Log.d(TAG, LogUtils.getTraceInfo() + "外部控制——— 传入数据源 bundle:" + bundle);
 
@@ -310,29 +189,27 @@ public class LeVideoView extends RelativeLayout implements LifecycleEventListene
         mVideoDuration = 0;
         mVideoBufferedDuration = 0;
 
-        mPlayMode = (bundle.containsKey(LeVideoViewManager.PROP_PLAY_MODE) ? bundle.getInt(LeVideoViewManager.PROP_PLAY_MODE) : -1);
-        mPano = (bundle.containsKey(LeVideoViewManager.PROP_SRC_IS_PANO) && bundle.getBoolean(LeVideoViewManager.PROP_SRC_IS_PANO));
-        mHasSkin = (bundle.containsKey(LeVideoViewManager.PROP_SRC_HAS_SKIN) && bundle.getBoolean(LeVideoViewManager.PROP_SRC_HAS_SKIN));
+        mPlayMode = (bundle.containsKey(PROP_PLAY_MODE) ? bundle.getInt(PROP_PLAY_MODE) : -1);
+        mPano = (bundle.containsKey(PROP_SRC_IS_PANO) && bundle.getBoolean(PROP_SRC_IS_PANO));
+        mHasSkin = (bundle.containsKey(PROP_SRC_HAS_SKIN) && bundle.getBoolean(PROP_SRC_HAS_SKIN));
 
         initLePlayerIfNeeded();
 
-        if (mLeVideoView != null) {
-            mLeVideoView.resetPlayer();
-//            mLeVideoView.stopAndRelease();
+        if (mMediaPlayer != null) {
+            mMediaPlayer.clearDataSource();
 
             mLastPosition = 0;
             mRateList = null;
             isCompleted = false;
 
             if (bundle.containsKey("path"))
-                mLeVideoView.setDataSource(bundle.getString("path"));
+                setDataSource(mThemedReactContext.getBaseContext(), bundle.getString("path"));
             else
-                mLeVideoView.setDataSource(bundle);
+                setDataSource(mThemedReactContext.getBaseContext(), bundle);
 
-            mLeVideoView.setVideoViewListener(mVideoViewListener);
 
             WritableMap event = Arguments.createMap();
-            event.putString(LeVideoViewManager.PROP_SRC, bundle.toString());
+            event.putString(PROP_SRC, bundle.toString());
             mEventEmitter.receiveEvent(getId(), Events.EVENT_LOAD_SOURCE.toString(), event);
 
         }
@@ -343,7 +220,7 @@ public class LeVideoView extends RelativeLayout implements LifecycleEventListene
      *
      * @param msec the msec
      */
-    public void seekTo(float msec) {
+    public void setSeekTo(float msec) {
         Log.d(TAG, LogUtils.getTraceInfo() + "外部控制——— SEEK TO：" + msec);
         if (mLePlayerValid) {
             if (msec <= 0 || msec >= mVideoDuration) {
@@ -351,21 +228,20 @@ public class LeVideoView extends RelativeLayout implements LifecycleEventListene
             }
 
             WritableMap event = Arguments.createMap();
-            event.putDouble(EVENT_PROP_CURRENT_TIME, mLeVideoView.getCurrentPosition() / 1000.0);
+            event.putDouble(EVENT_PROP_CURRENT_TIME, getCurrentPosition() / 1000.0);
             event.putDouble(EVENT_PROP_SEEK_TIME, msec / 1000.0);
 //            mEventEmitter.receiveEvent(getId(), Events.EVENT_SEEK.toString(), event);
 
-            mLeVideoView.seekTo(Math.round(msec * 1000.0f));
+            seekTo(Math.round(msec * 1000.0f));
 
             mLastPosition = 0; // 上一位置不再可用?
 
             if (isCompleted && mVideoDuration != 0 && msec < mVideoDuration) {
                 isCompleted = false;
-                mLeVideoView.retry();
+                mMediaPlayer.retry();
             }
         }
     }
-
 
     /**
      * 视频切换码率
@@ -382,12 +258,11 @@ public class LeVideoView extends RelativeLayout implements LifecycleEventListene
         if (mLePlayerValid && mRateList != null && mRateList.containsKey(rate)) {
             // 保存当前位置
             saveLastPostion();
-            //mCurrentRate = mLePlayer.getLastRate();
 
             //切换码率
-//            ((UICPVodVideoView)mLeVideoView).setDefination(rate);
-            mLePlayer.setDataSourceByRate(rate);
+            setDataSourceByRate(mThemedReactContext.getBaseContext(), rate);
 
+            mCurrentRate = rate;
 
             WritableMap event = Arguments.createMap();
             event.putString(EVENT_PROP_CURRENT_RATE, mCurrentRate);
@@ -395,7 +270,6 @@ public class LeVideoView extends RelativeLayout implements LifecycleEventListene
             mEventEmitter.receiveEvent(getId(), Events.EVENT_RATE_CHANG.toString(), event);
         }
     }
-
 
     /**
      * 音量控制 0-100
@@ -426,10 +300,10 @@ public class LeVideoView extends RelativeLayout implements LifecycleEventListene
      * 保存上次播放位置
      */
     private void saveLastPostion() {
-        if (mLeVideoView == null || mLeVideoView.getCurrentPosition() == 0) {
+        if (mMediaPlayer == null || getCurrentPosition() == 0) {
             return;
         }
-        mLastPosition = mLeVideoView.getCurrentPosition();
+        mLastPosition = getCurrentPosition();
     }
 
     /**
@@ -443,53 +317,47 @@ public class LeVideoView extends RelativeLayout implements LifecycleEventListene
         }
     }
 
-
     /**
      * 设置视频暂停和启动
      *
      * @param paused paused
      */
     public void setPausedModifier(final boolean paused) {
-        Log.d(TAG, LogUtils.getTraceInfo() + "外部控制——— 是否暂停 :" + paused);
 
         mPaused = paused;
+
         if (!mLePlayerValid) {
             return;
         }
 
         if (mPaused) {
-            if (mLeVideoView.isPlaying()) {//播放中
-
-                mLeVideoView.onPause();
+            if (isPlaying()) {
+                pause();
 
                 //暂停更新进度
                 mProgressUpdateHandler.removeCallbacks(mProgressUpdateRunnable);
 
                 WritableMap event = Arguments.createMap();
                 event.putDouble(EVENT_PROP_DURATION, mVideoDuration / 1000.0);
-                event.putDouble(EVENT_PROP_CURRENT_TIME, mLeVideoView.getCurrentPosition() / 1000.0);
+                event.putDouble(EVENT_PROP_CURRENT_TIME, getCurrentPosition() / 1000.0);
                 mEventEmitter.receiveEvent(getId(), Events.EVENT_PAUSE.toString(), event);
                 Log.d(TAG, LogUtils.getTraceInfo() + "外部控制——— 暂停播放 onPause ");
-
             }
         } else {
-            if (!mLeVideoView.isPlaying()) {//播放中
-
-                mLeVideoView.onStart();
+            if (!isPlaying()) {
+                start();
 
                 //启动更新进度
                 mProgressUpdateHandler.post(mProgressUpdateRunnable);
 
                 WritableMap event = Arguments.createMap();
                 event.putDouble(EVENT_PROP_DURATION, mVideoDuration / 1000.0);
-                event.putDouble(EVENT_PROP_CURRENT_TIME, mLeVideoView.getCurrentPosition() / 1000.0);
+                event.putDouble(EVENT_PROP_CURRENT_TIME, getCurrentPosition() / 1000.0);
                 mEventEmitter.receiveEvent(getId(), Events.EVENT_RESUME.toString(), event);
                 Log.d(TAG, LogUtils.getTraceInfo() + "外部控制——— 开始播放 onStart ");
-
             }
         }
     }
-
 
     /**
      * 设置回到上次播放的地址
@@ -503,11 +371,12 @@ public class LeVideoView extends RelativeLayout implements LifecycleEventListene
             return;
         }
         //回到上次播放位置
-        if (mLePlayer != null && mLastPosition != 0) {
-            mLePlayer.seekToLastPostion(lastPosition);
+        if (mMediaPlayer != null && mLastPosition != 0) {
+            mMediaPlayer.seekToLastPostion(lastPosition);
         }
 
     }
+
 
     /**
      * 根据当前状态设置播放器
@@ -517,23 +386,21 @@ public class LeVideoView extends RelativeLayout implements LifecycleEventListene
         setLastPosModifier(mLastPosition);
     }
 
-
     /**
      * 销毁播放器，释放资源
      */
     public void cleanupMediaPlayerResources() {
-        if (mLeVideoView != null) {
+        if (mMediaPlayer != null) {
             Log.d(TAG, LogUtils.getTraceInfo() + "控件清理 cleanupMediaPlayerResources 调起！");
             mLePlayerValid = false;
-            if (mLeVideoView.isPlaying()) mLeVideoView.stopAndRelease();
-            mLeVideoView = null;
-
+            mMediaPlayer.stop();
+            mMediaPlayer.release();
+            mMediaPlayer = null;
         }
     }
 
 
-    /*============================= 事件回调处理 ===================================*/
-
+/*============================= 事件回调处理 ===================================*/
 
     /**
      * 处理播放器准备完成事件
@@ -544,7 +411,7 @@ public class LeVideoView extends RelativeLayout implements LifecycleEventListene
         //开始封装回调事件参数
         WritableMap event = Arguments.createMap();
 
-        mVideoDuration = mLeVideoView.getDuration();
+        mVideoDuration = getDuration();
 
         // 视频基本信息，长/宽/方向
         WritableMap naturalSize = Arguments.createMap();
@@ -579,6 +446,7 @@ public class LeVideoView extends RelativeLayout implements LifecycleEventListene
             }
             event.putArray(EVENT_PROP_RATELIST, ratesList);  //可用码率
             event.putString(EVENT_PROP_DEFAULT_RATE, mDefaultRate);  //默认码率
+            event.putString(EVENT_PROP_CURRENT_RATE, mCurrentRate);  //当前码率
         }
 
         // 视频封面信息: LOGO
@@ -802,7 +670,6 @@ public class LeVideoView extends RelativeLayout implements LifecycleEventListene
      * @return boolean
      */
     public boolean processMediaVodLoad(int what, Bundle bundle) {
-
         VideoHolder videoHolder = bundle.getParcelable(PlayerParams.KEY_RESULT_DATA);
         if (videoHolder == null) return false;
 
@@ -818,48 +685,70 @@ public class LeVideoView extends RelativeLayout implements LifecycleEventListene
         mVideoDuration = Long.parseLong(videoHolder.getVideoDuration());
 
         //获得默认码率和码率列表
+        if (mRateList != null) mRateList.clear();
         mRateList = videoHolder.getVtypes();
         mCurrentRate = mDefaultRate = videoHolder.getDefaultVtype();
 
         //获得加载和水印图
         mCoverConfig = videoHolder.getCoverConfig();
 
-        Log.d(TAG, LogUtils.getTraceInfo() + "媒资数据事件——— event:" + what + " bundle:" + bundle.toString());
+        //设置当前码率为默认
+        mMediaPlayer.setDataSourceByRate(mCurrentRate);
+
+        Log.d(TAG, LogUtils.getTraceInfo() + "媒资数据事件——— 点播事件 event:" + what + " bundle:" + bundle.toString());
         return true;
     }
 
     /**
-     * 处理媒资直播数据获取的的事件
+     * 云直播返回的机位信息事件
      *
      * @param what
      * @param bundle null
      * @return boolean
      */
     public boolean processMediaLiveLoad(int what, Bundle bundle) {
-        //todo 直播信息获取
-        WritableMap event = Arguments.createMap();
-        event.putInt(EVENT_PROP_STAT_CODE, (bundle != null && bundle.containsKey(EVENT_PROP_STAT_CODE)) ? bundle.getInt(EVENT_PROP_STAT_CODE) : -1);
-//        event.putString(EVENT_PROP_RET_DATA, (bundle != null && bundle.containsKey(EVENT_PROP_RET_DATA)) ? bundle.getString(EVENT_PROP_RET_DATA) : "");
-        event.putInt(EVENT_PROP_HTTP_CODE, (bundle != null && bundle.containsKey(EVENT_PROP_HTTP_CODE)) ? bundle.getInt(EVENT_PROP_HTTP_CODE) : -1);
-//        mEventEmitter.receiveEvent(getId(), Events.EVENT_MEDIA_LIVE.toString(), event);
+        LiveInfo liveInfo = bundle.getParcelable(PlayerParams.KEY_RESULT_DATA);
+        if (liveInfo == null) return false;
+
+        mMediaStatusCode = bundle.getInt(EVENT_PROP_STAT_CODE);
+        mMediaHttpCode = bundle.getInt(EVENT_PROP_HTTP_CODE);
+
+        //获得默认码率和码率列表
+        if (mRateList != null) mRateList.clear();
+        mRateList = liveInfo.getVtypes();
+        mCurrentRate = mDefaultRate = liveInfo.getDefaultVtype();
+
+        Log.d(TAG, LogUtils.getTraceInfo() + "媒资数据事件——— 直播机位事件 event:" + what + " bundle:" + bundle.toString());
         return true;
     }
 
     /**
-     * 处理媒资活动直播数据获取的的事件
+     *  处理云直播返回的活动信息（1个活动最多包含4个机位，在后台配置）
      *
      * @param what   MEDIADATA_ACTION
      * @param bundle null
      * @return boolean
      */
     public boolean processMediaActionLoad(int what, Bundle bundle) {
-        // TODO 活动直播信息获取
-        WritableMap event = Arguments.createMap();
-        event.putInt(EVENT_PROP_STAT_CODE, (bundle != null && bundle.containsKey(EVENT_PROP_STAT_CODE)) ? bundle.getInt(EVENT_PROP_STAT_CODE) : -1);
-//        event.putString(EVENT_PROP_RET_DATA, (bundle != null && bundle.containsKey(EVENT_PROP_RET_DATA)) ? bundle.getString(EVENT_PROP_RET_DATA) : "");
-        event.putInt(EVENT_PROP_HTTP_CODE, (bundle != null && bundle.containsKey(EVENT_PROP_HTTP_CODE)) ? bundle.getInt(EVENT_PROP_HTTP_CODE) : -1);
-//        mEventEmitter.receiveEvent(getId(), Events.EVENT_MEDIA_ACTION.toString(), event);
-        return true;
+        ActionInfo actionInfo = bundle.getParcelable(PlayerParams.KEY_RESULT_DATA);
+        if (actionInfo == null) return false;
+
+        mMediaStatusCode = bundle.getInt(EVENT_PROP_STAT_CODE);
+        mMediaHttpCode = bundle.getInt(EVENT_PROP_HTTP_CODE);
+
+        //获得视频标题
+        String title = actionInfo.getActivityName();
+        if (!TextUtils.isEmpty(title)) {
+            mVideoTitle = title;
+        }
+
+        //获得默认码率和码率列表
+        if (mRateList != null) mRateList.clear();
+        actionInfo.get
+        mRateList = liveInfo.getVtypes();
+        mCurrentRate = mDefaultRate = liveInfo.getDefaultVtype();
+
+        Log.d(TAG, LogUtils.getTraceInfo() + "媒资数据事件——— 直播机位事件 event:" + what + " bundle:" + bundle.toString());
     }
 
     /**
@@ -951,7 +840,8 @@ public class LeVideoView extends RelativeLayout implements LifecycleEventListene
     /**
      * 处理播放器事件，具体事件参见IPlayer类
      */
-    private void handlePlayerEvent(int state, Bundle bundle) {
+    @Override
+    public void videoState(int state, Bundle bundle) {
         boolean handled = false;
         String event = "";
         switch (state) {
@@ -1053,33 +943,41 @@ public class LeVideoView extends RelativeLayout implements LifecycleEventListene
             Log.d(TAG, LogUtils.getTraceInfo() + "播放器事件——— event " + event + " state " + state + " bundle " + bundle);
     }
 
+    @Override
+    public void onVideoRotate(int i) {
+
+    }
+
+
     /**
      * 处理视频信息类事件
      */
-    private void handleVideoInfoEvent(int state, Bundle bundle) {
+    @Override
+    public void onMediaDataPlayerEvent(int state, Bundle bundle) {
         boolean handled = false;
         String event = "";
         switch (state) {
 
-            case PlayerEvent.MEDIADATA_VOD:  // 处理媒资返回点播对应数据  6000
+            case PlayerEvent.MEDIADATA_VOD:  // 云点播返回媒资信息  6000
                 handled = true;
                 event = "MEDIADATA_VOD";
                 processMediaVodLoad(state, bundle);
                 break;
 
-            case PlayerEvent.MEDIADATA_LIVE:  // 处理媒资返回直播对应数据  6001
+            case PlayerEvent.MEDIADATA_LIVE:  // 云直播返回的机位信息  6001
                 handled = true;
                 event = "MEDIADATA_LIVE";
                 processMediaLiveLoad(state, bundle);
                 break;
 
-            case PlayerEvent.MEDIADATA_GET_PLAYURL:  // 处理调度返回（直播、活动直播）对应数据  6002
+            case PlayerEvent.MEDIADATA_GET_PLAYURL:  // 云直播请求调度服务器回来的结果（rtmp直播）  6002
+
                 handled = true;
                 event = "MEDIADATA_GET_PLAYURL";
                 processMediaPlayURLLoad(state, bundle);
                 break;
 
-            case PlayerEvent.MEDIADATA_ACTION:  // 处理媒资返回活动直播对应数据  6003
+            case PlayerEvent.MEDIADATA_ACTION:  // 云直播返回的活动信息（1个活动最多4个机位，在后台配置）6003
                 handled = true;
                 event = "MEDIADATA_ACTION";
                 processMediaActionLoad(state, bundle);
@@ -1093,7 +991,8 @@ public class LeVideoView extends RelativeLayout implements LifecycleEventListene
     /**
      * 处理广告类事件
      */
-    private void handleAdEvent(int state, Bundle bundle) {
+    @Override
+    public void onAdPlayerEvent(int state, Bundle bundle) {
         boolean handled = false;
         String event = "";
         switch (state) {
@@ -1130,62 +1029,47 @@ public class LeVideoView extends RelativeLayout implements LifecycleEventListene
         }
         if (handled)
             Log.d(TAG, LogUtils.getTraceInfo() + "广告播放事件——— event " + event + " state " + state + " bundle " + bundle);
+
     }
 
-    /**
-     * 处理其他类事件
-     */
-    private void handleOtherEvent(int state, Bundle bundle) {
-        boolean handled = false;
-        String event = "";
-        switch (state) {
 
-            case PlayerEvent.CDEEVENT_EVENT_CDE_LINK_SHELL_ERROR: // CDE连接命令出错 1
-                handled = true;
-                event = "CDEEVENT_EVENT_CDE_LINK_SHELL_ERROR";
-                processOtherEvent(state, bundle);
-                break;
+    @Override
+    protected void onDetachedFromWindow() {
+        mLePlayerValid = false;
+        super.onDetachedFromWindow();
+    }
 
-            case PlayerEvent.CDEEVENT_EVENT_CDE_READY: // CDE 准备完毕 2
-                handled = true;
-                event = "CDEEVENT_EVENT_CDE_READY";
-                processOtherEvent(state, bundle);
-                break;
-
-        }
-
-        if (handled)
-            Log.d(TAG, LogUtils.getTraceInfo() + "其他类事件——— event " + event + " state " + state + " bundle " + bundle);
+    @Override
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
     }
 
     /*============================= 容器生命周期方法 ===================================*/
 
+
     @Override
     public void onHostResume() {
-        if (mLeVideoView != null) {
+        if (mMediaPlayer != null) {
             Log.d(TAG, LogUtils.getTraceInfo() + "生命周期事件 onHostResume 调起！");
-            mLeVideoView.onResume();
+            mMediaPlayer.retry();
         }
     }
 
     @Override
     public void onHostPause() {
-        if (mLeVideoView != null) {
+        if (mMediaPlayer != null) {
             Log.d(TAG, LogUtils.getTraceInfo() + "生命周期事件 onHostPause 调起！");
             saveLastPostion();
 //            mLeVideoView.stopAndRelease();
-            mLeVideoView.onPause();
+            mMediaPlayer.pause();
         }
     }
 
-
     @Override
     public void onHostDestroy() {
-        if (mLeVideoView != null) {
+        if (mMediaPlayer != null) {
             Log.d(TAG, LogUtils.getTraceInfo() + "生命周期事件 onHostDestroy 调起！");
-            mLeVideoView.onDestroy();
             cleanupMediaPlayerResources();
-            //mLeVideoView.onDestroy();
         }
     }
 }

@@ -1,4 +1,10 @@
-package com.demoproject.leecoSdk;
+/*************************************************************************
+ * Description: 乐视视频播放组件
+ * Author: raojia
+ * Mail: raojia@le.com
+ * Created Time: 2016-10-30
+ ************************************************************************/
+package com.demoproject.leecoSdk.A1;
 
 import android.app.Activity;
 import android.app.Service;
@@ -10,12 +16,14 @@ import android.os.Handler;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+
+
 import android.view.WindowManager;
 import android.widget.RelativeLayout;
 
 import com.demoproject.R;
-import com.demoproject.common.Constant;
-import com.demoproject.leecoSdk.vod.UICPVodVideoView;
+import com.demoproject.leecoSdk.A2.UICPVodVideoView;
+import com.demoproject.leecoSdk.Events;
 import com.demoproject.utils.LogUtils;
 import com.demoproject.utils.ScreenBrightnessManager;
 import com.facebook.react.bridge.Arguments;
@@ -24,20 +32,16 @@ import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.uimanager.ThemedReactContext;
 import com.facebook.react.uimanager.events.RCTEventEmitter;
+
 import com.lecloud.sdk.api.md.entity.action.CoverConfig;
 import com.lecloud.sdk.api.md.entity.action.WaterConfig;
 import com.lecloud.sdk.api.md.entity.vod.VideoHolder;
 import com.lecloud.sdk.constant.PlayerEvent;
 import com.lecloud.sdk.constant.PlayerParams;
 import com.lecloud.sdk.constant.StatusCode;
-import com.lecloud.sdk.listener.AdPlayerListener;
-import com.lecloud.sdk.listener.MediaDataPlayerListener;
-import com.lecloud.sdk.listener.OnPlayStateListener;
-import com.lecloud.sdk.player.IAdPlayer;
 import com.lecloud.sdk.player.IMediaDataPlayer;
-import com.lecloud.sdk.player.live.LivePlayer;
+import com.lecloud.sdk.videoview.IMediaDataVideoView;
 import com.lecloud.sdk.videoview.VideoViewListener;
-import com.letv.android.client.cp.sdk.player.vod.CPVodPlayer;
 import com.letv.android.client.cp.sdk.videoview.live.CPActionLiveVideoView;
 import com.letv.android.client.cp.sdk.videoview.live.CPLiveVideoView;
 import com.letv.android.client.cp.sdk.videoview.vod.CPVodVideoView;
@@ -46,68 +50,25 @@ import com.letv.android.client.skin.videoview.live.UICPLiveVideoView;
 import com.letv.android.client.skin.videoview.live.UICPPanoActionLiveVideoView;
 import com.letv.android.client.skin.videoview.live.UICPPanoLiveVideoView;
 import com.letv.android.client.skin.videoview.vod.UICPPanoVodVideoView;
-import com.letvcloud.cmf.MediaPlayer;
+
+import static com.demoproject.leecoSdk.Constants.*;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import static android.content.ContentValues.TAG;
+
 /**
- * Created by raojia on 2016/11/10.
+ * Created by JiaRao on 2016/31/10.
  */
-
-public class ReactVideoView extends VideoTextureView implements LifecycleEventListener, MediaDataPlayerListener,
-        OnPlayStateListener, AdPlayerListener,  MediaPlayer.OnVideoRotateListener {
-
-    //定义日志
-    public static final String TAG = Constant.TAG;
-
-    //字段名
-    public static final String EVENT_PROP_TITLE = "title"; //视频标题
-    public static final String EVENT_PROP_DURATION = "duration"; //视频总长
-    public static final String EVENT_PROP_PLAYABLE_DURATION = "playableDuration"; //可播放时长
-    public static final String EVENT_PROP_PLAY_BUFFERPERCENT = PlayerParams.KEY_PLAY_BUFFERPERCENT; //二级进度长度百分比
-    public static final String EVENT_PROP_CURRENT_TIME = "currentTime"; //当前时长
-    public static final String EVENT_PROP_SEEK_TIME = "seekTime"; //跳转时间
-    public static final String EVENT_PROP_NATURALSIZE = "naturalSize"; //视频原始尺寸
-    public static final String EVENT_PROP_VIDEO_BUFF = PlayerParams.KEY_VIDEO_BUFFER;  //缓冲加载进度百分比
-    public static final String EVENT_PROP_RATELIST = "rateList";  //可选择的码率
-    public static final String EVENT_PROP_CURRENT_RATE = "currentRate"; //当前码率
-    public static final String EVENT_PROP_DEFAULT_RATE = "defaultRate"; //默认码率
-    public static final String EVENT_PROP_NEXT_RATE = "nextRate"; //下一个码率
-
-    private static final String EVENT_PROP_MMS_STATCODE = "statusCode";  //媒资返回状态码
-    private static final String EVENT_PROP_MMS_HTTPCODE = "httpCode"; //媒资返回HTTP状态码
-
-    public static final String EVENT_PROP_WIDTH = "width"; //视频宽度
-    public static final String EVENT_PROP_HEIGHT = "height"; //视频高度
-
-    public static final String EVENT_PROP_ORIENTATION = "orientation"; //视频方向
-    public static final String EVENT_PROP_AD_TIME = IAdPlayer.AD_TIME; //广告倒计时
-
-    public static final String EVENT_PROP_STAT_CODE = PlayerParams.KEY_RESULT_STATUS_CODE; //媒资状态码
-    public static final String EVENT_PROP_HTTP_CODE = PlayerParams.KEY_HTTP_CODE; //媒资http请求状态
-
-    public static final String EVENT_PROP_RATE_KEY = "rateKey";  //码率索引
-    public static final String EVENT_PROP_RATE_VALUE = "rateValue";  //码率值
-
-    private static final String EVENT_PROP_LOGO = "logo";  //logo属性
-    private static final String EVENT_PROP_LOAD = "loading";  //加载属性
-    private static final String EVENT_PROP_WMARKS = "waterMarks";  //水印
-
-    private static final String EVENT_PROP_PIC = "pic";  //图片地址
-    private static final String EVENT_PROP_TARGET = "target";  //目标URL
-    private static final String EVENT_PROP_POS = "pos";  //位置
-
-    private static final String EVENT_PROP_VOLUME = "volume";  //音量
-    private static final String EVENT_PROP_BRIGHTNESS = "brightness";  //亮度
-
-    public static final String EVENT_PROP_ERROR = "error";
-    public static final String EVENT_PROP_WHAT = "what";
-    public static final String EVENT_PROP_EXTRA = "extra";
-    public static final String EVENT_PROP_EVENT = "event";
+public class LeVideoView extends RelativeLayout implements LifecycleEventListener {
 
     private ThemedReactContext mThemedReactContext;
     private RCTEventEmitter mEventEmitter;
+
+    /// 播放器
+    private IMediaDataVideoView mLeVideoView;
+    private IMediaDataPlayer mLePlayer;
 
     // 设备信息
     private final AudioManager mAudioManager;
@@ -147,6 +108,24 @@ public class ReactVideoView extends VideoTextureView implements LifecycleEventLi
     private boolean isCompleted = false;   // 是否播放完毕
     private boolean isSeeking = false;  // 是否在缓冲加载状态
 
+    /**
+     * 播放器回调函数
+     */
+    VideoViewListener mVideoViewListener = new VideoViewListener() {
+        @Override
+        public void onStateResult(int event, Bundle bundle) {
+            handlePlayerEvent(event, bundle);// 处理播放器类事件
+            handleVideoInfoEvent(event, bundle);// 处理媒资类事件
+            handleAdEvent(event, bundle);//处理广告类事件
+            handleOtherEvent(event, bundle);//处理其他事件
+        }
+
+        @Override
+        public String onGetVideoRateList(LinkedHashMap<String, String> map) {
+            return null;
+        }
+    };
+
     // 进度更新线程
     private Handler mProgressUpdateHandler = new Handler();
     private Runnable mProgressUpdateRunnable = new Runnable() {
@@ -155,7 +134,7 @@ public class ReactVideoView extends VideoTextureView implements LifecycleEventLi
         public void run() {
             if (mLePlayerValid && !mPaused && !isSeeking && !isCompleted) {
                 WritableMap event = Arguments.createMap();
-                event.putDouble(EVENT_PROP_CURRENT_TIME, getCurrentPosition() / 1000.0);
+                event.putDouble(EVENT_PROP_CURRENT_TIME, mLeVideoView.getCurrentPosition() / 1000.0);
                 event.putDouble(EVENT_PROP_DURATION, mVideoDuration / 1000.0);
                 event.putDouble(EVENT_PROP_PLAYABLE_DURATION, mVideoBufferedDuration / 1000.0); //TODO:mBufferUpdateRunnable
                 mEventEmitter.receiveEvent(getId(), Events.EVENT_PROGRESS.toString(), event);
@@ -165,9 +144,12 @@ public class ReactVideoView extends VideoTextureView implements LifecycleEventLi
     };
 
 
-    /*============================= 播放器构造 ===================================*/
+    /*============================= 播放器外部接口 ===================================*/
 
-    public ReactVideoView(ThemedReactContext context) {
+    /*
+    * 构造函数
+    */
+    public LeVideoView(ThemedReactContext context) {
         super(context);
         mThemedReactContext = context;
 
@@ -175,9 +157,27 @@ public class ReactVideoView extends VideoTextureView implements LifecycleEventLi
         mEventEmitter = mThemedReactContext.getJSModule(RCTEventEmitter.class);
         mThemedReactContext.addLifecycleEventListener(this);
 
-        setSurfaceTextureListener(this);
+        //创建播放器及监听
+//        initLePlayerIfNeeded();
+        //setSurfaceTextureListener(this);
 
-        initLePlayerIfNeeded();
+        //创建播放更新进度线程
+//        mProgressUpdateRunnable = new Runnable() {
+//
+//            @Override
+//            public void run() {
+//                if (mLePlayerValid && !mPaused && !isSeeking && !isCompleted) {
+//                    WritableMap event = Arguments.createMap();
+//                    event.putDouble(EVENT_PROP_CURRENT_TIME, mLeVideoView.getCurrentPosition() / 1000.0);
+//                    event.putDouble(EVENT_PROP_DURATION, mVideoDuration / 1000.0);
+//                    event.putDouble(EVENT_PROP_PLAYABLE_DURATION, mVideoBufferedDuration / 1000.0); //TODO:mBufferUpdateRunnable
+//                    mEventEmitter.receiveEvent(getId(), Events.EVENT_PROGRESS.toString(), event);
+//                }
+//                mProgressUpdateHandler.postDelayed(mProgressUpdateRunnable, 250);
+//            }
+//        };
+//        mProgressUpdateHandler.post(mProgressUpdateRunnable);
+
 
         //设置声音管理器
         mAudioManager = (AudioManager) context.getSystemService(Service.AUDIO_SERVICE);
@@ -189,7 +189,7 @@ public class ReactVideoView extends VideoTextureView implements LifecycleEventLi
 
     // 创建播放器及监听
     private void initLePlayerIfNeeded() {
-        if (mMediaPlayer == null) {
+        if (mLeVideoView == null) {
             mLePlayerValid = false;
 
             Context ctx = mThemedReactContext.getBaseContext();
@@ -199,28 +199,54 @@ public class ReactVideoView extends VideoTextureView implements LifecycleEventLi
 
             switch (mPlayMode) {
                 case PlayerParams.VALUE_PLAYER_LIVE:
+                    mLeVideoView = mHasSkin ? (mPano ? new UICPPanoLiveVideoView(ctx)
+                            : new UICPLiveVideoView(ctx))
+                            : new CPLiveVideoView(ctx);
+
+//                    mLePlayer = mHasSkin ? (mPano ? (IMediaDataPlayer) ((UICPPanoLiveVideoView) mLeVideoView).getPlayer()
+//                            : (IMediaDataPlayer) ((UICPLiveVideoView) mLeVideoView).getPlayer())
+//                            : (IMediaDataPlayer) ((CPLiveVideoView) mLeVideoView).getPlayer();
                     break;
 
                 case PlayerParams.VALUE_PLAYER_VOD:
-                    mMediaPlayer = new CPVodPlayer(ctx);
+                    mLeVideoView = mHasSkin ? (mPano ? new UICPPanoVodVideoView(ctx)
+                            : new UICPVodVideoView(ctx))
+                            : new CPVodVideoView(ctx);
+
+//                    mLePlayer = mHasSkin ? (mPano ? (IMediaDataPlayer) ((UICPPanoVodVideoView) mLeVideoView).getPlayer()
+//                            : (IMediaDataPlayer) ((UICPVodVideoView) mLeVideoView).getPlayer())
+//                            : (IMediaDataPlayer) ((CPVodVideoView) mLeVideoView).getPlayer();
+
                     break;
 
                 case PlayerParams.VALUE_PLAYER_ACTION_LIVE:
+                    mLeVideoView = mHasSkin ? (mPano ? new UICPPanoActionLiveVideoView(ctx)
+                            : new UICPActionLiveVideoView(ctx))
+                            : new CPActionLiveVideoView(ctx);
+
+//                    mLePlayer = mHasSkin ? (mPano ? (IMediaDataPlayer) ((UICPPanoActionLiveVideoView) mLeVideoView).getPlayer()
+//                            : (IMediaDataPlayer) ((UICPActionLiveVideoView) mLeVideoView).getPlayer())
+//                            : (IMediaDataPlayer) ((CPActionLiveVideoView) mLeVideoView).getPlayer();
                     break;
 
+                default:
+                    mLeVideoView = new LeBaseMediaDataVideoView(ctx);
+                    mLePlayer = (IMediaDataPlayer) ((LeBaseMediaDataVideoView) mLePlayer).getPlayer();
+                    break;
             }
 
-            //设置播放器监听器
-            mMediaPlayer.setOnMediaDataPlayerListener(this);
-            mMediaPlayer.setOnAdPlayerListener(this);
-            mMediaPlayer.setOnPlayStateListener(this);
-            mMediaPlayer.setOnVideoRotateListener(this);
+            //将播放器放入容器
+            View.inflate(mThemedReactContext, R.layout.video_play, this);
+            RelativeLayout videoContainer = (RelativeLayout) findViewById(R.id.videoContainer);
+            videoContainer.addView((View) mLeVideoView, VideoLayoutParams.computeContainerSize(mThemedReactContext, 16, 9));
+//            videoContainer.bringToFront();
 
+            //设置播放器监听器
+            mLeVideoView.setVideoViewListener(mVideoViewListener);
+
+            //mLeVideoView.setDataSource("http://cache.utovr.com/201601131107187320.mp4");
         }
     }
-
-
-    /*============================= 播放器外部接口 ===================================*/
 
     /**
      * 设置数据源
@@ -228,7 +254,7 @@ public class ReactVideoView extends VideoTextureView implements LifecycleEventLi
      * @param bundle 数据源包
      * @return
      */
-    public void setSrc(Bundle bundle) {
+    public void setDataSource(Bundle bundle) {
 
         Log.d(TAG, LogUtils.getTraceInfo() + "外部控制——— 传入数据源 bundle:" + bundle);
 
@@ -238,28 +264,29 @@ public class ReactVideoView extends VideoTextureView implements LifecycleEventLi
         mVideoDuration = 0;
         mVideoBufferedDuration = 0;
 
-        mPlayMode = (bundle.containsKey(LeVideoViewManager.PROP_PLAY_MODE) ? bundle.getInt(LeVideoViewManager.PROP_PLAY_MODE) : -1);
-        mPano = (bundle.containsKey(LeVideoViewManager.PROP_SRC_IS_PANO) && bundle.getBoolean(LeVideoViewManager.PROP_SRC_IS_PANO));
-        mHasSkin = (bundle.containsKey(LeVideoViewManager.PROP_SRC_HAS_SKIN) && bundle.getBoolean(LeVideoViewManager.PROP_SRC_HAS_SKIN));
+        mPlayMode = (bundle.containsKey(PROP_PLAY_MODE) ? bundle.getInt(PROP_PLAY_MODE) : -1);
+        mPano = (bundle.containsKey(PROP_SRC_IS_PANO) && bundle.getBoolean(PROP_SRC_IS_PANO));
+        mHasSkin = (bundle.containsKey(PROP_SRC_HAS_SKIN) && bundle.getBoolean(PROP_SRC_HAS_SKIN));
 
         initLePlayerIfNeeded();
 
-        if (mMediaPlayer != null) {
-            mMediaPlayer.reset();
-//            mMediaPlayer.stopAndRelease();
+        if (mLeVideoView != null) {
+            mLeVideoView.resetPlayer();
+//            mLeVideoView.stopAndRelease();
 
             mLastPosition = 0;
             mRateList = null;
             isCompleted = false;
 
             if (bundle.containsKey("path"))
-                setDataSource(mThemedReactContext.getBaseContext(), bundle.getString("path"));
+                mLeVideoView.setDataSource(bundle.getString("path"));
             else
-                setDataSource(mThemedReactContext.getBaseContext(), bundle);
+                mLeVideoView.setDataSource(bundle);
 
+            mLeVideoView.setVideoViewListener(mVideoViewListener);
 
             WritableMap event = Arguments.createMap();
-            event.putString(LeVideoViewManager.PROP_SRC, bundle.toString());
+            event.putString(PROP_SRC, bundle.toString());
             mEventEmitter.receiveEvent(getId(), Events.EVENT_LOAD_SOURCE.toString(), event);
 
         }
@@ -270,7 +297,7 @@ public class ReactVideoView extends VideoTextureView implements LifecycleEventLi
      *
      * @param msec the msec
      */
-    public void setSeekTo(float msec) {
+    public void seekTo(float msec) {
         Log.d(TAG, LogUtils.getTraceInfo() + "外部控制——— SEEK TO：" + msec);
         if (mLePlayerValid) {
             if (msec <= 0 || msec >= mVideoDuration) {
@@ -278,20 +305,21 @@ public class ReactVideoView extends VideoTextureView implements LifecycleEventLi
             }
 
             WritableMap event = Arguments.createMap();
-            event.putDouble(EVENT_PROP_CURRENT_TIME, getCurrentPosition() / 1000.0);
+            event.putDouble(EVENT_PROP_CURRENT_TIME, mLeVideoView.getCurrentPosition() / 1000.0);
             event.putDouble(EVENT_PROP_SEEK_TIME, msec / 1000.0);
 //            mEventEmitter.receiveEvent(getId(), Events.EVENT_SEEK.toString(), event);
 
-            seekTo(Math.round(msec * 1000.0f));
+            mLeVideoView.seekTo(Math.round(msec * 1000.0f));
 
             mLastPosition = 0; // 上一位置不再可用?
 
             if (isCompleted && mVideoDuration != 0 && msec < mVideoDuration) {
                 isCompleted = false;
-                mMediaPlayer.retry();
+                mLeVideoView.retry();
             }
         }
     }
+
 
     /**
      * 视频切换码率
@@ -308,9 +336,12 @@ public class ReactVideoView extends VideoTextureView implements LifecycleEventLi
         if (mLePlayerValid && mRateList != null && mRateList.containsKey(rate)) {
             // 保存当前位置
             saveLastPostion();
+            //mCurrentRate = mLePlayer.getLastRate();
 
             //切换码率
-            setDataSourceByRate(mThemedReactContext.getBaseContext(), rate);
+//            ((UICPVodVideoView)mLeVideoView).setDefination(rate);
+            mLePlayer.setDataSourceByRate(rate);
+
 
             WritableMap event = Arguments.createMap();
             event.putString(EVENT_PROP_CURRENT_RATE, mCurrentRate);
@@ -318,6 +349,7 @@ public class ReactVideoView extends VideoTextureView implements LifecycleEventLi
             mEventEmitter.receiveEvent(getId(), Events.EVENT_RATE_CHANG.toString(), event);
         }
     }
+
 
     /**
      * 音量控制 0-100
@@ -348,10 +380,10 @@ public class ReactVideoView extends VideoTextureView implements LifecycleEventLi
      * 保存上次播放位置
      */
     private void saveLastPostion() {
-        if (mMediaPlayer == null || getCurrentPosition() == 0) {
+        if (mLeVideoView == null || mLeVideoView.getCurrentPosition() == 0) {
             return;
         }
-        mLastPosition = getCurrentPosition();
+        mLastPosition = mLeVideoView.getCurrentPosition();
     }
 
     /**
@@ -365,47 +397,53 @@ public class ReactVideoView extends VideoTextureView implements LifecycleEventLi
         }
     }
 
+
     /**
      * 设置视频暂停和启动
      *
      * @param paused paused
      */
     public void setPausedModifier(final boolean paused) {
+        Log.d(TAG, LogUtils.getTraceInfo() + "外部控制——— 是否暂停 :" + paused);
 
         mPaused = paused;
-
         if (!mLePlayerValid) {
             return;
         }
 
         if (mPaused) {
-            if (isPlaying()) {
-                pause();
+            if (mLeVideoView.isPlaying()) {//播放中
+
+                mLeVideoView.onPause();
 
                 //暂停更新进度
                 mProgressUpdateHandler.removeCallbacks(mProgressUpdateRunnable);
 
                 WritableMap event = Arguments.createMap();
                 event.putDouble(EVENT_PROP_DURATION, mVideoDuration / 1000.0);
-                event.putDouble(EVENT_PROP_CURRENT_TIME, getCurrentPosition() / 1000.0);
+                event.putDouble(EVENT_PROP_CURRENT_TIME, mLeVideoView.getCurrentPosition() / 1000.0);
                 mEventEmitter.receiveEvent(getId(), Events.EVENT_PAUSE.toString(), event);
                 Log.d(TAG, LogUtils.getTraceInfo() + "外部控制——— 暂停播放 onPause ");
+
             }
         } else {
-            if (!isPlaying()) {
-                start();
+            if (!mLeVideoView.isPlaying()) {//播放中
+
+                mLeVideoView.onStart();
 
                 //启动更新进度
                 mProgressUpdateHandler.post(mProgressUpdateRunnable);
 
                 WritableMap event = Arguments.createMap();
                 event.putDouble(EVENT_PROP_DURATION, mVideoDuration / 1000.0);
-                event.putDouble(EVENT_PROP_CURRENT_TIME, getCurrentPosition() / 1000.0);
+                event.putDouble(EVENT_PROP_CURRENT_TIME, mLeVideoView.getCurrentPosition() / 1000.0);
                 mEventEmitter.receiveEvent(getId(), Events.EVENT_RESUME.toString(), event);
                 Log.d(TAG, LogUtils.getTraceInfo() + "外部控制——— 开始播放 onStart ");
+
             }
         }
     }
+
 
     /**
      * 设置回到上次播放的地址
@@ -419,12 +457,11 @@ public class ReactVideoView extends VideoTextureView implements LifecycleEventLi
             return;
         }
         //回到上次播放位置
-        if (mMediaPlayer != null && mLastPosition != 0) {
-            mMediaPlayer.seekToLastPostion(lastPosition);
+        if (mLePlayer != null && mLastPosition != 0) {
+            mLePlayer.seekToLastPostion(lastPosition);
         }
 
     }
-
 
     /**
      * 根据当前状态设置播放器
@@ -434,21 +471,23 @@ public class ReactVideoView extends VideoTextureView implements LifecycleEventLi
         setLastPosModifier(mLastPosition);
     }
 
+
     /**
      * 销毁播放器，释放资源
      */
     public void cleanupMediaPlayerResources() {
-        if (mMediaPlayer != null) {
+        if (mLeVideoView != null) {
             Log.d(TAG, LogUtils.getTraceInfo() + "控件清理 cleanupMediaPlayerResources 调起！");
             mLePlayerValid = false;
-            mMediaPlayer.stop();
-            mMediaPlayer.release();
-            mMediaPlayer = null;
+            if (mLeVideoView.isPlaying()) mLeVideoView.stopAndRelease();
+            mLeVideoView = null;
+
         }
     }
 
 
-/*============================= 事件回调处理 ===================================*/
+    /*============================= 事件回调处理 ===================================*/
+
 
     /**
      * 处理播放器准备完成事件
@@ -459,7 +498,7 @@ public class ReactVideoView extends VideoTextureView implements LifecycleEventLi
         //开始封装回调事件参数
         WritableMap event = Arguments.createMap();
 
-        mVideoDuration = getDuration();
+        mVideoDuration = mLeVideoView.getDuration();
 
         // 视频基本信息，长/宽/方向
         WritableMap naturalSize = Arguments.createMap();
@@ -866,8 +905,7 @@ public class ReactVideoView extends VideoTextureView implements LifecycleEventLi
     /**
      * 处理播放器事件，具体事件参见IPlayer类
      */
-    @Override
-    public void videoState(int state, Bundle bundle) {
+    private void handlePlayerEvent(int state, Bundle bundle) {
         boolean handled = false;
         String event = "";
         switch (state) {
@@ -969,17 +1007,10 @@ public class ReactVideoView extends VideoTextureView implements LifecycleEventLi
             Log.d(TAG, LogUtils.getTraceInfo() + "播放器事件——— event " + event + " state " + state + " bundle " + bundle);
     }
 
-    @Override
-    public void onVideoRotate(int i) {
-
-    }
-
-
     /**
      * 处理视频信息类事件
      */
-    @Override
-    public void onMediaDataPlayerEvent(int state, Bundle bundle) {
+    private void handleVideoInfoEvent(int state, Bundle bundle) {
         boolean handled = false;
         String event = "";
         switch (state) {
@@ -1016,8 +1047,7 @@ public class ReactVideoView extends VideoTextureView implements LifecycleEventLi
     /**
      * 处理广告类事件
      */
-    @Override
-    public void onAdPlayerEvent(int state, Bundle bundle) {
+    private void handleAdEvent(int state, Bundle bundle) {
         boolean handled = false;
         String event = "";
         switch (state) {
@@ -1054,47 +1084,62 @@ public class ReactVideoView extends VideoTextureView implements LifecycleEventLi
         }
         if (handled)
             Log.d(TAG, LogUtils.getTraceInfo() + "广告播放事件——— event " + event + " state " + state + " bundle " + bundle);
-
     }
 
+    /**
+     * 处理其他类事件
+     */
+    private void handleOtherEvent(int state, Bundle bundle) {
+        boolean handled = false;
+        String event = "";
+        switch (state) {
 
-    @Override
-    protected void onDetachedFromWindow() {
-        mLePlayerValid = false;
-        super.onDetachedFromWindow();
-    }
+            case PlayerEvent.CDEEVENT_EVENT_CDE_LINK_SHELL_ERROR: // CDE连接命令出错 1
+                handled = true;
+                event = "CDEEVENT_EVENT_CDE_LINK_SHELL_ERROR";
+                processOtherEvent(state, bundle);
+                break;
 
-    @Override
-    protected void onAttachedToWindow() {
-        super.onAttachedToWindow();
+            case PlayerEvent.CDEEVENT_EVENT_CDE_READY: // CDE 准备完毕 2
+                handled = true;
+                event = "CDEEVENT_EVENT_CDE_READY";
+                processOtherEvent(state, bundle);
+                break;
+
+        }
+
+        if (handled)
+            Log.d(TAG, LogUtils.getTraceInfo() + "其他类事件——— event " + event + " state " + state + " bundle " + bundle);
     }
 
     /*============================= 容器生命周期方法 ===================================*/
 
-
     @Override
     public void onHostResume() {
-        if (mMediaPlayer != null) {
+        if (mLeVideoView != null) {
             Log.d(TAG, LogUtils.getTraceInfo() + "生命周期事件 onHostResume 调起！");
-            mMediaPlayer.retry();
+            mLeVideoView.onResume();
         }
     }
 
     @Override
     public void onHostPause() {
-        if (mMediaPlayer != null) {
+        if (mLeVideoView != null) {
             Log.d(TAG, LogUtils.getTraceInfo() + "生命周期事件 onHostPause 调起！");
             saveLastPostion();
 //            mLeVideoView.stopAndRelease();
-            mMediaPlayer.pause();
+            mLeVideoView.onPause();
         }
     }
 
+
     @Override
     public void onHostDestroy() {
-        if (mMediaPlayer != null) {
+        if (mLeVideoView != null) {
             Log.d(TAG, LogUtils.getTraceInfo() + "生命周期事件 onHostDestroy 调起！");
+            mLeVideoView.onDestroy();
             cleanupMediaPlayerResources();
+            //mLeVideoView.onDestroy();
         }
     }
 }

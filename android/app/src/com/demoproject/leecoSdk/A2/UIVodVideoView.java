@@ -1,9 +1,8 @@
-package com.demoproject.leecoSdk.vod;
+package com.demoproject.leecoSdk.A2;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.Configuration;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -16,7 +15,6 @@ import com.lecloud.sdk.constant.StatusCode;
 import com.lecloud.sdk.player.IMediaDataPlayer;
 import com.lecloud.sdk.player.IPlayer;
 import com.lecloud.sdk.videoview.vod.VodVideoView;
-import com.lecloud.skin.R;
 
 
 import java.util.ArrayList;
