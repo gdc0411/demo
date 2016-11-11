@@ -180,7 +180,6 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
      * @return
      */
     public void setSrc(Bundle bundle) {
-
         Log.d(TAG, LogUtils.getTraceInfo() + "外部控制——— 传入数据源 bundle:" + bundle);
 
         if (bundle == null) return;
@@ -261,7 +260,6 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
 
             //切换码率
             setDataSourceByRate(mThemedReactContext.getBaseContext(), rate);
-
             mCurrentRate = rate;
 
             WritableMap event = Arguments.createMap();
@@ -699,28 +697,6 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
         return true;
     }
 
-    /**
-     * 云直播返回的机位信息事件
-     *
-     * @param what
-     * @param bundle null
-     * @return boolean
-     */
-    public boolean processMediaLiveLoad(int what, Bundle bundle) {
-        LiveInfo liveInfo = bundle.getParcelable(PlayerParams.KEY_RESULT_DATA);
-        if (liveInfo == null) return false;
-
-        mMediaStatusCode = bundle.getInt(EVENT_PROP_STAT_CODE);
-        mMediaHttpCode = bundle.getInt(EVENT_PROP_HTTP_CODE);
-
-        //获得默认码率和码率列表
-        if (mRateList != null) mRateList.clear();
-        mRateList = liveInfo.getVtypes();
-        mCurrentRate = mDefaultRate = liveInfo.getDefaultVtype();
-
-        Log.d(TAG, LogUtils.getTraceInfo() + "媒资数据事件——— 直播机位事件 event:" + what + " bundle:" + bundle.toString());
-        return true;
-    }
 
     /**
      *  处理云直播返回的活动信息（1个活动最多包含4个机位，在后台配置）
@@ -742,14 +718,39 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
             mVideoTitle = title;
         }
 
+        //获得加载和水印图
+        mCoverConfig = actionInfo.getCoverConfig();
+
+        Log.d(TAG, LogUtils.getTraceInfo() + "媒资数据事件——— 直播活动数据事件 event:" + what + " bundle:" + bundle.toString());
+        return true;
+    }
+
+    /**
+     * 云直播返回的机位信息事件
+     *
+     * @param what
+     * @param bundle null
+     * @return boolean
+     */
+    public boolean processMediaLiveLoad(int what, Bundle bundle) {
+        LiveInfo liveInfo = bundle.getParcelable(PlayerParams.KEY_RESULT_DATA);
+        if (liveInfo == null) return false;
+
+        mMediaStatusCode = bundle.getInt(EVENT_PROP_STAT_CODE);
+        mMediaHttpCode = bundle.getInt(EVENT_PROP_HTTP_CODE);
+
         //获得默认码率和码率列表
         if (mRateList != null) mRateList.clear();
-        actionInfo.
         mRateList = liveInfo.getVtypes();
         mCurrentRate = mDefaultRate = liveInfo.getDefaultVtype();
 
+        //设置当前码率为默认
+        mMediaPlayer.setDataSourceByRate(mCurrentRate);
+
         Log.d(TAG, LogUtils.getTraceInfo() + "媒资数据事件——— 直播机位事件 event:" + what + " bundle:" + bundle.toString());
+        return true;
     }
+
 
     /**
      * 处理媒资调度数据获取的的事件
