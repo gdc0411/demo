@@ -680,8 +680,8 @@ public class ReactVodVideoView extends VodVideoView {
 
         VideoHolder videoHolder = bundle.getParcelable(PlayerParams.KEY_RESULT_DATA);
 
-        mMediaStatusCode = bundle.getInt(EVENT_PROP_STAT_CODE);
-        mMediaHttpCode = bundle.getInt(EVENT_PROP_HTTP_CODE);
+        mMediaStatusCode = bundle.getInt(PlayerParams.KEY_RESULT_STATUS_CODE);
+        mMediaHttpCode = bundle.getInt(PlayerParams.KEY_HTTP_CODE);
 
         //获得视频标题
         String title = videoHolder.getTitle();
@@ -712,9 +712,9 @@ public class ReactVodVideoView extends VodVideoView {
     public boolean processMediaLiveLoad(int what, Bundle bundle) {
         //todo 直播信息获取
         WritableMap event = Arguments.createMap();
-        event.putInt(EVENT_PROP_STAT_CODE, (bundle != null && bundle.containsKey(EVENT_PROP_STAT_CODE)) ? bundle.getInt(EVENT_PROP_STAT_CODE) : -1);
+        event.putInt(EVENT_PROP_MMS_STATCODE, (bundle != null && bundle.containsKey(PlayerParams.KEY_RESULT_STATUS_CODE)) ? bundle.getInt(PlayerParams.KEY_RESULT_STATUS_CODE) : -1);
 //        event.putString(EVENT_PROP_RET_DATA, (bundle != null && bundle.containsKey(EVENT_PROP_RET_DATA)) ? bundle.getString(EVENT_PROP_RET_DATA) : "");
-        event.putInt(EVENT_PROP_HTTP_CODE, (bundle != null && bundle.containsKey(EVENT_PROP_HTTP_CODE)) ? bundle.getInt(EVENT_PROP_HTTP_CODE) : -1);
+        event.putInt(EVENT_PROP_MMS_HTTPCODE, (bundle != null && bundle.containsKey(PlayerParams.KEY_HTTP_CODE)) ? bundle.getInt(PlayerParams.KEY_HTTP_CODE) : -1);
 //        mEventEmitter.receiveEvent(getId(), Events.EVENT_MEDIA_LIVE.toString(), event);
         return true;
     }
@@ -729,9 +729,9 @@ public class ReactVodVideoView extends VodVideoView {
     public boolean processMediaActionLoad(int what, Bundle bundle) {
         // TODO 活动直播信息获取
         WritableMap event = Arguments.createMap();
-        event.putInt(EVENT_PROP_STAT_CODE, (bundle != null && bundle.containsKey(EVENT_PROP_STAT_CODE)) ? bundle.getInt(EVENT_PROP_STAT_CODE) : -1);
+        event.putInt(EVENT_PROP_MMS_STATCODE, (bundle != null && bundle.containsKey(PlayerParams.KEY_RESULT_STATUS_CODE)) ? bundle.getInt(PlayerParams.KEY_RESULT_STATUS_CODE) : -1);
 //        event.putString(EVENT_PROP_RET_DATA, (bundle != null && bundle.containsKey(EVENT_PROP_RET_DATA)) ? bundle.getString(EVENT_PROP_RET_DATA) : "");
-        event.putInt(EVENT_PROP_HTTP_CODE, (bundle != null && bundle.containsKey(EVENT_PROP_HTTP_CODE)) ? bundle.getInt(EVENT_PROP_HTTP_CODE) : -1);
+        event.putInt(EVENT_PROP_MMS_HTTPCODE, (bundle != null && bundle.containsKey(PlayerParams.KEY_HTTP_CODE)) ? bundle.getInt(PlayerParams.KEY_HTTP_CODE) : -1);
 //        mEventEmitter.receiveEvent(getId(), Events.EVENT_MEDIA_ACTION.toString(), event);
         return true;
     }
@@ -746,9 +746,9 @@ public class ReactVodVideoView extends VodVideoView {
     public boolean processMediaPlayURLLoad(int what, Bundle bundle) {
         // todo 调度信息获取
         WritableMap event = Arguments.createMap();
-        event.putInt(EVENT_PROP_STAT_CODE, (bundle != null && bundle.containsKey(EVENT_PROP_STAT_CODE)) ? bundle.getInt(EVENT_PROP_STAT_CODE) : -1);
+        event.putInt(EVENT_PROP_MMS_STATCODE, (bundle != null && bundle.containsKey(PlayerParams.KEY_RESULT_STATUS_CODE)) ? bundle.getInt(PlayerParams.KEY_RESULT_STATUS_CODE) : -1);
 //        event.putString(EVENT_PROP_RET_DATA, (bundle != null && bundle.containsKey(EVENT_PROP_RET_DATA)) ? bundle.getString(EVENT_PROP_RET_DATA) : "");
-        event.putInt(EVENT_PROP_HTTP_CODE, (bundle != null && bundle.containsKey(EVENT_PROP_HTTP_CODE)) ? bundle.getInt(EVENT_PROP_HTTP_CODE) : -1);
+        event.putInt(EVENT_PROP_MMS_HTTPCODE, (bundle != null && bundle.containsKey(PlayerParams.KEY_HTTP_CODE)) ? bundle.getInt(PlayerParams.KEY_HTTP_CODE) : -1);
 //        mEventEmitter.receiveEvent(getId(), Events.EVENT_MEDIA_PLAYURL.toString(), event);
         return true;
     }

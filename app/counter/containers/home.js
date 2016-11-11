@@ -12,6 +12,7 @@ import {
     Text,
     Image,
     TouchableOpacity,
+    Dimensions,
 } from 'react-native';
 import {bindActionCreators} from 'redux';
 import { connect } from 'react-redux';
@@ -21,12 +22,16 @@ import * as calcActions from '../actions/calcAction';
 import Counter from '../componets/Counter';
 import PlayItem from '../componets/PlayItem';
 
+//取得屏幕宽高
+const {height: SCREEN_HEIGHT, width: SCREEN_WIDTH} = Dimensions.get('window');
+
 /**
  * 首页的根容器组件，负责控制首页内的木偶组件
  * @class Root
  * @extends {Component}
  */
 class home extends Component {
+
     //跳转到播放页
     skipToPlayer = (source) => {
         const {navigator} = this.props;
@@ -70,11 +75,20 @@ class home extends Component {
                 </View>
                 :
                 <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }} >
-                    <PlayItem source={0} imgUrl={img1} onPlay={this.skipToPlayer}  />
-                    <PlayItem source={1} imgUrl={img2} onPlay={this.skipToPlayer}  />
-                    <PlayItem source={2} imgUrl={img2} onPlay={this.skipToPlayer}  />
-                    <PlayItem source={4} imgUrl={img2} onPlay={this.skipToPlayer}  />
-
+                    <View style={ { flexDirection: 'column', width: SCREEN_WIDTH } } >
+                        <View style={ { flexDirection: 'row', justifyContent: 'space-around' } } >
+                            <PlayItem source={0} imgUrl={img1} desc={'第三方URL'} color={'black'} onPlay={this.skipToPlayer}  />
+                            <PlayItem source={1} imgUrl={img2} desc={'云点播-长片'} color={'blue'} onPlay={this.skipToPlayer}  />
+                        </View>
+                        <View style={ { flexDirection: 'row', justifyContent: 'space-around' } } >
+                            <PlayItem source={2} imgUrl={img2} desc={'云点播-短片'} color={'blue'} onPlay={this.skipToPlayer}  />
+                            <PlayItem source={4} imgUrl={img2} desc={'云点播-有广告'} color={'blue'} onPlay={this.skipToPlayer}  />
+                        </View>
+                        <View style={ { flexDirection: 'row', justifyContent: 'space-around' } } >
+                            <PlayItem source={5} imgUrl={img2} desc={'云直播-Demo'} color={'red'} onPlay={this.skipToPlayer}  />
+                            <PlayItem source={6} imgUrl={img2} desc={'云直播-泸州'} color={'red'} onPlay={this.skipToPlayer}  />
+                        </View>
+                    </View>
                     <Counter value={value} para={plusPara} oper={`加`} onChange={this.operatePlus} />
                     <Counter value={value} para={minusPara} oper={`减`} onChange={this.operateMinus} />
                     <Counter value={value} para={timesPara} oper={`乘`} onChange={this.operateTimes} />

@@ -12,17 +12,15 @@ import bizProtoType  from './proto';
 class PlayItem extends Component {
 
     render() {
-        const { source, imgUrl, onPlay } = this.props;
+        const { source, desc, color, imgUrl, onPlay } = this.props;
         return (
-            <View  style={{ height: 90, width: 100 }} >
-                <TouchableOpacity
-                    style={{ height: 90, width: 100, }}
-                    onPress={(data) => onPlay(source) }>
-
-                    <Image
+            <View  style={{ height: 60 }} >
+                <TouchableOpacity  onPress={(data) => onPlay(source) }>
+                    <Text style={{ fontSize: 18, fontWeight:'bold', color:`${color}` }}>{desc}</Text>
+                    {/** <Image
                         style={{ height: 90, width: 100, }}
                         source={ require('../asserts/images/rmb.jpg') }
-                        resizeMode="contain" />
+                        resizeMode="contain" /> */}
 
                 </TouchableOpacity>
             </View>
@@ -33,6 +31,8 @@ class PlayItem extends Component {
 PlayItem.propTypes = {
     source: PropTypes.number.isRequired,
     imgUrl: PropTypes.string.isRequired,
+    desc: PropTypes.string.isRequired,
+    color: PropTypes.string.isRequired,
     onPlay: PropTypes.func.isRequired,
 };
 

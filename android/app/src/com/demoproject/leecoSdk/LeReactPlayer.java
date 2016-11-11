@@ -85,8 +85,6 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
     private boolean mPaused = false;  // 暂停状态
     private long mLastPosition;  //上次播放位置
     private int mVideoBufferedDuration = 0; //当前已缓冲长度
-    private int mMediaStatusCode = 0; //媒资返回状态
-    private int mMediaHttpCode = 0; //媒资返回值
 
 
     private boolean isCompleted = false;   // 是否播放完毕
@@ -108,6 +106,13 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
             mProgressUpdateHandler.postDelayed(mProgressUpdateRunnable, 250);
         }
     };
+
+
+    /*
+     * 云直播媒资信息
+    */
+    private String mCoverImgUrl;
+    private String mPlayerPageUrl;
 
 
     /*============================= 播放器构造 ===================================*/
@@ -185,8 +190,14 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
         if (bundle == null) return;
 
         mLePlayerValid = false;
+        isCompleted = false;
+        isSeeking = false;
         mVideoDuration = 0;
         mVideoBufferedDuration = 0;
+        mLastPosition = 0;
+        mCurrentRate = null;
+        mRateList = null;
+        mCoverConfig = null;
 
         mPlayMode = (bundle.containsKey(PROP_PLAY_MODE) ? bundle.getInt(PROP_PLAY_MODE) : -1);
         mPano = (bundle.containsKey(PROP_SRC_IS_PANO) && bundle.getBoolean(PROP_SRC_IS_PANO));
@@ -196,10 +207,6 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
 
         if (mMediaPlayer != null) {
             mMediaPlayer.clearDataSource();
-
-            mLastPosition = 0;
-            mRateList = null;
-            isCompleted = false;
 
             if (bundle.containsKey("path"))
                 setDataSource(mThemedReactContext.getBaseContext(), bundle.getString("path"));
@@ -222,7 +229,7 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
     public void setSeekTo(float msec) {
         Log.d(TAG, LogUtils.getTraceInfo() + "外部控制——— SEEK TO：" + msec);
         if (mLePlayerValid) {
-            if (msec <= 0 || msec >= mVideoDuration) {
+            if (msec < 0 || msec >= mVideoDuration) {
                 return;
             }
 
@@ -479,9 +486,8 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
             event.putArray(EVENT_PROP_WMARKS, waterMarkList);  // 水印信息
         }
 
-        event.putInt(EVENT_PROP_MMS_STATCODE, mMediaStatusCode); //媒资状态码
-        event.putInt(EVENT_PROP_MMS_HTTPCODE, mMediaHttpCode); //媒资状态码
-
+//        event.putInt(EVENT_PROP_MMS_STATCODE, mMediaStatusCode); //媒资状态码
+//        event.putInt(EVENT_PROP_MMS_HTTPCODE, mMediaHttpCode); //媒资状态码mMediaStatusCode
 
         // 设备信息： 声音和亮度
         int volume = 0;
@@ -643,19 +649,23 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
     }
 
     /**
-     * 处理播放器出错事件
+     * 处理出错事件
      *
      * @param what   the what
      * @param bundle the extra
      * @return boolean
      */
-    public boolean processPlayerError(int what, Bundle bundle) {
+    public boolean processError(int what, Bundle bundle) {
+        int statusCode = (bundle != null && bundle.containsKey(PlayerParams.KEY_RESULT_STATUS_CODE)) ? bundle.getInt(PlayerParams.KEY_RESULT_STATUS_CODE) : -1;
+        String errorCode = (bundle != null && bundle.containsKey(PlayerParams.KEY_RESULT_ERROR_CODE)) ? bundle.getString(PlayerParams.KEY_RESULT_ERROR_CODE) : "";
+        String errorMsg = (bundle != null && bundle.containsKey(PlayerParams.KEY_RESULT_ERROR_MSG)) ? bundle.getString(PlayerParams.KEY_RESULT_ERROR_MSG) : "";
+
         WritableMap error = Arguments.createMap();
         error.putInt(EVENT_PROP_WHAT, what);
-        error.putString(EVENT_PROP_EXTRA, (bundle != null) ? bundle.toString() : "");
-        WritableMap event = Arguments.createMap();
-        event.putMap(EVENT_PROP_ERROR, error);
-        mEventEmitter.receiveEvent(getId(), Events.EVENT_ERROR.toString(), event);
+        error.putInt(EVENT_PROP_MMS_STATCODE, statusCode);
+        error.putString(EVENT_PROP_ERROR_CODE, errorCode);
+        error.putString(EVENT_PROP_ERROR_MSG, errorMsg);
+        mEventEmitter.receiveEvent(getId(), Events.EVENT_ERROR.toString(), error);
         return true;
     }
 
@@ -668,30 +678,39 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
      * @return boolean
      */
     public boolean processMediaVodLoad(int what, Bundle bundle) {
-        VideoHolder videoHolder = bundle.getParcelable(PlayerParams.KEY_RESULT_DATA);
-        if (videoHolder == null) return false;
+        int mediaStatusCode = bundle.getInt(PlayerParams.KEY_RESULT_STATUS_CODE);
 
-        mMediaStatusCode = bundle.getInt(EVENT_PROP_STAT_CODE);
-        mMediaHttpCode = bundle.getInt(EVENT_PROP_HTTP_CODE);
+        switch (mediaStatusCode) {
 
-        //获得视频标题
-        String title = videoHolder.getTitle();
-        if (!TextUtils.isEmpty(title)) {
-            mVideoTitle = title;
+            case StatusCode.MEDIADATA_SUCCESS: //OK
+                VideoHolder videoHolder = bundle.getParcelable(PlayerParams.KEY_RESULT_DATA);
+                if (videoHolder == null) return false;
+
+                //获得视频标题
+                String title = videoHolder.getTitle();
+                if (!TextUtils.isEmpty(title)) {
+                    mVideoTitle = title;
+                }
+                //获得视频长度
+                mVideoDuration = Long.parseLong(videoHolder.getVideoDuration());
+
+                //获得默认码率和码率列表
+                if (mRateList != null) mRateList.clear();
+                mRateList = videoHolder.getVtypes();
+                mCurrentRate = mDefaultRate = videoHolder.getDefaultVtype();
+
+                //获得加载和水印图
+                mCoverConfig = videoHolder.getCoverConfig();
+
+                //设置当前码率为默认
+                mMediaPlayer.setDataSourceByRate(mCurrentRate);
+
+                break;
+
+            default: //处理错误
+                processError(what, bundle);
+                break;
         }
-        //获得视频长度
-        mVideoDuration = Long.parseLong(videoHolder.getVideoDuration());
-
-        //获得默认码率和码率列表
-        if (mRateList != null) mRateList.clear();
-        mRateList = videoHolder.getVtypes();
-        mCurrentRate = mDefaultRate = videoHolder.getDefaultVtype();
-
-        //获得加载和水印图
-        mCoverConfig = videoHolder.getCoverConfig();
-
-        //设置当前码率为默认
-        mMediaPlayer.setDataSourceByRate(mCurrentRate);
 
         Log.d(TAG, LogUtils.getTraceInfo() + "媒资数据事件——— 点播事件 event:" + what + " bundle:" + bundle.toString());
         return true;
@@ -699,27 +718,40 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
 
 
     /**
-     *  处理云直播返回的活动信息（1个活动最多包含4个机位，在后台配置）
+     * 处理云直播返回的活动信息（1个活动最多包含4个机位，在后台配置）
      *
      * @param what   MEDIADATA_ACTION
      * @param bundle null
      * @return boolean
      */
     public boolean processMediaActionLoad(int what, Bundle bundle) {
-        ActionInfo actionInfo = bundle.getParcelable(PlayerParams.KEY_RESULT_DATA);
-        if (actionInfo == null) return false;
+        int mediaStatusCode = bundle.getInt(PlayerParams.KEY_RESULT_STATUS_CODE);
 
-        mMediaStatusCode = bundle.getInt(EVENT_PROP_STAT_CODE);
-        mMediaHttpCode = bundle.getInt(EVENT_PROP_HTTP_CODE);
+        switch (mediaStatusCode) {
 
-        //获得视频标题
-        String title = actionInfo.getActivityName();
-        if (!TextUtils.isEmpty(title)) {
-            mVideoTitle = title;
+            case StatusCode.MEDIADATA_SUCCESS: //OK
+                ActionInfo actionInfo = bundle.getParcelable(PlayerParams.KEY_RESULT_DATA);
+                if (actionInfo == null) return false;
+
+                //获得视频标题
+                String title = actionInfo.getActivityName();
+                if (!TextUtils.isEmpty(title)) {
+                    mVideoTitle = title;
+                }
+
+                // 获得封面图和网页播放地址
+                mCoverImgUrl = actionInfo.getCoverImgUrl();
+                mPlayerPageUrl = actionInfo.getPlayerPageUrl();
+
+                //获得加载和水印图
+                mCoverConfig = actionInfo.getCoverConfig();
+
+                break;
+
+            default: //处理错误
+                processError(what, bundle);
+                break;
         }
-
-        //获得加载和水印图
-        mCoverConfig = actionInfo.getCoverConfig();
 
         Log.d(TAG, LogUtils.getTraceInfo() + "媒资数据事件——— 直播活动数据事件 event:" + what + " bundle:" + bundle.toString());
         return true;
@@ -733,19 +765,26 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
      * @return boolean
      */
     public boolean processMediaLiveLoad(int what, Bundle bundle) {
-        LiveInfo liveInfo = bundle.getParcelable(PlayerParams.KEY_RESULT_DATA);
-        if (liveInfo == null) return false;
+        int mediaStatusCode = bundle.getInt(PlayerParams.KEY_RESULT_STATUS_CODE);
 
-        mMediaStatusCode = bundle.getInt(EVENT_PROP_STAT_CODE);
-        mMediaHttpCode = bundle.getInt(EVENT_PROP_HTTP_CODE);
+        switch (mediaStatusCode) {
 
-        //获得默认码率和码率列表
-        if (mRateList != null) mRateList.clear();
-        mRateList = liveInfo.getVtypes();
-        mCurrentRate = mDefaultRate = liveInfo.getDefaultVtype();
+            case StatusCode.MEDIADATA_SUCCESS: //OK
 
-        //设置当前码率为默认
-        mMediaPlayer.setDataSourceByRate(mCurrentRate);
+                LiveInfo liveInfo = bundle.getParcelable(PlayerParams.KEY_RESULT_DATA);
+                if (liveInfo == null) return false;
+
+                //获得默认码率和码率列表
+                if (mRateList != null) mRateList.clear();
+                mRateList = liveInfo.getVtypes();
+                mCurrentRate = mDefaultRate = liveInfo.getDefaultVtype();
+
+                break;
+
+            default: //处理错误
+                processError(what, bundle);
+                break;
+        }
 
         Log.d(TAG, LogUtils.getTraceInfo() + "媒资数据事件——— 直播机位事件 event:" + what + " bundle:" + bundle.toString());
         return true;
@@ -762,9 +801,9 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
     public boolean processMediaPlayURLLoad(int what, Bundle bundle) {
         // todo 调度信息获取
         WritableMap event = Arguments.createMap();
-        event.putInt(EVENT_PROP_STAT_CODE, (bundle != null && bundle.containsKey(EVENT_PROP_STAT_CODE)) ? bundle.getInt(EVENT_PROP_STAT_CODE) : -1);
+        event.putInt(EVENT_PROP_MMS_STATCODE, (bundle != null && bundle.containsKey(PlayerParams.KEY_RESULT_STATUS_CODE)) ? bundle.getInt(PlayerParams.KEY_RESULT_STATUS_CODE) : -1);
 //        event.putString(EVENT_PROP_RET_DATA, (bundle != null && bundle.containsKey(EVENT_PROP_RET_DATA)) ? bundle.getString(EVENT_PROP_RET_DATA) : "");
-        event.putInt(EVENT_PROP_HTTP_CODE, (bundle != null && bundle.containsKey(EVENT_PROP_HTTP_CODE)) ? bundle.getInt(EVENT_PROP_HTTP_CODE) : -1);
+        event.putInt(EVENT_PROP_MMS_HTTPCODE, (bundle != null && bundle.containsKey(PlayerParams.KEY_HTTP_CODE)) ? bundle.getInt(PlayerParams.KEY_HTTP_CODE) : -1);
 //        mEventEmitter.receiveEvent(getId(), Events.EVENT_MEDIA_PLAYURL.toString(), event);
         return true;
     }
@@ -815,7 +854,7 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
      * @return boolean
      */
     public boolean processAdvertError(int what, Bundle bundle) {
-//        mEventEmitter.receiveEvent(getId(), Events.EVENT_AD_ERROR.toString(), null);
+        processError(what, bundle);
         return true;
     }
 
@@ -827,11 +866,11 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
      * @return boolean
      */
     public boolean processOtherEvent(int what, Bundle bundle) {
-        WritableMap error = Arguments.createMap();
-        error.putInt(EVENT_PROP_WHAT, what);
-        error.putString(EVENT_PROP_EXTRA, (bundle != null) ? bundle.toString() : "");
+        WritableMap other = Arguments.createMap();
+        other.putInt(EVENT_PROP_WHAT, what);
+        other.putString(EVENT_PROP_EXTRA, (bundle != null) ? bundle.toString() : "");
         WritableMap event = Arguments.createMap();
-        event.putMap(EVENT_PROP_EVENT, error);
+        event.putMap(EVENT_PROP_EVENT, other);
         mEventEmitter.receiveEvent(getId(), Events.EVENT_OTHER_EVENT.toString(), event);
         return true;
     }
@@ -851,7 +890,7 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
                 // 播放器初始化
                 handled = true;
                 event = "PLAY_INIT";
-                processOtherEvent(state, bundle);
+//                processOtherEvent(state, bundle);
                 break;
 
             case PlayerEvent.PLAY_BUFFERING: // 获取视频缓冲加载状态 201
@@ -882,7 +921,7 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
             case PlayerEvent.PLAY_ERROR: //播放出错 205
                 handled = true;
                 event = "PLAY_ERROR";
-                processPlayerError(state, bundle);
+                processError(state, bundle);
                 break;
 
             case PlayerEvent.PLAY_INFO: //206

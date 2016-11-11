@@ -37,7 +37,7 @@ class VideoPlayer extends Component {
             /* 暂停/播放状态 */
             paused: false,
             /* 跳转 */
-            seek: 0,
+            seek: -1,
             /* 播放码率 */
             rate: '',
             /* 播放音量 */
@@ -63,6 +63,8 @@ class VideoPlayer extends Component {
             eventInfo: '',
             /* 广告信息 */
             advertInfo: '',
+            /* 出错信息 */
+            errorInfo: '',
         };
 
         this.onLoad = this.onLoad.bind(this);
@@ -212,11 +214,15 @@ class VideoPlayer extends Component {
                 break;
 
             case '4': //点播 Demo示例，有广告
-                source = { playMode: 10000, uuid: "838389", vuid: "200271100", businessline: "102", saas: true, pano: false, hasSkin: false }; //
+                source = { playMode: 10000, uuid: "838389", vuid: "200271100", businessline: "102", saas: true, pano: false, hasSkin: false };
                 break;
 
-            case '5': //活动直播
+            case '5': //活动直播 官方demo
                 source = { playMode: 10002, actionId: "A2016062700000gx", usehls: false, customerId: "838389", businessline: "102", cuid: "", utoken: "", pano: false, hasSkin: false };
+                break;
+
+            case '6': //活动直播 泸州
+                source = { playMode: 10002, actionId: "A2016111100001zn", usehls: false, customerId: "865024", businessline: "102", cuid: "", utoken: "", pano: false, hasSkin: false };
                 break;
 
             default: //网络或本地地址
@@ -234,7 +240,7 @@ class VideoPlayer extends Component {
 
         return (
             <View style={styles.container}>
-                <TouchableOpacity style={[styles.fullScreen, { width: SCREEN_WIDTH, height: 180}]} onPress={() => { this.setState({ paused: !this.state.paused }); } }>
+                <TouchableOpacity style={[styles.fullScreen, { width: SCREEN_WIDTH, height: 180 }]} onPress={() => { this.setState({ paused: !this.state.paused }); } }>
                     <RCTLeVideoView style={[styles.fullScreen, { width: SCREEN_WIDTH, height: 180 }]}
                         source={this.state.source}
                         paused={this.state.paused}
@@ -258,6 +264,7 @@ class VideoPlayer extends Component {
                         onAdStart={() => { this.setState({ advertInfo: '广告开始！' }); } }
                         onAdProgress={(data) => { this.setState({ advertInfo: `广告播放中……倒计时${data.AdTime}` }); } }
                         onAdComplete={() => { this.setState({ advertInfo: `广告结束！` }); } }
+                        onError={(data) => { this.setState({ errorInfo: `出错啦！状态码：${data.statusCode} 错误码：${data.errorCode} 错误：${data.errorMsg} 事件：${data.what}` }); } }
                         />
                 </TouchableOpacity>
 
@@ -274,13 +281,18 @@ class VideoPlayer extends Component {
                             </Text>
                         </View>
                         <View style={styles.bufferDisplay}>
-                            <Text style={[styles.DisplayOption, { color: 'red' }]}>
+                            <Text style={[styles.DisplayOption, { color: 'cyan' }]}>
                                 {this.state.eventInfo} 已缓冲{this.state.buffPercent}%
                             </Text>
                         </View>
                         <View style={styles.bufferDisplay}>
                             <Text style={[styles.DisplayOption, { color: 'green' }]}>
                                 {this.state.advertInfo}
+                            </Text>
+                        </View>
+                        <View style={styles.bufferDisplay}>
+                            <Text style={[styles.DisplayOption, { color: 'red' }]}>
+                                {this.state.errorInfo}
                             </Text>
                         </View>
                     </View>
@@ -348,7 +360,7 @@ const styles = StyleSheet.create({
         backgroundColor: "transparent",
         borderRadius: 5,
         position: 'absolute',
-        bottom: 100,
+        bottom: 140,
         left: 20,
         right: 20,
     },

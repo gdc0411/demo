@@ -24,7 +24,6 @@ public class LeTextureView extends TextureView implements TextureView.SurfaceTex
     //定义日志
     public static final String TAG = LogUtils.TAG;
 
-
     protected IMediaDataPlayer mMediaPlayer;
     protected ScalableType mScalableType = ScalableType.NONE;
 
