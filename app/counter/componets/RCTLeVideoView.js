@@ -362,6 +362,17 @@ export default class Video extends Component {
     };
 
     /**
+     * 处理云直播机位切换完成的事件
+     * @param {any} event 原生回调句柄
+     * @memberOf Video
+     */
+    _onActionLiveChange = (event) => {
+        if (this.props.onActionLiveChange) {
+            this.props.onActionLiveChange(event.nativeEvent);
+        }
+    };
+
+    /**
      * 处理其他未定义的事件
      * @param {any} event 原生回调句柄
      * @memberOf Video
@@ -395,7 +406,7 @@ export default class Video extends Component {
                 utoken: source.utoken,
                 pano: source.pano || false,
                 hasSkin: source.hasSkin || false,
-                path: uri,
+                uri: uri,
             },
             /* 回调函数赋值 */
             onVideoSourceLoad: this._onSourceLoad,
@@ -413,6 +424,8 @@ export default class Video extends Component {
             onVideoRendingStart: this._onStartRending,
             onVideoBufferPercent: this._onPlayablePercent,
             onVideoRateChange: this._onRateChange,
+            /*直播相关*/
+            onActionLiveChange: this._onActionLiveChange,
             /*媒资相关*/
             onMediaVodLoad: this._onMMSVodLoad,
             onMediaLiveLoad: this._onMMSLiveLoad,
@@ -443,11 +456,13 @@ export default class Video extends Component {
 Video.propTypes = {
     /* 原生属性 */
     /* 播放源：支持点播、直播和本地或URI */
-    src: PropTypes.object,
+    src: PropTypes.object.isRequired,
     /* 跳转到时间点 */
     seek: PropTypes.number,
     /* 设置视频码率 */
     rate: PropTypes.string,
+    /* 设置机位（直播） */
+    live: PropTypes.string,
     /* 设置音量百分比 */
     volume: PropTypes.number,
     /* 设置亮度值0-255 */
@@ -508,6 +523,9 @@ Video.propTypes = {
     onAdComplete: PropTypes.func,
     onAdError: PropTypes.func,
 
+    /**直播相关 */
+    onActionLiveChange: PropTypes.func,
+
     /*其他事件*/
     onOtherEvent: PropTypes.func,
 
@@ -523,6 +541,6 @@ Video.propTypes = {
 
 const RCTLeVideoView = requireNativeComponent('RCTLeVideoView', Video, {
     nativeOnly: {
-        src: true, seek: true, rate: true, volume: true, brightness: true,
+        src: true, seek: true, rate: true, live: true, volume: true, brightness: true,
     },
 });

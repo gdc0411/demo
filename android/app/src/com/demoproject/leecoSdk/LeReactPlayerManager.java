@@ -22,27 +22,7 @@ import java.util.Map;
 
 import javax.annotation.Nullable;
 
-import static com.demoproject.leecoSdk.Constants.PROP_BRIGHTNESS;
-import static com.demoproject.leecoSdk.Constants.PROP_PAUSED;
-import static com.demoproject.leecoSdk.Constants.PROP_PLAY_MODE;
-import static com.demoproject.leecoSdk.Constants.PROP_RATE;
-import static com.demoproject.leecoSdk.Constants.PROP_SEEK;
-import static com.demoproject.leecoSdk.Constants.PROP_SRC;
-import static com.demoproject.leecoSdk.Constants.PROP_SRC_ALIVE_ACTIONID;
-import static com.demoproject.leecoSdk.Constants.PROP_SRC_ALIVE_BUSINESSLINE;
-import static com.demoproject.leecoSdk.Constants.PROP_SRC_ALIVE_CUID;
-import static com.demoproject.leecoSdk.Constants.PROP_SRC_ALIVE_CUSTOMERID;
-import static com.demoproject.leecoSdk.Constants.PROP_SRC_ALIVE_IS_USEHLS;
-import static com.demoproject.leecoSdk.Constants.PROP_SRC_ALIVE_UTIOKEN;
-import static com.demoproject.leecoSdk.Constants.PROP_SRC_HAS_SKIN;
-import static com.demoproject.leecoSdk.Constants.PROP_SRC_IS_PANO;
-import static com.demoproject.leecoSdk.Constants.PROP_SRC_VOD_BUSINESSLINE;
-import static com.demoproject.leecoSdk.Constants.PROP_SRC_VOD_SAAS;
-import static com.demoproject.leecoSdk.Constants.PROP_SRC_VOD_UUID;
-import static com.demoproject.leecoSdk.Constants.PROP_SRC_VOD_VUID;
-import static com.demoproject.leecoSdk.Constants.PROP_URI;
-import static com.demoproject.leecoSdk.Constants.PROP_VOLUME;
-import static com.demoproject.leecoSdk.Constants.REACT_CLASS;
+import static com.demoproject.leecoSdk.Constants.*;
 import static com.demoproject.utils.LogUtils.TAG;
 
 /**
@@ -106,7 +86,7 @@ public class LeReactPlayerManager extends SimpleViewManager<LeReactPlayer> {
                 bundle.putInt(PlayerParams.KEY_PLAY_MODE, PlayerParams.VALUE_PLAYER_VOD);
                 bundle.putString(PlayerParams.KEY_PLAY_UUID, src.hasKey(PROP_SRC_VOD_UUID) ? src.getString(PROP_SRC_VOD_UUID) : "");
                 bundle.putString(PlayerParams.KEY_PLAY_VUID, src.hasKey(PROP_SRC_VOD_UUID) ? src.getString(PROP_SRC_VOD_VUID) : "");
-                bundle.putString(PlayerParams.KEY_PLAY_BUSINESSLINE, src.hasKey(PROP_SRC_VOD_UUID) ? src.getString(PROP_SRC_VOD_BUSINESSLINE) : "102");
+                bundle.putString(PlayerParams.KEY_PLAY_BUSINESSLINE, src.hasKey(PROP_SRC_VOD_UUID) ? src.getString(PROP_SRC_VOD_BUSINESSLINE) : "");
                 bundle.putBoolean("saas", !src.hasKey(PROP_SRC_VOD_SAAS) || src.getBoolean(PROP_SRC_VOD_SAAS));
                 bundle.putBoolean("pano", src.hasKey(PROP_SRC_IS_PANO) && src.getBoolean(PROP_SRC_IS_PANO));
                 bundle.putBoolean("hasSkin", src.hasKey(PROP_SRC_HAS_SKIN) && src.getBoolean(PROP_SRC_HAS_SKIN));
@@ -119,10 +99,10 @@ public class LeReactPlayerManager extends SimpleViewManager<LeReactPlayer> {
             case PlayerParams.VALUE_PLAYER_ACTION_LIVE:
                 bundle = new Bundle();
                 bundle.putInt(PlayerParams.KEY_PLAY_MODE, PlayerParams.VALUE_PLAYER_ACTION_LIVE);
-                bundle.putString(PlayerParams.KEY_PLAY_ACTIONID, src.hasKey(PROP_SRC_VOD_UUID) ? src.getString(PROP_SRC_ALIVE_ACTIONID) : "A2016062700000gx");
+                bundle.putString(PlayerParams.KEY_PLAY_ACTIONID, src.hasKey(PROP_SRC_ALIVE_ACTIONID) ? src.getString(PROP_SRC_ALIVE_ACTIONID) : "");
                 bundle.putBoolean(PlayerParams.KEY_PLAY_USEHLS, src.hasKey(PROP_SRC_ALIVE_IS_USEHLS) && src.getBoolean(PROP_SRC_ALIVE_IS_USEHLS));
-                bundle.putString(PlayerParams.KEY_PLAY_CUSTOMERID, src.hasKey(PROP_SRC_ALIVE_CUSTOMERID) ? src.getString(PROP_SRC_ALIVE_CUSTOMERID) : "838389");
-                bundle.putString(PlayerParams.KEY_PLAY_BUSINESSLINE, src.hasKey(PROP_SRC_ALIVE_BUSINESSLINE) ? src.getString(PROP_SRC_ALIVE_BUSINESSLINE) : "102");
+                bundle.putString(PlayerParams.KEY_PLAY_CUSTOMERID, src.hasKey(PROP_SRC_ALIVE_CUSTOMERID) ? src.getString(PROP_SRC_ALIVE_CUSTOMERID) : "");
+                bundle.putString(PlayerParams.KEY_PLAY_BUSINESSLINE, src.hasKey(PROP_SRC_ALIVE_BUSINESSLINE) ? src.getString(PROP_SRC_ALIVE_BUSINESSLINE) : "");
                 bundle.putString(PlayerParams.KEY_ACTION_CUID, src.hasKey(PROP_SRC_ALIVE_CUID) ? src.getString(PROP_SRC_ALIVE_CUID) : "");
                 bundle.putString(PlayerParams.KEY_ACTION_UTOKEN, src.hasKey(PROP_SRC_ALIVE_UTIOKEN) ? src.getString(PROP_SRC_ALIVE_UTIOKEN) : "");
                 bundle.putBoolean("pano", src.hasKey(PROP_SRC_IS_PANO) && src.getBoolean(PROP_SRC_IS_PANO));
@@ -137,7 +117,7 @@ public class LeReactPlayerManager extends SimpleViewManager<LeReactPlayer> {
                 //未知播放类型则为URI
                 bundle = new Bundle();
                 bundle.putInt(PlayerParams.KEY_PLAY_MODE, PlayerParams.VALUE_PLAYER_VOD);
-                bundle.putString("path", src.hasKey(PROP_URI) ? src.getString(PROP_URI) :"http://cache.utovr.com/201601131107187320.mp4");
+                bundle.putString("path", src.hasKey(PROP_URI) ? src.getString(PROP_URI) :"");
                 bundle.putBoolean("pano", src.hasKey(PROP_SRC_IS_PANO) && src.getBoolean(PROP_SRC_IS_PANO));
                 bundle.putBoolean("hasSkin", src.hasKey(PROP_SRC_HAS_SKIN) && src.getBoolean(PROP_SRC_HAS_SKIN));
                 videoView.setSrc(bundle);
@@ -161,6 +141,11 @@ public class LeReactPlayerManager extends SimpleViewManager<LeReactPlayer> {
     @ReactProp(name = PROP_RATE)
     public void setRate(final LeReactPlayer videoView, final String rate) {
         videoView.setRate(rate);
+    }
+
+    @ReactProp(name = PROP_LIVE)
+    public void setLive(final LeReactPlayer videoView, final String liveId) {
+        videoView.setLive(liveId);
     }
 
     /**

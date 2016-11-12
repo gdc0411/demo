@@ -40,10 +40,12 @@ class VideoPlayer extends Component {
             seek: -1,
             /* 播放码率 */
             rate: '',
+            /* 云直播机位切换 */
+            live: '',
             /* 播放音量 */
-            volume: 20,
+            volume: -1,
             /* 屏幕亮度 */
-            brightness: 50,
+            brightness: -1,
             /* 视频总长度 */
             duration: 0.0,
             /* 视频当前时间点 */
@@ -93,12 +95,28 @@ class VideoPlayer extends Component {
         let ratesStr = '';
         // alert(this.props.params.source);
 
-        var arr = data.rateList; //获得码率列表
+        let arr = data.rateList; //获得码率列表
         // alert(this.state.ratesInfo);
         if (arr instanceof Array && arr.length > 0) {
             for (var i = 0; i < arr.length; i++) {
                 ratesStr += `{${arr[i].rateKey},${arr[i].rateValue}}`;
             }
+        }
+
+        //获得直播信息
+        let livesStr = '';
+        // alert(this.state.ratesInfo);
+        if (data.actionLive !== undefined) {
+            livesStr += `{actionState:${data.actionLive.actionState},currentLive:${data.actionLive.currentLive}`;
+            // livesStr += `{actionState:${data.actionLive.actionState},coverImgUrl:${data.actionLive.coverImgUrl},playerPageUrl:${data.actionLive.playerPageUrl}`;
+            // livesStr += `,beginTime:${data.actionLive.beginTime},startTime:${data.actionLive.startTime}`;
+            let liveArr = data.actionLive.lives;
+            if (liveArr instanceof Array && liveArr.length > 0) {
+                for (var i = 0; i < liveArr.length; i++) {
+                    livesStr += `{liveId:${liveArr[i].liveId},machine:${liveArr[i].machine},previewSteamId:${liveArr[i].previewSteamId},liveStatus:${liveArr[i].liveStatus}}`;
+                }
+            }
+            livesStr += '}';
         }
 
         // 查看使用可以把下面注释去掉 raojia 2016/11/3
@@ -119,15 +137,13 @@ class VideoPlayer extends Component {
         // alert('亮度：' + data.brightness);
 
         this.setState({
-            volume: data.volume,
-            brightness: data.brightness,
             duration: data.duration,
             width: data.naturalSize.width,
             height: data.naturalSize.height,
             ratesInfo: data.rateList,
             eventInfo: 'Player准备完毕',
             videoInfo: `片名：${data.title} 长度：${data.duration} 宽高:${data.naturalSize.width}，${data.naturalSize.height} \n`
-            + `码率：${ratesStr} 默认：${data.defaultRate} \n音量：${data.volume} 亮度:${data.brightness} `
+            + `码率：${ratesStr} 默认：${data.defaultRate} \n音量：${data.volume} 亮度:${data.brightness} \n ${livesStr}`
         });
     }
 
@@ -158,6 +174,25 @@ class VideoPlayer extends Component {
             <TouchableOpacity onPress={() => { this.setState({ rate: rate }); } }>
                 <Text style={[styles.controlOption, { fontWeight: isSelected ? "bold" : "normal" }]}>
                     {rateName}
+                </Text>
+            </TouchableOpacity>
+        );
+    }
+
+      /**
+     * 渲染机位控件，设置机位
+     * @param {any} volume 码率
+     * @returns
+     * @memberOf VideoPlayer
+     */
+    renderLiveControl(live) {
+        const isSelected = (this.state.live == live);
+        let liveName = '机位1';        
+        // if( this.state.ratesInfo.length > 0 ) alert(this.state.ratesInfo );
+        return (
+            <TouchableOpacity onPress={() => { this.setState({ live: live }); } }>
+                <Text style={[styles.controlOption, { fontWeight: isSelected ? "bold" : "normal" }]}>
+                    {liveName}
                 </Text>
             </TouchableOpacity>
         );
@@ -225,6 +260,10 @@ class VideoPlayer extends Component {
                 source = { playMode: 10002, actionId: "A2016111100001zn", usehls: false, customerId: "865024", businessline: "102", cuid: "", utoken: "", pano: false, hasSkin: false };
                 break;
 
+            case '7': //活动直播 自己推流
+                source = { playMode: 10002, actionId: "A2016111200001as", usehls: false, customerId: "", businessline: "", cuid: "", utoken: "", pano: false, hasSkin: false };
+                break;
+
             default: //网络或本地地址
                 source = { playMode: 0, uri: "http://cache.utovr.com/201601131107187320.mp4", pano: false, hasSkin: false };
                 break;
@@ -246,6 +285,7 @@ class VideoPlayer extends Component {
                         paused={this.state.paused}
                         seek={this.state.seek}
                         rate={this.state.rate}
+                        live={this.state.live}
                         volume={this.state.volume}
                         brightness={this.state.brightness}
                         onSourceLoad={(data) => { this.setState({ sourceInfo: `视频源: ${data.src}` }); } }
@@ -264,6 +304,8 @@ class VideoPlayer extends Component {
                         onAdStart={() => { this.setState({ advertInfo: '广告开始！' }); } }
                         onAdProgress={(data) => { this.setState({ advertInfo: `广告播放中……倒计时${data.AdTime}` }); } }
                         onAdComplete={() => { this.setState({ advertInfo: `广告结束！` }); } }
+                        onRateChange={(data) => { this.setState({ eventInfo: `码率切换:${data.currentRate} 到 ${data.nextRate}` }); } }
+                        onActionLiveChange={(data) => { this.setState({ eventInfo: `机位切换:${data.currentLive} 到 ${data.nextLive}` }); } }
                         onError={(data) => { this.setState({ errorInfo: `出错啦！状态码：${data.statusCode} 错误码：${data.errorCode} 错误：${data.errorMsg} 事件：${data.what}` }); } }
                         />
                 </TouchableOpacity>
@@ -299,12 +341,15 @@ class VideoPlayer extends Component {
                 </View>
 
                 <View style={styles.controls}>
-                    <View style={styles.generalControls}>
+                    {/*
                         <View style={styles.volumeControl}>
-                            {this.renderRateControl('21') }
-                            {this.renderRateControl('13') }
-                            {this.renderRateControl('22') }
+                            {this.renderLiveControl('201611113000002it') }
                         </View>
+                    */}
+                    <View style={styles.volumeControl}>
+                        {this.renderRateControl('21') }
+                        {this.renderRateControl('13') }
+                        {this.renderRateControl('22') }
                     </View>
 
                     <View style={styles.volumeControl}>
@@ -360,7 +405,7 @@ const styles = StyleSheet.create({
         backgroundColor: "transparent",
         borderRadius: 5,
         position: 'absolute',
-        bottom: 140,
+        bottom: 100,
         left: 20,
         right: 20,
     },

@@ -88,6 +88,9 @@ class home extends Component {
                             <PlayItem source={5} imgUrl={img2} desc={'云直播-Demo'} color={'red'} onPlay={this.skipToPlayer}  />
                             <PlayItem source={6} imgUrl={img2} desc={'云直播-泸州'} color={'red'} onPlay={this.skipToPlayer}  />
                         </View>
+                        <View style={ { flexDirection: 'row', justifyContent: 'space-around' } } >
+                            <PlayItem source={7} imgUrl={img2} desc={'云直播-推流'} color={'red'} onPlay={this.skipToPlayer}  />                            
+                        </View>
                     </View>
                     <Counter value={value} para={plusPara} oper={`加`} onChange={this.operatePlus} />
                     <Counter value={value} para={minusPara} oper={`减`} onChange={this.operateMinus} />

@@ -15,6 +15,8 @@ import com.demoproject.utils.LogUtils;
 import com.lecloud.sdk.player.IMediaDataActionPlayer;
 import com.lecloud.sdk.player.IMediaDataPlayer;
 
+import static com.facebook.react.bridge.ReadableType.Null;
+
 
 /**
  * Created by raojia on 2016/11/10.
@@ -97,7 +99,6 @@ public class LeTextureView extends TextureView implements TextureView.SurfaceTex
     }
 
 
-
     private void scaleVideoSize(int videoWidth, int videoHeight) {
         if (videoWidth == 0 || videoHeight == 0) {
             return;
@@ -113,20 +114,20 @@ public class LeTextureView extends TextureView implements TextureView.SurfaceTex
     }
 
 
-    public void setDataSource(@NonNull Context context, @NonNull String path )  {
+    public void setDataSource(String path) {
         mMediaPlayer.setDataSource(path);
     }
 
 
-    public void setDataSource(@NonNull Context context, @NonNull Bundle bundle )  {
+    public void setDataSource(Bundle bundle) {
         mMediaPlayer.setDataSourceByMediaData(bundle);
     }
 
-    public void setDataSourceByLiveId(@NonNull Context context, @NonNull String liveId) {
-        ((IMediaDataActionPlayer)this.mMediaPlayer).setDataSourceByLiveId(liveId);
+    public void setDataSourceByLiveId(String liveId) {
+        ((IMediaDataActionPlayer) this.mMediaPlayer).setDataSourceByLiveId(liveId);
     }
 
-    public void setDataSourceByRate(@NonNull Context context, @NonNull String rate) {
+    public void setDataSourceByRate(String rate) {
         mMediaPlayer.setDataSourceByRate(rate);
     }
 
@@ -162,10 +163,13 @@ public class LeTextureView extends TextureView implements TextureView.SurfaceTex
         mMediaPlayer.pause();
     }
 
-    public void seekTo(int msec) {
+    public void seekTo(long msec) {
         mMediaPlayer.seekTo(msec);
     }
 
+    public void seekToLastPostion(long msec) {
+        mMediaPlayer.seekToLastPostion(msec);
+    }
 
     public void setVolume(float leftVolume, float rightVolume) {
         mMediaPlayer.setVolume(leftVolume, rightVolume);
