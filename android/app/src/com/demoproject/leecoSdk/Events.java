@@ -32,6 +32,9 @@ public enum Events {
     EVENT_MEDIA_ACTION("onMediaActionLoad"),  // 获得活动直播媒资
     EVENT_MEDIA_PLAYURL("onMediaPlayURLLoad"),  // 获得媒资调度
     EVENT_ACTION_LIVE_CHANGE("onActionLiveChange"), // 云直播切换机位
+    EVENT_ACTION_TIME_SHIFT("onActionTimeShift"), // 云直播进度
+    EVENT_ACTION_STATUS_CHANGE("onActionStatusChange"), // 云直播状态回调
+    EVENT_ONLINE_NUM_CHANGE("onActionOnlineNumChange"), // 云直播在线人数变化
     EVENT_OTHER_EVENT("onOtherEventInfo");  // 其他事件
 
 

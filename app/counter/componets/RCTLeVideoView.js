@@ -141,7 +141,7 @@ export default class Video extends Component {
     };
 
     /**
-     * 处理视频播放中的事件
+     * 处理VOD视频播放中的事件
      * @param {any} event 原生回调句柄
      * @memberOf Video
      */
@@ -373,6 +373,39 @@ export default class Video extends Component {
     };
 
     /**
+    * 处理LIVE视频播放中的事件
+    * @param {any} event 原生回调句柄
+    * @memberOf Video
+    */
+    _onActionTimeShift = (event) => {
+        if (this.props.onActionTimeShift) {
+            this.props.onActionTimeShift(event.nativeEvent);
+        }
+    };
+
+    /**
+    * 处理LIVE活动直播中的状态回调
+    * @param {any} event 原生回调句柄
+    * @memberOf Video
+    */
+    _onActionStatusChange = (event) => {
+        if (this.props.onActionStatusChange) {
+            this.props.onActionStatusChange(event.nativeEvent);
+        }
+    };
+
+    /**
+    * 处理LIVE活动直播中的在线人数变化回调
+    * @param {any} event 原生回调句柄
+    * @memberOf Video
+    */
+    _onActionOnlineNumChange = (event) => {
+        if (this.props.onActionOnlineNumChange) {
+            this.props.onActionOnlineNumChange(event.nativeEvent);
+        }
+    };
+
+    /**
      * 处理其他未定义的事件
      * @param {any} event 原生回调句柄
      * @memberOf Video
@@ -426,6 +459,9 @@ export default class Video extends Component {
             onVideoRateChange: this._onRateChange,
             /*直播相关*/
             onActionLiveChange: this._onActionLiveChange,
+            onActionTimeShift: this._onActionTimeShift,
+            onActionStatusChange: this._onActionStatusChange,
+            onActionOnlineNumChange: this._onActionOnlineNumChange,
             /*媒资相关*/
             onMediaVodLoad: this._onMMSVodLoad,
             onMediaLiveLoad: this._onMMSLiveLoad,
@@ -525,6 +561,9 @@ Video.propTypes = {
 
     /**直播相关 */
     onActionLiveChange: PropTypes.func,
+    onActionTimeShift: PropTypes.func,
+    onActionStatusChange: PropTypes.func,
+    onActionOnlineNumChange: PropTypes.func,
 
     /*其他事件*/
     onOtherEvent: PropTypes.func,

@@ -5,17 +5,17 @@ import android.content.res.TypedArray;
 import android.graphics.Matrix;
 import android.graphics.SurfaceTexture;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 import android.view.Surface;
 import android.view.TextureView;
 
 import com.demoproject.R;
 import com.demoproject.utils.LogUtils;
+
 import com.lecloud.sdk.player.IMediaDataActionPlayer;
 import com.lecloud.sdk.player.IMediaDataPlayer;
 
-import static com.facebook.react.bridge.ReadableType.Null;
+
 
 
 /**
@@ -82,21 +82,21 @@ public class LeTextureView extends TextureView implements TextureView.SurfaceTex
 
     }
 
-    @Override
-    protected void onDetachedFromWindow() {
-//        Log.i(TAG, LogUtils.getTraceInfo() + "onDetachedFromWindow...");
-
-        super.onDetachedFromWindow();
-        if (mMediaPlayer == null) {
-            return;
-        }
-
-        if (isPlaying()) {
-            stop();
-        }
-        release();
-        mMediaPlayer = null;
-    }
+//    @Override
+//    protected void onDetachedFromWindow() {
+////        Log.i(TAG, LogUtils.getTraceInfo() + "onDetachedFromWindow...");
+//
+//        super.onDetachedFromWindow();
+//        if (mMediaPlayer == null) {
+//            return;
+//        }
+//
+//        if (isPlaying()) {
+//            stop();
+//        }
+//        release();
+//        mMediaPlayer = null;
+//    }
 
 
     private void scaleVideoSize(int videoWidth, int videoHeight) {

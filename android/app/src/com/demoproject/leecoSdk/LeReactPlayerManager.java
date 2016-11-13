@@ -8,6 +8,7 @@ package com.demoproject.leecoSdk;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.facebook.react.bridge.ReadableMap;
@@ -30,7 +31,6 @@ import static com.demoproject.utils.LogUtils.TAG;
  */
 public class LeReactPlayerManager extends SimpleViewManager<LeReactPlayer> {
 
-
     private ThemedReactContext mReactContext;
 
     @Override
@@ -40,6 +40,7 @@ public class LeReactPlayerManager extends SimpleViewManager<LeReactPlayer> {
 
     @Override
     protected LeReactPlayer createViewInstance(ThemedReactContext reactContext) {
+        Log.d(TAG, LogUtils.getTraceInfo() + "生命周期事件 createViewInstance 调起！");
         mReactContext = reactContext;
         return new LeReactPlayer(mReactContext);
     }
@@ -47,9 +48,11 @@ public class LeReactPlayerManager extends SimpleViewManager<LeReactPlayer> {
     @Override
     public void onDropViewInstance(LeReactPlayer videoView) {
         Log.d(TAG, LogUtils.getTraceInfo() + "生命周期事件 onDropViewInstance 调起！");
+//        videoView.cleanupMediaPlayerResources();
         super.onDropViewInstance(videoView);
-        videoView.cleanupMediaPlayerResources();
     }
+
+
 
     @Override
     @Nullable
@@ -72,9 +75,13 @@ public class LeReactPlayerManager extends SimpleViewManager<LeReactPlayer> {
         );
     }
 
-
+    /**
+     * 设置数据源，必填（VOD、LIVE）
+     *
+     * @param src 数据源包
+     */
     @ReactProp(name = PROP_SRC)
-    public void setDataSource(final LeReactPlayer videoView, @Nullable ReadableMap src) {
+    public void setDataSource(final LeReactPlayer videoView, final ReadableMap src) {
         if (src == null || !src.hasKey(PROP_PLAY_MODE) || src.getInt(PROP_PLAY_MODE) == -1 ) {
             return;
         }
@@ -132,42 +139,66 @@ public class LeReactPlayerManager extends SimpleViewManager<LeReactPlayer> {
         videoView.setPausedModifier(paused);
     }
 
-
+    /**
+     * 视频Seek到某一位置（VOD）
+     * 直播Seek到某一时间（LIVE）
+     *
+     * @param seek the msec
+     */
     @ReactProp(name = PROP_SEEK)
     public void setSeek(final LeReactPlayer videoView, final float seek) {
         videoView.setSeekTo(seek);
     }
 
+    /**
+     * 视频切换码率（VOD、LIVE）
+     *
+     * @param rate 码率值
+     */
     @ReactProp(name = PROP_RATE)
     public void setRate(final LeReactPlayer videoView, final String rate) {
         videoView.setRate(rate);
     }
 
+    /**
+     * 云直播切换机位（LIVE）
+     *
+     * @param liveId 机位ID
+     */
     @ReactProp(name = PROP_LIVE)
     public void setLive(final LeReactPlayer videoView, final String liveId) {
         videoView.setLive(liveId);
     }
 
     /**
-     * 调节音量
+     * 设置左右声道（VOD、LIVE）
      *
-     * @param videoView the video view
-     * @param volume    the volume
+     */
+//    @ReactProp(name = PROP_TRACK)
+//    public void setLeftAndRightTrack(final LeReactPlayer videoView, final float leftVolume, final float rightVolume) {
+//        videoView.setLeftAndRightTrack(leftVolume, rightVolume);
+//    }
+
+
+    /**
+     * 音量控制（VOD、LIVE）
+     *
+     * @param volume  音量控制 0-100
      */
     @ReactProp(name = PROP_VOLUME)
     public void setVolume(final LeReactPlayer videoView, final int volume) {
-        videoView.setVolume(volume);
+        videoView.setVolumePercent(volume);
     }
 
     /**
-     * 调节亮度
+     /**
+     * 设置亮度（VOD、LIVE）
      *
-     * @param videoView  the video view
-     * @param brightness the brightness
+     * @param brightness 取值0-255
      */
     @ReactProp(name = PROP_BRIGHTNESS)
     public void setBrightness(final LeReactPlayer videoView, final int brightness) {
-        videoView.setScreenBrightness((Activity) mReactContext.getBaseContext(), brightness);
+        videoView.setScreenBrightness( brightness);
     }
 
 }
