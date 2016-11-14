@@ -56,7 +56,6 @@ import static com.demoproject.leecoSdk.Constants.*;
 /**
  * Created by raojia on 2016/11/10.
  */
-
 public class LeReactPlayer extends LeTextureView implements LifecycleEventListener, MediaDataPlayerListener,
         OnPlayStateListener, AdPlayerListener, MediaPlayer.OnVideoRotateListener {
 
