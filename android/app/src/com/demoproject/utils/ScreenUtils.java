@@ -13,6 +13,7 @@ import android.view.WindowManager;
 import java.lang.reflect.Method;
 
 public class ScreenUtils {
+
     public static int getNavigationBarHeight(Context context) {
         int result = 0;
         if (hasNavBar(context)) {
@@ -109,8 +110,7 @@ public class ScreenUtils {
             activity.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
             activity.getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
         } else {
-            activity.getWindow().getDecorView().setSystemUiVisibility(
-                    View.SYSTEM_UI_FLAG_VISIBLE);
+            activity.getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_VISIBLE);
             activity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         }
     }

@@ -77,12 +77,22 @@ export default class Video extends Component {
     };
 
     /**
-     * 设置视频音量百分比（0-100）
-     * @param {any} percent 音量
+     * 设置屏幕亮度（0-255）
+     * @param {any} value 亮度
      * @memberOf Video
      */
     brightness = (value) => {
         this.setNativeProps({ brightness: value });
+    };
+
+
+    /**
+     * 设置屏幕方向 0-横屏，1-竖屏
+     * @param {any} orientation 方向
+     * @memberOf Video
+     */
+    orientation = (value) => {
+        this.setNativeProps({ orientation: value });
     };
 
     /**
@@ -93,6 +103,17 @@ export default class Video extends Component {
     _onSourceLoad = (event) => {
         if (this.props.onSourceLoad) {
             this.props.onSourceLoad(event.nativeEvent);
+        }
+    };
+
+    /**
+     * 处理屏幕方向设置完成事件
+     * @param {any} event 原生回调句柄
+     * @memberOf Video
+     */
+    _onOrientationChange = (event) => {
+        if (this.props.onOrientationChange) {
+            this.props.onOrientationChange(event.nativeEvent);
         }
     };
 
@@ -441,8 +462,10 @@ export default class Video extends Component {
                 hasSkin: source.hasSkin || false,
                 uri: uri,
             },
-            /* 回调函数赋值 */
+            /*回调函数赋值*/
             onVideoSourceLoad: this._onSourceLoad,
+            /*设备相关*/
+            onOrientationChange: this._onOrientationChange,
             /*播放相关*/
             onVideoLoad: this._onLoad,
             onVideoSizeChange: this._onSizeChange,
@@ -497,19 +520,23 @@ Video.propTypes = {
     seek: PropTypes.number,
     /* 设置视频码率 */
     rate: PropTypes.string,
-    /* 设置机位（直播） */
-    live: PropTypes.string,
     /* 设置音量百分比 */
     volume: PropTypes.number,
     /* 设置亮度值0-255 */
     brightness: PropTypes.number,
+    /* 设置屏幕方向 */
+    orientation: PropTypes.number,
 
     /* 组件属性 */
     /* 暂停或播放 */
     paused: PropTypes.bool,
+    /* 设置机位（直播） */
+    live: PropTypes.string,
 
     /* 数据源设置完毕回调 */
     onSourceLoad: PropTypes.func,
+    /* 设置屏幕方向回调 */
+    onOrientationChange: PropTypes.func,
     /* 视频尺寸获得回调 */
     onSizeChange: PropTypes.func,
     /* 播放加载完成回调 */
@@ -580,6 +607,6 @@ Video.propTypes = {
 
 const RCTLeVideoView = requireNativeComponent('RCTLeVideoView', Video, {
     nativeOnly: {
-        src: true, seek: true, rate: true, live: true, volume: true, brightness: true,
+        src: true, seek: true, rate: true, volume: true, brightness: true, orientation: true,
     },
 });

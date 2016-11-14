@@ -505,14 +505,15 @@ public class LeVideoView extends RelativeLayout implements LifecycleEventListene
         naturalSize.putInt(EVENT_PROP_WIDTH, mVideoWidth);
         naturalSize.putInt(EVENT_PROP_HEIGHT, mVideoHeight);
         if (mVideoWidth > mVideoHeight)
-            naturalSize.putString(EVENT_PROP_ORIENTATION, "landscape");
+            naturalSize.putString(EVENT_PROP_VIDEO_ORIENTATION, "landscape");
         else
-            naturalSize.putString(EVENT_PROP_ORIENTATION, "portrait");
+            naturalSize.putString(EVENT_PROP_VIDEO_ORIENTATION, "portrait");
 
         // 视频基本信息
         event.putString(EVENT_PROP_TITLE, mVideoTitle); //视频标题
         event.putDouble(EVENT_PROP_DURATION, mVideoDuration / 1000.0);  //视频总长度
         event.putDouble(EVENT_PROP_CURRENT_TIME, mLastPosition);  //当前播放位置
+
         event.putMap(EVENT_PROP_NATURALSIZE, naturalSize);  //原始尺寸
 
 

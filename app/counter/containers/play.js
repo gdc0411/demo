@@ -34,6 +34,8 @@ class VideoPlayer extends Component {
             /* 视频真实尺寸 */
             width: -1,
             height: -1,
+            /* 屏幕方向 */
+            orientation: -1,
             /* 暂停/播放状态 */
             paused: false,
             /* 跳转 */
@@ -179,20 +181,48 @@ class VideoPlayer extends Component {
         );
     }
 
-      /**
-     * 渲染机位控件，设置机位
-     * @param {any} volume 码率
-     * @returns
-     * @memberOf VideoPlayer
-     */
+    /**
+   * 渲染机位控件，设置机位
+   * @param {any} volume 码率
+   * @returns
+   * @memberOf VideoPlayer
+   */
     renderLiveControl(live) {
         const isSelected = (this.state.live == live);
-        let liveName = '机位1';        
+        let liveName = '机位1';
         // if( this.state.ratesInfo.length > 0 ) alert(this.state.ratesInfo );
         return (
             <TouchableOpacity onPress={() => { this.setState({ live: live }); } }>
                 <Text style={[styles.controlOption, { fontWeight: isSelected ? "bold" : "normal" }]}>
                     {liveName}
+                </Text>
+            </TouchableOpacity>
+        );
+    }
+
+    renderOrientationControl(orientation) {
+        const isSelected = (this.state.orientation == orientation);
+        let dispName = '';
+        switch (orientation) {
+            case 0:
+                dispName = ' 正横屏 ';
+                break;
+            case 1:
+                dispName = ' 正竖屏 ';
+                break;
+            case 8:
+                dispName = ' 反横屏 ';
+                break;
+            case 9:
+                dispName = ' 反竖屏 ';
+                break;
+        }
+
+        // if( this.state.ratesInfo.length > 0 ) alert(this.state.ratesInfo );
+        return (
+            <TouchableOpacity onPress={() => { this.setState({ orientation: orientation }); } }>
+                <Text style={[styles.controlOption, { fontWeight: isSelected ? "bold" : "normal" }]}>
+                    {dispName}
                 </Text>
             </TouchableOpacity>
         );
@@ -282,13 +312,15 @@ class VideoPlayer extends Component {
                 <TouchableOpacity style={[styles.fullScreen, { width: SCREEN_WIDTH, height: 180 }]} onPress={() => { this.setState({ paused: !this.state.paused }); } }>
                     <RCTLeVideoView style={[styles.fullScreen, { width: SCREEN_WIDTH, height: 180 }]}
                         source={this.state.source}
-                        paused={this.state.paused}
                         seek={this.state.seek}
                         rate={this.state.rate}
-                        live={this.state.live}
+                        orientation={this.state.orientation}
                         volume={this.state.volume}
                         brightness={this.state.brightness}
+                        paused={this.state.paused}
+                        live={this.state.live}
                         onSourceLoad={(data) => { this.setState({ sourceInfo: `视频源: ${data.src}` }); } }
+                        onOrientationChange={(data) => { this.setState({ orientation: data.orientation }); } }
                         onLoad={this.onLoad}
                         onProgress={(data) => { this.setState({ currentTime: data.currentTime, eventInfo: `播放中…… ${data.currentTime}/${data.duration}` }); } }
                         onPlayablePercent = {(data) => { this.setState({ buffPercent: data.bufferpercent }); } }
@@ -344,6 +376,12 @@ class VideoPlayer extends Component {
                 </View>
 
                 <View style={styles.controls}>
+                    <View style={styles.volumeControl}>
+                        {this.renderOrientationControl(0) }
+                        {this.renderOrientationControl(1) }
+                        {this.renderOrientationControl(8) }
+                        {this.renderOrientationControl(9) }
+                    </View>
                     {/*
                         <View style={styles.volumeControl}>
                             {this.renderLiveControl('201611113000002it') }

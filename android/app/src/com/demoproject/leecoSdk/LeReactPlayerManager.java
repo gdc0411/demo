@@ -201,4 +201,16 @@ public class LeReactPlayerManager extends SimpleViewManager<LeReactPlayer> {
         videoView.setScreenBrightness( brightness);
     }
 
+    /**
+     /**
+     * 设置转屏方向（VOD、LIVE）
+     *
+     * @param orientation 0-横屏，1-竖屏
+     */
+    @ReactProp(name = PROP_ORIENTATION)
+    public void setOrientation(final LeReactPlayer videoView, final int orientation) {
+        videoView.setOrientation(orientation);
+    }
+
+
 }

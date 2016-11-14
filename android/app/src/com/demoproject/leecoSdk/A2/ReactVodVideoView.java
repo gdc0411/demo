@@ -424,9 +424,9 @@ public class ReactVodVideoView extends VodVideoView {
         naturalSize.putInt(EVENT_PROP_WIDTH, mVideoWidth);
         naturalSize.putInt(EVENT_PROP_HEIGHT, mVideoHeight);
         if (mVideoWidth > mVideoHeight)
-            naturalSize.putString(EVENT_PROP_ORIENTATION, "landscape");
+            naturalSize.putString(EVENT_PROP_VIDEO_ORIENTATION, "landscape");
         else
-            naturalSize.putString(EVENT_PROP_ORIENTATION, "portrait");
+            naturalSize.putString(EVENT_PROP_VIDEO_ORIENTATION, "portrait");
 
         // 视频基本信息
         event.putString(EVENT_PROP_TITLE, mVideoTitle); //视频标题

@@ -60,6 +60,8 @@ public interface Constants {
     String PROP_TRACK = "track";
     // 屏幕亮度调节
     String PROP_BRIGHTNESS = "brightness";
+    // 屏幕方向
+    String PROP_ORIENTATION = "orientation";
 
 
     String EVENT_PROP_PLAY_MODE = "playMode"; //播放模式（VOD，LIVE）
@@ -112,7 +114,8 @@ public interface Constants {
     String EVENT_PROP_WIDTH = "width"; //视频宽度
     String EVENT_PROP_HEIGHT = "height"; //视频高度
 
-    String EVENT_PROP_ORIENTATION = "orientation"; //视频方向
+    String EVENT_PROP_ORIENTATION = "orientation"; //屏幕方向
+    String EVENT_PROP_VIDEO_ORIENTATION = "videoOrientation"; //视频方向
     String EVENT_PROP_AD_TIME = "AdTime"; //广告倒计时
 
     String EVENT_PROP_RATE_KEY = "rateKey";  //码率索引

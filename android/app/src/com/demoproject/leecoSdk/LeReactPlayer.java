@@ -3,17 +3,21 @@ package com.demoproject.leecoSdk;
 import android.app.Activity;
 import android.app.Service;
 import android.content.Context;
+import android.content.pm.ActivityInfo;
 import android.graphics.PixelFormat;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.WindowManager;
 
 
 import com.demoproject.utils.LogUtils;
+import com.demoproject.utils.OrientationSensorUtils;
 import com.demoproject.utils.ScreenBrightnessManager;
+import com.demoproject.utils.ScreenUtils;
 import com.demoproject.utils.TimeUtils;
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.LifecycleEventListener;
@@ -59,19 +63,55 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
     private ThemedReactContext mThemedReactContext;
     private RCTEventEmitter mEventEmitter;
 
+    /*
+    * 设备控制
+    */
     // 设备信息
     private final AudioManager mAudioManager;
     private final int mCurrentBrightness;
+    private OrientationSensorUtils mOrientationSensorUtils; //方向控制
 
+    private int mCurrentOritentation; //当前屏幕方向
+    private boolean isLockFlag = false;
+    private Handler mOrientationChangeHandler = new Handler() {
+
+        @Override
+        public void handleMessage(Message msg) {
+            int orient = -1;
+            switch (msg.what) {
+                case OrientationSensorUtils.ORIENTATION_8:// 反横屏
+                    orient = 8;
+                    break;
+                case OrientationSensorUtils.ORIENTATION_9:// 反竖屏
+                    orient = 9;
+                    break;
+                case OrientationSensorUtils.ORIENTATION_0:// 正横屏
+                    orient = 0;
+                    break;
+                case OrientationSensorUtils.ORIENTATION_1:// 正竖屏
+                    orient = 1;
+                    break;
+            }
+            WritableMap event = Arguments.createMap();
+            event.putInt(EVENT_PROP_ORIENTATION, orient);
+            mEventEmitter.receiveEvent(getId(), Events.EVENT_ORIENTATION_CHANG.toString(), event);
+
+            Log.d(TAG, LogUtils.getTraceInfo() + "设备转屏事件——— orientation："+ orient);
+
+            super.handleMessage(msg);
+        }
+
+    };
 
     /// 播放器设置
     private int mPlayMode = -1;
+
     private boolean mHasSkin = false; //是否有皮肤
     private boolean mPano = false;  //是否全景
-
-
     // 播放器可用状态，prepared, started, paused，completed 时为true
     private boolean mLePlayerValid = false;
+
+
     /*
     * 视频媒资信息
     */
@@ -81,20 +121,20 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
     private int mVideoWidth;  //视频实际宽度
     private int mVideoHeight;  //视频实际高度
     private CoverConfig mCoverConfig;  //LOGO，加载图，水印等信息
-
     /*
     * 视频状态信息
     */
     private String mCurrentRate;  // 当前视频码率
+
     private boolean mPaused = false;  // 暂停状态
     private boolean isCompleted = false;   // 是否播放完毕
     private boolean isSeeking = false;  // 是否在缓冲加载状态
-
-
     /*
      * == 云点播状态 ==============
     */
     private long mVideoDuration = 0;  //当前视频总长
+
+
     private long mLastPosition;  //上次播放位置
     private int mVideoBufferedDuration = 0; //当前已缓冲长度
     // VOD进度更新线程
@@ -113,11 +153,11 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
             mProgressUpdateHandler.postDelayed(mProgressUpdateRunnable, 250);
         }
     };
-
     /*
      * == 云直播状态变量 =====================
     */
     private ActionInfo mActionInfo;
+
     private com.lecloud.sdk.api.md.entity.live.LiveInfo mCurrentLiveInfo;
     private String mCurrentLiveId; //当前机位
     private int mWaterMarkHight = 800;  //高位
@@ -125,10 +165,9 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
     private int mMaxDelayTime = 1000; // 最大延时
     private int mCachePreSize = 500; // 起播缓冲值
     private int mCacheMaxSize = 10000; //最大缓冲值
-
     private ItimeShiftListener mTimeShiftListener;
-    private ActionStatusListener mActionStatusListener;
     private OnlinePeopleChangeListener mOnlinePeopleChangeListener;
+    private ActionStatusListener mActionStatusListener;
 
 
     /*============================= 播放器构造 ===================================*/
@@ -149,6 +188,8 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
         // 获得当前屏幕亮度 取值0-255
         mCurrentBrightness = ScreenBrightnessManager.getScreenBrightness(context.getBaseContext());
 
+        // 屏幕方向
+        mCurrentOritentation = ScreenUtils.getOrientation(context.getBaseContext());
     }
 
     private void initActionLiveListener() {
@@ -477,12 +518,48 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
     /**
      * 设置屏幕方向（VOD、LIVE）
      *
-     * @param requestedOrientation 码率值
+     * @param requestedOrientation 设置屏幕方向
      */
-    public void setRequestedOrientation(int requestedOrientation) {
+    public void setOrientation(int requestedOrientation) {
+        if (requestedOrientation < 0 || mCurrentOritentation == requestedOrientation) return;
+
         if (mThemedReactContext.getBaseContext() instanceof Activity) {
-            ((Activity) mThemedReactContext.getBaseContext()).setRequestedOrientation(requestedOrientation);
+            Activity activity = (Activity) mThemedReactContext.getBaseContext();
+
+            switch (requestedOrientation) {
+                case ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE: //正横屏 0
+                    ScreenUtils.showFullScreen(activity, true);
+                    activity.setRequestedOrientation(requestedOrientation);
+                    mCurrentOritentation = requestedOrientation;
+                    break;
+
+                case ActivityInfo.SCREEN_ORIENTATION_PORTRAIT: //正竖屏 1
+                    ScreenUtils.showFullScreen(activity, false);
+                    activity.setRequestedOrientation(requestedOrientation);
+                    mCurrentOritentation = requestedOrientation;
+                    break;
+
+                case ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE: //反横屏 8
+                    ScreenUtils.showFullScreen(activity, true);
+                    activity.setRequestedOrientation(requestedOrientation);
+                    mCurrentOritentation = requestedOrientation;
+                    break;
+
+                case ActivityInfo.SCREEN_ORIENTATION_REVERSE_PORTRAIT: //反竖屏 9
+                    ScreenUtils.showFullScreen(activity, false);
+                    activity.setRequestedOrientation(requestedOrientation);
+                    mCurrentOritentation = requestedOrientation;
+                    break;
+            }
+            //ScreenUtils.getOrientation(activity);
         }
+
+        WritableMap event = Arguments.createMap();
+        event.putDouble(EVENT_PROP_ORIENTATION, mCurrentOritentation);
+        mEventEmitter.receiveEvent(getId(), Events.EVENT_ORIENTATION_CHANG.toString(), event);
+
+        Log.d(TAG, LogUtils.getTraceInfo() + "外部控制——— 设置方向 orientation:" + requestedOrientation);
+
     }
 
     /**
@@ -570,6 +647,9 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
     public void cleanupMediaPlayerResources() {
         Log.d(TAG, LogUtils.getTraceInfo() + "控件清理 cleanupMediaPlayerResources 调起！");
 
+        if (mCurrentOritentation != ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
+            setOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+
         if (mMediaPlayer != null) {
             mLePlayerValid = false;
 
@@ -603,15 +683,18 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
 
         // 当前播放模式
         event.putInt(EVENT_PROP_PLAY_MODE, mPlayMode);
+        // 当前屏幕方向
+        event.putInt(EVENT_PROP_ORIENTATION, mCurrentOritentation);
+
 
         // 视频基本信息，长/宽/方向
         WritableMap naturalSize = Arguments.createMap();
         naturalSize.putInt(EVENT_PROP_WIDTH, mVideoWidth);
         naturalSize.putInt(EVENT_PROP_HEIGHT, mVideoHeight);
         if (mVideoWidth > mVideoHeight)
-            naturalSize.putString(EVENT_PROP_ORIENTATION, "landscape");
+            naturalSize.putString(EVENT_PROP_VIDEO_ORIENTATION, "landscape");
         else
-            naturalSize.putString(EVENT_PROP_ORIENTATION, "portrait");
+            naturalSize.putString(EVENT_PROP_VIDEO_ORIENTATION, "portrait");
 
         // 视频基本信息
         event.putString(EVENT_PROP_TITLE, mVideoTitle); //视频标题
@@ -1395,18 +1478,32 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
 
 
     @Override
-    protected void onDetachedFromWindow() {
-        Log.d(TAG, LogUtils.getTraceInfo() + "生命周期事件 onDetachedFromWindow 调起！");
-        super.onDetachedFromWindow();
-        if (mMediaPlayer != null) {
-            cleanupMediaPlayerResources();
+    protected void onAttachedToWindow() {
+        Log.d(TAG, LogUtils.getTraceInfo() + "生命周期事件 onAttachedToWindow 调起！");
+        if (mOrientationSensorUtils == null) {
+            mOrientationSensorUtils = new OrientationSensorUtils((Activity) mThemedReactContext.getBaseContext(), mOrientationChangeHandler);
         }
+//        if(!mUseGravitySensor){
+//            return;
+//        }
+        mOrientationSensorUtils.onResume();
+
+        super.onAttachedToWindow();
     }
 
     @Override
-    protected void onAttachedToWindow() {
-        Log.d(TAG, LogUtils.getTraceInfo() + "生命周期事件 onAttachedToWindow 调起！");
-        super.onAttachedToWindow();
+    protected void onDetachedFromWindow() {
+        Log.d(TAG, LogUtils.getTraceInfo() + "生命周期事件 onDetachedFromWindow 调起！");
+        super.onDetachedFromWindow();
+
+        if (mOrientationSensorUtils != null) {
+            mOrientationSensorUtils.onPause();
+        }
+        mOrientationChangeHandler.removeCallbacksAndMessages(null);
+
+        if (mMediaPlayer != null) {
+            cleanupMediaPlayerResources();
+        }
     }
 
     /*============================= 容器生命周期方法 ===================================*/
