@@ -320,7 +320,7 @@ class VideoPlayer extends Component {
                         paused={this.state.paused}
                         live={this.state.live}
                         onSourceLoad={(data) => { this.setState({ sourceInfo: `视频源: ${data.src}` }); } }
-                        onOrientationChange={(data) => { this.setState({ orientation: data.orientation }); } }
+
                         onLoad={this.onLoad}
                         onProgress={(data) => { this.setState({ currentTime: data.currentTime, eventInfo: `播放中…… ${data.currentTime}/${data.duration}` }); } }
                         onPlayablePercent = {(data) => { this.setState({ buffPercent: data.bufferpercent }); } }

@@ -555,7 +555,7 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
 
         WritableMap event = Arguments.createMap();
         event.putDouble(EVENT_PROP_ORIENTATION, mCurrentOritentation);
-        mEventEmitter.receiveEvent(getId(), Events.EVENT_ORIENTATION_CHANG.toString(), event);
+//        mEventEmitter.receiveEvent(getId(), Events.EVENT_ORIENTATION_CHANG.toString(), event);
 
         Log.d(TAG, LogUtils.getTraceInfo() + "外部控制——— 设置方向 orientation:" + requestedOrientation);
 
