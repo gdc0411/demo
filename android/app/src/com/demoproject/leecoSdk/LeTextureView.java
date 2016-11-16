@@ -12,11 +12,15 @@ import android.view.TextureView;
 import com.demoproject.R;
 import com.demoproject.utils.LogUtils;
 
+import com.lecloud.sdk.listener.AdPlayerListener;
+import com.lecloud.sdk.listener.MediaDataPlayerListener;
+import com.lecloud.sdk.listener.OnPlayStateListener;
+import com.lecloud.sdk.player.IAdPlayer;
 import com.lecloud.sdk.player.IMediaDataActionPlayer;
+import com.lecloud.sdk.player.IMediaDataLivePlayer;
 import com.lecloud.sdk.player.IMediaDataPlayer;
-
-
-
+import com.lecloud.sdk.player.IPlayer;
+import com.letvcloud.cmf.MediaPlayer;
 
 /**
  * Created by raojia on 2016/11/10.
@@ -26,7 +30,7 @@ public class LeTextureView extends TextureView implements TextureView.SurfaceTex
     //定义日志
     public static final String TAG = LogUtils.TAG;
 
-    protected IMediaDataPlayer mMediaPlayer;
+    protected IPlayer mMediaPlayer;
     protected ScalableType mScalableType = ScalableType.NONE;
 
     public LeTextureView(Context context) {
@@ -113,6 +117,23 @@ public class LeTextureView extends TextureView implements TextureView.SurfaceTex
         }
     }
 
+    public void setOnMediaDataPlayerListener(MediaDataPlayerListener mediaDataPlayerListener) {
+        if (mMediaPlayer instanceof IMediaDataPlayer)
+            ((IMediaDataPlayer) mMediaPlayer).setOnMediaDataPlayerListener(mediaDataPlayerListener);
+    }
+
+    public void setOnAdPlayerListener(AdPlayerListener adPlayerListener) {
+        if (mMediaPlayer instanceof IMediaDataPlayer)
+            ((IMediaDataPlayer) mMediaPlayer).setOnAdPlayerListener(adPlayerListener);
+    }
+
+    public void setOnPlayStateListener(OnPlayStateListener onPlayStateListener) {
+        mMediaPlayer.setOnPlayStateListener(onPlayStateListener);
+    }
+
+    public void setOnVideoRotateListener(MediaPlayer.OnVideoRotateListener onVideoRotateListener) {
+        mMediaPlayer.setOnVideoRotateListener(onVideoRotateListener);
+    }
 
     public void setDataSource(String path) {
         mMediaPlayer.setDataSource(path);
@@ -120,15 +141,22 @@ public class LeTextureView extends TextureView implements TextureView.SurfaceTex
 
 
     public void setDataSource(Bundle bundle) {
-        mMediaPlayer.setDataSourceByMediaData(bundle);
+        if (mMediaPlayer instanceof IMediaDataPlayer)
+            ((IMediaDataPlayer) mMediaPlayer).setDataSourceByMediaData(bundle);
     }
 
     public void setDataSourceByLiveId(String liveId) {
-        ((IMediaDataActionPlayer) this.mMediaPlayer).setDataSourceByLiveId(liveId);
+        if (mMediaPlayer instanceof IMediaDataPlayer)
+            ((IMediaDataActionPlayer) this.mMediaPlayer).setDataSourceByLiveId(liveId);
     }
 
     public void setDataSourceByRate(String rate) {
-        mMediaPlayer.setDataSourceByRate(rate);
+        if (mMediaPlayer instanceof IMediaDataPlayer)
+            ((IMediaDataPlayer) mMediaPlayer).setDataSourceByRate(rate);
+    }
+
+    public void clearDataSource(){
+        mMediaPlayer.clearDataSource();
     }
 
 
@@ -159,12 +187,21 @@ public class LeTextureView extends TextureView implements TextureView.SurfaceTex
         return mMediaPlayer.isPlaying();
     }
 
+    public void retry() {
+        mMediaPlayer.retry();
+    }
+
     public void pause() {
         mMediaPlayer.pause();
     }
 
     public void seekTo(long msec) {
         mMediaPlayer.seekTo(msec);
+    }
+
+    public void seekTimeShift(long time) {
+        if (mMediaPlayer instanceof IMediaDataLivePlayer)
+            ((IMediaDataLivePlayer) mMediaPlayer).seekTimeShift(time);
     }
 
     public void seekToLastPostion(long msec) {
@@ -179,9 +216,41 @@ public class LeTextureView extends TextureView implements TextureView.SurfaceTex
         mMediaPlayer.start();
     }
 
+    public void startTimeShift() {
+        if (mMediaPlayer instanceof IMediaDataLivePlayer)
+            ((IMediaDataLivePlayer) mMediaPlayer).startTimeShift();
+    }
+
+    public void stopTimeShift() {
+        if (mMediaPlayer instanceof IMediaDataLivePlayer)
+            ((IMediaDataLivePlayer) mMediaPlayer).stopTimeShift();
+    }
+
     public void stop() {
         mMediaPlayer.stop();
     }
+
+    public void setCacheWatermark(int markHigh, int markLow) {
+        mMediaPlayer.setCacheWatermark(markHigh, markLow);
+    }
+
+    public void setMaxDelayTime(int delayTime) {
+        mMediaPlayer.setMaxDelayTime(delayTime);
+    }
+
+    public void setCachePreSize(int cachePreSize) {
+        mMediaPlayer.setCachePreSize(cachePreSize);
+    }
+
+    public void setCacheMaxSize(int cacheMaxSize) {
+        mMediaPlayer.setCachePreSize(cacheMaxSize);
+    }
+
+    public void clickAd() {
+        if (mMediaPlayer instanceof IAdPlayer)
+            ((IAdPlayer) mMediaPlayer).clickAd();
+    }
+
 
     public void release() {
         mMediaPlayer.reset();

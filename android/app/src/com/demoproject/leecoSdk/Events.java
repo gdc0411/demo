@@ -26,6 +26,7 @@ public enum Events {
     EVENT_AD_START("onAdvertStart"),  // 广告开始
     EVENT_AD_PROGRESS("onAdvertProgress"),  // 广告播放中
     EVENT_AD_COMPLETE("onAdvertComplete"),  // 广告结束
+    EVENT_AD_CLICK("onAdvertClick"),  // 广告点击
     EVENT_AD_ERROR("onAdvertError"),  // 广告出错
     EVENT_MEDIA_VOD("onMediaVodLoad"),  // 获得点播媒资
     EVENT_MEDIA_LIVE("onMediaLiveLoad"),  // 获得直播媒资

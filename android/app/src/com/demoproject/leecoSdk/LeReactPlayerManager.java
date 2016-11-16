@@ -136,8 +136,9 @@ public class LeReactPlayerManager extends SimpleViewManager<LeReactPlayer> {
 
     @ReactProp(name = PROP_PAUSED, defaultBoolean = false)
     public void setPaused(final LeReactPlayer videoView, final boolean paused) {
-        videoView.setPausedModifier(paused);
+        videoView.setPaused(paused);
     }
+
 
     /**
      * 视频Seek到某一位置（VOD）
@@ -168,6 +169,12 @@ public class LeReactPlayerManager extends SimpleViewManager<LeReactPlayer> {
     @ReactProp(name = PROP_LIVE)
     public void setLive(final LeReactPlayer videoView, final String liveId) {
         videoView.setLive(liveId);
+    }
+
+
+    @ReactProp(name = PROP_CLICKAD, defaultBoolean = false)
+    public void setClickAd(final LeReactPlayer videoView, final boolean isClicked) {
+        videoView.setClickAd(isClicked);
     }
 
     /**

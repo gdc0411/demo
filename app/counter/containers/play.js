@@ -54,6 +54,8 @@ class VideoPlayer extends Component {
             currentTime: 0.0,
             /* 视频已缓冲百分比 */
             buffPercent: 0,
+            /* 是否点击广告 */
+            clickAd: false,
 
             /* 播放源信息 */
             sourceInfo: '',
@@ -269,31 +271,24 @@ class VideoPlayer extends Component {
             case '1': //点播 乐视云测试数据
                 source = { playMode: 10000, uuid: "847695", vuid: "200323369", businessline: "102", saas: true, pano: false, hasSkin: false };
                 break;
-
             case '2': //点播 川台数据
                 source = { playMode: 10000, uuid: "841215", vuid: "300184109", businessline: "102", saas: true, pano: false, hasSkin: false };
                 break;
-
             case '3': //点播  川台数据,艳秋提供带广告
                 source = { playMode: 10000, uuid: "819108", vuid: "200644549", businessline: "102", saas: true, pano: false, hasSkin: false };
                 break;
-
             case '4': //点播 Demo示例，有广告
                 source = { playMode: 10000, uuid: "838389", vuid: "200271100", businessline: "102", saas: true, pano: false, hasSkin: false };
                 break;
-
             case '5': //活动直播 官方demo
                 source = { playMode: 10002, actionId: "A2016062700000gx", usehls: false, customerId: "838389", businessline: "102", cuid: "", utoken: "", pano: false, hasSkin: false };
                 break;
-
             case '6': //活动直播 泸州
                 source = { playMode: 10002, actionId: "A2016111100001zn", usehls: false, customerId: "865024", businessline: "102", cuid: "", utoken: "", pano: false, hasSkin: false };
                 break;
-
             case '7': //活动直播 自己推流
                 source = { playMode: 10002, actionId: "A2016111200001as", usehls: false, customerId: "", businessline: "", cuid: "", utoken: "", pano: false, hasSkin: false };
                 break;
-
             default: //网络或本地地址
                 source = { playMode: 0, uri: "http://cache.utovr.com/201601131107187320.mp4", pano: false, hasSkin: false };
                 break;
@@ -319,8 +314,8 @@ class VideoPlayer extends Component {
                         brightness={this.state.brightness}
                         paused={this.state.paused}
                         live={this.state.live}
+                        clickAd={this.state.clickAd}
                         onSourceLoad={(data) => { this.setState({ sourceInfo: `视频源: ${data.src}` }); } }
-
                         onLoad={this.onLoad}
                         onProgress={(data) => { this.setState({ currentTime: data.currentTime, eventInfo: `播放中…… ${data.currentTime}/${data.duration}` }); } }
                         onPlayablePercent = {(data) => { this.setState({ buffPercent: data.bufferpercent }); } }
@@ -336,6 +331,8 @@ class VideoPlayer extends Component {
                         onAdStart={() => { this.setState({ advertInfo: '广告开始！' }); } }
                         onAdProgress={(data) => { this.setState({ advertInfo: `广告播放中……倒计时${data.AdTime}` }); } }
                         onAdComplete={() => { this.setState({ advertInfo: `广告结束！` }); } }
+                        onAdClick={() => { this.setState({ advertInfo: `广告点击了！！` }); } }
+
                         onRateChange={(data) => { this.setState({ eventInfo: `码率切换:${data.currentRate} 到 ${data.nextRate}` }); } }
                         onActionLiveChange={(data) => { this.setState({ eventInfo: `机位切换:${data.currentLive} 到 ${data.nextLive}` }); } }
                         onActionTimeShift={(data) => { this.setState({ currentTime: data.currentTime, eventInfo: `播放中…… ${data.serverTime}/${data.currentTime}/${data.beginTime}` }); } }
@@ -363,9 +360,11 @@ class VideoPlayer extends Component {
                             </Text>
                         </View>
                         <View style={styles.bufferDisplay}>
-                            <Text style={[styles.DisplayOption, { color: 'green' }]}>
-                                {this.state.advertInfo}
-                            </Text>
+                            <TouchableOpacity onPress={() => { this.setState({ clickAd: true }); } }>
+                                <Text style={[styles.DisplayOption, { color: 'green' }]}>
+                                    {this.state.advertInfo}
+                                </Text>
+                            </TouchableOpacity>
                         </View>
                         <View style={styles.bufferDisplay}>
                             <Text style={[styles.DisplayOption, { color: 'red' }]}>

@@ -58,6 +58,8 @@ public interface Constants {
     String PROP_VOLUME = "volume";
     // 左右声道
     String PROP_TRACK = "track";
+    // 点击广告
+    String PROP_CLICKAD = "clickAd";
     // 屏幕亮度调节
     String PROP_BRIGHTNESS = "brightness";
     // 屏幕方向

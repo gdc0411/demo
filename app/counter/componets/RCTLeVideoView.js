@@ -47,53 +47,53 @@ export default class Video extends Component {
         this._root.setNativeProps(nativeProps);
     }
 
-    /**
-     * 设置视频seek到某一时间点
-     * @param {any} time 时间点
-     * @memberOf Video
-     */
-    seek = (time) => {
-        this.setNativeProps({ seek: time });
-    };
+    // /**
+    //  * 设置视频seek到某一时间点
+    //  * @param {any} time 时间点
+    //  * @memberOf Video
+    //  */
+    // seek = (time) => {
+    //     this.setNativeProps({ seek: time });
+    // };
 
 
-    /**
-     * 设置视频码率切换到某一值
-     * @param {any} value 码率值
-     * @memberOf Video
-     */
-    rate = (value) => {
-        this.setNativeProps({ rate: value });
-    };
+    // /**
+    //  * 设置视频码率切换到某一值
+    //  * @param {any} value 码率值
+    //  * @memberOf Video
+    //  */
+    // rate = (value) => {
+    //     this.setNativeProps({ rate: value });
+    // };
 
 
-    /**
-     * 设置视频音量百分比（0-100）
-     * @param {any} percent 音量
-     * @memberOf Video
-     */
-    volume = (percent) => {
-        this.setNativeProps({ volume: percent });
-    };
+    // /**
+    //  * 设置视频音量百分比（0-100）
+    //  * @param {any} percent 音量
+    //  * @memberOf Video
+    //  */
+    // volume = (percent) => {
+    //     this.setNativeProps({ volume: percent });
+    // };
 
-    /**
-     * 设置屏幕亮度（0-255）
-     * @param {any} value 亮度
-     * @memberOf Video
-     */
-    brightness = (value) => {
-        this.setNativeProps({ brightness: value });
-    };
+    // /**
+    //  * 设置屏幕亮度（0-255）
+    //  * @param {any} value 亮度
+    //  * @memberOf Video
+    //  */
+    // brightness = (value) => {
+    //     this.setNativeProps({ brightness: value });
+    // };
 
 
-    /**
-     * 设置屏幕方向 0-横屏，1-竖屏
-     * @param {any} orientation 方向
-     * @memberOf Video
-     */
-    orientation = (value) => {
-        this.setNativeProps({ orientation: value });
-    };
+    // /**
+    //  * 设置屏幕方向 0-正横屏，1-正竖屏，8-反横屏，9-反竖屏
+    //  * @param {any} orientation 方向
+    //  * @memberOf Video
+    //  */
+    // orientation = (value) => {
+    //     this.setNativeProps({ orientation: value });
+    // };
 
     /**
      * 处理数据源加载完成事件
@@ -317,6 +317,17 @@ export default class Video extends Component {
     };
 
     /**
+     * 处理广告点击的事件
+     * @param {any} event 原生回调句柄
+     * @memberOf Video
+     */
+    _onAdClick = (event) => {
+        if (this.props.onAdClick) {
+            this.props.onAdClick(event.nativeEvent);
+        }
+    };
+
+    /**
      * 处理广告正在播放的事件
      * @param {any} event 原生回调句柄
      * @memberOf Video
@@ -494,6 +505,7 @@ export default class Video extends Component {
             onAdvertStart: this._onAdStart,
             onAdvertProgress: this._onAdProgress,
             onAdvertComplete: this._onAdComplete,
+            onAdvertClick: this._onAdClick,
             onAdvertError: this._onAdError,
             /*缓冲相关*/
             onBufferStart: this._onStartBuffer,
@@ -514,8 +526,41 @@ export default class Video extends Component {
 
 Video.propTypes = {
     /* 原生属性 */
+    src: PropTypes.object,
+
+    /* 组件属性 */
     /* 播放源：支持点播、直播和本地或URI */
-    src: PropTypes.object.isRequired,
+    source: PropTypes.oneOfType([
+        //点播
+        PropTypes.shape({
+            playMode: PropTypes.number,
+            uuid: PropTypes.string,
+            vuid: PropTypes.string,
+            businessline: PropTypes.string,
+            saas: PropTypes.bool,
+            pano: PropTypes.bool,
+            hasSkin: PropTypes.bool,
+        }),
+        //直播
+        PropTypes.shape({
+            playMode: PropTypes.number,
+            actionId: PropTypes.string,
+            usehls: PropTypes.bool,
+            customerId: PropTypes.string,
+            businessline: PropTypes.string,
+            cuid: PropTypes.string,
+            utoken: PropTypes.string,
+            pano: PropTypes.bool,
+            hasSkin: PropTypes.bool,
+        }),
+        //uri
+        PropTypes.shape({
+            playMode: PropTypes.number,
+            uri: PropTypes.string,
+            pano: PropTypes.bool,
+            hasSkin: PropTypes.bool,
+        }),
+    ]).isRequired,
     /* 跳转到时间点 */
     seek: PropTypes.number,
     /* 设置视频码率 */
@@ -526,10 +571,10 @@ Video.propTypes = {
     brightness: PropTypes.number,
     /* 设置屏幕方向 */
     orientation: PropTypes.number,
-
-    /* 组件属性 */
     /* 暂停或播放 */
     paused: PropTypes.bool,
+    /* 是否点击广告 */
+    clickAd: PropTypes.bool,
     /* 设置机位（直播） */
     live: PropTypes.string,
 
@@ -543,9 +588,6 @@ Video.propTypes = {
     onLoad: PropTypes.func,
     /* 可选码率列表加载完成回调 */
     onRateLoad: PropTypes.func,
-
-    /* 播放错误回调 */
-    onError: PropTypes.func,
     /* 播放进行回调 */
     onProgress: PropTypes.func,
     /* 播放跳转回调 */
@@ -564,6 +606,8 @@ Video.propTypes = {
     onPlayablePercent: PropTypes.func,
     /* 播放码率切换的回调 */
     onRateChange: PropTypes.func,
+    /* 播放错误回调 */
+    onError: PropTypes.func,
 
     /* 缓冲开始 */
     onStartBuffer: PropTypes.func,
@@ -584,6 +628,7 @@ Video.propTypes = {
     onAdStart: PropTypes.func,
     onAdProgress: PropTypes.func,
     onAdComplete: PropTypes.func,
+    onAdClick: PropTypes.func,
     onAdError: PropTypes.func,
 
     /**直播相关 */
@@ -606,7 +651,5 @@ Video.propTypes = {
 };
 
 const RCTLeVideoView = requireNativeComponent('RCTLeVideoView', Video, {
-    nativeOnly: {
-        src: true, seek: true, rate: true, volume: true, brightness: true, orientation: true,
-    },
+    nativeOnly: { src: true },
 });
