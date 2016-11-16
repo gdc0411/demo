@@ -165,7 +165,6 @@ public class LeTextureView extends TextureView implements TextureView.SurfaceTex
         scaleVideoSize(getVideoWidth(), getVideoHeight());
     }
 
-
     public long getCurrentPosition() {
         return mMediaPlayer.getCurrentPosition();
     }
@@ -181,7 +180,6 @@ public class LeTextureView extends TextureView implements TextureView.SurfaceTex
     public int getVideoWidth() {
         return mMediaPlayer.getVideoWidth();
     }
-
 
     public boolean isPlaying() {
         return mMediaPlayer.isPlaying();
@@ -250,8 +248,7 @@ public class LeTextureView extends TextureView implements TextureView.SurfaceTex
         if (mMediaPlayer instanceof IAdPlayer)
             ((IAdPlayer) mMediaPlayer).clickAd();
     }
-
-
+    
     public void release() {
         mMediaPlayer.reset();
         mMediaPlayer.release();
