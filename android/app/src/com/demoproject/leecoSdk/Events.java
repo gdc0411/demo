@@ -3,7 +3,6 @@ package com.demoproject.leecoSdk;
 /**
  * Created by LizaRao on 2016/11/6.
  */
-
 public enum Events {
 
     EVENT_LOAD_SOURCE("onVideoSourceLoad"), // 传入数据源

@@ -6,7 +6,6 @@ import com.lecloud.sdk.player.IAdPlayer;
 /**
  * Created by raojia on 2016/11/11.
  */
-
 public interface Constants {
 
     String REACT_CLASS = "RCTLeVideoView";
