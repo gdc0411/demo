@@ -12,6 +12,9 @@ import android.view.TextureView;
 import com.demoproject.R;
 import com.demoproject.utils.LogUtils;
 
+import com.lecloud.sdk.api.linepeople.OnlinePeopleChangeListener;
+import com.lecloud.sdk.api.status.ActionStatusListener;
+import com.lecloud.sdk.api.timeshift.ItimeShiftListener;
 import com.lecloud.sdk.listener.AdPlayerListener;
 import com.lecloud.sdk.listener.MediaDataPlayerListener;
 import com.lecloud.sdk.listener.OnPlayStateListener;
@@ -155,7 +158,7 @@ public class LeTextureView extends TextureView implements TextureView.SurfaceTex
             ((IMediaDataPlayer) mMediaPlayer).setDataSourceByRate(rate);
     }
 
-    public void clearDataSource(){
+    public void clearDataSource() {
         mMediaPlayer.clearDataSource();
     }
 
@@ -248,7 +251,23 @@ public class LeTextureView extends TextureView implements TextureView.SurfaceTex
         if (mMediaPlayer instanceof IAdPlayer)
             ((IAdPlayer) mMediaPlayer).clickAd();
     }
-    
+
+    public void setTimeShiftListener(ItimeShiftListener itimeShiftListener) {
+        if (mMediaPlayer instanceof IMediaDataLivePlayer)
+            ((IMediaDataLivePlayer) mMediaPlayer).setTimeShiftListener(itimeShiftListener);
+    }
+
+    public void setActionStatusListener(ActionStatusListener actionStatusListener) {
+        if (mMediaPlayer instanceof IMediaDataLivePlayer)
+        ((IMediaDataActionPlayer) mMediaPlayer).setActionStatusListener(actionStatusListener);
+    }
+
+    public void setOnlinePeopleListener (OnlinePeopleChangeListener onlinePeopleChangeListener) {
+        if (mMediaPlayer instanceof IMediaDataLivePlayer)
+            ((IMediaDataActionPlayer) mMediaPlayer).setOnlinePeopleListener(onlinePeopleChangeListener);
+    }
+
+
     public void release() {
         mMediaPlayer.reset();
         mMediaPlayer.release();

@@ -213,7 +213,7 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
                     mEventEmitter.receiveEvent(getId(), Events.EVENT_ACTION_TIME_SHIFT.toString(), event);
                 }
             };
-            ((IMediaDataLivePlayer) mMediaPlayer).setTimeShiftListener(mTimeShiftListener);
+            setTimeShiftListener(mTimeShiftListener);
         }
 
         if (mActionStatusListener == null) {
@@ -238,7 +238,7 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
                 }
             };
 
-            ((IMediaDataActionPlayer) mMediaPlayer).setActionStatusListener(mActionStatusListener);
+            setActionStatusListener(mActionStatusListener);
         }
 
         if (mOnlinePeopleChangeListener == null) {
@@ -254,7 +254,7 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
                 }
             };
 
-            ((IMediaDataActionPlayer) mMediaPlayer).setOnlinePeopleListener(mOnlinePeopleChangeListener);
+            setOnlinePeopleListener(mOnlinePeopleChangeListener);
         }
 
     }
@@ -464,11 +464,11 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
      * @param paused paused
      */
     public void setPaused(final boolean paused) {
-        mPaused = paused;
-
         if (!mLePlayerValid) {
             return;
         }
+
+        mPaused = paused;
 
         setPausedModifier(paused);
         Log.d(TAG, LogUtils.getTraceInfo() + "外部控制——— 设置暂停状态:" + paused);
@@ -481,7 +481,7 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
      * @param clicked 是否点击
      */
     public void setClickAd(final boolean clicked) {
-        if ( !clicked || mMediaPlayer == null ) {
+        if ( !clicked || !mLePlayerValid ) {
             return;
         }
 
@@ -542,7 +542,7 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
      * 保存上次播放位置
      */
     private void saveLastPostion() {
-        if (mMediaPlayer == null || getCurrentPosition() == 0) {
+        if ( !mLePlayerValid || getCurrentPosition() == 0) {
             return;
         }
         mLastPosition = getCurrentPosition();
@@ -1257,6 +1257,8 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
      * @return boolean
      */
     private boolean processAdvertStart(int what, Bundle bundle) {
+        mLePlayerValid = true;
+
         mEventEmitter.receiveEvent(getId(), Events.EVENT_AD_START.toString(), null);
         return true;
     }
