@@ -8,7 +8,7 @@ import com.lecloud.sdk.player.IAdPlayer;
  */
 public interface Constants {
 
-    String REACT_CLASS = "RCTLeVideoView";
+    String REACT_CLASS = "RCTLeVideo";
 
     /**
      * T播放器模式

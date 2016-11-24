@@ -516,7 +516,7 @@ export default class Video extends Component {
         });
 
         return (
-            <RCTLeVideoView
+            <RCTLeVideo
                 ref={this._assignRoot}
                 {...nativeProps}
                 />
@@ -650,6 +650,6 @@ Video.propTypes = {
     ...View.propTypes,
 };
 
-const RCTLeVideoView = requireNativeComponent('RCTLeVideoView', Video, {
+const RCTLeVideo = requireNativeComponent('RCTLeVideo', Video, {
     nativeOnly: { src: true },
 });

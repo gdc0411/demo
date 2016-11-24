@@ -23,7 +23,7 @@ import * as playActions from '../actions/playAction';
 //取得屏幕宽高
 const {height: SCREEN_HEIGHT, width: SCREEN_WIDTH} = Dimensions.get('window');
 
-import RCTLeVideoView from '../componets/RCTLeVideoView';
+import Video from '../componets/RCTLeVideo';
 
 class VideoPlayer extends Component {
     constructor(props) {
@@ -305,7 +305,7 @@ class VideoPlayer extends Component {
         return (
             <View style={styles.container}>
                 <TouchableOpacity style={[styles.fullScreen, { width: SCREEN_WIDTH, height: 180 }]} onPress={() => { this.setState({ paused: !this.state.paused }); } }>
-                    <RCTLeVideoView style={[styles.fullScreen, { width: SCREEN_WIDTH, height: 180 }]}
+                    <Video style={[styles.fullScreen, { width: SCREEN_WIDTH, height: 180 }]}
                         source={this.state.source}
                         seek={this.state.seek}
                         rate={this.state.rate}
