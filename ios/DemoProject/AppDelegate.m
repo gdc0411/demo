@@ -17,7 +17,7 @@
 
 
 
-#define kLCTestBundleID   @"com.lecloud.DemoProject"
+#define kLCTestBundleID   @"com.lecloud.sdkTest"
 
 
 @implementation AppDelegate
