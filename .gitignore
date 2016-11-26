@@ -44,7 +44,7 @@ npm-debug.log
 
 # RN project
 .vscode
-ios
 .eslintrc
 .buckconfig
 .flowconfig
+libLECPlayerFoundation.a

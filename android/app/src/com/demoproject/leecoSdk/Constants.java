@@ -63,6 +63,8 @@ public interface Constants {
     String PROP_BRIGHTNESS = "brightness";
     // 屏幕方向
     String PROP_ORIENTATION = "orientation";
+    // 是否后台播放
+    String PROP_PLAY_IN_BACKGROUND = "playInBackground";
 
 
     String EVENT_PROP_PLAY_MODE = "playMode"; //播放模式（VOD，LIVE）

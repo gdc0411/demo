@@ -250,6 +250,7 @@ public class LeTextureView extends TextureView implements TextureView.SurfaceTex
     public void clickAd() {
         if (mMediaPlayer instanceof IAdPlayer)
             ((IAdPlayer) mMediaPlayer).clickAd();
+
     }
 
     public void setTimeShiftListener(ItimeShiftListener itimeShiftListener) {
@@ -259,10 +260,10 @@ public class LeTextureView extends TextureView implements TextureView.SurfaceTex
 
     public void setActionStatusListener(ActionStatusListener actionStatusListener) {
         if (mMediaPlayer instanceof IMediaDataLivePlayer)
-        ((IMediaDataActionPlayer) mMediaPlayer).setActionStatusListener(actionStatusListener);
+            ((IMediaDataActionPlayer) mMediaPlayer).setActionStatusListener(actionStatusListener);
     }
 
-    public void setOnlinePeopleListener (OnlinePeopleChangeListener onlinePeopleChangeListener) {
+    public void setOnlinePeopleListener(OnlinePeopleChangeListener onlinePeopleChangeListener) {
         if (mMediaPlayer instanceof IMediaDataLivePlayer)
             ((IMediaDataActionPlayer) mMediaPlayer).setOnlinePeopleListener(onlinePeopleChangeListener);
     }

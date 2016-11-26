@@ -129,6 +129,10 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
     private boolean mPaused = false;  // 暂停状态
     private boolean isCompleted = false;   // 是否播放完毕
     private boolean isSeeking = false;  // 是否在缓冲加载状态
+
+    private boolean mPlayInBackground = false;  //是否后台播放
+    private boolean mOriginPauseStatus = false;  //退入后台前状态
+
     /*
      * == 云点播状态 ==============
     */
@@ -475,13 +479,19 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
     }
 
 
+    public void setPlayInBackground(final boolean playInBackground) {
+        mPlayInBackground = playInBackground;
+
+        Log.d(TAG, LogUtils.getTraceInfo() + "外部控制——— 设置是否后台播放:" + playInBackground);
+    }
+
     /**
      * 设置视频暂停和启动（VOD、LIVE）
      *
      * @param clicked 是否点击
      */
     public void setClickAd(final boolean clicked) {
-        if ( !clicked || !mLePlayerValid ) {
+        if (!clicked || !mLePlayerValid) {
             return;
         }
 
@@ -542,7 +552,7 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
      * 保存上次播放位置
      */
     private void saveLastPostion() {
-        if ( !mLePlayerValid || getCurrentPosition() == 0) {
+        if (!mLePlayerValid || getCurrentPosition() == 0) {
             return;
         }
         mLastPosition = getCurrentPosition();
@@ -612,11 +622,13 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
                 pause();
 
                 //暂停更新进度
-                if (mPlayMode == PlayerParams.VALUE_PLAYER_VOD)
+                if (mPlayMode == PlayerParams.VALUE_PLAYER_VOD) {
+                    saveLastPostion();
                     mProgressUpdateHandler.removeCallbacks(mProgressUpdateRunnable);
+                }
 
-//                if (mPlayMode == PlayerParams.VALUE_PLAYER_ACTION_LIVE)
-//                    stopTimeShiftListener();
+                if (mPlayMode == PlayerParams.VALUE_PLAYER_ACTION_LIVE && mTimeShiftListener != null)
+                    stopTimeShift();
 
                 WritableMap event = Arguments.createMap();
                 event.putDouble(EVENT_PROP_DURATION, mVideoDuration / 1000.0);
@@ -632,10 +644,8 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
                 if (mPlayMode == PlayerParams.VALUE_PLAYER_VOD)
                     mProgressUpdateHandler.post(mProgressUpdateRunnable);
 
-                if (mPlayMode == PlayerParams.VALUE_PLAYER_ACTION_LIVE)
-                    if (mTimeShiftListener != null) {
-                        startTimeShift();
-                    }
+                if (mPlayMode == PlayerParams.VALUE_PLAYER_ACTION_LIVE && mTimeShiftListener != null)
+                    startTimeShift();
 
                 WritableMap event = Arguments.createMap();
                 event.putDouble(EVENT_PROP_DURATION, mVideoDuration / 1000.0);
@@ -1257,8 +1267,7 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
      * @return boolean
      */
     private boolean processAdvertStart(int what, Bundle bundle) {
-        mLePlayerValid = true;
-
+        //mLePlayerValid = true; //广告不允许暂停
         mEventEmitter.receiveEvent(getId(), Events.EVENT_AD_START.toString(), null);
         return true;
     }
@@ -1271,6 +1280,7 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
      * @return boolean
      */
     private boolean processAdvertComplete(int what, Bundle bundle) {
+        mLePlayerValid = true;
         mEventEmitter.receiveEvent(getId(), Events.EVENT_AD_COMPLETE.toString(), null);
         return true;
     }
@@ -1548,10 +1558,22 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
     public void onHostResume() {
         Log.d(TAG, LogUtils.getTraceInfo() + "生命周期事件 onHostResume 调起！");
 
-        if (mMediaPlayer != null) {
-            mMediaPlayer.retry();
-            if (mPlayMode == PlayerParams.VALUE_PLAYER_ACTION_LIVE && mTimeShiftListener != null)
-                startTimeShift();
+        if (mMediaPlayer != null && !mPlayInBackground) {
+
+            mPaused = false;
+//            retry();
+
+            new Handler().post(new Runnable() {
+                @Override
+                public void run() {
+                    if (mPlayMode == PlayerParams.VALUE_PLAYER_ACTION_LIVE && mTimeShiftListener != null)
+                        startTimeShift();
+                    // Restore original state
+                    retry();
+//                    setPausedModifier(mOriginPauseStatus);
+                }
+            });
+
         }
     }
 
@@ -1559,12 +1581,18 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
     public void onHostPause() {
         Log.d(TAG, LogUtils.getTraceInfo() + "生命周期事件 onHostPause 调起！");
 
-        if (mMediaPlayer != null) {
+        if (mMediaPlayer != null && !mPlayInBackground) {
+
+            mOriginPauseStatus = mPaused;
+            mPaused = true;
+
             if (mPlayMode == PlayerParams.VALUE_PLAYER_VOD) saveLastPostion();
             if (mPlayMode == PlayerParams.VALUE_PLAYER_ACTION_LIVE && mTimeShiftListener != null)
                 stopTimeShift();
-//            mLeVideoView.stopAndRelease();
+
             pause();
+
+//            setPausedModifier(mPaused);
         }
     }
 

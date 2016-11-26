@@ -220,4 +220,15 @@ public class LeReactPlayerManager extends SimpleViewManager<LeReactPlayer> {
     }
 
 
+     /**
+     /**
+     * 设置是否后台播放（VOD、LIVE）
+     *
+     * @param playInBackground 是否支持
+     */
+    @ReactProp(name = PROP_PLAY_IN_BACKGROUND, defaultBoolean = false)
+    public void setPlayInBackground(final LeReactPlayer videoView, final boolean playInBackground) {
+        videoView.setPlayInBackground(playInBackground);
+    }
+
 }
