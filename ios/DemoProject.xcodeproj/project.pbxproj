@@ -22,13 +22,20 @@
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		140ED2AC1D01E1AD002B40FF /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 146834041AC3E56700842450 /* libReact.a */; };
 		146834051AC3E58100842450 /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 146834041AC3E56700842450 /* libReact.a */; };
+		2D6B1CD81DE9BB5E00EA494B /* libLECLivePlayerSDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D6B1CD11DE9BB5E00EA494B /* libLECLivePlayerSDK.a */; };
+		2D6B1CD91DE9BB5E00EA494B /* libLECLivePlayerUISDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D6B1CD21DE9BB5E00EA494B /* libLECLivePlayerUISDK.a */; };
+		2D6B1CDA1DE9BB5E00EA494B /* libLECPlayerFoundation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D6B1CD31DE9BB5E00EA494B /* libLECPlayerFoundation.a */; };
+		2D6B1CDB1DE9BB5E00EA494B /* libLECPlayerUIKit.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D6B1CD41DE9BB5E00EA494B /* libLECPlayerUIKit.a */; };
+		2D6B1CDC1DE9BB5E00EA494B /* libLECVodPlayerSDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D6B1CD51DE9BB5E00EA494B /* libLECVodPlayerSDK.a */; };
+		2D6B1CDD1DE9BB5E00EA494B /* libLECVodPlayerUISDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D6B1CD61DE9BB5E00EA494B /* libLECVodPlayerUISDK.a */; };
+		2D6B1CDE1DE9BB5E00EA494B /* libZipArchive.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D6B1CD71DE9BB5E00EA494B /* libZipArchive.a */; };
 		2D7B19781DE6F38500354A05 /* UIView+FindUIViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D7B19701DE6F38500354A05 /* UIView+FindUIViewController.m */; };
 		2D7B19791DE6F38500354A05 /* RCTLeVideoManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D7B19721DE6F38500354A05 /* RCTLeVideoManager.m */; };
 		2D7B197A1DE6F38500354A05 /* RCTLeVideoPlayerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D7B19741DE6F38500354A05 /* RCTLeVideoPlayerViewController.m */; };
 		2D7B197B1DE6F38500354A05 /* RCTLeVideo.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D7B19771DE6F38500354A05 /* RCTLeVideo.m */; };
-		2DA206F11DE8B7CD0004CE1D /* LECVodPlayerResource.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 2DA206EE1DE8B7CD0004CE1D /* LECVodPlayerResource.bundle */; };
-		2DA206F21DE8B7CD0004CE1D /* LECPlayerResource.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 2DA206EF1DE8B7CD0004CE1D /* LECPlayerResource.bundle */; };
-		2DA206F31DE8B7CD0004CE1D /* LECPlayerUIResource.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 2DA206F01DE8B7CD0004CE1D /* LECPlayerUIResource.bundle */; };
+		2DA206F11DE8B7CD0004CE1D /* LECPlayerResource.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 2DA206EE1DE8B7CD0004CE1D /* LECPlayerResource.bundle */; };
+		2DA206F21DE8B7CD0004CE1D /* LECPlayerUIResource.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 2DA206EF1DE8B7CD0004CE1D /* LECPlayerUIResource.bundle */; };
+		2DA206F31DE8B7CD0004CE1D /* LECVodPlayerResource.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 2DA206F01DE8B7CD0004CE1D /* LECVodPlayerResource.bundle */; };
 		2DA206F71DE8B89B0004CE1D /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2DA206F51DE8B89B0004CE1D /* AdSupport.framework */; };
 		2DA206F81DE8B89B0004CE1D /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2DA206F61DE8B89B0004CE1D /* MediaPlayer.framework */; };
 		2DA207011DE8B9950004CE1D /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2DA206F91DE8B9950004CE1D /* AudioToolbox.framework */; };
@@ -44,13 +51,6 @@
 		2DA207101DE8BA990004CE1D /* libxml2.2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 2DA2070F1DE8BA990004CE1D /* libxml2.2.tbd */; };
 		2DA207121DE8BAAC0004CE1D /* libz.1.2.5.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 2DA207111DE8BAAC0004CE1D /* libz.1.2.5.tbd */; };
 		2DA207131DE8C0A80004CE1D /* libReachbility.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2DA206DC1DE8B5B10004CE1D /* libReachbility.a */; };
-		2DA207141DE8C0A80004CE1D /* libZipArchive.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2DA206DD1DE8B5B10004CE1D /* libZipArchive.a */; };
-		2DA207151DE8C0A80004CE1D /* libLECPlayerFoundation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2DA206DE1DE8B5B10004CE1D /* libLECPlayerFoundation.a */; };
-		2DA207161DE8C0A80004CE1D /* libLECPlayerUIKit.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2DA206DF1DE8B5B10004CE1D /* libLECPlayerUIKit.a */; };
-		2DA207171DE8C0A80004CE1D /* libLECLivePlayerUISDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2DA206E01DE8B5B10004CE1D /* libLECLivePlayerUISDK.a */; };
-		2DA207181DE8C0A80004CE1D /* libLECVodPlayerSDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2DA206E11DE8B5B10004CE1D /* libLECVodPlayerSDK.a */; };
-		2DA207191DE8C0A80004CE1D /* libLECLivePlayerSDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2DA206E21DE8B5B10004CE1D /* libLECLivePlayerSDK.a */; };
-		2DA2071A1DE8C0A80004CE1D /* libLECVodPlayerUISDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2DA206E31DE8B5B10004CE1D /* libLECVodPlayerUISDK.a */; };
 		392D188B09B145E0B6613D6D /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 930FF21BCF8F403D8916C7DE /* libz.tbd */; };
 		7A4698B093D14EAB946AF44D /* libCodePush.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D213FCE7C1E742FAB43DE238 /* libCodePush.a */; };
 		832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
@@ -213,6 +213,13 @@
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = DemoProject/main.m; sourceTree = "<group>"; };
 		146833FF1AC3E56700842450 /* React.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = React.xcodeproj; path = "../node_modules/react-native/React/React.xcodeproj"; sourceTree = "<group>"; };
 		17750468756A4148AF35D158 /* CodePush.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = CodePush.xcodeproj; path = "../node_modules/react-native-code-push/ios/CodePush.xcodeproj"; sourceTree = "<group>"; };
+		2D6B1CD11DE9BB5E00EA494B /* libLECLivePlayerSDK.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libLECLivePlayerSDK.a; path = ../../../XcodeProjects/lecloud_iOS_vrp_SDK_v4.3.1_20160923/SDK4.3.1/Libs/libLECLivePlayerSDK.a; sourceTree = "<group>"; };
+		2D6B1CD21DE9BB5E00EA494B /* libLECLivePlayerUISDK.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libLECLivePlayerUISDK.a; path = ../../../XcodeProjects/lecloud_iOS_vrp_SDK_v4.3.1_20160923/SDK4.3.1/Libs/libLECLivePlayerUISDK.a; sourceTree = "<group>"; };
+		2D6B1CD31DE9BB5E00EA494B /* libLECPlayerFoundation.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libLECPlayerFoundation.a; path = ../../../XcodeProjects/lecloud_iOS_vrp_SDK_v4.3.1_20160923/SDK4.3.1/Libs/libLECPlayerFoundation.a; sourceTree = "<group>"; };
+		2D6B1CD41DE9BB5E00EA494B /* libLECPlayerUIKit.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libLECPlayerUIKit.a; path = ../../../XcodeProjects/lecloud_iOS_vrp_SDK_v4.3.1_20160923/SDK4.3.1/Libs/libLECPlayerUIKit.a; sourceTree = "<group>"; };
+		2D6B1CD51DE9BB5E00EA494B /* libLECVodPlayerSDK.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libLECVodPlayerSDK.a; path = ../../../XcodeProjects/lecloud_iOS_vrp_SDK_v4.3.1_20160923/SDK4.3.1/Libs/libLECVodPlayerSDK.a; sourceTree = "<group>"; };
+		2D6B1CD61DE9BB5E00EA494B /* libLECVodPlayerUISDK.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libLECVodPlayerUISDK.a; path = ../../../XcodeProjects/lecloud_iOS_vrp_SDK_v4.3.1_20160923/SDK4.3.1/Libs/libLECVodPlayerUISDK.a; sourceTree = "<group>"; };
+		2D6B1CD71DE9BB5E00EA494B /* libZipArchive.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libZipArchive.a; path = ../../../XcodeProjects/lecloud_iOS_vrp_SDK_v4.3.1_20160923/SDK4.3.1/Libs/libZipArchive.a; sourceTree = "<group>"; };
 		2D7B196F1DE6F38500354A05 /* UIView+FindUIViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIView+FindUIViewController.h"; path = "DemoProject/UIView+FindUIViewController.h"; sourceTree = "<group>"; };
 		2D7B19701DE6F38500354A05 /* UIView+FindUIViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIView+FindUIViewController.m"; path = "DemoProject/UIView+FindUIViewController.m"; sourceTree = "<group>"; };
 		2D7B19711DE6F38500354A05 /* RCTLeVideoManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RCTLeVideoManager.h; path = DemoProject/RCTLeVideoManager.h; sourceTree = "<group>"; };
@@ -222,17 +229,10 @@
 		2D7B19751DE6F38500354A05 /* RCTLeVideoPlayerViewControllerDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RCTLeVideoPlayerViewControllerDelegate.h; path = DemoProject/RCTLeVideoPlayerViewControllerDelegate.h; sourceTree = "<group>"; };
 		2D7B19761DE6F38500354A05 /* RCTLeVideo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RCTLeVideo.h; path = DemoProject/RCTLeVideo.h; sourceTree = "<group>"; };
 		2D7B19771DE6F38500354A05 /* RCTLeVideo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RCTLeVideo.m; path = DemoProject/RCTLeVideo.m; sourceTree = "<group>"; };
-		2DA206DC1DE8B5B10004CE1D /* libReachbility.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libReachbility.a; path = SDK4.3.1/Libs/libReachbility.a; sourceTree = "<group>"; };
-		2DA206DD1DE8B5B10004CE1D /* libZipArchive.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libZipArchive.a; path = SDK4.3.1/Libs/libZipArchive.a; sourceTree = "<group>"; };
-		2DA206DE1DE8B5B10004CE1D /* libLECPlayerFoundation.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libLECPlayerFoundation.a; path = SDK4.3.1/Libs/libLECPlayerFoundation.a; sourceTree = "<group>"; };
-		2DA206DF1DE8B5B10004CE1D /* libLECPlayerUIKit.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libLECPlayerUIKit.a; path = SDK4.3.1/Libs/libLECPlayerUIKit.a; sourceTree = "<group>"; };
-		2DA206E01DE8B5B10004CE1D /* libLECLivePlayerUISDK.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libLECLivePlayerUISDK.a; path = SDK4.3.1/Libs/libLECLivePlayerUISDK.a; sourceTree = "<group>"; };
-		2DA206E11DE8B5B10004CE1D /* libLECVodPlayerSDK.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libLECVodPlayerSDK.a; path = SDK4.3.1/Libs/libLECVodPlayerSDK.a; sourceTree = "<group>"; };
-		2DA206E21DE8B5B10004CE1D /* libLECLivePlayerSDK.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libLECLivePlayerSDK.a; path = SDK4.3.1/Libs/libLECLivePlayerSDK.a; sourceTree = "<group>"; };
-		2DA206E31DE8B5B10004CE1D /* libLECVodPlayerUISDK.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libLECVodPlayerUISDK.a; path = SDK4.3.1/Libs/libLECVodPlayerUISDK.a; sourceTree = "<group>"; };
-		2DA206EE1DE8B7CD0004CE1D /* LECVodPlayerResource.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = LECVodPlayerResource.bundle; path = SDK4.3.1/LECVodPlayerResource.bundle; sourceTree = "<group>"; };
-		2DA206EF1DE8B7CD0004CE1D /* LECPlayerResource.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = LECPlayerResource.bundle; path = SDK4.3.1/LECPlayerResource.bundle; sourceTree = "<group>"; };
-		2DA206F01DE8B7CD0004CE1D /* LECPlayerUIResource.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = LECPlayerUIResource.bundle; path = SDK4.3.1/LECPlayerUIResource.bundle; sourceTree = "<group>"; };
+		2DA206DC1DE8B5B10004CE1D /* libReachbility.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libReachbility.a; path = ../../../XcodeProjects/lecloud_iOS_vrp_SDK_v4.3.1_20160923/SDK4.3.1/Libs/libReachbility.a; sourceTree = "<group>"; };
+		2DA206EE1DE8B7CD0004CE1D /* LECPlayerResource.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = LECPlayerResource.bundle; path = ../../../XcodeProjects/lecloud_iOS_vrp_SDK_v4.3.1_20160923/SDK4.3.1/LECPlayerResource.bundle; sourceTree = "<group>"; };
+		2DA206EF1DE8B7CD0004CE1D /* LECPlayerUIResource.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = LECPlayerUIResource.bundle; path = ../../../XcodeProjects/lecloud_iOS_vrp_SDK_v4.3.1_20160923/SDK4.3.1/LECPlayerUIResource.bundle; sourceTree = "<group>"; };
+		2DA206F01DE8B7CD0004CE1D /* LECVodPlayerResource.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = LECVodPlayerResource.bundle; path = ../../../XcodeProjects/lecloud_iOS_vrp_SDK_v4.3.1_20160923/SDK4.3.1/LECVodPlayerResource.bundle; sourceTree = "<group>"; };
 		2DA206F51DE8B89B0004CE1D /* AdSupport.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AdSupport.framework; path = System/Library/Frameworks/AdSupport.framework; sourceTree = SDKROOT; };
 		2DA206F61DE8B89B0004CE1D /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
 		2DA206F91DE8B9950004CE1D /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
@@ -267,22 +267,19 @@
 			buildActionMask = 2147483647;
 			files = (
 				2DA207131DE8C0A80004CE1D /* libReachbility.a in Frameworks */,
-				2DA207141DE8C0A80004CE1D /* libZipArchive.a in Frameworks */,
-				2DA207151DE8C0A80004CE1D /* libLECPlayerFoundation.a in Frameworks */,
-				2DA207161DE8C0A80004CE1D /* libLECPlayerUIKit.a in Frameworks */,
-				2DA207171DE8C0A80004CE1D /* libLECLivePlayerUISDK.a in Frameworks */,
-				2DA207181DE8C0A80004CE1D /* libLECVodPlayerSDK.a in Frameworks */,
-				2DA207191DE8C0A80004CE1D /* libLECLivePlayerSDK.a in Frameworks */,
-				2DA2071A1DE8C0A80004CE1D /* libLECVodPlayerUISDK.a in Frameworks */,
 				2DA207121DE8BAAC0004CE1D /* libz.1.2.5.tbd in Frameworks */,
 				2DA207101DE8BA990004CE1D /* libxml2.2.tbd in Frameworks */,
 				2DA2070E1DE8BA8C0004CE1D /* libstdc++.6.0.9.tbd in Frameworks */,
 				392D188B09B145E0B6613D6D /* libz.tbd in Frameworks */,
 				2DA2070A1DE8BA510004CE1D /* libiconv.tbd in Frameworks */,
+				2D6B1CDC1DE9BB5E00EA494B /* libLECVodPlayerSDK.a in Frameworks */,
+				2D6B1CD91DE9BB5E00EA494B /* libLECLivePlayerUISDK.a in Frameworks */,
 				2DA207011DE8B9950004CE1D /* AudioToolbox.framework in Frameworks */,
 				2DA207021DE8B9950004CE1D /* CoreData.framework in Frameworks */,
 				2DA207031DE8B9950004CE1D /* CoreLocation.framework in Frameworks */,
+				2D6B1CDB1DE9BB5E00EA494B /* libLECPlayerUIKit.a in Frameworks */,
 				2DA207041DE8B9950004CE1D /* CoreMedia.framework in Frameworks */,
+				2D6B1CDD1DE9BB5E00EA494B /* libLECVodPlayerUISDK.a in Frameworks */,
 				2DA207051DE8B9950004CE1D /* CoreTelephony.framework in Frameworks */,
 				2DA207061DE8B9950004CE1D /* JavaScriptCore.framework in Frameworks */,
 				2DA207071DE8B9950004CE1D /* SystemConfiguration.framework in Frameworks */,
@@ -293,8 +290,11 @@
 				00C302E51ABCBA2D00DB3ED1 /* libRCTActionSheet.a in Frameworks */,
 				00C302E71ABCBA2D00DB3ED1 /* libRCTGeolocation.a in Frameworks */,
 				00C302E81ABCBA2D00DB3ED1 /* libRCTImage.a in Frameworks */,
+				2D6B1CDE1DE9BB5E00EA494B /* libZipArchive.a in Frameworks */,
 				133E29F31AD74F7200F7D852 /* libRCTLinking.a in Frameworks */,
+				2D6B1CDA1DE9BB5E00EA494B /* libLECPlayerFoundation.a in Frameworks */,
 				00C302E91ABCBA2D00DB3ED1 /* libRCTNetwork.a in Frameworks */,
+				2D6B1CD81DE9BB5E00EA494B /* libLECLivePlayerSDK.a in Frameworks */,
 				139105C61AF99C1200B5F7CC /* libRCTSettings.a in Frameworks */,
 				832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */,
 				00C302EA1ABCBA2D00DB3ED1 /* libRCTVibration.a in Frameworks */,
@@ -443,14 +443,14 @@
 		2DA206DB1DE8B59A0004CE1D /* Libs */ = {
 			isa = PBXGroup;
 			children = (
+				2D6B1CD11DE9BB5E00EA494B /* libLECLivePlayerSDK.a */,
+				2D6B1CD21DE9BB5E00EA494B /* libLECLivePlayerUISDK.a */,
+				2D6B1CD31DE9BB5E00EA494B /* libLECPlayerFoundation.a */,
+				2D6B1CD41DE9BB5E00EA494B /* libLECPlayerUIKit.a */,
+				2D6B1CD51DE9BB5E00EA494B /* libLECVodPlayerSDK.a */,
+				2D6B1CD61DE9BB5E00EA494B /* libLECVodPlayerUISDK.a */,
+				2D6B1CD71DE9BB5E00EA494B /* libZipArchive.a */,
 				2DA206DC1DE8B5B10004CE1D /* libReachbility.a */,
-				2DA206DD1DE8B5B10004CE1D /* libZipArchive.a */,
-				2DA206DE1DE8B5B10004CE1D /* libLECPlayerFoundation.a */,
-				2DA206DF1DE8B5B10004CE1D /* libLECPlayerUIKit.a */,
-				2DA206E01DE8B5B10004CE1D /* libLECLivePlayerUISDK.a */,
-				2DA206E11DE8B5B10004CE1D /* libLECVodPlayerSDK.a */,
-				2DA206E21DE8B5B10004CE1D /* libLECLivePlayerSDK.a */,
-				2DA206E31DE8B5B10004CE1D /* libLECVodPlayerUISDK.a */,
 			);
 			name = Libs;
 			sourceTree = "<group>";
@@ -458,9 +458,9 @@
 		2DA206ED1DE8B7B10004CE1D /* Bundles */ = {
 			isa = PBXGroup;
 			children = (
-				2DA206EE1DE8B7CD0004CE1D /* LECVodPlayerResource.bundle */,
-				2DA206EF1DE8B7CD0004CE1D /* LECPlayerResource.bundle */,
-				2DA206F01DE8B7CD0004CE1D /* LECPlayerUIResource.bundle */,
+				2DA206EE1DE8B7CD0004CE1D /* LECPlayerResource.bundle */,
+				2DA206EF1DE8B7CD0004CE1D /* LECPlayerUIResource.bundle */,
+				2DA206F01DE8B7CD0004CE1D /* LECVodPlayerResource.bundle */,
 			);
 			name = Bundles;
 			sourceTree = "<group>";
@@ -810,9 +810,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2DA206F11DE8B7CD0004CE1D /* LECVodPlayerResource.bundle in Resources */,
-				2DA206F31DE8B7CD0004CE1D /* LECPlayerUIResource.bundle in Resources */,
-				2DA206F21DE8B7CD0004CE1D /* LECPlayerResource.bundle in Resources */,
+				2DA206F11DE8B7CD0004CE1D /* LECPlayerResource.bundle in Resources */,
+				2DA206F31DE8B7CD0004CE1D /* LECVodPlayerResource.bundle in Resources */,
+				2DA206F21DE8B7CD0004CE1D /* LECPlayerUIResource.bundle in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */,
 			);
@@ -936,15 +936,14 @@
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 					"$(SRCROOT)/../node_modules/react-native/React/**",
 					"$(SRCROOT)/../node_modules/react-native-code-push/ios/CodePush/**",
-					"$(SRCROOT)/SDK4.3.1/**",
+					"$(SRCROOT)/../../../XcodeProjects/lecloud_iOS_vrp_SDK_v4.3.1_20160923/SDK4.3.1/**",
 				);
 				INFOPLIST_FILE = DemoProject/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
-					"$(PROJECT_DIR)/SDK4.3.1/**",
-					"$(PROJECT_DIR)/SDK4.3.1/Libs",
+					"$(PROJECT_DIR)/../../../XcodeProjects/lecloud_iOS_vrp_SDK_v4.3.1_20160923/SDK4.3.1/**",
 				);
 				OTHER_LDFLAGS = (
 					"$(inherited)",
@@ -969,15 +968,14 @@
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 					"$(SRCROOT)/../node_modules/react-native/React/**",
 					"$(SRCROOT)/../node_modules/react-native-code-push/ios/CodePush/**",
-					"$(SRCROOT)/SDK4.3.1/**",
+					"$(SRCROOT)/../../../XcodeProjects/lecloud_iOS_vrp_SDK_v4.3.1_20160923/SDK4.3.1/**",
 				);
 				INFOPLIST_FILE = DemoProject/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
-					"$(PROJECT_DIR)/SDK4.3.1/**",
-					"$(PROJECT_DIR)/SDK4.3.1/Libs",
+					"$(PROJECT_DIR)/../../../XcodeProjects/lecloud_iOS_vrp_SDK_v4.3.1_20160923/SDK4.3.1/**",
 				);
 				OTHER_LDFLAGS = (
 					"$(inherited)",
