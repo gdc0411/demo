@@ -1,15 +1,14 @@
 //
-//  RCTVideoPlayerViewController.h
-//  RCTVideo
+//  RCTLeVideoPlayerViewController.h
+//  RCTLeVideo
 //
-//  Created by Stanisław Chmiela on 31.03.2016.
-//  Copyright © 2016 Facebook. All rights reserved.
+//  Created by RaoJia on 25.11.2016.
+//  Copyright © 2016 LeCloud. All rights reserved.
 //
 
-#import <AVKit/AVKit.h>
-#import "RCTLeVideo.h"
+#import "LCBaseViewController.h"
 #import "RCTLeVideoPlayerViewControllerDelegate.h"
 
-@interface RCTLeVideoPlayerViewController : AVPlayerViewController
+@interface RCTLeVideoPlayerViewController : LCBaseViewController
 @property (nonatomic, weak) id<RCTLeVideoPlayerViewControllerDelegate> rctDelegate;
 @end
