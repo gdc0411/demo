@@ -6,18 +6,18 @@
  ************************************************************************/
 'use strict';
 
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import {
-    AlertIOS,
-    AppRegistry,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    View,
-    Dimensions,
+  AlertIOS,
+  AppRegistry,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  Dimensions,
 } from 'react-native';
 import { connect } from 'react-redux';
-import {bindActionCreators} from 'redux';
+import { bindActionCreators } from 'redux';
 
 import * as playActions from '../actions/playAction';
 
@@ -45,11 +45,11 @@ class VideoPlayer extends Component {
   };
 
   onLoad(data) {
-    this.setState({duration: data.duration});
+    this.setState({ duration: data.duration });
   }
 
   onProgress(data) {
-    this.setState({currentTime: data.currentTime});
+    this.setState({ currentTime: data.currentTime });
   }
 
   getCurrentTimePercentage() {
@@ -64,11 +64,13 @@ class VideoPlayer extends Component {
     const isSelected = this.state.skin == skin;
     const selectControls = skin == 'native' || skin == 'embed';
     return (
-      <TouchableOpacity onPress={() => { this.setState({
+      <TouchableOpacity onPress={() => {
+        this.setState({
           controls: selectControls,
           skin: skin
-        }); }}>
-        <Text style={[styles.controlOption, {fontWeight: isSelected ? "bold" : "normal"}]}>
+        });
+      } }>
+        <Text style={[styles.controlOption, { fontWeight: isSelected ? "bold" : "normal" }]}>
           {skin}
         </Text>
       </TouchableOpacity>
@@ -79,8 +81,8 @@ class VideoPlayer extends Component {
     const isSelected = (this.state.rate == rate);
 
     return (
-      <TouchableOpacity onPress={() => { this.setState({rate: rate}); }}>
-        <Text style={[styles.controlOption, {fontWeight: isSelected ? "bold" : "normal"}]}>
+      <TouchableOpacity onPress={() => { this.setState({ rate: rate }); } }>
+        <Text style={[styles.controlOption, { fontWeight: isSelected ? "bold" : "normal" }]}>
           {rate}x
         </Text>
       </TouchableOpacity>
@@ -91,8 +93,8 @@ class VideoPlayer extends Component {
     const isSelected = (this.state.resizeMode == resizeMode);
 
     return (
-      <TouchableOpacity onPress={() => { this.setState({resizeMode: resizeMode}); }}>
-        <Text style={[styles.controlOption, {fontWeight: isSelected ? "bold" : "normal"}]}>
+      <TouchableOpacity onPress={() => { this.setState({ resizeMode: resizeMode }); } }>
+        <Text style={[styles.controlOption, { fontWeight: isSelected ? "bold" : "normal" }]}>
           {resizeMode}
         </Text>
       </TouchableOpacity>
@@ -103,8 +105,8 @@ class VideoPlayer extends Component {
     const isSelected = (this.state.volume == volume);
 
     return (
-      <TouchableOpacity onPress={() => { this.setState({volume: volume}); }}>
-        <Text style={[styles.controlOption, {fontWeight: isSelected ? "bold" : "normal"}]}>
+      <TouchableOpacity onPress={() => { this.setState({ volume: volume }); } }>
+        <Text style={[styles.controlOption, { fontWeight: isSelected ? "bold" : "normal" }]}>
           {volume * 100}%
         </Text>
       </TouchableOpacity>
@@ -117,9 +119,9 @@ class VideoPlayer extends Component {
 
     return (
       <View style={styles.container}>
-        <TouchableOpacity style={styles.fullScreen} onPress={() => {this.setState({paused: !this.state.paused});}}>
+        <TouchableOpacity style={styles.fullScreen} onPress={() => { this.setState({ paused: !this.state.paused }); } }>
           <Video
-            source={{uri: "http://bos.nj.bpc.baidu.com/tieba-smallvideo/11772_3c435014fb2dd9a5fd56a57cc369f6a0.mp4"}}
+            source={{ uri: "http://bos.nj.bpc.baidu.com/tieba-smallvideo/11772_3c435014fb2dd9a5fd56a57cc369f6a0.mp4" }}
             style={styles.fullScreen}
             rate={this.state.rate}
             paused={this.state.paused}
@@ -128,9 +130,9 @@ class VideoPlayer extends Component {
             resizeMode={this.state.resizeMode}
             onLoad={this.onLoad}
             onProgress={this.onProgress}
-            onEnd={() => { AlertIOS.alert('Done!'); }}
+            onEnd={() => { AlertIOS.alert('Done!'); } }
             repeat={true}
-          />
+            />
         </TouchableOpacity>
 
         <View style={styles.controls}>
@@ -163,8 +165,8 @@ class VideoPlayer extends Component {
 
           <View style={styles.trackingControls}>
             <View style={styles.progress}>
-              <View style={[styles.innerProgressCompleted, {flex: flexCompleted}]} />
-              <View style={[styles.innerProgressRemaining, {flex: flexRemaining}]} />
+              <View style={[styles.innerProgressCompleted, { flex: flexCompleted }]} />
+              <View style={[styles.innerProgressRemaining, { flex: flexRemaining }]} />
             </View>
           </View>
         </View>
@@ -178,7 +180,7 @@ class VideoPlayer extends Component {
       <View style={styles.container}>
         <View style={styles.fullScreen}>
           <Video
-            source={{uri: "broadchurch"}}
+            source={{ uri: "broadchurch" }}
             style={videoStyle}
             rate={this.state.rate}
             paused={this.state.paused}
@@ -187,10 +189,10 @@ class VideoPlayer extends Component {
             resizeMode={this.state.resizeMode}
             onLoad={this.onLoad}
             onProgress={this.onProgress}
-            onEnd={() => { AlertIOS.alert('Done!'); }}
+            onEnd={() => { AlertIOS.alert('Done!'); } }
             repeat={true}
             controls={this.state.controls}
-          />
+            />
         </View>
         <View style={styles.controls}>
           <View style={styles.generalControls}>
@@ -310,13 +312,13 @@ const styles = StyleSheet.create({
 
 //配置Map映射表，拿到自己关心的数据
 const mapStateToProps = state => ({
-    //state.xxx必须与reducer同名
-    datasource: state.play.datasource,
+  //state.xxx必须与reducer同名
+  datasource: state.play.datasource,
 });
 
 
 const mapDispatchToProps = dispatch => ({
-    actions: bindActionCreators(playActions, dispatch)
+  actions: bindActionCreators(playActions, dispatch)
 });
 
 //连接Redux
