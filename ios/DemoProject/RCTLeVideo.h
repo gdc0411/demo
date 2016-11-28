@@ -16,12 +16,22 @@
 #import "LCBaseViewController.h"
 
 
+typedef NS_ENUM (int,LCPlayerMode){
+  LCPlayerVod = 10000,
+  LCPlayerLive = 10001,
+  LCPlayerActionLive = 10002,
+  LCPlayerMobileLive = 10003,
+  LCOtherMode
+};
+
+
+
 @class RCTEventDispatcher;
 
 @interface RCTLeVideo : UIView <RCTLeVideoPlayerViewControllerDelegate>
 
 - (instancetype)initWithEventDispatcher:(RCTEventDispatcher *)eventDispatcher NS_DESIGNATED_INITIALIZER;
 
-- (LCBaseViewController*)createPlayerViewController:(LECVODPlayer*)player withPlayerItem:(LECPlayerOption*)playerItem;
+- (LCBaseViewController*)createPlayerViewController:(LECVODPlayer*)player withPlayerOption:(LECPlayerOption*)playerOption;
 
 @end
