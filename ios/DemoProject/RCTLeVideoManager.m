@@ -1,6 +1,17 @@
+//
+//  RCTLeVideoManager.m
+//  RCTLeVideo
+//
+//  Created by RaoJia on 28.11.2016.
+//  Copyright © 2016 LeCloud. All rights reserved.
+//
+
 #import "RCTLeVideoManager.h"
 #import "RCTLeVideo.h"
-#import "RCTBridge.h"
+
+#import "RCTBridge.h" //进行通信的头文件
+#import "RCTEventDispatcher.h"  //事件派发，不导入会引起Xcode警告
+
 #import <AVFoundation/AVFoundation.h>
 
 @implementation RCTLeVideoManager
@@ -59,8 +70,11 @@ RCT_EXPORT_MODULE();
     return dispatch_get_main_queue();
 }
 
+
 RCT_EXPORT_VIEW_PROPERTY(src, NSDictionary);
 RCT_EXPORT_VIEW_PROPERTY(paused, BOOL);
+
+//RCT_EXPORT_VIEW_PROPERTY(onVideoSourceLoad, RCTBubblingEventBlock)
 
 - (NSDictionary *)constantsToExport
 {

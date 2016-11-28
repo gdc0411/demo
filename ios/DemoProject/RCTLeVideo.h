@@ -25,10 +25,12 @@ typedef NS_ENUM (int,LCPlayerMode){
 };
 
 
-
 @class RCTEventDispatcher;
 
 @interface RCTLeVideo : UIView <RCTLeVideoPlayerViewControllerDelegate>
+
+//@property (nonatomic, copy) RCTBubblingEventBlock onVideoSourceLoad;
+
 
 - (instancetype)initWithEventDispatcher:(RCTEventDispatcher *)eventDispatcher NS_DESIGNATED_INITIALIZER;
 

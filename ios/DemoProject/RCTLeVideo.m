@@ -23,7 +23,6 @@
   __block BOOL _isSeeking;
   BOOL _isFullScreen;
   
-  
 }
 @property (nonatomic, strong) LECVODPlayer *lePlayer;
 @property (nonatomic, strong) LECPlayerOption *option;
@@ -41,11 +40,12 @@
   /* Required to publish events */
   RCTEventDispatcher *_eventDispatcher;
   
-  
   int _playMode; //当前播放模式
   int _currentOritentation; //当前屏幕方向
-  int _width;
-  int _height;
+  int _width; //当前视频宽度
+  int _height; //当前视频高度
+  NSString *_currentRate; //当前码率
+  long _lastPosition;
   
 
   bool _pendingSeek;
@@ -57,8 +57,9 @@
   BOOL _controls;
   
   /* Keep track of any modifiers, need to be applied after each play */
-  float _volume;
-  NSString * _rate;
+  int _volume;
+  int _brightness;
+  
   BOOL _paused;
   BOOL _repeat;
   BOOL _playbackStalled;
@@ -207,6 +208,9 @@
   //从source里拿到必要参数,用来创建player\option\controller
   [self playerItemForSource:source];
   
+  
+//  self.onVideoSourceLoad(@{@"target": self.reactTag,@"src": [[self class] returnJSONStringWithDictionary:source]});
+  
   [_eventDispatcher sendInputEventWithName:@"onVideoSourceLoad"
                                       body:@{@"src": [[self class] returnJSONStringWithDictionary:source],
                                              @"target": self.reactTag}];
@@ -257,12 +261,6 @@
                    if (result){
                      NSLog(@"播放器注册成功");
                      [wSelf play];//注册完成后自动播放
-                     LECStreamRateItem * lItem = wSelf.lePlayer.selectedStreamRateItem;
-                     
-                     
-                     //      [wSelf.playerRateBtn setTitle:lItem.name
-                     //                           forState:(UIControlStateNormal)];
-
                    }else{
                      [_playerViewController showTips:@"播放器注册失败,请检查UU和VU"];
                      //      [_loadIndicatorView stopAnimating];
@@ -316,23 +314,61 @@
 {
   NSLog(@"Prepared Event!");
   
+  // 当前播放模式, 当前屏幕方向
   NSMutableDictionary *event = [NSMutableDictionary dictionaryWithObjectsAndKeys:
                                 [NSNumber numberWithInt:_playMode],@"playMode",
                                 [NSNumber numberWithInt:_currentOritentation],@"orientation", nil];
   
+  // 视频基本信息，长/宽/方向
   _width = player.actualVideoWidth;
   _height = player.actualVideoHeight;
-  NSString* _videoOrientation = (_width > _height)? @"landscape" : @"portrait";
+  NSString* videoOrientation = (_width > _height)? @"landscape" : @"portrait";
   
   NSDictionary *naturalSize =  [NSDictionary dictionaryWithObjectsAndKeys:
                                 [NSNumber numberWithInt:_width],@"width",
                                 [NSNumber numberWithInt:_height],@"height",
-                                _videoOrientation,@"videoOrientation",nil];
-  
+                                videoOrientation,@"videoOrientation",nil];
   
   [event setValue:_lePlayer.videoTitle forKey:@"title"];
-  [event setObject:naturalSize forKey:@"naturalSize"];
+  [event setValue:naturalSize forKey:@"naturalSize"];
   
+  // 视频码率信息
+  
+  NSArray *aRatesList = _lePlayer.streamRatesList;
+  if(aRatesList && [aRatesList count] >0 ){
+    
+    NSMutableArray *ratesList = [NSMutableArray arrayWithCapacity: [aRatesList count]];
+    for(LECStreamRateItem *element in aRatesList){
+      //NSLog(@"%@",element);
+      if((NSNull *)element != [NSNull null] && element.isEnabled){
+        [ratesList addObject: [NSDictionary dictionaryWithObjectsAndKeys:element.code,@"rateKey",element.name,@"rateValue",nil]];
+      }
+    }
+    [event setValue:ratesList forKey:@"rateList"]; //可用码率
+  }
+  LECStreamRateItem * lItem = _lePlayer.selectedStreamRateItem;
+  if( lItem ){
+    [event setValue:lItem.code forKey:@"defaultRate"]; //默认码率
+    [event setValue:_currentRate forKey:@"currentRate"]; //当前码率
+  }
+  
+  // 视频封面信息: 加载
+  if (_lePlayer.loadingIconUrl) {
+    [event setValue:[NSDictionary dictionaryWithObjectsAndKeys:_lePlayer.loadingIconUrl,@"pic",nil] forKey:@"loading"];  // LOADING信息
+  }
+  
+  if (_playMode == LCPlayerVod) { //VOD模式下参数
+    [event setValue:[NSNumber numberWithLong:_lePlayer.duration ] forKey:@"duration"]; //视频总长度（VOD）
+    [event setValue:[NSNumber numberWithLong:_lastPosition] forKey:@"currentTime"]; //当前播放位置（VOD）
+  }
+  
+  // 设备信息： 声音和亮度
+  [event setValue:[NSNumber numberWithLong:_volume] forKey:@"volume"]; //声音百分比
+  [event setValue:[NSNumber numberWithLong:_brightness] forKey:@"brightness"]; //屏幕亮度
+  
+  [event setValue:self.reactTag forKey:@"target"];
+
+  [_eventDispatcher sendInputEventWithName:@"onVideoLoad" body:event];
   
 }
 
