@@ -22,6 +22,8 @@
   __block BOOL _isPlay;
   __block BOOL _isSeeking;
   BOOL _isFullScreen;
+  
+  
 }
 @property (nonatomic, strong) LECVODPlayer *lePlayer;
 @property (nonatomic, strong) LECPlayerOption *option;
@@ -39,6 +41,13 @@
   /* Required to publish events */
   RCTEventDispatcher *_eventDispatcher;
   
+  
+  int _playMode; //当前播放模式
+  int _currentOritentation; //当前屏幕方向
+  int _width;
+  int _height;
+  
+
   bool _pendingSeek;
   float _pendingSeekTime;
   float _lastSeekTime;
@@ -68,6 +77,9 @@
     _isFullScreen = NO;
     _isPlay = NO;
     _isSeeking = NO;
+    
+    _currentOritentation = 9;
+
     
     //    _playbackStalled = NO;
     //    _rate = 1.0;
@@ -141,12 +153,39 @@
   }
 }
 
+#pragma mark - 将Dictionary转为Json
++ (NSString *)returnJSONStringWithDictionary:(NSDictionary *)dictionary{
+  //系统自带
+  NSError * error;
+  NSData * jsonData = [NSJSONSerialization dataWithJSONObject:dictionary options:kNilOptions error:&error];
+  if(error != nil){
+    NSLog(@"转换JSON出错:%@", error);
+    return nil;
+  }
+  
+  NSString * jsonStr = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+  //自定义
+  //  NSString *jsonStr = @"{";
+  //  NSArray * keys = [dictionary allKeys];
+  //  for (NSString * key in keys) {
+  //    jsonStr = [NSString stringWithFormat:@"%@\"%@\":\"%@\",",jsonStr,key,[dictionary objectForKey:key]];
+  //  }
+  //  jsonStr = [NSString stringWithFormat:@"%@%@",[jsonStr substringWithRange:NSMakeRange(0, jsonStr.length-1)],@"}"];
+  
+  return jsonStr;
+}
+
 
 #pragma mark - Player and source
 - (void)setSrc:(NSDictionary *)source
 {
+  NSLog(@"外部控制——— 传入数据源: %@", source);
+  if(source == nil){
+    return;
+  }
+  
   // 销毁原播放器和控制器
-  if (!_lePlayer ) {
+  if (_lePlayer != nil ) {
     [_lePlayer pause];
     
     [_playerViewController.view removeFromSuperview];
@@ -168,13 +207,9 @@
   //从source里拿到必要参数,用来创建player\option\controller
   [self playerItemForSource:source];
   
-  
-//  [_eventDispatcher sendInputEventWithName:@"onVideoLoadStart"
-//                                      body:@{@"src": @{
-//                                                 @"uri": [source objectForKey:@"uri"],
-//                                                 @"type": [source objectForKey:@"type"],
-//                                                 @"isNetwork":[NSNumber numberWithBool:(bool)[source objectForKey:@"isNetwork"]]},
-//                                             @"target": self.reactTag}];
+  [_eventDispatcher sendInputEventWithName:@"onVideoSourceLoad"
+                                      body:@{@"src": [[self class] returnJSONStringWithDictionary:source],
+                                             @"target": self.reactTag}];
 }
 
 - (void)playerItemForSource:(NSDictionary *)source
@@ -183,6 +218,9 @@
   
   if(playMode == LCPlayerVod ){ //云点播
     NSLog(@"设置点播数据源");
+    
+    _playMode = LCPlayerVod;
+    
     NSString *uuid = [source objectForKey:@"uuid"];
     NSString *vuid = [source objectForKey:@"vuid"];
     NSString *buinessline = [source objectForKey:@"businessline"];
@@ -216,19 +254,15 @@
  resumeFromLastPlayPosition:YES
      resumeFromLastRateType:YES
                  completion:^(BOOL result) {
-                   
                    if (result){
                      NSLog(@"播放器注册成功");
                      [wSelf play];//注册完成后自动播放
-                     //      wSelf.titleLabel.text = wSelf.player.videoTitle;
-                     //      LECStreamRateItem * lItem = wSelf.player.selectedStreamRateItem;
+                     LECStreamRateItem * lItem = wSelf.lePlayer.selectedStreamRateItem;
+                     
+                     
                      //      [wSelf.playerRateBtn setTitle:lItem.name
                      //                           forState:(UIControlStateNormal)];
-                     
-                     //      _timeObserver = [_player addPeriodicTimeObserverForInterval:CMTimeMakeWithSeconds(progressUpdateIntervalMS, NSEC_PER_SEC)
-                     //                                                            queue:NULL
-                     //                                                       usingBlock:^(CMTime time) { [weakSelf sendProgressUpdate]; }
-                     //                       ];
+
                    }else{
                      [_playerViewController showTips:@"播放器注册失败,请检查UU和VU"];
                      //      [_loadIndicatorView stopAnimating];
@@ -276,13 +310,40 @@
 }
 
 #pragma mark - LECPlayerDelegate
+#pragma mark 处理prepare事件
+- (void) processPrepared:(LECPlayer *) player
+             playerEvent:(LECPlayerPlayEvent) playerEvent
+{
+  NSLog(@"Prepared Event!");
+  
+  NSMutableDictionary *event = [NSMutableDictionary dictionaryWithObjectsAndKeys:
+                                [NSNumber numberWithInt:_playMode],@"playMode",
+                                [NSNumber numberWithInt:_currentOritentation],@"orientation", nil];
+  
+  _width = player.actualVideoWidth;
+  _height = player.actualVideoHeight;
+  NSString* _videoOrientation = (_width > _height)? @"landscape" : @"portrait";
+  
+  NSDictionary *naturalSize =  [NSDictionary dictionaryWithObjectsAndKeys:
+                                [NSNumber numberWithInt:_width],@"width",
+                                [NSNumber numberWithInt:_height],@"height",
+                                _videoOrientation,@"videoOrientation",nil];
+  
+  
+  [event setValue:_lePlayer.videoTitle forKey:@"title"];
+  [event setObject:naturalSize forKey:@"naturalSize"];
+  
+  
+}
+
+
 /*播放器播放状态*/
 - (void) lecPlayer:(LECPlayer *) player
        playerEvent:(LECPlayerPlayEvent) playerEvent
 {
   switch (playerEvent){
     case LECPlayerPlayEventPrepareDone:
-      //      _titleLabel.text = _lePlayer.videoTitle;
+      [self processPrepared:player playerEvent:playerEvent];
       break;
     case LECPlayerPlayEventEOS:
       [_playerViewController showTips:@"播放结束"];
