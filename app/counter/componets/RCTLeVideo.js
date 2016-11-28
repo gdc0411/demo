@@ -475,6 +475,44 @@ export default class Video extends Component {
             },
             /*回调函数赋值*/
             onVideoSourceLoad: this._onSourceLoad,
+            /*设备相关*/
+            onOrientationChange: this._onOrientationChange,
+            /*播放相关*/
+            onVideoLoad: this._onLoad,
+            onVideoSizeChange: this._onSizeChange,
+            onVideoRateLoad: this._onRateLoad,
+            onVideoError: this._onError,
+            onVideoProgress: this._onProgress,
+            onVideoSeek: this._onSeek,
+            onVideoSeekComplete: this._onSeekComplete,
+            onVideoEnd: this._onEnd,
+            onVideoPause: this._onPause,
+            onVideoResume: this._onResume,
+            onVideoRendingStart: this._onStartRending,
+            onVideoBufferPercent: this._onPlayablePercent,
+            onVideoRateChange: this._onRateChange,
+            /*直播相关*/
+            onActionLiveChange: this._onActionLiveChange,
+            onActionTimeShift: this._onActionTimeShift,
+            onActionStatusChange: this._onActionStatusChange,
+            onActionOnlineNumChange: this._onActionOnlineNumChange,
+            /*媒资相关*/
+            onMediaVodLoad: this._onMMSVodLoad,
+            onMediaLiveLoad: this._onMMSLiveLoad,
+            onMediaActionLoad: this._onMMSActionLoad,
+            onMediaPlayURLLoad: this._onMMSPlayURLLoad,
+            /*广告相关*/
+            onAdvertStart: this._onAdStart,
+            onAdvertProgress: this._onAdProgress,
+            onAdvertComplete: this._onAdComplete,
+            onAdvertClick: this._onAdClick,
+            onAdvertError: this._onAdError,
+            /*缓冲相关*/
+            onBufferStart: this._onStartBuffer,
+            onBufferEnd: this._onEndBuffer,
+            onBufferPercent: this._onBuffPercent,
+            /*其他事件相关*/
+            onOtherEventInfo: this._onOtherEvent,
         });
 
         return (
@@ -523,11 +561,90 @@ Video.propTypes = {
             hasSkin: PropTypes.bool,
         }),
     ]).isRequired,
+    /* 跳转到时间点 */
+    seek: PropTypes.number,
+    /* 设置视频码率 */
+    rate: PropTypes.string,
+    /* 设置音量百分比 */
+    volume: PropTypes.number,
+    /* 设置亮度值0-255 */
+    brightness: PropTypes.number,
+    /* 设置屏幕方向 */
+    orientation: PropTypes.number,
     /* 暂停或播放 */
     paused: PropTypes.bool,
+    /* 点击广告 */
+    clickAd: PropTypes.bool,
+    /* 设置机位（直播） */
+    live: PropTypes.string,
+    /* 设置后台播放 */
+    playInBackground: PropTypes.bool,
+    /* 设置？？？ */
+    playWhenInactive: PropTypes.bool,
+    /* 设置进度条更新频率 */
+    progressUpdateInterval: PropTypes.number,
 
     /* 数据源设置完毕回调 */
     onSourceLoad: PropTypes.func,
+    /* 设置屏幕方向回调 */
+    onOrientationChange: PropTypes.func,
+    /* 视频尺寸获得回调 */
+    onSizeChange: PropTypes.func,
+    /* 播放加载完成回调 */
+    onLoad: PropTypes.func,
+    /* 可选码率列表加载完成回调 */
+    onRateLoad: PropTypes.func,
+    /* 播放进行回调 */
+    onProgress: PropTypes.func,
+    /* 播放跳转回调 */
+    onSeek: PropTypes.func,
+    /* 播放跳转完毕回调 */
+    onSeekComplete: PropTypes.func,
+    /* 播放结束回调 */
+    onEnd: PropTypes.func,
+    /* 播放暂停回调 */
+    onPause: PropTypes.func,
+    /* 播放后台恢复回调 */
+    onResume: PropTypes.func,
+    /* 播放码率设置改变回调 */
+    onPlaybackRateChange: PropTypes.func,
+    /* 播放总体缓冲进度回调 */
+    onPlayablePercent: PropTypes.func,
+    /* 播放码率切换的回调 */
+    onRateChange: PropTypes.func,
+    /* 播放错误回调 */
+    onError: PropTypes.func,
+
+    /* 缓冲开始 */
+    onStartBuffer: PropTypes.func,
+    /* 缓冲完毕 */
+    onEndBuffer: PropTypes.func,
+    /* 渲染第一帧完成 */
+    onStartRending: PropTypes.func,
+    /* 视频缓冲进度，百分比 */
+    onBuffPercent: PropTypes.func,
+
+    /*媒资相关*/
+    onMMSVodLoad: PropTypes.func,
+    onMMSLiveLoad: PropTypes.func,
+    onMMSActionLoad: PropTypes.func,
+    onMMSPlayURLLoad: PropTypes.func,
+
+    /*广告相关*/
+    onAdStart: PropTypes.func,
+    onAdProgress: PropTypes.func,
+    onAdComplete: PropTypes.func,
+    onAdClick: PropTypes.func,
+    onAdError: PropTypes.func,
+
+    /**直播相关 */
+    onActionLiveChange: PropTypes.func,
+    onActionTimeShift: PropTypes.func,
+    onActionStatusChange: PropTypes.func,
+    onActionOnlineNumChange: PropTypes.func,
+
+    /*其他事件*/
+    onOtherEvent: PropTypes.func,
 
     /* Required by react-native */
     scaleX: PropTypes.number,

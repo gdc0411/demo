@@ -82,6 +82,7 @@ class VideoPlayer extends Component {
         // var today = new Date();
         // alert("The time is: " + today.toString());
         // setTimeout("showTime()", 5000);
+
         const { src } = this.props.params;
         const newSource = this.getFormatDatasource(src);
         this.setState({ source: newSource, });
@@ -306,8 +307,38 @@ class VideoPlayer extends Component {
                 <TouchableOpacity style={[styles.fullScreen, { width: SCREEN_WIDTH, height: 180 }]} onPress={() => { this.setState({ paused: !this.state.paused }); } }>
                     <Video style={[styles.fullScreen, { width: SCREEN_WIDTH, height: 180 }]}
                         source={this.state.source}
+                        seek={this.state.seek}
+                        rate={this.state.rate}
+                        orientation={this.state.orientation}
+                        volume={this.state.volume}
+                        brightness={this.state.brightness}
                         paused={this.state.paused}
+                        live={this.state.live}
+                        clickAd={this.state.clickAd}
                         onSourceLoad={(data) => { this.setState({ sourceInfo: `视频源: ${data.src}` }); } }
+                        onLoad={this.onLoad}
+                        onProgress={(data) => { this.setState({ currentTime: data.currentTime, eventInfo: `播放中…… ${data.currentTime}/${data.duration}` }); } }
+                        onPlayablePercent = {(data) => { this.setState({ buffPercent: data.bufferpercent }); } }
+                        onStartBuffer={() => { this.setState({ eventInfo: '缓冲开始！' }); } }
+                        onBufferPercent={(data) => { this.setState({ eventInfo: `缓冲中…… ${data.videobuff}%` }); } }
+                        onEndBuffer={() => { this.setState({ eventInfo: '缓冲完毕！' }); } }
+                        onStartRending={() => { this.setState({ eventInfo: '渲染第一帧……' }); } }
+                        onSeek={(data) => { this.setState({ eventInfo: `跳转到……${data.currentTime}+${data.seekTime}` }); } }
+                        onSeekComplete={(data) => { this.setState({ eventInfo: `跳转完毕！` }); } }
+                        onPause={(data) => { this.setState({ eventInfo: `暂停…… ${data.currentTime}/${data.duration}` }); } }
+                        onResume={(data) => { this.setState({ eventInfo: `恢复播放…… ${data.currentTime}/${data.duration}` }); } }
+                        onEnd={() => { this.setState({ eventInfo: '播放完毕！' }); } }
+                        onAdStart={() => { this.setState({ advertInfo: '广告开始！' }); } }
+                        onAdProgress={(data) => { this.setState({ advertInfo: `广告播放中……倒计时${data.AdTime}` }); } }
+                        onAdComplete={() => { this.setState({ advertInfo: `广告结束！` }); } }
+                        onAdClick={() => { this.setState({ advertInfo: `广告点击了！！` }); } }
+
+                        onRateChange={(data) => { this.setState({ eventInfo: `码率切换:${data.currentRate} 到 ${data.nextRate}` }); } }
+                        onActionLiveChange={(data) => { this.setState({ eventInfo: `机位切换:${data.currentLive} 到 ${data.nextLive}` }); } }
+                        onActionTimeShift={(data) => { this.setState({ currentTime: data.currentTime, eventInfo: `播放中…… ${data.serverTime}/${data.currentTime}/${data.beginTime}` }); } }
+                        onActionStatusChange={(data) => { this.setState({ eventInfo: `活动状态变化…… ${data.actionState}/${data.actionId}/${data.beginTime}/${data.endTime}` }); } }
+                        onActionOnlineNumChange={(data) => { this.setState({ eventInfo: `在线人数变化…… ${data.onlineNum}` }); } }
+                        onError={(data) => { this.setState({ errorInfo: `出错啦！状态码：${data.statusCode} 错误码：${data.errorCode} 错误：${data.errorMsg} 事件：${data.what}` }); } }
                         />
                 </TouchableOpacity>
 

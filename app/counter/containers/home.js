@@ -12,6 +12,7 @@ import {
     Text,
     Image,
     TouchableOpacity,
+    Platform,
     Dimensions,
 } from 'react-native';
 import {bindActionCreators} from 'redux';
@@ -36,7 +37,11 @@ class home extends Component {
     skipToPlayer = (source) => {
         const {navigator} = this.props;
         // this.props.actions.play(source);
-        navigator.push({ location: '/play/' + source, });
+        if( Platform.OS === "android" ){
+            navigator.push({ location: '/play/' + source, });
+        }else{
+            navigator.push({ location: '/playIOS/' + source, });
+        }
     }
 
     //加
@@ -89,7 +94,7 @@ class home extends Component {
                             <PlayItem source={6} imgUrl={img2} desc={'云直播-泸州'} color={'red'} onPlay={this.skipToPlayer}  />
                         </View>
                         <View style={ { flexDirection: 'row', justifyContent: 'space-around' } } >
-                            <PlayItem source={7} imgUrl={img2} desc={'云直播-推流'} color={'red'} onPlay={this.skipToPlayer}  />                            
+                            <PlayItem source={7} imgUrl={img2} desc={'云直播-推流'} color={'red'} onPlay={this.skipToPlayer}  />
                         </View>
                     </View>
                     <Counter value={value} para={plusPara} oper={`加`} onChange={this.operatePlus} />
