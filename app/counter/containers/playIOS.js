@@ -307,7 +307,10 @@ class VideoPlayer extends Component {
                     <Video style={[styles.fullScreen, { width: SCREEN_WIDTH, height: 180 }]}
                         source={this.state.source}
                         paused={this.state.paused}
-                        onSourceLoad={(data) => { this.setState({ sourceInfo: `视频源: ${data.src}` }); } }
+                        onVideoSourceLoad={(data) => { this.setState({ sourceInfo: `视频源: ${data.src}` }); } }
+                        onVideoLoad={this.onLoad}
+                        onVideoProgress={(data) => { this.setState({ currentTime: data.currentTime, eventInfo: `播放中…… ${data.currentTime}/${data.duration}` }); } }
+                        onVideoEnd={() => { this.setState({ eventInfo: '播放完毕！' }); } }
                         />
                 </TouchableOpacity>
 

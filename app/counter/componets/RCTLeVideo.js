@@ -6,7 +6,7 @@
  ************************************************************************/
 'use strict';
 
-import React, {Component, PropTypes} from 'react';
+import React, { Component, PropTypes } from 'react';
 import {
     StyleSheet,
     requireNativeComponent,
@@ -95,27 +95,27 @@ export default class Video extends Component {
     //     this.setNativeProps({ orientation: value });
     // };
 
-    /**
-     * 处理数据源加载完成事件
-     * @param {any} event 原生回调句柄
-     * @memberOf Video
-     */
-    _onSourceLoad = (event) => {
-        if (this.props.onSourceLoad) {
-            this.props.onSourceLoad(event.nativeEvent);
-        }
-    };
+    // /**
+    //  * 处理数据源加载完成事件
+    //  * @param {any} event 原生回调句柄
+    //  * @memberOf Video
+    //  */
+    // _onSourceLoad = (event) => {
+    //     if (this.props.onSourceLoad) {
+    //         this.props.onSourceLoad(event.nativeEvent);
+    //     }
+    // };
 
-    /**
-     * 处理屏幕方向设置完成事件
-     * @param {any} event 原生回调句柄
-     * @memberOf Video
-     */
-    _onOrientationChange = (event) => {
-        if (this.props.onOrientationChange) {
-            this.props.onOrientationChange(event.nativeEvent);
-        }
-    };
+    // /**
+    //  * 处理屏幕方向设置完成事件
+    //  * @param {any} event 原生回调句柄
+    //  * @memberOf Video
+    //  */
+    // _onOrientationChange = (event) => {
+    //     if (this.props.onOrientationChange) {
+    //         this.props.onOrientationChange(event.nativeEvent);
+    //     }
+    // };
 
     /**
      * 处理获取播放器尺寸的事件
@@ -139,27 +139,27 @@ export default class Video extends Component {
         }
     };
 
-    /**
-     * 处理视频准备完成的事件
-     * @param {any} event 原生回调句柄
-     * @memberOf Video
-     */
-    _onLoad = (event) => {
-        if (this.props.onLoad) {
-            this.props.onLoad(event.nativeEvent);
-        }
-    };
+    // /**
+    //  * 处理视频准备完成的事件
+    //  * @param {any} event 原生回调句柄
+    //  * @memberOf Video
+    //  */
+    // _onLoad = (event) => {
+    //     if (this.props.onLoad) {
+    //         this.props.onLoad(event.nativeEvent);
+    //     }
+    // };
 
-    /**
-     * 处理视频出错的事件
-     * @param {any} event 原生回调句柄
-     * @memberOf Video
-     */
-    _onError = (event) => {
-        if (this.props.onError) {
-            this.props.onError(event.nativeEvent);
-        }
-    };
+    // /**
+    //  * 处理视频出错的事件
+    //  * @param {any} event 原生回调句柄
+    //  * @memberOf Video
+    //  */
+    // _onError = (event) => {
+    //     if (this.props.onError) {
+    //         this.props.onError(event.nativeEvent);
+    //     }
+    // };
 
     /**
      * 处理VOD视频播放中的事件
@@ -194,16 +194,16 @@ export default class Video extends Component {
         }
     };
 
-    /**
-     * 处理视频播放完成的事件
-     * @param {any} event 原生回调句柄
-     * @memberOf Video
-     */
-    _onEnd = (event) => {
-        if (this.props.onEnd) {
-            this.props.onEnd(event.nativeEvent);
-        }
-    };
+    // /**
+    //  * 处理视频播放完成的事件
+    //  * @param {any} event 原生回调句柄
+    //  * @memberOf Video
+    //  */
+    // _onEnd = (event) => {
+    //     if (this.props.onEnd) {
+    //         this.props.onEnd(event.nativeEvent);
+    //     }
+    // };
 
     /**
      * 处理视频暂停的事件
@@ -473,47 +473,49 @@ export default class Video extends Component {
                 hasSkin: source.hasSkin || false,
                 uri: uri,
             },
-            /*回调函数赋值*/
-            onVideoSourceLoad: this._onSourceLoad,
+            /*回调函数属性赋值*/
+            onVideoSourceLoad: (event) => { if (this.props.onVideoSourceLoad) this.props.onVideoSourceLoad(event.nativeEvent); },
             /*设备相关*/
-            onOrientationChange: this._onOrientationChange,
+            onOrientationChange: (event) => { if (this.props.onOrientationChange) this.props.onOrientationChange(event.nativeEvent); },
             /*播放相关*/
-            onVideoLoad: this._onLoad,
-            onVideoSizeChange: this._onSizeChange,
-            onVideoRateLoad: this._onRateLoad,
-            onVideoError: this._onError,
-            onVideoProgress: this._onProgress,
-            onVideoSeek: this._onSeek,
-            onVideoSeekComplete: this._onSeekComplete,
-            onVideoEnd: this._onEnd,
-            onVideoPause: this._onPause,
-            onVideoResume: this._onResume,
-            onVideoRendingStart: this._onStartRending,
-            onVideoBufferPercent: this._onPlayablePercent,
-            onVideoRateChange: this._onRateChange,
+            onVideoLoad: (event) => { if (this.props.onVideoLoad) this.props.onVideoLoad(event.nativeEvent); },
+            onVideoSizeChange: (event) => { if (this.props.onVideoSizeChange) this.props.onVideoSizeChange(event.nativeEvent); },
+            onVideoRateLoad: (event) => { if (this.props.onVideoRateLoad) this.props.onVideoRateLoad(event.nativeEvent); },
+            onVideoError: (event) => { if (this.props.onVideoError) this.props.onVideoError(event.nativeEvent); },
+            onVideoProgress: (event) => { if (this.props.onVideoProgress) this.props.onVideoProgress(event.nativeEvent); },
+            onVideoSeek: (event) => { if (this.props.onVideoSeek) this.props.onVideoSeek(event.nativeEvent); },
+            onVideoSeekComplete: (event) => { if (this.props.onVideoSeekComplete) this.props.onVideoSeekComplete(event.nativeEvent); },
+            onVideoEnd: (event) => { if (this.props.onVideoEnd) this.props.onVideoEnd(event.nativeEvent); },
+            onVideoPause: (event) => { if (this.props.onVideoPause) this.props.onVideoPause(event.nativeEvent); },
+            onVideoResume: (event) => { if (this.props.onVideoResume) this.props.onVideoResume(event.nativeEvent); },
+            onVideoRendingStart: (event) => { if (this.props.onVideoRendingStart) this.props.onVideoRendingStart(event.nativeEvent); },
+            onVideoBufferPercent: (event) => { if (this.props.onVideoBufferPercent) this.props.onVideoBufferPercent(event.nativeEvent); },
+            onVideoRateChange: (event) => { if (this.props.onVideoRateChange) this.props.onVideoRateChange(event.nativeEvent); },
             /*直播相关*/
-            onActionLiveChange: this._onActionLiveChange,
-            onActionTimeShift: this._onActionTimeShift,
-            onActionStatusChange: this._onActionStatusChange,
-            onActionOnlineNumChange: this._onActionOnlineNumChange,
+            onActionLiveChange: (event) => { if (this.props.onActionLiveChange) this.props.onActionLiveChange(event.nativeEvent); },
+            onActionTimeShift: (event) => { if (this.props.onActionTimeShift) this.props.onActionTimeShift(event.nativeEvent); },
+            onActionStatusChange: (event) => { if (this.props.onActionStatusChange) this.props.onActionStatusChange(event.nativeEvent); },
+            onActionOnlineNumChange: (event) => { if (this.props.onActionOnlineNumChange) this.props.onActionOnlineNumChange(event.nativeEvent); },
             /*媒资相关*/
-            onMediaVodLoad: this._onMMSVodLoad,
-            onMediaLiveLoad: this._onMMSLiveLoad,
-            onMediaActionLoad: this._onMMSActionLoad,
-            onMediaPlayURLLoad: this._onMMSPlayURLLoad,
+            onMediaVodLoad: (event) => { if (this.props.onMediaVodLoad) this.props.onMediaVodLoad(event.nativeEvent); },
+            onMediaLiveLoad: (event) => { if (this.props.onMediaLiveLoad) this.props.onMediaLiveLoad(event.nativeEvent); },
+            onMediaActionLoad: (event) => { if (this.props.onMediaActionLoad) this.props.onMediaActionLoad(event.nativeEvent); },
+            onMediaPlayURLLoad: (event) => { if (this.props.onMediaPlayURLLoad) this.props.onMediaPlayURLLoad(event.nativeEvent); },
             /*广告相关*/
-            onAdvertStart: this._onAdStart,
-            onAdvertProgress: this._onAdProgress,
-            onAdvertComplete: this._onAdComplete,
-            onAdvertClick: this._onAdClick,
-            onAdvertError: this._onAdError,
+            onAdvertStart: (event) => { if (this.props.onAdvertStart) this.props.onAdvertStart(event.nativeEvent); },
+            onAdvertProgress: (event) => { if (this.props.onAdvertProgress) this.props.onAdvertProgress(event.nativeEvent); },
+            onAdvertComplete: (event) => { if (this.props.onAdvertComplete) this.props.onAdvertComplete(event.nativeEvent); },
+            onAdvertClick: (event) => { if (this.props.onAdvertClick) this.props.onAdvertClick(event.nativeEvent); },
+            onAdvertError: (event) => { if (this.props.onAdvertError) this.props.onAdvertError(event.nativeEvent); },
             /*缓冲相关*/
-            onBufferStart: this._onStartBuffer,
-            onBufferEnd: this._onEndBuffer,
-            onBufferPercent: this._onBuffPercent,
+            onBufferStart: (event) => { if (this.props.onBufferStart) this.props.onBufferStart(event.nativeEvent); },
+            onBufferEnd: (event) => { if (this.props.onBufferEnd) this.props.onBufferEnd(event.nativeEvent); },
+            onBufferPercent: (event) => { if (this.props.onBufferPercent) this.props.onBufferPercent(event.nativeEvent); },
             /*其他事件相关*/
-            onOtherEventInfo: this._onOtherEvent,
+            onOtherEventInfo: (event) => { if (this.props.onOtherEventInfo) this.props.onOtherEventInfo(event.nativeEvent); },
         });
+
+        console.log(nativeProps);
 
         return (
             <RCTLeVideo
@@ -526,7 +528,7 @@ export default class Video extends Component {
 
 Video.propTypes = {
     /* 原生属性 */
-    src: PropTypes.object,
+    //src: PropTypes.object,
 
     /* 组件属性 */
     /* 播放源：支持点播、直播和本地或URI */
@@ -584,67 +586,46 @@ Video.propTypes = {
     /* 设置进度条更新频率 */
     progressUpdateInterval: PropTypes.number,
 
-    /* 数据源设置完毕回调 */
-    onSourceLoad: PropTypes.func,
-    /* 设置屏幕方向回调 */
+    /* 数据源相关 */
+    onVideoSourceLoad: PropTypes.func,
+    /*设备相关*/
     onOrientationChange: PropTypes.func,
-    /* 视频尺寸获得回调 */
-    onSizeChange: PropTypes.func,
-    /* 播放加载完成回调 */
-    onLoad: PropTypes.func,
-    /* 可选码率列表加载完成回调 */
-    onRateLoad: PropTypes.func,
-    /* 播放进行回调 */
-    onProgress: PropTypes.func,
-    /* 播放跳转回调 */
-    onSeek: PropTypes.func,
-    /* 播放跳转完毕回调 */
-    onSeekComplete: PropTypes.func,
-    /* 播放结束回调 */
-    onEnd: PropTypes.func,
-    /* 播放暂停回调 */
-    onPause: PropTypes.func,
-    /* 播放后台恢复回调 */
-    onResume: PropTypes.func,
-    /* 播放码率设置改变回调 */
-    onPlaybackRateChange: PropTypes.func,
-    /* 播放总体缓冲进度回调 */
-    onPlayablePercent: PropTypes.func,
-    /* 播放码率切换的回调 */
-    onRateChange: PropTypes.func,
-    /* 播放错误回调 */
-    onError: PropTypes.func,
-
-    /* 缓冲开始 */
-    onStartBuffer: PropTypes.func,
-    /* 缓冲完毕 */
-    onEndBuffer: PropTypes.func,
-    /* 渲染第一帧完成 */
-    onStartRending: PropTypes.func,
-    /* 视频缓冲进度，百分比 */
-    onBuffPercent: PropTypes.func,
-
+    /*播放相关*/
+    onVideoSizeChange: PropTypes.func,
+    onVideoLoad: PropTypes.func,
+    onVideoRateLoad: PropTypes.func,
+    onVideoProgress: PropTypes.func,
+    onVideoSeek: PropTypes.func,
+    onVideoSeekComplete: PropTypes.func,
+    onVideoEnd: PropTypes.func,
+    onVideoPause: PropTypes.func,
+    onVideoResume: PropTypes.func,
+    onVideoBufferPercent: PropTypes.func,
+    onVideoRateChange: PropTypes.func,
+    onVideoError: PropTypes.func,
+    /* 缓冲相关 */
+    onBufferStart: PropTypes.func,
+    onBufferEnd: PropTypes.func,
+    onVideoRendingStart: PropTypes.func,
+    onBufferPercent: PropTypes.func,
     /*媒资相关*/
-    onMMSVodLoad: PropTypes.func,
-    onMMSLiveLoad: PropTypes.func,
-    onMMSActionLoad: PropTypes.func,
-    onMMSPlayURLLoad: PropTypes.func,
-
+    onMediaVodLoad: PropTypes.func,
+    onMediaLiveLoad: PropTypes.func,
+    onMediaActionLoad: PropTypes.func,
+    onMediaPlayURLLoad: PropTypes.func,
     /*广告相关*/
-    onAdStart: PropTypes.func,
-    onAdProgress: PropTypes.func,
-    onAdComplete: PropTypes.func,
-    onAdClick: PropTypes.func,
-    onAdError: PropTypes.func,
-
+    onAdvertStart: PropTypes.func,
+    onAdvertProgress: PropTypes.func,
+    onAdvertComplete: PropTypes.func,
+    onAdvertClick: PropTypes.func,
+    onAdvertError: PropTypes.func,
     /**直播相关 */
     onActionLiveChange: PropTypes.func,
     onActionTimeShift: PropTypes.func,
     onActionStatusChange: PropTypes.func,
     onActionOnlineNumChange: PropTypes.func,
-
     /*其他事件*/
-    onOtherEvent: PropTypes.func,
+    onOtherEventInfo: PropTypes.func,
 
     /* Required by react-native */
     scaleX: PropTypes.number,

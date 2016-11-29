@@ -11,10 +11,10 @@
 
 #import "RCTLeVideoPlayerViewControllerDelegate.h"
 
-#import "LECVODPlayer.h"
-#import "LECPlayerOption.h"
-#import "LCBaseViewController.h"
-
+@class RCTBridge;
+@class LECVODPlayer;
+@class LECPlayerOption;
+@class LCBaseViewController;
 
 typedef NS_ENUM (int,LCPlayerMode){
   LCPlayerVod = 10000,
@@ -29,10 +29,8 @@ typedef NS_ENUM (int,LCPlayerMode){
 
 @interface RCTLeVideo : UIView <RCTLeVideoPlayerViewControllerDelegate>
 
-//@property (nonatomic, copy) RCTBubblingEventBlock onVideoSourceLoad;
 
-
-- (instancetype)initWithEventDispatcher:(RCTEventDispatcher *)eventDispatcher NS_DESIGNATED_INITIALIZER;
+- (instancetype)initWithBridge:(RCTBridge *)bridge NS_DESIGNATED_INITIALIZER;
 
 - (LCBaseViewController*)createPlayerViewController:(LECVODPlayer*)player withPlayerOption:(LECPlayerOption*)playerOption;
 

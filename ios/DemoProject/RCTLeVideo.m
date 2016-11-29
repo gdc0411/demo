@@ -12,6 +12,11 @@
 #import "RCTEventDispatcher.h"
 #import "UIView+React.h"
 
+#import "RCTBridge.h"
+#import "LECVODPlayer.h"
+#import "LECPlayerOption.h"
+#import "LCBaseViewController.h"
+
 #import "RCTLeVideoPlayerViewController.h"
 
 
@@ -27,10 +32,47 @@
 @property (nonatomic, strong) LECVODPlayer *lePlayer;
 @property (nonatomic, strong) LECPlayerOption *option;
 
+@property (nonatomic, copy) RCTDirectEventBlock onVideoSourceLoad;  // 数据源设置
+@property (nonatomic, copy) RCTDirectEventBlock onVideoSizeChange;  // 视频真实宽高
+@property (nonatomic, copy) RCTDirectEventBlock onVideoRateLoad; // 视频码率列表
+@property (nonatomic, copy) RCTDirectEventBlock onVideoLoad; // 播放器准备完毕
+@property (nonatomic, copy) RCTDirectEventBlock onVideoError;  // 播放出错
+@property (nonatomic, copy) RCTDirectEventBlock onVideoProgress; // 正在播放视频
+@property (nonatomic, copy) RCTDirectEventBlock onVideoBufferPercent;  // 缓存进度
+@property (nonatomic, copy) RCTDirectEventBlock onVideoPause; // 播放暂停
+@property (nonatomic, copy) RCTDirectEventBlock onVideoResume; // 播放继续
+@property (nonatomic, copy) RCTDirectEventBlock onVideoSeek; // 播放跳转中
+@property (nonatomic, copy) RCTDirectEventBlock onVideoSeekComplete; // 播放跳转结束
+@property (nonatomic, copy) RCTDirectEventBlock onVideoRateChange; //视频码率切换
+@property (nonatomic, copy) RCTDirectEventBlock onVideoEnd;  // 播放完毕
+@property (nonatomic, copy) RCTDirectEventBlock onBufferStart; // 开始缓冲
+@property (nonatomic, copy) RCTDirectEventBlock onBufferEnd;  // 缓冲结束
+@property (nonatomic, copy) RCTDirectEventBlock onVideoRendingStart; // 加载第一帧
+@property (nonatomic, copy) RCTDirectEventBlock onBufferPercent; // 缓冲加载进度，转圈
+@property (nonatomic, copy) RCTDirectEventBlock onAdvertStart; // 广告开始
+@property (nonatomic, copy) RCTDirectEventBlock onAdvertProgress;  // 广告播放中
+@property (nonatomic, copy) RCTDirectEventBlock onAdvertComplete; // 广告结束
+@property (nonatomic, copy) RCTDirectEventBlock onAdvertClick; // 广告点击
+@property (nonatomic, copy) RCTDirectEventBlock onAdvertError; // 广告出错
+@property (nonatomic, copy) RCTDirectEventBlock onMediaVodLoad; // 获得点播媒资
+@property (nonatomic, copy) RCTDirectEventBlock onMediaLiveLoad; // 获得直播媒资
+@property (nonatomic, copy) RCTDirectEventBlock onMediaActionLoad; // 获得活动直播媒资
+@property (nonatomic, copy) RCTDirectEventBlock onMediaPlayURLLoad; // 获得媒资调度
+@property (nonatomic, copy) RCTDirectEventBlock onActionLiveChange; // 云直播切换机位
+@property (nonatomic, copy) RCTDirectEventBlock onActionTimeShift; // 云直播进度
+@property (nonatomic, copy) RCTDirectEventBlock onActionStatusChange; // 云直播状态回调
+@property (nonatomic, copy) RCTDirectEventBlock onActionOnlineNumChange; // 云直播在线人数变化
+@property (nonatomic, copy) RCTDirectEventBlock onOrientationChange; //屏幕方向切换
+@property (nonatomic, copy) RCTDirectEventBlock onOtherEventInfo;  // 其他事件
+
+
 @end
 
 @implementation RCTLeVideo
 {
+  /* Required to connect JS */
+  __weak RCTBridge *_bridge;
+  
   BOOL _playerItemObserversSet;
   BOOL _playerBufferEmpty;
   
@@ -38,7 +80,7 @@
   NSURL *_videoURL;
   
   /* Required to publish events */
-  RCTEventDispatcher *_eventDispatcher;
+//  RCTEventDispatcher *_eventDispatcher;
   
   int _playMode; //当前播放模式
   int _currentOritentation; //当前屏幕方向
@@ -70,30 +112,16 @@
 }
 
 #pragma mark 创建事件分发器
-- (instancetype)initWithEventDispatcher:(RCTEventDispatcher *)eventDispatcher
+- (instancetype)initWithBridge:(RCTBridge *)bridge
 {
   if ((self = [super init])) {
-    _eventDispatcher = eventDispatcher;
+    _bridge = bridge;
     
     _isFullScreen = NO;
     _isPlay = NO;
     _isSeeking = NO;
     
-    _currentOritentation = 9;
-
-    
-    //    _playbackStalled = NO;
-    //    _rate = 1.0;
-    //    _volume = 1.0;
-    //    _resizeMode = @"AVLayerVideoGravityResizeAspectFill";
-    //    _pendingSeek = false;
-    //    _pendingSeekTime = 0.0f;
-    //    _lastSeekTime = 0.0f;
-    //    _progressUpdateInterval = 250;
-    //    _controls = NO;
-    //    _playerBufferEmpty = YES;
-    //    _playInBackground = false;
-    //    _playWhenInactive = false;
+    _currentOritentation = 1;
     
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(applicationWillResignActive:)
@@ -110,9 +138,52 @@
                                                  name:UIApplicationWillEnterForegroundNotification
                                                object:nil];
   }
-  
   return self;
 }
+
+//- (instancetype)initWithEventDispatcher:(RCTEventDispatcher *)eventDispatcher
+//{
+//  if ((self = [super init])) {
+//    _eventDispatcher = eventDispatcher;
+//    
+//    _isFullScreen = NO;
+//    _isPlay = NO;
+//    _isSeeking = NO;
+//    
+//    _currentOritentation = 9;
+//
+//    
+//    //    _playbackStalled = NO;
+//    //    _rate = 1.0;
+//    //    _volume = 1.0;
+//    //    _resizeMode = @"AVLayerVideoGravityResizeAspectFill";
+//    //    _pendingSeek = false;
+//    //    _pendingSeekTime = 0.0f;
+//    //    _lastSeekTime = 0.0f;
+//    //    _progressUpdateInterval = 250;
+//    //    _controls = NO;
+//    //    _playerBufferEmpty = YES;
+//    //    _playInBackground = false;
+//    //    _playWhenInactive = false;
+//    
+//    [[NSNotificationCenter defaultCenter] addObserver:self
+//                                             selector:@selector(applicationWillResignActive:)
+//                                                 name:UIApplicationWillResignActiveNotification
+//                                               object:nil];
+//    
+//    [[NSNotificationCenter defaultCenter] addObserver:self
+//                                             selector:@selector(applicationDidEnterBackground:)
+//                                                 name:UIApplicationDidEnterBackgroundNotification
+//                                               object:nil];
+//    
+//    [[NSNotificationCenter defaultCenter] addObserver:self
+//                                             selector:@selector(applicationWillEnterForeground:)
+//                                                 name:UIApplicationWillEnterForegroundNotification
+//                                               object:nil];
+//  }
+//  
+//  return self;
+//}
 
 #pragma mark 设置viewController
 - (LCBaseViewController*)createPlayerViewController:(LECVODPlayer*)player withPlayerOption:(LECPlayerOption*)playerOption {
@@ -156,7 +227,7 @@
 
 #pragma mark - 将Dictionary转为Json
 + (NSString *)returnJSONStringWithDictionary:(NSDictionary *)dictionary{
-  //系统自带
+  //系统
   NSError * error;
   NSData * jsonData = [NSJSONSerialization dataWithJSONObject:dictionary options:kNilOptions error:&error];
   if(error != nil){
@@ -208,12 +279,13 @@
   //从source里拿到必要参数,用来创建player\option\controller
   [self playerItemForSource:source];
   
+  if (_onVideoSourceLoad) {
+    _onVideoSourceLoad(@{@"target": self.reactTag,@"src": [[self class] returnJSONStringWithDictionary:source]});
+  }
   
-//  self.onVideoSourceLoad(@{@"target": self.reactTag,@"src": [[self class] returnJSONStringWithDictionary:source]});
-  
-  [_eventDispatcher sendInputEventWithName:@"onVideoSourceLoad"
-                                      body:@{@"src": [[self class] returnJSONStringWithDictionary:source],
-                                             @"target": self.reactTag}];
+//  [_eventDispatcher sendInputEventWithName:@"onVideoSourceLoad"
+//                                      body:@{@"src": [[self class] returnJSONStringWithDictionary:source],
+//                                             @"target": self.reactTag}];
 }
 
 - (void)playerItemForSource:(NSDictionary *)source
@@ -368,7 +440,29 @@
   
   [event setValue:self.reactTag forKey:@"target"];
 
-  [_eventDispatcher sendInputEventWithName:@"onVideoLoad" body:event];
+  if(_onVideoLoad){
+    _onVideoLoad(event);
+  }
+  
+  //[_eventDispatcher sendInputEventWithName:@"onVideoLoad" body:event];
+  
+  [self applyModifiers];
+
+}
+
+
+#pragma mark 处理prepare事件
+- (void) processCompleted:(LECPlayer *) player
+              playerEvent:(LECPlayerPlayEvent) playerEvent
+{
+  //[_playerViewController showTips:@"播放结束"];
+  //      _playerViewController.playSlider.value = 0.0;
+  //      _timeInfoLabel.text = @"00:00:00/00:00:00";
+  //      [self.playStateBtn setTitle:@"播放" forState:(UIControlStateNormal)];
+  _isPlay = NO;
+  if (_onVideoEnd) {
+    _onVideoEnd(@{@"target": self.reactTag});
+  }
   
 }
 
@@ -378,15 +472,12 @@
        playerEvent:(LECPlayerPlayEvent) playerEvent
 {
   switch (playerEvent){
-    case LECPlayerPlayEventPrepareDone:
+    case LECPlayerPlayEventPrepareDone: //准备结束
       [self processPrepared:player playerEvent:playerEvent];
       break;
-    case LECPlayerPlayEventEOS:
-      [_playerViewController showTips:@"播放结束"];
-      //      _playerViewController.playSlider.value = 0.0;
-      //      _timeInfoLabel.text = @"00:00:00/00:00:00";
-      //      [self.playStateBtn setTitle:@"播放" forState:(UIControlStateNormal)];
-      _isPlay = NO;
+      
+    case LECPlayerPlayEventEOS: //播放完成
+      [self processCompleted:player playerEvent:playerEvent];
       break;
     case LECPlayerPlayEventGetVideoSize:
       break;
@@ -442,8 +533,8 @@
     float value = (float)position/(float)duration;
     //    [_playSlider setValue:value];
   }
-  NSString * playTimeStr = [_playerViewController timeFormate:position];
-  NSString * totalTimeStr = [_playerViewController timeFormate:duration];
+//  NSString * playTimeStr = [_playerViewController timeFormate:position];
+//  NSString * totalTimeStr = [_playerViewController timeFormate:duration];
   //  _timeInfoLabel.text = [NSString stringWithFormat:@"%@/%@",playTimeStr,totalTimeStr];
   NSLog(@"播放位置:%lld,缓冲位置:%lld,总时长:%lld",position,cacheDuration,duration);
 }
@@ -528,13 +619,14 @@
 
 - (void)playbackStalled:(NSNotification *)notification
 {
-  [_eventDispatcher sendInputEventWithName:@"onPlaybackStalled" body:@{@"target": self.reactTag}];
+//  [_eventDispatcher sendInputEventWithName:@"onPlaybackStalled" body:@{@"target": self.reactTag}];
   _playbackStalled = YES;
 }
 
 - (void)playerItemDidReachEnd:(NSNotification *)notification
 {
-  [_eventDispatcher sendInputEventWithName:@"onVideoEnd" body:@{@"target": self.reactTag}];
+  
+//  [_eventDispatcher sendInputEventWithName:@"onVideoEnd" body:@{@"target": self.reactTag}];
 }
 
 #pragma mark - 设置属性
@@ -562,12 +654,29 @@
 }
 
 
+- (void)applyModifiers
+{
+//  if (_muted) {
+//    [_lePlayer setVolume:0];
+//    [_lePlayer setMuted:YES];
+//  } else {
+//    [_lePlayer setVolume:_volume];
+//    [_lePlayer setMuted:NO];
+//  }
+  
+//  [self setResizeMode:_resizeMode];
+//  [self setRepeat:_repeat];
+  [self setPaused:_paused];
+//  [self setControls:_controls];
+}
+
+
 #pragma mark - RCTLeVideoPlayerViewControllerDelegate
 
 - (void)videoPlayerViewControllerWillDismiss:(LCBaseViewController *)playerViewController
 {
   if (_playerViewController == playerViewController && _fullscreenPlayerPresented){
-    [_eventDispatcher sendInputEventWithName:@"onVideoFullscreenPlayerWillDismiss" body:@{@"target": self.reactTag}];
+//    [_eventDispatcher sendInputEventWithName:@"onVideoFullscreenPlayerWillDismiss" body:@{@"target": self.reactTag}];
   }
 }
 
@@ -577,7 +686,7 @@
     _fullscreenPlayerPresented = false;
     //    _presentingViewController = nil;
     //    [self applyModifiers];
-    [_eventDispatcher sendInputEventWithName:@"onVideoFullscreenPlayerDidDismiss" body:@{@"target": self.reactTag}];
+//    [_eventDispatcher sendInputEventWithName:@"onVideoFullscreenPlayerDidDismiss" body:@{@"target": self.reactTag}];
   }
 }
 
@@ -636,7 +745,7 @@
   [_playerViewController.view removeFromSuperview];
   _playerViewController = nil;
   
-  _eventDispatcher = nil;
+//  _eventDispatcher = nil;
   [[NSNotificationCenter defaultCenter] removeObserver:self];
   
   [super removeFromSuperview];

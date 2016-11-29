@@ -211,9 +211,9 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
                             + "，currentTime：" + TimeUtils.timet(currentTime) + "，beginTime：" + TimeUtils.timet(begin));
 
                     WritableMap event = Arguments.createMap();
-                    event.putInt(EVENT_PROP_SERVER_TIME, (int) serverTime / 1000);
-                    event.putInt(EVENT_PROP_CURRENT_TIME, (int) currentTime / 1000);
-                    event.putInt(EVENT_PROP_LIVE_BEGIN, (int) begin / 1000);
+                    event.putInt(EVENT_PROP_SERVER_TIME, (int) (serverTime / 1000));
+                    event.putInt(EVENT_PROP_CURRENT_TIME, (int) (currentTime / 1000));
+                    event.putInt(EVENT_PROP_LIVE_BEGIN, (int) (begin / 1000));
                     mEventEmitter.receiveEvent(getId(), Events.EVENT_ACTION_TIME_SHIFT.toString(), event);
                 }
             };
@@ -230,8 +230,8 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
                     WritableMap event = Arguments.createMap();
                     event.putInt(EVENT_PROP_LIVE_ACTION_STATE, actionStatus.getStatus());
                     event.putString(EVENT_PROP_LIVE_ACTION_ID, actionStatus.getActivityId());
-                    event.putInt(EVENT_PROP_LIVE_BEGIN, (int) actionStatus.getBeginTime() / 1000);
-                    event.putInt(EVENT_PROP_LIVE_END, (int) actionStatus.getEndTime() / 1000);
+                    event.putInt(EVENT_PROP_LIVE_BEGIN, (int) (actionStatus.getBeginTime() / 1000));
+                    event.putInt(EVENT_PROP_LIVE_END, (int) (actionStatus.getEndTime() / 1000));
                     event.putString(EVENT_PROP_LIVE_ID, actionStatus.getLiveId());
                     event.putString(EVENT_PROP_STREAM_ID, actionStatus.getStreamId());
 
