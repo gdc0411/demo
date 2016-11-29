@@ -6,24 +6,26 @@
  ************************************************************************/
 'use strict';
 
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import {
     AppRegistry,
     StyleSheet,
     Text,
     TouchableOpacity,
     View,
+    StatusBar,
     Dimensions,
+    Platform,
 } from 'react-native';
 import { connect } from 'react-redux';
-import {bindActionCreators} from 'redux';
-
+import { bindActionCreators } from 'redux';
 import * as playActions from '../actions/playAction';
+
+import Video from '../componets/RCTLeVideo';
 
 //取得屏幕宽高
 const {height: SCREEN_HEIGHT, width: SCREEN_WIDTH} = Dimensions.get('window');
-
-import Video from '../componets/RCTLeVideo';
+const STATUS_BAR_HEIGHT = (Platform.OS === 'ios' ? 20 : 0);
 
 class VideoPlayer extends Component {
     constructor(props) {
@@ -304,6 +306,7 @@ class VideoPlayer extends Component {
 
         return (
             <View style={styles.container}>
+                <StatusBar barStyle='light-content' style={{ height: STATUS_BAR_HEIGHT }} />
                 <TouchableOpacity style={[styles.fullScreen, { width: SCREEN_WIDTH, height: 180 }]} onPress={() => { this.setState({ paused: !this.state.paused }); } }>
                     <Video style={[styles.fullScreen, { width: SCREEN_WIDTH, height: 180 }]}
                         source={this.state.source}
@@ -318,7 +321,7 @@ class VideoPlayer extends Component {
                         onVideoSourceLoad={(data) => { this.setState({ sourceInfo: `视频源: ${data.src}` }); } }
                         onVideoLoad={this.onLoad}
                         onVideoProgress={(data) => { this.setState({ currentTime: data.currentTime, eventInfo: `播放中…… ${data.currentTime}/${data.duration}` }); } }
-                        onVideoBufferPercent = {(data) => { this.setState({ buffPercent: data.bufferpercent }); } }
+                        onVideoBufferPercent={(data) => { this.setState({ buffPercent: data.bufferpercent }); } }
                         onBufferStart={() => { this.setState({ eventInfo: '缓冲开始！' }); } }
                         onBufferPercent={(data) => { this.setState({ eventInfo: `缓冲中…… ${data.videobuff}%` }); } }
                         onBufferEnd={() => { this.setState({ eventInfo: '缓冲完毕！' }); } }
@@ -355,7 +358,7 @@ class VideoPlayer extends Component {
                         </View>
                         <View style={styles.bufferDisplay}>
                             <Text style={[styles.DisplayOption, { color: 'cyan' }]}>
-                                {this.state.eventInfo} 已缓冲{this.state.buffPercent}%
+                                {this.state.eventInfo}已缓冲{this.state.buffPercent}%
                             </Text>
                         </View>
                         <View style={styles.bufferDisplay}>
@@ -375,10 +378,10 @@ class VideoPlayer extends Component {
 
                 <View style={styles.controls}>
                     <View style={styles.volumeControl}>
-                        {this.renderOrientationControl(0) }
-                        {this.renderOrientationControl(1) }
-                        {this.renderOrientationControl(8) }
-                        {this.renderOrientationControl(9) }
+                        {this.renderOrientationControl(0)}
+                        {this.renderOrientationControl(1)}
+                        {this.renderOrientationControl(8)}
+                        {this.renderOrientationControl(9)}
                     </View>
                     {/*
                         <View style={styles.volumeControl}>
@@ -386,21 +389,21 @@ class VideoPlayer extends Component {
                         </View>
                     */}
                     <View style={styles.volumeControl}>
-                        {this.renderRateControl('21') }
-                        {this.renderRateControl('13') }
-                        {this.renderRateControl('22') }
+                        {this.renderRateControl('21')}
+                        {this.renderRateControl('13')}
+                        {this.renderRateControl('22')}
                     </View>
 
                     <View style={styles.volumeControl}>
-                        {this.renderVolumeControl(40) }
-                        {this.renderVolumeControl(60) }
-                        {this.renderVolumeControl(100) }
+                        {this.renderVolumeControl(40)}
+                        {this.renderVolumeControl(60)}
+                        {this.renderVolumeControl(100)}
                     </View>
 
                     <View style={styles.volumeControl}>
-                        {this.renderBrightnessControl(55) }
-                        {this.renderBrightnessControl(155) }
-                        {this.renderBrightnessControl(255) }
+                        {this.renderBrightnessControl(55)}
+                        {this.renderBrightnessControl(155)}
+                        {this.renderBrightnessControl(255)}
                     </View>
 
                     <View style={styles.trackingControls}>
@@ -428,7 +431,7 @@ const styles = StyleSheet.create({
     },
     fullScreen: {
         position: 'absolute',
-        top: 0,
+        top: STATUS_BAR_HEIGHT,
         left: 0,
         right: 0,
     },
