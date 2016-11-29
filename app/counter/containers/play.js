@@ -320,7 +320,7 @@ class VideoPlayer extends Component {
                         clickAd={this.state.clickAd}
                         onVideoSourceLoad={(data) => { this.setState({ sourceInfo: `视频源: ${data.src}` }); } }
                         onVideoLoad={this.onLoad}
-                        onVideoProgress={(data) => { this.setState({ currentTime: data.currentTime, eventInfo: `播放中…… ${data.currentTime}/${data.duration}` }); } }
+                        onVideoProgress={(data) => { this.setState({ currentTime: data.currentTime, duration: data.duration, eventInfo: `播放中…… ${data.currentTime}/${data.duration}` }); } }
                         onVideoBufferPercent={(data) => { this.setState({ buffPercent: data.bufferpercent }); } }
                         onBufferStart={() => { this.setState({ eventInfo: '缓冲开始！' }); } }
                         onBufferPercent={(data) => { this.setState({ eventInfo: `缓冲中…… ${data.videobuff}%` }); } }
