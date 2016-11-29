@@ -705,6 +705,47 @@
   
 }
 
+
+- (void)setSeek:(float)seek
+{
+  
+}
+
+- (void)setRate:(NSString*)rate
+{
+  
+}
+
+- (void)setLive:(NSString*)liveId
+{
+  
+}
+
+- (void)setClickAd:(BOOL)isClicked
+{
+  
+}
+
+- (void)setVolume:(int)volume
+{
+  
+}
+
+- (void)setBrightness:(int)brightness
+{
+  
+}
+
+- (void)setOrientation:(int)orientation
+{
+  
+}
+
+- (void)setPlayInBackground:(BOOL)playInBackground
+{
+  
+}
+
 - (void)usePlayerViewController
 {
   if( _lePlayer ){

@@ -17,9 +17,5 @@ export default module.exports = {
             path: '/play/:src',
             component: play
         },
-        {
-            path: '/playIOS/:src',
-            component: playIOS
-        },
     ],
 };

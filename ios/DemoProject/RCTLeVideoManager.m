@@ -30,6 +30,15 @@ RCT_EXPORT_MODULE();
 RCT_EXPORT_VIEW_PROPERTY(src, NSDictionary); // 数据源
 RCT_EXPORT_VIEW_PROPERTY(paused, BOOL);  // 开始或暂停
 RCT_EXPORT_VIEW_PROPERTY(seek, float);  // seek位置
+RCT_EXPORT_VIEW_PROPERTY(rate, NSString*);  // 切换码率
+RCT_EXPORT_VIEW_PROPERTY(live, NSString*);  // 切换机位
+RCT_EXPORT_VIEW_PROPERTY(volume, int);  // 音量调节
+//RCT_EXPORT_VIEW_PROPERTY(track, float);  // 左右声道
+RCT_EXPORT_VIEW_PROPERTY(clickAd, BOOL);  // 点击广告
+RCT_EXPORT_VIEW_PROPERTY(brightness, int);  // 屏幕亮度调节
+RCT_EXPORT_VIEW_PROPERTY(orientation, int);  // 屏幕方向
+RCT_EXPORT_VIEW_PROPERTY(playInBackground, BOOL);  // 是否后台播放
+
 
 RCT_EXPORT_VIEW_PROPERTY(onVideoSourceLoad, RCTDirectEventBlock);  // 数据源事件
 RCT_EXPORT_VIEW_PROPERTY(onVideoSizeChange, RCTDirectEventBlock);  // 视频真实宽高

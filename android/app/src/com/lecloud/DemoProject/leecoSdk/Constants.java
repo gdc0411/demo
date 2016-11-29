@@ -51,7 +51,7 @@ public interface Constants {
     String PROP_SEEK = "seek";
     // 切换码率
     String PROP_RATE = "rate";
-    // 切换码率
+    // 切换机位
     String PROP_LIVE = "live";
     // 音量调节
     String PROP_VOLUME = "volume";

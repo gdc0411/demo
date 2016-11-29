@@ -12,10 +12,9 @@ import {
     Text,
     Image,
     TouchableOpacity,
-    Platform,
     Dimensions,
 } from 'react-native';
-import {bindActionCreators} from 'redux';
+import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import * as calcActions from '../actions/calcAction';
@@ -37,11 +36,7 @@ class home extends Component {
     skipToPlayer = (source) => {
         const {navigator} = this.props;
         // this.props.actions.play(source);
-        if( Platform.OS === "android" ){
-            navigator.push({ location: '/play/' + source, });
-        }else{
-            navigator.push({ location: '/playIOS/' + source, });
-        }
+        navigator.push({ location: '/play/' + source, });
     }
 
     //加
@@ -80,21 +75,21 @@ class home extends Component {
                 </View>
                 :
                 <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }} >
-                    <View style={ { flexDirection: 'column', width: SCREEN_WIDTH } } >
-                        <View style={ { flexDirection: 'row', justifyContent: 'space-around' } } >
-                            <PlayItem source={0} imgUrl={img1} desc={'第三方URL'} color={'black'} onPlay={this.skipToPlayer}  />
-                            <PlayItem source={1} imgUrl={img2} desc={'云点播-长片'} color={'blue'} onPlay={this.skipToPlayer}  />
+                    <View style={{ flexDirection: 'column', width: SCREEN_WIDTH }} >
+                        <View style={{ flexDirection: 'row', justifyContent: 'space-around' }} >
+                            <PlayItem source={0} imgUrl={img1} desc={'第三方URL'} color={'black'} onPlay={this.skipToPlayer} />
+                            <PlayItem source={1} imgUrl={img2} desc={'云点播-长片'} color={'blue'} onPlay={this.skipToPlayer} />
                         </View>
-                        <View style={ { flexDirection: 'row', justifyContent: 'space-around' } } >
-                            <PlayItem source={2} imgUrl={img2} desc={'云点播-短片'} color={'blue'} onPlay={this.skipToPlayer}  />
-                            <PlayItem source={4} imgUrl={img2} desc={'云点播-有广告'} color={'blue'} onPlay={this.skipToPlayer}  />
+                        <View style={{ flexDirection: 'row', justifyContent: 'space-around' }} >
+                            <PlayItem source={2} imgUrl={img2} desc={'云点播-短片'} color={'blue'} onPlay={this.skipToPlayer} />
+                            <PlayItem source={4} imgUrl={img2} desc={'云点播-有广告'} color={'blue'} onPlay={this.skipToPlayer} />
                         </View>
-                        <View style={ { flexDirection: 'row', justifyContent: 'space-around' } } >
-                            <PlayItem source={5} imgUrl={img2} desc={'云直播-Demo'} color={'red'} onPlay={this.skipToPlayer}  />
-                            <PlayItem source={6} imgUrl={img2} desc={'云直播-泸州'} color={'red'} onPlay={this.skipToPlayer}  />
+                        <View style={{ flexDirection: 'row', justifyContent: 'space-around' }} >
+                            <PlayItem source={5} imgUrl={img2} desc={'云直播-Demo'} color={'red'} onPlay={this.skipToPlayer} />
+                            <PlayItem source={6} imgUrl={img2} desc={'云直播-泸州'} color={'red'} onPlay={this.skipToPlayer} />
                         </View>
-                        <View style={ { flexDirection: 'row', justifyContent: 'space-around' } } >
-                            <PlayItem source={7} imgUrl={img2} desc={'云直播-推流'} color={'red'} onPlay={this.skipToPlayer}  />
+                        <View style={{ flexDirection: 'row', justifyContent: 'space-around' }} >
+                            <PlayItem source={7} imgUrl={img2} desc={'云直播-推流'} color={'red'} onPlay={this.skipToPlayer} />
                         </View>
                     </View>
                     <Counter value={value} para={plusPara} oper={`加`} onChange={this.operatePlus} />
