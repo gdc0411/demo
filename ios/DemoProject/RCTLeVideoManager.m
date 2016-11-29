@@ -39,7 +39,6 @@ RCT_EXPORT_VIEW_PROPERTY(brightness, int);  // 屏幕亮度调节
 RCT_EXPORT_VIEW_PROPERTY(orientation, int);  // 屏幕方向
 RCT_EXPORT_VIEW_PROPERTY(playInBackground, BOOL);  // 是否后台播放
 
-
 RCT_EXPORT_VIEW_PROPERTY(onVideoSourceLoad, RCTDirectEventBlock);  // 数据源事件
 RCT_EXPORT_VIEW_PROPERTY(onVideoSizeChange, RCTDirectEventBlock);  // 视频真实宽高
 RCT_EXPORT_VIEW_PROPERTY(onVideoRateLoad, RCTDirectEventBlock); // 视频码率列表
@@ -72,8 +71,6 @@ RCT_EXPORT_VIEW_PROPERTY(onActionStatusChange, RCTDirectEventBlock); // 云直�
 RCT_EXPORT_VIEW_PROPERTY(onActionOnlineNumChange, RCTDirectEventBlock); // 云直播在线人数变化
 RCT_EXPORT_VIEW_PROPERTY(onOrientationChange, RCTDirectEventBlock); //屏幕方向切换
 RCT_EXPORT_VIEW_PROPERTY(onOtherEventInfo, RCTDirectEventBlock); // 其他事件
-
-
 
 - (NSDictionary *)constantsToExport
 {

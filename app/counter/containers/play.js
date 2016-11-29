@@ -299,6 +299,13 @@ class VideoPlayer extends Component {
         return source;
     }
 
+        //跳转到播放页
+    handleBack = () => {
+        const {navigator} = this.props;
+        // this.props.actions.play(source);
+        navigator.pop();
+    }
+
 
     render() {
         const flexCompleted = this.getCurrentTimePercentage() * 100;
@@ -388,6 +395,7 @@ class VideoPlayer extends Component {
                             {this.renderLiveControl('201611113000002it') }
                         </View>
                     */}
+                    <Text style={[styles.DisplayOption]} onPress={this.handleBack} >返回</Text>
                     <View style={styles.volumeControl}>
                         {this.renderRateControl('21')}
                         {this.renderRateControl('13')}

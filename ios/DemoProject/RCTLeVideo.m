@@ -114,6 +114,7 @@
 #pragma mark 创建事件分发器
 - (instancetype)initWithBridge:(RCTBridge *)bridge
 {
+  NSLog(@"初始化桥……");
   if ((self = [super init])) {
     _bridge = bridge;
     
@@ -193,8 +194,6 @@
   return playerController;
 }
 
-
-#pragma mark - Progress
 - (void)dealloc
 {
   [[NSNotificationCenter defaultCenter] removeObserver:self];
@@ -225,7 +224,7 @@
   }
 }
 
-#pragma mark - 将Dictionary转为Json
+/* 将Dictionary转为Json */
 + (NSString *)returnJSONStringWithDictionary:(NSDictionary *)dictionary useSystem:(BOOL)system{
   if(system){
     //系统
@@ -248,45 +247,7 @@
   }
 }
 
-
-#pragma mark - Player and source
-- (void)setSrc:(NSDictionary *)source
-{
-  NSLog(@"外部控制——— 传入数据源: %@", source);
-  if(source == nil){
-    return;
-  }
-  
-  // 销毁原播放器和控制器
-  if (_lePlayer != nil ) {
-    [_lePlayer pause];
-    
-    [_playerViewController.view removeFromSuperview];
-    _playerViewController = nil;
-  }
-  
-  // 创建播放器
-  _lePlayer = [[LECVODPlayer alloc] init];
-  _lePlayer.delegate = self;
-  
-  self.frame = LCRect_PlayerHalfFrame;
-  _lePlayer.videoView.frame = self.bounds;
-  _lePlayer.videoView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin| UIViewAutoresizingFlexibleWidth| UIViewAutoresizingFlexibleHeight;
-  _lePlayer.videoView.contentMode = UIViewContentModeScaleAspectFit;
-  
-  [self addSubview:_lePlayer.videoView];
-  [self sendSubviewToBack:_lePlayer.videoView];
-  
-  //从source里拿到必要参数,用来创建player\option\controller
-  [self playerItemForSource:source];
-  
-  if (_onVideoSourceLoad) {
-    //    _onVideoSourceLoad(@{@"target": self.reactTag,@"src": [[self class] returnJSONStringWithDictionary:source useSystem:YES]});
-    _onVideoSourceLoad(source);
-  }
-  
-}
-
+/* 根据数据源包创建播放 */
 - (void)playerItemForSource:(NSDictionary *)source
 {
   int playMode = [RCTConvert int:[source objectForKey:@"playMode"]];
@@ -320,6 +281,7 @@
   }
   
   __weak typeof(self) wSelf = self;
+  
   [_lePlayer registerWithUu:_playerViewController.uu
                          vu:_playerViewController.vu
                payCheckCode:nil
@@ -329,6 +291,12 @@
  resumeFromLastPlayPosition:NO
      resumeFromLastRateType:YES
                  completion:^(BOOL result) {
+                   
+                   if (wSelf.onVideoSourceLoad) {//数据源回显
+                     wSelf.onVideoSourceLoad(@{@"src": [[wSelf class] returnJSONStringWithDictionary:source useSystem:YES]});
+                     //wSelf.onVideoSourceLoad(source);
+                   }
+                   
                    if (result){
                      NSLog(@"播放器注册成功");
                      [wSelf play];//注册完成后自动播放
@@ -344,6 +312,110 @@
                  }];
   
 }
+
+#pragma mark - 设置属性
+- (void)setSrc:(NSDictionary *)source
+{
+  NSLog(@"外部控制——— 传入数据源: %@", source);
+  if(source == nil){
+    return;
+  }
+  
+  // 销毁原播放器和控制器
+  if (_lePlayer) {
+    [_lePlayer pause];
+    
+    [_playerViewController.view removeFromSuperview];
+    _playerViewController = nil;
+  }
+  
+  // 创建播放器
+  _lePlayer = [[LECVODPlayer alloc] init];
+  _lePlayer.delegate = self;
+  
+  self.frame = LCRect_PlayerHalfFrame;
+  _lePlayer.videoView.frame = self.bounds;
+  _lePlayer.videoView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin| UIViewAutoresizingFlexibleWidth| UIViewAutoresizingFlexibleHeight;
+  _lePlayer.videoView.contentMode = UIViewContentModeScaleAspectFit;
+  
+  [self addSubview:_lePlayer.videoView];
+  [self sendSubviewToBack:_lePlayer.videoView];
+  
+  //从source里拿到必要参数,用来创建player\option\controller
+  [self playerItemForSource:source];
+  
+  if (_onVideoSourceLoad) {
+//    _onVideoSourceLoad(@{@"target": self.reactTag,@"src": [[self class] returnJSONStringWithDictionary:source useSystem:YES]});
+    _onVideoSourceLoad(source);
+  }
+  
+}
+
+
+- (void)setPaused:(BOOL)paused
+{
+  if (paused) {
+    NSLog(@"外部控制——— 暂停播放 pause ");
+    [self pause];
+    if (_onVideoPause) {
+      _onVideoPause([NSDictionary dictionaryWithObjectsAndKeys:
+                     [NSNumber numberWithDouble:_lePlayer.duration] ,@"duration",
+                     [NSNumber numberWithDouble:_lePlayer.position] ,@"currentTime", nil]);
+    }
+  } else {
+    NSLog(@"外部控制——— 开始播放 start ");
+    [self play];
+    if (_onVideoResume) {
+      _onVideoResume([NSDictionary dictionaryWithObjectsAndKeys:
+                      [NSNumber numberWithDouble:_lePlayer.duration] ,@"duration",
+                      [NSNumber numberWithDouble:_lePlayer.position] ,@"currentTime", nil]);
+    }
+  }
+  _paused = paused;
+  
+}
+
+
+- (void)setSeek:(float)seek
+{
+  
+}
+
+- (void)setRate:(NSString*)rate
+{
+  
+}
+
+- (void)setLive:(NSString*)liveId
+{
+  
+}
+
+- (void)setClickAd:(BOOL)isClicked
+{
+  
+}
+
+- (void)setVolume:(int)volume
+{
+  
+}
+
+- (void)setBrightness:(int)brightness
+{
+  
+}
+
+- (void)setOrientation:(int)orientation
+{
+  
+}
+
+- (void)setPlayInBackground:(BOOL)playInBackground
+{
+  
+}
+
 
 #pragma mark - 播放控制
 - (void)play
@@ -681,70 +753,6 @@
   //  [_eventDispatcher sendInputEventWithName:@"onVideoEnd" body:@{@"target": self.reactTag}];
 }
 
-#pragma mark - 设置属性
-- (void)setPaused:(BOOL)paused
-{
-  if (paused) {
-    NSLog(@"外部控制——— 暂停播放 pause ");
-    [self pause];
-    if (_onVideoPause) {
-      _onVideoPause([NSDictionary dictionaryWithObjectsAndKeys:
-                     [NSNumber numberWithDouble:_lePlayer.duration] ,@"duration",
-                     [NSNumber numberWithDouble:_lePlayer.position] ,@"currentTime", nil]);
-    }
-  } else {
-    NSLog(@"外部控制——— 开始播放 start ");
-    [self play];
-    if (_onVideoResume) {
-      _onVideoResume([NSDictionary dictionaryWithObjectsAndKeys:
-                     [NSNumber numberWithDouble:_lePlayer.duration] ,@"duration",
-                     [NSNumber numberWithDouble:_lePlayer.position] ,@"currentTime", nil]);
-    }
-  }
-  _paused = paused;
-  
-}
-
-
-- (void)setSeek:(float)seek
-{
-  
-}
-
-- (void)setRate:(NSString*)rate
-{
-  
-}
-
-- (void)setLive:(NSString*)liveId
-{
-  
-}
-
-- (void)setClickAd:(BOOL)isClicked
-{
-  
-}
-
-- (void)setVolume:(int)volume
-{
-  
-}
-
-- (void)setBrightness:(int)brightness
-{
-  
-}
-
-- (void)setOrientation:(int)orientation
-{
-  
-}
-
-- (void)setPlayInBackground:(BOOL)playInBackground
-{
-  
-}
 
 - (void)usePlayerViewController
 {
