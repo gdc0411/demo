@@ -3,6 +3,7 @@
  * Author: raojia
  * Mail: raojia@le.com
  * Created Time: 2016-10-30
+ * Modified Time: 2016-11-29
  ************************************************************************/
 'use strict';
 
@@ -514,9 +515,7 @@ export default class Video extends Component {
             /*其他事件相关*/
             onOtherEventInfo: (event) => { if (this.props.onOtherEventInfo) this.props.onOtherEventInfo(event.nativeEvent); },
         });
-
-        console.log(nativeProps);
-
+        // console.log(nativeProps);
         return (
             <RCTLeVideo
                 ref={this._assignRoot}

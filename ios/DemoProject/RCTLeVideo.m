@@ -37,7 +37,7 @@
 @property (nonatomic, copy) RCTDirectEventBlock onVideoRateLoad; // 视频码率列表
 @property (nonatomic, copy) RCTDirectEventBlock onVideoLoad; // 播放器准备完毕
 @property (nonatomic, copy) RCTDirectEventBlock onVideoError;  // 播放出错
-@property (nonatomic, copy) RCTDirectEventBlock onVideoProgress; // 正在播放视频
+@property (nonatomic, copy) RCTDirectEventBlock onVideoProgress; // 更新播放视频
 @property (nonatomic, copy) RCTDirectEventBlock onVideoBufferPercent;  // 缓存进度
 @property (nonatomic, copy) RCTDirectEventBlock onVideoPause; // 播放暂停
 @property (nonatomic, copy) RCTDirectEventBlock onVideoResume; // 播放继续
@@ -80,7 +80,7 @@
   NSURL *_videoURL;
   
   /* Required to publish events */
-//  RCTEventDispatcher *_eventDispatcher;
+  //  RCTEventDispatcher *_eventDispatcher;
   
   int _playMode; //当前播放模式
   int _currentOritentation; //当前屏幕方向
@@ -89,7 +89,7 @@
   NSString *_currentRate; //当前码率
   long _lastPosition;
   
-
+  
   bool _pendingSeek;
   float _pendingSeekTime;
   float _lastSeekTime;
@@ -145,14 +145,14 @@
 //{
 //  if ((self = [super init])) {
 //    _eventDispatcher = eventDispatcher;
-//    
+//
 //    _isFullScreen = NO;
 //    _isPlay = NO;
 //    _isSeeking = NO;
-//    
+//
 //    _currentOritentation = 9;
 //
-//    
+//
 //    //    _playbackStalled = NO;
 //    //    _rate = 1.0;
 //    //    _volume = 1.0;
@@ -165,23 +165,23 @@
 //    //    _playerBufferEmpty = YES;
 //    //    _playInBackground = false;
 //    //    _playWhenInactive = false;
-//    
+//
 //    [[NSNotificationCenter defaultCenter] addObserver:self
 //                                             selector:@selector(applicationWillResignActive:)
 //                                                 name:UIApplicationWillResignActiveNotification
 //                                               object:nil];
-//    
+//
 //    [[NSNotificationCenter defaultCenter] addObserver:self
 //                                             selector:@selector(applicationDidEnterBackground:)
 //                                                 name:UIApplicationDidEnterBackgroundNotification
 //                                               object:nil];
-//    
+//
 //    [[NSNotificationCenter defaultCenter] addObserver:self
 //                                             selector:@selector(applicationWillEnterForeground:)
 //                                                 name:UIApplicationWillEnterForegroundNotification
 //                                               object:nil];
 //  }
-//  
+//
 //  return self;
 //}
 
@@ -226,25 +226,26 @@
 }
 
 #pragma mark - 将Dictionary转为Json
-+ (NSString *)returnJSONStringWithDictionary:(NSDictionary *)dictionary{
-  //系统
-  NSError * error;
-  NSData * jsonData = [NSJSONSerialization dataWithJSONObject:dictionary options:kNilOptions error:&error];
-  if(error != nil){
-    NSLog(@"转换JSON出错:%@", error);
-    return nil;
++ (NSString *)returnJSONStringWithDictionary:(NSDictionary *)dictionary useSystem:(BOOL)system{
+  if(system){
+    //系统
+    NSError * error;
+    NSData * jsonData = [NSJSONSerialization dataWithJSONObject:dictionary options:kNilOptions error:&error];
+    if(error != nil){
+      NSLog(@"转换JSON出错:%@", error);
+      return nil;
+    }
+    return [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+  }else{
+    //自定义
+    NSString *jsonStr = @"{";
+    NSArray * keys = [dictionary allKeys];
+    for (NSString * key in keys) {
+      jsonStr = [NSString stringWithFormat:@"%@\"%@\":\"%@\",",jsonStr,key,[dictionary objectForKey:key]];
+    }
+    jsonStr = [NSString stringWithFormat:@"%@%@",[jsonStr substringWithRange:NSMakeRange(0, jsonStr.length-1)],@"}"];
+    return jsonStr;
   }
-  
-  NSString * jsonStr = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-  //自定义
-  //  NSString *jsonStr = @"{";
-  //  NSArray * keys = [dictionary allKeys];
-  //  for (NSString * key in keys) {
-  //    jsonStr = [NSString stringWithFormat:@"%@\"%@\":\"%@\",",jsonStr,key,[dictionary objectForKey:key]];
-  //  }
-  //  jsonStr = [NSString stringWithFormat:@"%@%@",[jsonStr substringWithRange:NSMakeRange(0, jsonStr.length-1)],@"}"];
-  
-  return jsonStr;
 }
 
 
@@ -280,12 +281,10 @@
   [self playerItemForSource:source];
   
   if (_onVideoSourceLoad) {
-    _onVideoSourceLoad(@{@"target": self.reactTag,@"src": [[self class] returnJSONStringWithDictionary:source]});
+    //    _onVideoSourceLoad(@{@"target": self.reactTag,@"src": [[self class] returnJSONStringWithDictionary:source useSystem:YES]});
+    _onVideoSourceLoad(source);
   }
   
-//  [_eventDispatcher sendInputEventWithName:@"onVideoSourceLoad"
-//                                      body:@{@"src": [[self class] returnJSONStringWithDictionary:source],
-//                                             @"target": self.reactTag}];
 }
 
 - (void)playerItemForSource:(NSDictionary *)source
@@ -327,32 +326,34 @@
                 payUserName:nil
                     options:_option
       onlyLocalVODAvaliable:NO
- resumeFromLastPlayPosition:YES
+ resumeFromLastPlayPosition:NO
      resumeFromLastRateType:YES
                  completion:^(BOOL result) {
                    if (result){
                      NSLog(@"播放器注册成功");
                      [wSelf play];//注册完成后自动播放
                    }else{
-                     [_playerViewController showTips:@"播放器注册失败,请检查UU和VU"];
-                     //      [_loadIndicatorView stopAnimating];
+                     //[_playerViewController showTips:@"播放器注册失败,请检查UU和VU"];
+                     if (wSelf.onVideoError) {
+                       NSDictionary *event =  [NSDictionary dictionaryWithObjectsAndKeys:
+                                               @"-1" ,@"errorCode",
+                                               @"播放器注册失败,请检查UU和VU" ,@"errorMsg", nil];
+                       wSelf.onVideoError(event);
+                     }
                    }
                  }];
   
 }
 
-
-
 #pragma mark - 播放控制
 - (void)play
 {
-  if (_isPlay)
-  {
+  if (_isPlay) {
     return;
   }
   __weak typeof(self) wSelf = self;
   [_lePlayer playWithCompletion:^{
-    //    [wSelf.playStateBtn setTitle:@"暂停" forState:(UIControlStateNormal)];
+    //    [wSelf.playStateBtn setTitle:@"暂停" forState:(UIControlStateNormal)];    
     _isPlay = YES;
   }];
 }
@@ -438,8 +439,8 @@
   [event setValue:[NSNumber numberWithLong:_volume] forKey:@"volume"]; //声音百分比
   [event setValue:[NSNumber numberWithLong:_brightness] forKey:@"brightness"]; //屏幕亮度
   
-  [event setValue:self.reactTag forKey:@"target"];
-
+  //  [event setValue:self.reactTag forKey:@"target"];
+  
   if(_onVideoLoad){
     _onVideoLoad(event);
   }
@@ -447,7 +448,7 @@
   //[_eventDispatcher sendInputEventWithName:@"onVideoLoad" body:event];
   
   [self applyModifiers];
-
+  
 }
 
 
@@ -455,17 +456,81 @@
 - (void) processCompleted:(LECPlayer *) player
               playerEvent:(LECPlayerPlayEvent) playerEvent
 {
-  //[_playerViewController showTips:@"播放结束"];
-  //      _playerViewController.playSlider.value = 0.0;
-  //      _timeInfoLabel.text = @"00:00:00/00:00:00";
-  //      [self.playStateBtn setTitle:@"播放" forState:(UIControlStateNormal)];
   _isPlay = NO;
   if (_onVideoEnd) {
-    _onVideoEnd(@{@"target": self.reactTag});
+    _onVideoEnd(nil);
   }
-  
 }
 
+#pragma mark 处理PlayerInfo事件
+- (void) processPlayerInfo:(LECPlayer *) player
+               playerEvent:(LECPlayerPlayEvent) playerEvent
+{
+  switch (playerEvent) {
+    case LECPlayerPlayEventBufferStart:
+      NSLog(@"开始缓冲");
+      _isSeeking = YES;
+      if (_onBufferStart) {
+        _onBufferStart(nil);
+      }
+      break;
+    case LECPlayerPlayEventRenderFirstPic:
+      NSLog(@"加载第一帧");
+      if (_onVideoRendingStart) {
+        _onVideoRendingStart(nil);
+      }
+      break;
+    case LECPlayerPlayEventBufferEnd:
+      NSLog(@"缓冲结束");
+      if (_onBufferEnd) {
+        _onBufferEnd(nil);
+      }
+      break;
+      
+    default:
+      break;
+  }
+}
+
+#pragma mark 视频源SIZE变化
+- (void) processVideoSizeChanged:(LECPlayer *) player
+                     playerEvent:(LECPlayerPlayEvent) playerEvent
+{
+  NSLog(@"视频尺寸变化！");
+  _width =  player.actualVideoWidth;
+  _height = player.actualVideoHeight;
+  
+  if (_onVideoSizeChange) {
+    _onVideoSizeChange([NSDictionary dictionaryWithObjectsAndKeys:
+                        [NSNumber numberWithInt:_width] ,@"width",
+                        [NSNumber numberWithInt:_height] ,@"height", nil]);
+  }
+}
+
+
+#pragma mark 处理视频Seek完毕事件
+- (void) processSeekComplete:(LECPlayer *) player
+                 playerEvent:(LECPlayerPlayEvent) playerEvent
+{
+  NSLog(@"完成Seek操作");
+  _isSeeking = NO;
+  
+  if (_onVideoSeekComplete) {
+    _onVideoSeekComplete(nil);
+  }
+}
+
+- (void) processError:(LECPlayer *) player
+          playerEvent:(LECPlayerPlayEvent) playerEvent
+{
+  NSString * error = [NSString stringWithFormat:@"%@:%@",player.errorCode,player.errorDescription];
+  NSLog(@"播放器错误:%@",error);
+  //[_playerViewController showTips:error]; //弹出提示
+  
+  if (_onVideoError) {
+    _onVideoError([NSDictionary dictionaryWithObjectsAndKeys: player.errorCode ,@"errorCode", player.errorDescription  ,@"errorMsg", nil]);
+  }
+}
 
 /*播放器播放状态*/
 - (void) lecPlayer:(LECPlayer *) player
@@ -479,42 +544,24 @@
     case LECPlayerPlayEventEOS: //播放完成
       [self processCompleted:player playerEvent:playerEvent];
       break;
-    case LECPlayerPlayEventGetVideoSize:
+      
+    case LECPlayerPlayEventGetVideoSize: //视频源Size
+      [self processVideoSizeChanged:player playerEvent:playerEvent];
       break;
-    case LECPlayerPlayEventRenderFirstPic:
-      //      [_loadIndicatorView stopAnimating];
-      break;
+      
+    case LECPlayerPlayEventRenderFirstPic: //缓存相关
     case LECPlayerPlayEventBufferStart:
-      //      _loadIndicatorView.hidden = NO;
-      //      [_loadIndicatorView startAnimating];
-      NSLog(@"开始缓冲");
-      break;
     case LECPlayerPlayEventBufferEnd:
-      //      [_loadIndicatorView stopAnimating];
-      NSLog(@"缓冲结束");
+      [self processPlayerInfo:player playerEvent:playerEvent];
       break;
       
-    case LECPlayerPlayEventSeekComplete:
-      NSLog(@"完成Seek操作");
-      _isSeeking = NO;
-      //      [_loadIndicatorView stopAnimating];
+    case LECPlayerPlayEventSeekComplete: //seek完毕
+      [self processSeekComplete:player playerEvent:playerEvent];
       break;
       
-    case LECPlayerPlayEventNoStream:
-    {
-      NSString * error = [NSString stringWithFormat:@"%@:%@",player.errorCode,player.errorDescription];
-      NSLog(@"无媒体信息:%@",error);
-      //      [_loadIndicatorView stopAnimating];
-      [_playerViewController showTips:error];
-    }
-      break;
-    case LECPlayerPlayEventPlayError:
-    {
-      NSString * error = [NSString stringWithFormat:@"%@:%@",player.errorCode,player.errorDescription];
-      NSLog(@"播放器错误:%@",error);
-      //      [_loadIndicatorView stopAnimating];
-      [_playerViewController showTips:error];
-    }
+    case LECPlayerPlayEventNoStream:  //无媒体信息
+    case LECPlayerPlayEventPlayError: //播放错误
+      [self processError:player playerEvent:playerEvent];
       break;
       
     default:
@@ -522,23 +569,29 @@
   }
 }
 
-/*播放器播放时间回调*/
+/* 播放进度 */
 - (void) lecPlayer:(LECPlayer *) player
           position:(int64_t) position
      cacheDuration:(int64_t) cacheDuration
           duration:(int64_t) duration
 {
-  if (!_isSeeking)
-  {
-    float value = (float)position/(float)duration;
-    //    [_playSlider setValue:value];
+  if(_onVideoProgress){
+    _onVideoProgress([NSDictionary dictionaryWithObjectsAndKeys:
+                      [NSNumber numberWithDouble:position] ,@"currentTime",
+                      [NSNumber numberWithDouble:duration] ,@"duration",
+                      [NSNumber numberWithDouble:cacheDuration] ,@"playableDuration", nil]);
   }
-//  NSString * playTimeStr = [_playerViewController timeFormate:position];
-//  NSString * totalTimeStr = [_playerViewController timeFormate:duration];
-  //  _timeInfoLabel.text = [NSString stringWithFormat:@"%@/%@",playTimeStr,totalTimeStr];
+  
+  if(_onVideoBufferPercent){
+    int percent = (int) (((float)cacheDuration /(float)duration) * 100);
+    _onVideoBufferPercent([NSDictionary dictionaryWithObjectsAndKeys:
+                      [NSNumber numberWithInt: percent ] ,@"bufferpercent", nil]);
+  }
+  
   NSLog(@"播放位置:%lld,缓冲位置:%lld,总时长:%lld",position,cacheDuration,duration);
 }
 
+#pragma mark 广告正片切换
 - (void) lecPlayer:(LECPlayer *) player contentTypeChanged:(LECPlayerContentType) contentType
 {
   switch (contentType){
@@ -619,23 +672,34 @@
 
 - (void)playbackStalled:(NSNotification *)notification
 {
-//  [_eventDispatcher sendInputEventWithName:@"onPlaybackStalled" body:@{@"target": self.reactTag}];
+  //  [_eventDispatcher sendInputEventWithName:@"onPlaybackStalled" body:@{@"target": self.reactTag}];
   _playbackStalled = YES;
 }
 
 - (void)playerItemDidReachEnd:(NSNotification *)notification
 {
-  
-//  [_eventDispatcher sendInputEventWithName:@"onVideoEnd" body:@{@"target": self.reactTag}];
+  //  [_eventDispatcher sendInputEventWithName:@"onVideoEnd" body:@{@"target": self.reactTag}];
 }
 
 #pragma mark - 设置属性
 - (void)setPaused:(BOOL)paused
 {
   if (paused) {
+    NSLog(@"外部控制——— 暂停播放 pause ");
     [self pause];
+    if (_onVideoPause) {
+      _onVideoPause([NSDictionary dictionaryWithObjectsAndKeys:
+                     [NSNumber numberWithDouble:_lePlayer.duration] ,@"duration",
+                     [NSNumber numberWithDouble:_lePlayer.position] ,@"currentTime", nil]);
+    }
   } else {
+    NSLog(@"外部控制——— 开始播放 start ");
     [self play];
+    if (_onVideoResume) {
+      _onVideoResume([NSDictionary dictionaryWithObjectsAndKeys:
+                     [NSNumber numberWithDouble:_lePlayer.duration] ,@"duration",
+                     [NSNumber numberWithDouble:_lePlayer.position] ,@"currentTime", nil]);
+    }
   }
   _paused = paused;
   
@@ -656,18 +720,18 @@
 
 - (void)applyModifiers
 {
-//  if (_muted) {
-//    [_lePlayer setVolume:0];
-//    [_lePlayer setMuted:YES];
-//  } else {
-//    [_lePlayer setVolume:_volume];
-//    [_lePlayer setMuted:NO];
-//  }
+  //  if (_muted) {
+  //    [_lePlayer setVolume:0];
+  //    [_lePlayer setMuted:YES];
+  //  } else {
+  //    [_lePlayer setVolume:_volume];
+  //    [_lePlayer setMuted:NO];
+  //  }
   
-//  [self setResizeMode:_resizeMode];
-//  [self setRepeat:_repeat];
+  //  [self setResizeMode:_resizeMode];
+  //  [self setRepeat:_repeat];
   [self setPaused:_paused];
-//  [self setControls:_controls];
+  //  [self setControls:_controls];
 }
 
 
@@ -676,7 +740,7 @@
 - (void)videoPlayerViewControllerWillDismiss:(LCBaseViewController *)playerViewController
 {
   if (_playerViewController == playerViewController && _fullscreenPlayerPresented){
-//    [_eventDispatcher sendInputEventWithName:@"onVideoFullscreenPlayerWillDismiss" body:@{@"target": self.reactTag}];
+    //    [_eventDispatcher sendInputEventWithName:@"onVideoFullscreenPlayerWillDismiss" body:@{@"target": self.reactTag}];
   }
 }
 
@@ -686,7 +750,7 @@
     _fullscreenPlayerPresented = false;
     //    _presentingViewController = nil;
     //    [self applyModifiers];
-//    [_eventDispatcher sendInputEventWithName:@"onVideoFullscreenPlayerDidDismiss" body:@{@"target": self.reactTag}];
+    //    [_eventDispatcher sendInputEventWithName:@"onVideoFullscreenPlayerDidDismiss" body:@{@"target": self.reactTag}];
   }
 }
 
@@ -745,7 +809,7 @@
   [_playerViewController.view removeFromSuperview];
   _playerViewController = nil;
   
-//  _eventDispatcher = nil;
+  //  _eventDispatcher = nil;
   [[NSNotificationCenter defaultCenter] removeObserver:self];
   
   [super removeFromSuperview];

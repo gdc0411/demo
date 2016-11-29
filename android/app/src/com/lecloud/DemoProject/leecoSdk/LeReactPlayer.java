@@ -942,7 +942,7 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
         WritableMap event = Arguments.createMap();
         event.putInt(EVENT_PROP_WIDTH, mVideoWidth);
         event.putInt(EVENT_PROP_HEIGHT, mVideoHeight);
-//        mEventEmitter.receiveEvent(getId(), Events.EVENT_CHANGESIZE.toString(), event);
+        mEventEmitter.receiveEvent(getId(), Events.EVENT_CHANGESIZE.toString(), event);
         return true;
     }
 

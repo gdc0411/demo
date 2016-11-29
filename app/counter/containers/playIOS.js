@@ -305,15 +305,34 @@ class VideoPlayer extends Component {
         const flexRemaining = (1 - this.getCurrentTimePercentage()) * 100;
         return (
             <View style={styles.container}>
-                <StatusBar barStyle='light-content' style={{height: STATUS_BAR_HEIGHT}}  />
+                <StatusBar barStyle='light-content' style={{ height: STATUS_BAR_HEIGHT }} />
                 <TouchableOpacity style={[styles.fullScreen, { width: SCREEN_WIDTH, height: 180 }]} onPress={() => { this.setState({ paused: !this.state.paused }); } }>
                     <Video style={[styles.fullScreen, { width: SCREEN_WIDTH, height: 180 }]}
                         source={this.state.source}
                         paused={this.state.paused}
                         onVideoSourceLoad={(data) => { this.setState({ sourceInfo: `视频源: ${data.src}` }); } }
                         onVideoLoad={this.onLoad}
-                        onVideoProgress={(data) => { this.setState({ currentTime: data.currentTime, eventInfo: `播放中…… ${data.currentTime}/${data.duration}` }); } }
+                        onVideoProgress={(data) => { this.setState({ currentTime: data.currentTime, duration: data.duration, eventInfo: `播放中…… ${data.currentTime}/${data.duration}` }); } }
+                        onVideoBufferPercent={(data) => { this.setState({ buffPercent: data.bufferpercent }); } }
+                        onBufferStart={() => { this.setState({ eventInfo: '缓冲开始！' }); } }
+                        onBufferPercent={(data) => { this.setState({ eventInfo: `缓冲中…… ${data.videobuff}%` }); } }
+                        onBufferEnd={() => { this.setState({ eventInfo: '缓冲完毕！' }); } }
+                        onVideoRendingStart={() => { this.setState({ eventInfo: '渲染第一帧……' }); } }
+                        onVideoSeek={(data) => { this.setState({ eventInfo: `跳转到……${data.currentTime}+${data.seekTime}` }); } }
+                        onVideoSeekComplete={(data) => { this.setState({ eventInfo: `跳转完毕！` }); } }
+                        onVideoPause={(data) => { this.setState({ eventInfo: `暂停…… ${data.currentTime}/${data.duration}` }); } }
+                        onVideoResume={(data) => { this.setState({ eventInfo: `恢复播放…… ${data.currentTime}/${data.duration}` }); } }
                         onVideoEnd={() => { this.setState({ eventInfo: '播放完毕！' }); } }
+                        onAdvertStart={() => { this.setState({ advertInfo: '广告开始！' }); } }
+                        onAdvertProgress={(data) => { this.setState({ advertInfo: `广告播放中……倒计时${data.AdTime}` }); } }
+                        onAdvertComplete={() => { this.setState({ advertInfo: `广告结束！` }); } }
+                        onAdvertClick={() => { this.setState({ advertInfo: `广告点击了！！` }); } }
+                        onVideoRateLoad={(data) => { this.setState({ eventInfo: `码率切换:${data.currentRate} 到 ${data.nextRate}` }); } }
+                        onActionLiveChange={(data) => { this.setState({ eventInfo: `机位切换:${data.currentLive} 到 ${data.nextLive}` }); } }
+                        onActionTimeShift={(data) => { this.setState({ currentTime: data.currentTime, eventInfo: `播放中…… ${data.serverTime}/${data.currentTime}/${data.beginTime}` }); } }
+                        onActionStatusChange={(data) => { this.setState({ eventInfo: `活动状态变化…… ${data.actionState}/${data.actionId}/${data.beginTime}/${data.endTime}` }); } }
+                        onActionOnlineNumChange={(data) => { this.setState({ eventInfo: `在线人数变化…… ${data.onlineNum}` }); } }
+                        onVideoError={(data) => { this.setState({ errorInfo: `出错啦！状态码：${data.statusCode} 错误码：${data.errorCode} 错误：${data.errorMsg} 事件：${data.what}` }); } }
                         />
                 </TouchableOpacity>
 
