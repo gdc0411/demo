@@ -431,7 +431,7 @@ const styles = StyleSheet.create({
     },
     fullScreen: {
         position: 'absolute',
-        top: 0,
+        top: STATUS_BAR_HEIGHT,
         left: 0,
         right: 0,
     },
