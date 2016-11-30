@@ -363,8 +363,6 @@
   
 }
 
-
-
 /* 将Dictionary转为Json */
 + (NSString *)returnJSONStringWithDictionary:(NSDictionary *)dictionary useSystem:(BOOL)system{
   if(system){
