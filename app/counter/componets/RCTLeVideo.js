@@ -87,9 +87,9 @@ export default class Video extends Component {
 
         seek: PropTypes.number,
         rate: PropTypes.string,
-        /* 设置音量百分比 */
+        /* 设置音量百分比 0-100 */
         volume: PropTypes.number,
-        /* 亮度值0-255 */
+        /* 亮度值百分比0-100 */
         brightness: PropTypes.number,
         /* 设置屏幕方向 */
         orientation: PropTypes.number,
@@ -135,7 +135,7 @@ export default class Video extends Component {
         onAdvertStart: PropTypes.func,
         onAdvertProgress: PropTypes.func,
         onAdvertComplete: PropTypes.func,
-        onAdvertClick: PropTypes.func,        
+        onAdvertClick: PropTypes.func,
         onAdvertError: PropTypes.func,
         /**直播相关 */
         onActionLiveChange: PropTypes.func,
@@ -143,7 +143,7 @@ export default class Video extends Component {
         onActionStatusChange: PropTypes.func,
         onActionOnlineNumChange: PropTypes.func,
         /*处理其他未定义的事件*/
-        onOtherEventInfo: PropTypes.func, 
+        onOtherEventInfo: PropTypes.func,
 
         /* Required by react-native */
         scaleX: PropTypes.number,
@@ -220,7 +220,7 @@ export default class Video extends Component {
             /*其他事件相关*/
             onOtherEventInfo: (event) => { if (this.props.onOtherEventInfo) this.props.onOtherEventInfo(event.nativeEvent); },
         });
-        
+
         // console.log(nativeProps);
         return (
             <RCTLeVideo

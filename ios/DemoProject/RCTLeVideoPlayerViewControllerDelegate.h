@@ -11,4 +11,5 @@
 @protocol RCTLeVideoPlayerViewControllerDelegate <NSObject>
 - (void)videoPlayerViewControllerWillDismiss:(LCBaseViewController *)playerViewController;
 - (void)videoPlayerViewControllerDidDismiss:(LCBaseViewController *)playerViewController;
+- (void)videoPlayerViewShouldRotateToOrientation:(LCBaseViewController *)playerViewController;
 @end

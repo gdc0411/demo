@@ -352,6 +352,7 @@ class VideoPlayer extends Component {
                 </TouchableOpacity>
 
                 <View style={styles.displays}>
+                    <Text style={[styles.DisplayOption]} onPress={this.handleBack} > 返 回 </Text>
                     <View style={styles.infoDisplays}>
                         <View style={styles.bufferDisplay}>
                             <Text style={styles.DisplayOption}>
@@ -395,7 +396,6 @@ class VideoPlayer extends Component {
                             {this.renderLiveControl('201611113000002it') }
                         </View>
                     */}
-                    <Text style={[styles.DisplayOption]} onPress={this.handleBack} >返回</Text>
                     <View style={styles.volumeControl}>
                         {this.renderRateControl('21')}
                         {this.renderRateControl('13')}
@@ -403,15 +403,15 @@ class VideoPlayer extends Component {
                     </View>
 
                     <View style={styles.volumeControl}>
-                        {this.renderVolumeControl(40)}
-                        {this.renderVolumeControl(60)}
+                        {this.renderVolumeControl(20)}
+                        {this.renderVolumeControl(50)}
                         {this.renderVolumeControl(100)}
                     </View>
 
                     <View style={styles.volumeControl}>
-                        {this.renderBrightnessControl(55)}
-                        {this.renderBrightnessControl(155)}
-                        {this.renderBrightnessControl(255)}
+                        {this.renderBrightnessControl(20)}
+                        {this.renderBrightnessControl(50)}
+                        {this.renderBrightnessControl(100)}
                     </View>
 
                     <View style={styles.trackingControls}>

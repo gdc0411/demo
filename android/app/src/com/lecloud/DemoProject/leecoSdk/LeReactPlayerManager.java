@@ -201,7 +201,7 @@ public class LeReactPlayerManager extends SimpleViewManager<LeReactPlayer> {
      /**
      * 设置亮度（VOD、LIVE）
      *
-     * @param brightness 取值0-255
+     * @param brightness 取值0-1
      */
     @ReactProp(name = PROP_BRIGHTNESS)
     public void setBrightness(final LeReactPlayer videoView, final int brightness) {

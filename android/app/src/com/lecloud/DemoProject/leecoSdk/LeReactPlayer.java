@@ -68,7 +68,7 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
     */
     // 设备信息
     private final AudioManager mAudioManager;
-    private final int mCurrentBrightness;
+    private int mCurrentBrightness;
     private OrientationSensorUtils mOrientationSensorUtils; //方向控制
 
     private int mCurrentOritentation; //当前屏幕方向
@@ -189,8 +189,8 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
         //设置声音管理器
         mAudioManager = (AudioManager) context.getSystemService(Service.AUDIO_SERVICE);
 
-        // 获得当前屏幕亮度 取值0-255
-        mCurrentBrightness = ScreenBrightnessManager.getScreenBrightness(context.getBaseContext());
+        // 获得当前屏幕亮度，取值0-1
+        mCurrentBrightness = ScreenBrightnessManager.getScreenBrightness(context.getBaseContext()) * 100 / 255;
 
         // 屏幕方向
         mCurrentOritentation = ScreenUtils.getOrientation(context.getBaseContext());
@@ -378,7 +378,7 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
             WritableMap event = Arguments.createMap();
             event.putDouble(EVENT_PROP_CURRENT_TIME, getCurrentPosition() / 1000.0);
             event.putDouble(EVENT_PROP_SEEK_TIME, msec / 1000.0);
-//            mEventEmitter.receiveEvent(getId(), Events.EVENT_SEEK.toString(), event);
+            mEventEmitter.receiveEvent(getId(), Events.EVENT_SEEK.toString(), event);
 
             seekTo(Math.round(msec * 1000.0f));
 
@@ -536,16 +536,18 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
 
 
     /**
-     * 设置亮度（VOD、LIVE）
+     * 设置亮度百分比（VOD、LIVE）
      *
-     * @param paramInt 取值0-255
+     * @param brightness 取值0-1
      */
-    public void setScreenBrightness(final int paramInt) {
-        if (paramInt < 0 || paramInt > 255) {
+    public void setScreenBrightness(final int brightness) {
+        if (brightness < 0 || brightness > 100) {
             return;
         }
-        ScreenBrightnessManager.setScreenBrightness((Activity) (mThemedReactContext.getBaseContext()), paramInt);
-        Log.d(TAG, LogUtils.getTraceInfo() + "外部控制——— 调节亮度:" + paramInt);
+        mCurrentBrightness = brightness;
+        ScreenBrightnessManager.setScreenBrightness((Activity) (mThemedReactContext.getBaseContext()), ((brightness * 255) / 100));
+
+        Log.d(TAG, LogUtils.getTraceInfo() + "外部控制——— 调节亮度:" + brightness);
     }
 
     /**
@@ -1286,7 +1288,7 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
     }
 
     /**
-     * 处理广告结束的事件
+     * 处理正在播放广告的事件
      *
      * @param what   AD_PROGRESS
      * @param bundle null
