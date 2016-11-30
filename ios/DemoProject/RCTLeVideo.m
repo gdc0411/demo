@@ -35,7 +35,7 @@
 @property (nonatomic, strong) LECPlayer *lePlayer;
 @property (nonatomic, strong) LECPlayerOption *option;
 
-@property(nonatomic) CGFloat brightness NS_AVAILABLE_IOS(5_0);        // 0 .. 1.0, where 1.0 is maximum brightness. Only supported by main screen.
+@property(nonatomic) CGFloat screenBrightness NS_AVAILABLE_IOS(5_0);        // 0 .. 1.0, where 1.0 is maximum brightness. Only supported by main screen.
 
 
 @property (nonatomic, copy) RCTDirectEventBlock onVideoSourceLoad;  // 数据源设置
@@ -93,9 +93,13 @@
   long _duration; //视频总厂
   long _lastPosition; //最后位置
   NSArray *_ratesList; //可用码率列表
-  
   int _currentBrightness;  //屏幕亮度百分比 0-100
-
+  
+  LECActivityItem *_activityItem; //直播信息
+  LECActivityConfigItem* _activityConfigItem; //直播配置信息
+  
+  __block NSString *_title; //视频标题
+  
   
   bool _pendingSeek;
   float _pendingSeekTime;
@@ -152,7 +156,7 @@
                                                object:nil];
     
     [[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications]; //开始生成设备旋转通知
-
+    
     
   }
   return self;
@@ -202,6 +206,13 @@
 //  return self;
 //}
 
+- (void)dealloc
+{
+  [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+RCT_NOT_IMPLEMENTED(- (instancetype)init)
+
 /*创建viewController*/
 - (LCBaseViewController*)createPlayerViewController:(LECPlayer*)player withPlayerOption:(LECPlayerOption*)playerOption {
   RCTLeVideoPlayerViewController* playerController= [[RCTLeVideoPlayerViewController alloc] init];
@@ -217,39 +228,29 @@
   if(source == nil)
     return;
   
-  // 销毁原播放器和控制器
   if (_lePlayer) {
-    [_lePlayer pause];
-    
-    [_playerViewController.view removeFromSuperview];
-    _playerViewController = nil;
+    [self stop];
+    [_lePlayer unregister];
+    _lePlayer.delegate = nil;
+    _lePlayer = nil;
   }
+  _option = nil;
   
+  [_playerViewController.view removeFromSuperview];
+  _playerViewController = nil;
   
-  //从source里拿到必要参数,用来创建player\option\controller
+  //根据必要参数创建播放器
   [self playerItemForSource:source];
-  
-//  if (_onVideoSourceLoad) {
-//    //    _onVideoSourceLoad(@{@"target": self.reactTag,@"src": [[self class] returnJSONStringWithDictionary:source useSystem:YES]});
-//    _onVideoSourceLoad(source);
-//  }
   
 }
 
 
 - (void)setPaused:(BOOL)paused
 {
-  if(_lePlayer == nil)
+  NSLog(@"外部控制——— 播放暂停：%@", paused?@"YES":@"NO");
+  if(_lePlayer == nil  )
     return;
-  
-  if (paused) {
-    NSLog(@"外部控制——— 暂停播放 pause ");
-    [self pause];
-    
-  } else {
-    NSLog(@"外部控制——— 开始播放 start ");
-    [self play];
-  }
+  paused? [self pause]: [self play];
   _paused = paused;
 }
 
@@ -313,7 +314,7 @@
   _lePlayer.volume = volume;
   
   NSLog(@"外部控制——— 音量调节:%d", volume );
-
+  
 }
 
 - (void)setBrightness:(int)brightness
@@ -322,7 +323,7 @@
     return;
   }
   _currentBrightness = brightness;
-
+  
   [[UIScreen mainScreen] setBrightness: brightness / 100];
   NSLog(@"外部控制——— 调节亮度:%d", brightness );
 }
@@ -331,7 +332,7 @@
 {
   if( requestedOrientation<0 || requestedOrientation == _currentOritentation )
     return;
-
+  
   _currentOritentation = requestedOrientation;
   
   int orientation = 1;
@@ -422,7 +423,7 @@
     
     [self addSubview:_lePlayer.videoView];
     [self sendSubviewToBack:_lePlayer.videoView];
-
+    
     
     NSString *uuid = [source objectForKey:@"uuid"];
     NSString *vuid = [source objectForKey:@"vuid"];
@@ -457,6 +458,8 @@
                                     
                                     if (result){
                                       NSLog(@"播放器注册成功");
+                                      _title = ((LECVODPlayer*)(wSelf.lePlayer)).videoTitle;
+                                      
                                       [wSelf play];//注册完成后自动播放
                                       
                                     }else{
@@ -466,11 +469,11 @@
                                       }
                                     }
                                   }];
-
+    
     
   }else if( playMode == LCPlayerActionLive) { //活动直播
     NSLog(@"直播数据源");
-
+    
     _playMode = LCPlayerActionLive;
     
     LECActivityInfoManager * manager = [LECActivityInfoManager sharedManager];
@@ -510,7 +513,7 @@
       
       if (success ) {
         NSLog(@"活动事件Manager注册成功");
-//        [weakSelf.titleLabel setText:manager.activityItem.activityName];
+        _title = manager.activityItem.activityName;
         LECActivityItem *aItem = manager.activityItem;
         BOOL isEnable = NO;
         if (aItem.activityLiveItemList.count != 0) {
@@ -549,7 +552,7 @@
     if (!requestSuccess) {
       NSLog(@"活动事件Manager注册失败");
     }
-
+    
     
   }else{ //普通URL
     
@@ -582,18 +585,9 @@
 
 - (void)applyModifiers
 {
-  //  if (_muted) {
-  //    [_lePlayer setVolume:0];
-  //    [_lePlayer setMuted:YES];
-  //  } else {
-  //    [_lePlayer setVolume:_volume];
-  //    [_lePlayer setMuted:NO];
-  //  }
-  
   //  [self setResizeMode:_resizeMode];
   //  [self setRepeat:_repeat];
   [self setPaused:_paused];
-  //  [self setControls:_controls];
 }
 
 
@@ -631,14 +625,13 @@
   if (!_isPlay){
     return;
   }
-
+  
+  [_lePlayer pause];
+  
   if (_onVideoPause) {
     _onVideoPause(@{@"duration":[NSNumber numberWithDouble:_lePlayer.duration],
                     @"currentTime":[NSNumber numberWithDouble:_lePlayer.position],});
-
-  [_lePlayer pause];
-}
-  
+  }
   _isPlay = NO;
 }
 
@@ -650,6 +643,8 @@
   
   if( [player isMemberOfClass: [LECVODPlayer class]] ){ //点播模式
     _playMode = LCPlayerVod;
+  }else if( [player isMemberOfClass: [LECActivityPlayer class]] ){ //活动模式
+    _playMode = LCPlayerActionLive;
   }
   
   // 当前播放模式, 当前屏幕方向
@@ -666,18 +661,17 @@
                                 [NSNumber numberWithInt:_width],@"width",
                                 [NSNumber numberWithInt:_height],@"height",
                                 videoOrientation,@"videoOrientation",nil];
-  
-  if(_playMode == LCPlayerVod){
-    [event setValue: ((LECVODPlayer*)player).videoTitle forKey:@"title"];
-  }
+  [event setValue:_title forKey:@"title"];
   [event setValue:naturalSize forKey:@"naturalSize"];
   
   // 视频码率信息
   if(_playMode == LCPlayerVod){
-      _ratesList = ((LECVODPlayer*)player).streamRatesList;
+    _ratesList = ((LECVODPlayer*)player).streamRatesList;
+  }else if(_playMode == LCPlayerActionLive){
+    _ratesList = ((LECActivityPlayer*)player).streamRatesList;
   }
+  
   if(_ratesList && [_ratesList count] > 0 ){
-    
     NSMutableArray *ratesList = [NSMutableArray arrayWithCapacity: [_ratesList count]];
     for(LECStreamRateItem *element in _ratesList){
       //NSLog(@"%@",element);
@@ -699,6 +693,10 @@
     if (((LECVODPlayer*)player).loadingIconUrl) {
       [event setValue:[NSDictionary dictionaryWithObjectsAndKeys:((LECVODPlayer*)player).loadingIconUrl,@"pic",nil] forKey:@"loading"];  // LOADING信息
     }
+  }else if(_playMode == LCPlayerActionLive){
+    if (((LECActivityPlayer*)player).loadingIconUrl) {
+      [event setValue:[NSDictionary dictionaryWithObjectsAndKeys:((LECVODPlayer*)player).loadingIconUrl,@"pic",nil] forKey:@"loading"];  // LOADING信息
+    }
   }
   
   if (_playMode == LCPlayerVod) { //VOD模式下参数
@@ -708,10 +706,10 @@
   
   // 设备信息： 音量和亮度
   _volume = player.volume;
-//  _volume = [[AVAudioSession sharedInstance] outputVolume];
+  //  _volume = [[AVAudioSession sharedInstance] outputVolume];
   
-  _brightness = [UIScreen mainScreen].brightness;
-  _currentBrightness = _brightness * 100;
+  _screenBrightness = [UIScreen mainScreen].brightness;
+  _currentBrightness = _screenBrightness * 100;
   [event setValue:[NSNumber numberWithInt:_volume] forKey:@"volume"]; //声音百分比
   [event setValue:[NSNumber numberWithInt:_currentBrightness] forKey:@"brightness"]; //屏幕亮度
   
@@ -846,29 +844,53 @@
      cacheDuration:(int64_t) cacheDuration
           duration:(int64_t) duration
 {
-  _lastPosition = position;
-  _duration = duration;
   
-  if(_onVideoProgress){
-    _onVideoProgress(@{@"currentTime": [NSNumber numberWithDouble:position],
-                       @"duration": [NSNumber numberWithDouble:duration],
-                       @"playableDuration": [NSNumber numberWithDouble:cacheDuration],});
+  if(_playMode == LCPlayerVod){
+    _lastPosition = position;
+    _duration = duration;
+    
+    if(_onVideoProgress){
+      _onVideoProgress(@{@"currentTime": [NSNumber numberWithDouble:position],
+                         @"duration": [NSNumber numberWithDouble:duration],
+                         @"playableDuration": [NSNumber numberWithDouble:cacheDuration],});
+    }
+    if(_onVideoBufferPercent){
+      _onVideoBufferPercent(@{@"bufferpercent": [NSNumber numberWithInt: (int) ((((float)position + (float)cacheDuration)/(float)duration) * 100) ]});
+    }
+  }else if(_playMode == LCPlayerActionLive){
+    
+    if(_onActionTimeShift){
+      _onActionTimeShift(@{@"currentTime": [NSNumber numberWithInt:(int)((LECActivityPlayer*)player).currentPlayTimestamp],
+                           @"beginTime": [NSNumber numberWithInt:(int)((LECActivityPlayer*)player).streamStartTimestamp],
+                           @"serverTime": [NSNumber numberWithInt:(int)((LECActivityPlayer*)player).serverRealTimestamp],
+                           @"endTime": [NSNumber numberWithInt:(int)((LECActivityPlayer*)player).streamEndTimestamp], });
+    }
   }
-  
-  if(_onVideoBufferPercent){
-    _onVideoBufferPercent(@{@"bufferpercent": [NSNumber numberWithInt: (int) ((((float)position + (float)cacheDuration)/(float)duration) * 100) ]});
-  }
-//  NSLog(@"播放位置:%lld,缓冲位置:%lld,总时长:%lld",position,cacheDuration,duration);
+   //  NSLog(@"播放位置:%lld,缓冲位置:%lld,总时长:%lld",position,cacheDuration,duration);
 }
 
-
+/*直播事件*/
 - (void) activityManager:(LECActivityInfoManager *) manager event:(LCActivityEvent) event {
   switch (event) {
     case LCActivityEventActivityConfigUpdate: {
+     
+      _activityItem =  manager.activityItem;
+      _activityConfigItem =  manager.activityConfigItem;
       
+      if(_onActionOnlineNumChange){
+        _onActionOnlineNumChange(@{@"actionState": [NSNumber numberWithInt:(int)manager.activityItem.status],
+                                   @"actionId": manager.activityId,
+                                   @"beginTime": [NSNumber numberWithInt:(int)manager.activityItem.beginTime],
+                                   @"endTime": [NSNumber numberWithInt:(int)manager.activityItem.endTime] });
+      }
+      
+      NSLog(@"活动状态变化:%d,",(int)manager.activityItem.status);
       break;
     }
     case LCActivityEventOnlineAudiencesNumberUpdate: {
+      if(_onActionOnlineNumChange){
+        _onActionOnlineNumChange(@{@"onlineNum": [NSNumber numberWithLong:(long)manager.onlineAudiencesNumber] });
+      }
       NSLog(@"活动在线人数:%ld,",(long)manager.onlineAudiencesNumber);
       break;
     }
@@ -898,7 +920,6 @@
 - (void)usePlayerViewController
 {
   if( _lePlayer ){
-    
     _playerViewController = [self createPlayerViewController:_lePlayer withPlayerOption:_option];
     
     // to prevent video from being animated when resizeMode is 'cover'
@@ -968,14 +989,14 @@
 - (void)removeReactSubview:(UIView *)subview
 {
   NSLog(@"removeReactSubview消息");
-
+  
   [subview removeFromSuperview];
 }
 
 - (void)layoutSubviews
 {
   NSLog(@"layoutSubviews消息");
-
+  
   [super layoutSubviews];
   _playerViewController.view.frame = self.bounds;
   
@@ -994,14 +1015,19 @@
   
   [self setOrientation:1];
   
-  //销毁播放器
-  [self stop];
-  [_lePlayer unregister];
-  _lePlayer.delegate = nil;
-  _lePlayer = nil;
+  if( _lePlayer ){
+    [self stop];
+    
+    [_lePlayer unregister];
+    _lePlayer.delegate = nil;
+    _lePlayer = nil;
+  }
+  
+  _option = nil;
   
   [_playerViewController.view removeFromSuperview];
   _playerViewController = nil;
+  
   
   if(_playMode == LCPlayerActionLive){
     [[LECActivityInfoManager sharedManager] releaseActivity];

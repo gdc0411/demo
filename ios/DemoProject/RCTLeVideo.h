@@ -12,7 +12,7 @@
 #import "RCTLeVideoPlayerViewControllerDelegate.h"
 
 @class RCTBridge;
-@class LECVODPlayer;
+@class LECPlayer;
 @class LECPlayerOption;
 @class LCBaseViewController;
 
@@ -32,6 +32,6 @@ typedef NS_ENUM (int,LCPlayerMode){
 
 - (instancetype)initWithBridge:(RCTBridge *)bridge NS_DESIGNATED_INITIALIZER;
 
-- (LCBaseViewController*)createPlayerViewController:(LECVODPlayer*)player withPlayerOption:(LECPlayerOption*)playerOption;
+- (LCBaseViewController*)createPlayerViewController:(LECPlayer*)player withPlayerOption:(LECPlayerOption*)playerOption;
 
 @end
