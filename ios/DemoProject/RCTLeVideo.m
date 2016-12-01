@@ -97,6 +97,7 @@
   
   LECActivityItem *_activityItem; //直播信息
   LECActivityConfigItem* _activityConfigItem; //直播配置信息
+  NSString* _currentLive; //当前机位
   
   __block NSString *_title; //视频标题
   
@@ -162,49 +163,6 @@
   return self;
 }
 
-//- (instancetype)initWithEventDispatcher:(RCTEventDispatcher *)eventDispatcher
-//{
-//  if ((self = [super init])) {
-//    _eventDispatcher = eventDispatcher;
-//
-//    _isFullScreen = NO;
-//    _isPlay = NO;
-//    _isSeeking = NO;
-//
-//    _currentOritentation = 9;
-//
-//
-//    //    _playbackStalled = NO;
-//    //    _rate = 1.0;
-//    //    _volume = 1.0;
-//    //    _resizeMode = @"AVLayerVideoGravityResizeAspectFill";
-//    //    _pendingSeek = false;
-//    //    _pendingSeekTime = 0.0f;
-//    //    _lastSeekTime = 0.0f;
-//    //    _progressUpdateInterval = 250;
-//    //    _controls = NO;
-//    //    _playerBufferEmpty = YES;
-//    //    _playInBackground = false;
-//    //    _playWhenInactive = false;
-//
-//    [[NSNotificationCenter defaultCenter] addObserver:self
-//                                             selector:@selector(applicationWillResignActive:)
-//                                                 name:UIApplicationWillResignActiveNotification
-//                                               object:nil];
-//
-//    [[NSNotificationCenter defaultCenter] addObserver:self
-//                                             selector:@selector(applicationDidEnterBackground:)
-//                                                 name:UIApplicationDidEnterBackgroundNotification
-//                                               object:nil];
-//
-//    [[NSNotificationCenter defaultCenter] addObserver:self
-//                                             selector:@selector(applicationWillEnterForeground:)
-//                                                 name:UIApplicationWillEnterForegroundNotification
-//                                               object:nil];
-//  }
-//
-//  return self;
-//}
 
 - (void)dealloc
 {
@@ -297,12 +255,24 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
 
 - (void)setLive:(NSString*)liveId
 {
+  if( [[self class]isBlankString:liveId] || _lePlayer == nil || _activityItem == nil || [_activityItem.activityLiveItemList count]==0)
+    return;
+
+  [_lePlayer stop];
+  [_lePlayer unregister];
   
+  __weak typeof(self) wSelf = self;
+  [(LECActivityPlayer*)_lePlayer registerWithLiveId:liveId completion:^(BOOL result) {
+    if (wSelf.onActionLiveChange) {
+      wSelf.onActionLiveChange(@{@"currentLive":_currentLive,@"nextLive":liveId});
+    }
+  }];
+  NSLog(@"外部控制——— 切换机位 current:%@ next:%@", _currentLive, liveId);
 }
 
 - (void)setClickAd:(BOOL)isClicked
 {
-  
+  NSLog(@"外部控制——— 点击广告，iOS暂不支持！");
 }
 
 - (void)setVolume:(int)volume
@@ -523,7 +493,7 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
               isEnable = [(LECActivityPlayer*)wSelf.lePlayer registerWithLiveId:lItem.liveId completion:^(BOOL result) {
                 if (result) {
                   [wSelf play];//自动播放
-                  LECStreamRateItem * lItem = wSelf.lePlayer.selectedStreamRateItem;
+//                  LECStreamRateItem * lItem = wSelf.lePlayer.selectedStreamRateItem;
                   //[weakSelf.playerRateBtn setTitle:lItem.name forState:(UIControlStateNormal)];
                   NSLog(@"活动机位数目:%lu",(unsigned long)aItem.activityLiveItemList.count);
                 }
@@ -532,6 +502,9 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
                                       wSelf.lePlayer.errorCode,
                                       wSelf.lePlayer.errorDescription];
                   NSLog(@"%@",error);
+                  if (wSelf.onVideoError) {
+                    wSelf.onVideoError(@{@"errorCode":wSelf.lePlayer.errorCode,@"errorMsg":wSelf.lePlayer.errorDescription});
+                  }
                 }
               }];
               if (isEnable) {
@@ -543,14 +516,23 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
         }
         if (!isEnable) {
           NSLog(@"没有可用的直播机位");
+          if (wSelf.onVideoError) {
+            wSelf.onVideoError(@{@"errorCode":@"-1",@"errorMsg":@"没有可用的直播机位"});
+          }
         }
       } else {
+        if (wSelf.onVideoError) {
+          wSelf.onVideoError(@{@"errorCode":@"-1",@"errorMsg":@"直播活动注册失败"});
+        }
         NSLog(@"直播活动注册失败");
       }
     }];
     
     if (!requestSuccess) {
       NSLog(@"活动事件Manager注册失败");
+      if (wSelf.onVideoError) {
+        wSelf.onVideoError(@{@"errorCode":@"-1",@"errorMsg":@"活动事件Manager注册失败"});
+      }
     }
     
     
@@ -601,8 +583,7 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
   __weak typeof(self) wSelf = self;
   [_lePlayer playWithCompletion:^{
     if (wSelf.onVideoResume) {
-      wSelf.onVideoResume(@{@"duration":[NSNumber numberWithDouble:_lePlayer.duration],
-                            @"currentTime":[NSNumber numberWithDouble:_lePlayer.position],});
+      wSelf.onVideoResume(@{@"duration":[NSNumber numberWithDouble:_lePlayer.duration],@"currentTime":[NSNumber numberWithDouble:_lePlayer.position],});
     }
     _isPlay = YES;
   }];
@@ -614,10 +595,7 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
     return;
   }
   __weak typeof(self) wSelf = self;
-  [_lePlayer stopWithCompletion:^{
-    //    [wSelf.playStateBtn setTitle:@"播放" forState:(UIControlStateNormal)];
-    _isPlay = NO;
-  }];
+  [_lePlayer stopWithCompletion:^{ _isPlay = NO; }];
 }
 
 - (void)pause
@@ -629,8 +607,7 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
   [_lePlayer pause];
   
   if (_onVideoPause) {
-    _onVideoPause(@{@"duration":[NSNumber numberWithDouble:_lePlayer.duration],
-                    @"currentTime":[NSNumber numberWithDouble:_lePlayer.position],});
+    _onVideoPause(@{@"duration":[NSNumber numberWithDouble:_lePlayer.duration], @"currentTime":[NSNumber numberWithDouble:_lePlayer.position],});
   }
   _isPlay = NO;
 }
@@ -647,36 +624,33 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
     _playMode = LCPlayerActionLive;
   }
   
-  // 当前播放模式, 当前屏幕方向
+  //当前播放模式, 当前屏幕方向
   NSMutableDictionary *event = [NSMutableDictionary dictionaryWithObjectsAndKeys:
                                 [NSNumber numberWithInt:_playMode],@"playMode",
                                 [NSNumber numberWithInt:_currentOritentation],@"orientation", nil];
   
-  // 视频基本信息，长/宽/方向
+  //视频基本信息，长/宽/方向
   _width = player.actualVideoWidth;
   _height = player.actualVideoHeight;
-  NSString* videoOrientation = (_width > _height)? @"landscape" : @"portrait";
+  [event setValue:@{@"width":[NSNumber numberWithInt:_width],
+                    @"height":[NSNumber numberWithInt:_height],
+                    @"videoOrientation":(_width>_height)? @"landscape" : @"portrait"}
+           forKey:@"naturalSize"];
   
-  NSDictionary *naturalSize =  [NSDictionary dictionaryWithObjectsAndKeys:
-                                [NSNumber numberWithInt:_width],@"width",
-                                [NSNumber numberWithInt:_height],@"height",
-                                videoOrientation,@"videoOrientation",nil];
   [event setValue:_title forKey:@"title"];
-  [event setValue:naturalSize forKey:@"naturalSize"];
   
-  // 视频码率信息
-  if(_playMode == LCPlayerVod){
+  //视频码率信息
+  if(_playMode == LCPlayerVod)
     _ratesList = ((LECVODPlayer*)player).streamRatesList;
-  }else if(_playMode == LCPlayerActionLive){
+  else if(_playMode == LCPlayerActionLive)
     _ratesList = ((LECActivityPlayer*)player).streamRatesList;
-  }
+  
   
   if(_ratesList && [_ratesList count] > 0 ){
     NSMutableArray *ratesList = [NSMutableArray arrayWithCapacity: [_ratesList count]];
     for(LECStreamRateItem *element in _ratesList){
-      //NSLog(@"%@",element);
       if((NSNull *)element != [NSNull null] && element.isEnabled){
-        [ratesList addObject: [NSDictionary dictionaryWithObjectsAndKeys:element.code,@"rateKey",element.name,@"rateValue",nil]];
+        [ratesList addObject: @{@"rateKey": element.code, @"rateValue": element.name }];
       }
     }
     [event setValue:ratesList forKey:@"rateList"]; //可用码率
@@ -691,17 +665,56 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
   // 视频封面信息: 加载
   if(_playMode == LCPlayerVod){
     if (((LECVODPlayer*)player).loadingIconUrl) {
-      [event setValue:[NSDictionary dictionaryWithObjectsAndKeys:((LECVODPlayer*)player).loadingIconUrl,@"pic",nil] forKey:@"loading"];  // LOADING信息
+      [event setValue:@{@"pic": ((LECVODPlayer*)player).loadingIconUrl} forKey:@"loading"];  // LOADING信息
     }
   }else if(_playMode == LCPlayerActionLive){
     if (((LECActivityPlayer*)player).loadingIconUrl) {
-      [event setValue:[NSDictionary dictionaryWithObjectsAndKeys:((LECVODPlayer*)player).loadingIconUrl,@"pic",nil] forKey:@"loading"];  // LOADING信息
+      [event setValue:@{@"pic": ((LECActivityPlayer*)player).loadingIconUrl} forKey:@"loading"];  // LOADING信息
     }
   }
   
   if (_playMode == LCPlayerVod) { //VOD模式下参数
     [event setValue:[NSNumber numberWithLong:(_duration==0)?((LECVODPlayer*)player).duration==0:_duration] forKey:@"duration"]; //视频总长度（VOD）
     [event setValue:[NSNumber numberWithLong:_lastPosition] forKey:@"currentTime"]; //当前播放位置（VOD）
+    
+  } else if(_playMode == LCPlayerActionLive ) { //ACTION模式参数
+    
+    NSMutableDictionary* actionLive = [NSMutableDictionary dictionaryWithCapacity:13];
+    if(_activityItem){ //直播数据
+      [actionLive setValue:_activityItem.activityName forKey:@"title"];
+      [actionLive setValue:_activityItem.activityCoverImage forKey:@"coverImgUrl"];
+      [actionLive setValue:_activityItem.activityWebUrl forKey:@"playerPageUrl"];
+      [actionLive setValue:[NSNumber numberWithInt:_activityItem.status] forKey:@"actionState"];
+      [actionLive setValue:[NSNumber numberWithInt:(int)_activityItem.beginTime] forKey:@"beginTime"];
+      [actionLive setValue:[NSNumber numberWithInt:(int)_activityItem.endTime] forKey:@"endTime"];
+      [actionLive setValue:_activityItem.activityDesc forKey:@"actionDesc"];
+      
+      NSArray* liveInfos =  _activityItem.activityLiveItemList;
+      NSMutableArray* lives = [NSMutableArray arrayWithCapacity:[liveInfos count]];
+      for(LECActivityLiveItem *element in liveInfos){
+        if((NSNull *)element != [NSNull null]){
+          [lives addObject: @{@"liveId": element.liveId? element.liveId:[NSNull null],
+                              @"machine": [NSNumber numberWithInt:(int)element.livePositionNumber],
+                              @"previewSteamId": element.previewStreamId?element.previewStreamId:[NSNull null],
+                              @"previewSteamPlayUrl": element.previewRTMPUrl?element.previewRTMPUrl:[NSNull null],
+                              @"liveStatus": [NSNumber numberWithInt:(int)element.status]}];
+          
+          if(element.status == LCActivityLiveStatusUsing){ //默认机位
+            _currentLive = element.liveId;
+            [actionLive setValue:element.liveId forKey:@"currentLive"];
+          }
+        }
+        [actionLive setValue:lives forKey:@"lives"];
+      }
+      [event setValue:actionLive forKey:@"actionLive"];
+    }
+    
+    if(_activityConfigItem){ //封面.logo.loading.水印
+      [event setValue:@{@"pic":_activityConfigItem.logoUrl} forKey:@"logo"];
+      [event setValue:@{@"pic":_activityConfigItem.loadingIconUrl} forKey:@"loading"];
+      [event setValue:@{@"pic":_activityConfigItem.waterMarkUrl,
+                        @"pos": [NSNumber numberWithInt:(int)_activityConfigItem.waterMarkPosition]} forKey:@"waterMarks"];
+    }
   }
   
   // 设备信息： 音量和亮度
@@ -713,6 +726,7 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
   [event setValue:[NSNumber numberWithInt:_volume] forKey:@"volume"]; //声音百分比
   [event setValue:[NSNumber numberWithInt:_currentBrightness] forKey:@"brightness"]; //屏幕亮度
   
+  
   if(_onVideoLoad){
     _onVideoLoad(event);
   }
@@ -721,15 +735,14 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
   
 }
 
-
 /*播放完成*/
 - (void) processCompleted:(LECPlayer *) player
               playerEvent:(LECPlayerPlayEvent) playerEvent
 {
   _isPlay = NO;
-  if (_onVideoEnd) {
+  
+  if (_onVideoEnd)
     _onVideoEnd(nil);
-  }
 }
 
 /*缓冲事件*/
@@ -738,25 +751,15 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
 {
   switch (playerEvent) {
     case LECPlayerPlayEventBufferStart:
-      NSLog(@"开始缓冲");
       _isSeeking = YES;
-      if (_onBufferStart) {
-        _onBufferStart(nil);
-      }
+      if (_onBufferStart) _onBufferStart(nil);
       break;
     case LECPlayerPlayEventRenderFirstPic:
-      NSLog(@"加载第一帧");
-      if (_onVideoRendingStart) {
-        _onVideoRendingStart(nil);
-      }
+      if (_onVideoRendingStart) _onVideoRendingStart(nil);
       break;
     case LECPlayerPlayEventBufferEnd:
-      NSLog(@"缓冲结束");
-      if (_onBufferEnd) {
-        _onBufferEnd(nil);
-      }
+      if (_onBufferEnd) _onBufferEnd(nil);
       break;
-      
     default:
       break;
   }
@@ -766,10 +769,8 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
 - (void) processVideoSizeChanged:(LECPlayer *) player
                      playerEvent:(LECPlayerPlayEvent) playerEvent
 {
-  NSLog(@"视频尺寸变化！");
   _width =  player.actualVideoWidth;
   _height = player.actualVideoHeight;
-  
   if (_onVideoSizeChange) {
     _onVideoSizeChange(@{@"width": [NSNumber numberWithInt:_width],@"height": [NSNumber numberWithInt:_height],});
   }
@@ -780,12 +781,8 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
 - (void) processSeekComplete:(LECPlayer *) player
                  playerEvent:(LECPlayerPlayEvent) playerEvent
 {
-  NSLog(@"完成Seek操作");
   _isSeeking = NO;
-  
-  if (_onVideoSeekComplete) {
-    _onVideoSeekComplete(nil);
-  }
+  if (_onVideoSeekComplete) _onVideoSeekComplete(nil);
 }
 
 /*播放出错*/
@@ -797,7 +794,7 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
   //[_playerViewController showTips:error]; //弹出提示
   
   if (_onVideoError) {
-    _onVideoError([NSDictionary dictionaryWithObjectsAndKeys: player.errorCode ,@"errorCode", player.errorDescription  ,@"errorMsg", nil]);
+    _onVideoError(@{@"errorCode": player.errorCode,@"errorMsg": player.errorDescription});
   }
 }
 
@@ -866,24 +863,44 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
                            @"endTime": [NSNumber numberWithInt:(int)((LECActivityPlayer*)player).streamEndTimestamp], });
     }
   }
-   //  NSLog(@"播放位置:%lld,缓冲位置:%lld,总时长:%lld",position,cacheDuration,duration);
+  //  NSLog(@"播放位置:%lld,缓冲位置:%lld,总时长:%lld",position,cacheDuration,duration);
 }
 
 /*直播事件*/
 - (void) activityManager:(LECActivityInfoManager *) manager event:(LCActivityEvent) event {
   switch (event) {
     case LCActivityEventActivityConfigUpdate: {
-     
+      
       _activityItem =  manager.activityItem;
       _activityConfigItem =  manager.activityConfigItem;
       
-      if(_onActionOnlineNumChange){
-        _onActionOnlineNumChange(@{@"actionState": [NSNumber numberWithInt:(int)manager.activityItem.status],
-                                   @"actionId": manager.activityId,
-                                   @"beginTime": [NSNumber numberWithInt:(int)manager.activityItem.beginTime],
-                                   @"endTime": [NSNumber numberWithInt:(int)manager.activityItem.endTime] });
+      int actionStatus = manager.activityItem.status;
+      NSString *errorMsg;
+      switch (actionStatus) {
+        case LECActivityStatusUnStarted:
+          errorMsg = @"活动未开始";
+          break;
+        case LECActivityStatusLiving:
+          errorMsg = @"活动正在直播";
+          break;
+        case LECActivityStatusSuspending:
+          errorMsg = @"活动直播中断";
+          break;
+        case LECActivityStatusEnd:
+          errorMsg = @"活动直播结束";
+          break;
+        default:
+          errorMsg = @"未知状态";
+          break;
       }
       
+      if(_onActionStatusChange){
+        _onActionStatusChange(@{@"actionState": [NSNumber numberWithInt:(int)manager.activityItem.status],
+                                @"actionId": manager.activityId,
+                                @"beginTime": [NSNumber numberWithInt:(int)manager.activityItem.beginTime],
+                                @"endTime": [NSNumber numberWithInt:(int)manager.activityItem.endTime],
+                                @"errorMsg": errorMsg});
+      }
       NSLog(@"活动状态变化:%d,",(int)manager.activityItem.status);
       break;
     }
@@ -908,7 +925,6 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
       break;
     case LECPlayerContentTypeAdv:
       NSLog(@"正在播放广告");
-      
       //      [_loadIndicatorView stopAnimating];
       break;
       

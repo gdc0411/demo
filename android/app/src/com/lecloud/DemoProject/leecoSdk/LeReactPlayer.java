@@ -222,7 +222,6 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
 
         if (mActionStatusListener == null) {
             mActionStatusListener = new ActionStatusListener() {
-
                 @Override
                 public void onChange(ActionStatus actionStatus) {
                     Log.d(TAG, LogUtils.getTraceInfo() + "直播状态变化事件——— actionStatus：" + actionStatus.toString());
@@ -447,7 +446,7 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
         if (!mLePlayerValid || mPlayMode != PlayerParams.VALUE_PLAYER_ACTION_LIVE || mActionInfo == null)
             return;
 
-        // 检查码率是否可用
+        // 检查机位是否可用
         if (mActionInfo.getLiveInfos() != null && mActionInfo.getLiveInfos().contains(liveId)) {
             //切换机位
             setDataSourceByLiveId(liveId);
@@ -808,12 +807,12 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
             if (mActionInfo != null) {
                 actionLive.putString(EVENT_PROP_LIVE_COVER_IMG, mActionInfo.getCoverImgUrl()); //直播封面图
                 actionLive.putString(EVENT_PROP_LIVE_PLAYER_URL, mActionInfo.getPlayerPageUrl()); //直播页面URL
-                actionLive.putInt(EVENT_PROP_LIVE_ACTION_STATE, mActionInfo.getActivityState()); //直播页面URL
+                actionLive.putInt(EVENT_PROP_LIVE_ACTION_STATE, mActionInfo.getActivityState()); //直播状态
                 actionLive.putString(EVENT_PROP_CURRENT_LIVE, mCurrentLiveId); //当前机位
 
                 if (mCurrentLiveInfo != null) {
-                    actionLive.putString(EVENT_PROP_LIVE_BEGIN_TIME, mCurrentLiveInfo.getLiveBeginTime()); //当前机位开始时间URL
-                    actionLive.putString(EVENT_PROP_LIVE_START_TIME, mCurrentLiveInfo.getLiveStartTime()); //当前机位开始时间URL
+                    actionLive.putString(EVENT_PROP_LIVE_BEGIN_TIME, mCurrentLiveInfo.getLiveBeginTime()); //开始时间
+                    actionLive.putString(EVENT_PROP_LIVE_START_TIME, mCurrentLiveInfo.getLiveStartTime()); //结束时间
                 }
 
                 final List<LiveInfo> liveInfos = mActionInfo.getLiveInfos();
