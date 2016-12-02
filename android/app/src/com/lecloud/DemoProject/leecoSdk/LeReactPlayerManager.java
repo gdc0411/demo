@@ -147,7 +147,7 @@ public class LeReactPlayerManager extends SimpleViewManager<LeReactPlayer> {
      * @param seek the msec
      */
     @ReactProp(name = PROP_SEEK)
-    public void setSeek(final LeReactPlayer videoView, final float seek) {
+    public void setSeek(final LeReactPlayer videoView, final int seek) {
         videoView.setSeekTo(seek);
     }
 

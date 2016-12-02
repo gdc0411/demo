@@ -51,9 +51,9 @@ class VideoPlayer extends Component {
             /* 屏幕亮度 */
             brightness: -1,
             /* 视频总长度 */
-            duration: 0.0,
+            duration: 0,
             /* 视频当前时间点 */
-            currentTime: 0.0,
+            currentTime: 0,
             /* 视频已缓冲百分比 */
             buffPercent: 0,
             /* 是否点击广告 */
@@ -299,13 +299,23 @@ class VideoPlayer extends Component {
         return source;
     }
 
-        //跳转到播放页
+    //跳转到播放页
     handleBack = () => {
         const {navigator} = this.props;
         // this.props.actions.play(source);
         navigator.pop();
     }
 
+    getLocalTime = (timestamp) => {
+        let d = new Date(timestamp * 1000);    //根据时间戳生成的时间对象
+        let date =  (d.getMonth() + 1) + "月" +
+           (d.getDate()) + "日" + 
+           (d.getHours()) + ":" + 
+           (d.getMinutes()) + ":" + 
+           (d.getSeconds());
+        // return new Date(parseInt(timestamp) * 1000).toLocaleString().replace(/年|月/g, "-").replace(/日/g, " ");
+        return date;
+    }
 
     render() {
         const flexCompleted = this.getCurrentTimePercentage() * 100;
@@ -330,13 +340,13 @@ class VideoPlayer extends Component {
                         onVideoProgress={(data) => { this.setState({ currentTime: data.currentTime, duration: data.duration, eventInfo: `播放中…… ${data.currentTime}/${data.duration}` }); } }
                         onVideoBufferPercent={(data) => { this.setState({ buffPercent: data.bufferpercent }); } }
                         onBufferStart={() => { this.setState({ eventInfo: '缓冲开始！' }); } }
-                        onBufferPercent={(data) => { this.setState({ eventInfo: `缓冲中…… ${data.videobuff}%` }); } }
+                        onBufferPercent={(data) => { this.setState({ eventInfo: `${(data.videobuff)?'缓冲中……'+data.videobuff+'%':''}`}); } }
                         onBufferEnd={() => { this.setState({ eventInfo: '缓冲完毕！' }); } }
                         onVideoRendingStart={() => { this.setState({ eventInfo: '渲染第一帧……' }); } }
-                        onVideoSeek={(data) => { this.setState({ eventInfo: `跳转到……${data.currentTime}+${data.seekTime}` }); } }
+                        onVideoSeek={(data) => { this.setState({ eventInfo: `跳转到……${data.currentTime}+${data.seekTime}`}); } }
                         onVideoSeekComplete={(data) => { this.setState({ eventInfo: `跳转完毕！` }); } }
-                        onVideoPause={(data) => { this.setState({ paused: true, eventInfo: `暂停…… ${data.currentTime}/${data.duration}` }); } }
-                        onVideoResume={(data) => { this.setState({ paused: false, eventInfo: `恢复播放…… ${data.currentTime}/${data.duration}` }); } }
+                        onVideoPause={(data) => { this.setState({ paused: true, eventInfo: `暂停…… ${(data.beginTime) ? this.getLocalTime(data.beginTime) + '/' + this.getLocalTime(data.currentTime) + '/' + this.getLocalTime(data.serverTime) : data.currentTime + '/' + data.duration}`}); } }
+                        onVideoResume={(data) => { this.setState({ paused: false, eventInfo: `恢复播放……  ${(data.beginTime) ? this.getLocalTime(data.beginTime) + '/' + this.getLocalTime(data.currentTime) + '/' + this.getLocalTime(data.serverTime) : data.currentTime + '/' + data.duration}`}); } }
                         onVideoEnd={() => { this.setState({ eventInfo: '播放完毕！' }); } }
                         onAdvertStart={() => { this.setState({ advertInfo: '广告开始！' }); } }
                         onAdvertProgress={(data) => { this.setState({ advertInfo: `广告播放中……倒计时${data.AdTime}` }); } }
@@ -344,7 +354,7 @@ class VideoPlayer extends Component {
                         onAdvertClick={() => { this.setState({ advertInfo: `广告点击了！！` }); } }
                         onVideoRateLoad={(data) => { this.setState({ eventInfo: `码率切换:${data.currentRate} 到 ${data.nextRate}` }); } }
                         onActionLiveChange={(data) => { this.setState({ eventInfo: `机位切换:${data.currentLive} 到 ${data.nextLive}` }); } }
-                        onActionTimeShift={(data) => { this.setState({ currentTime: data.currentTime, eventInfo: `播放中…… ${data.serverTime}/${data.currentTime}/${data.beginTime}` }); } }
+                        onActionTimeShift={(data) => { this.setState({ currentTime: data.currentTime, eventInfo: `播放中…… ${this.getLocalTime(data.beginTime)}/${this.getLocalTime(data.currentTime)}/${this.getLocalTime(data.serverTime)}` }); } }
                         onActionStatusChange={(data) => { this.setState({ eventInfo: `活动状态变化…… ${data.actionState}/${data.actionId}/${data.beginTime}/${data.endTime}` }); } }
                         onActionOnlineNumChange={(data) => { this.setState({ eventInfo: `在线人数变化…… ${data.onlineNum}` }); } }
                         onVideoError={(data) => { this.setState({ errorInfo: `出错啦！状态码：${data.statusCode} 错误码：${data.errorCode} 错误：${data.errorMsg} 事件：${data.what}` }); } }

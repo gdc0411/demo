@@ -86,15 +86,15 @@ public interface Constants {
     String EVENT_PROP_CURRENT_LIVE = "currentLive"; //当前机位（LIVE）
     String EVENT_PROP_NEXT_LIVE = "nextLive"; //切换后的机位（LIVE）
     String EVENT_PROP_SERVER_TIME = "serverTime"; //服务器时间（LIVE）
-    String EVENT_PROP_LIVE_BEGIN = "beginTime"; //直播开始时间（LIVE）
-    String EVENT_PROP_LIVE_END = "endTime"; //直播开始时间（LIVE）
+    String EVENT_PROP_LIVE_BEGIN_TIME = "beginTime"; //直播开始时间（LIVE）
+    String EVENT_PROP_LIVE_END_TIME = "endTime"; //直播结束时间（LIVE）
     String EVENT_PROP_ACTIONLIVE = "actionLive"; //云直播数据（LIVE）
     String EVENT_PROP_LIVE_ACTION_STATE = "actionState"; //当前直播活动状态（LIVE）
 
     String EVENT_PROP_LIVE_ACTION_ID = "actionId"; //当前直播活动ID（LIVE）
     String EVENT_PROP_LIVE_COVER_IMG = "coverImgUrl"; //封面URL（LIVE）
     String EVENT_PROP_LIVE_PLAYER_URL = "playerPageUrl"; //直播页地址URL（LIVE）
-    String EVENT_PROP_LIVE_BEGIN_TIME = "beginTime"; //直播开始时间（LIVE）
+
     String EVENT_PROP_LIVE_START_TIME = "startTime"; //直播开始时间（LIVE）
 
     String EVENT_PROP_LIVES = "lives";  //机位集合（LIVE）
