@@ -308,11 +308,11 @@ class VideoPlayer extends Component {
 
     getLocalTime = (timestamp) => {
         let d = new Date(timestamp * 1000);    //根据时间戳生成的时间对象
-        let date =  (d.getMonth() + 1) + "月" +
-           (d.getDate()) + "日" + 
-           (d.getHours()) + ":" + 
-           (d.getMinutes()) + ":" + 
-           (d.getSeconds());
+        let date = (d.getMonth() + 1) + "月" +
+            (d.getDate()) + "日" +
+            (d.getHours()) + ":" +
+            (d.getMinutes()) + ":" +
+            (d.getSeconds());
         // return new Date(parseInt(timestamp) * 1000).toLocaleString().replace(/年|月/g, "-").replace(/日/g, " ");
         return date;
     }
@@ -340,13 +340,13 @@ class VideoPlayer extends Component {
                         onVideoProgress={(data) => { this.setState({ currentTime: data.currentTime, duration: data.duration, eventInfo: `播放中…… ${data.currentTime}/${data.duration}` }); } }
                         onVideoBufferPercent={(data) => { this.setState({ buffPercent: data.bufferpercent }); } }
                         onBufferStart={() => { this.setState({ eventInfo: '缓冲开始！' }); } }
-                        onBufferPercent={(data) => { this.setState({ eventInfo: `${(data.videobuff)?'缓冲中……'+data.videobuff+'%':''}`}); } }
+                        onBufferPercent={(data) => { this.setState({ eventInfo: `${(data.videobuff) ? '缓冲中……' + data.videobuff + '%' : ''}` }); } }
                         onBufferEnd={() => { this.setState({ eventInfo: '缓冲完毕！' }); } }
                         onVideoRendingStart={() => { this.setState({ eventInfo: '渲染第一帧……' }); } }
-                        onVideoSeek={(data) => { this.setState({ eventInfo: `跳转到……${data.currentTime}+${data.seekTime}`}); } }
+                        onVideoSeek={(data) => { this.setState({ eventInfo: `跳转到……${data.currentTime}+${data.seekTime}` }); } }
                         onVideoSeekComplete={(data) => { this.setState({ eventInfo: `跳转完毕！` }); } }
-                        onVideoPause={(data) => { this.setState({ paused: true, eventInfo: `暂停…… ${(data.beginTime) ? this.getLocalTime(data.beginTime) + '/' + this.getLocalTime(data.currentTime) + '/' + this.getLocalTime(data.serverTime) : data.currentTime + '/' + data.duration}`}); } }
-                        onVideoResume={(data) => { this.setState({ paused: false, eventInfo: `恢复播放……  ${(data.beginTime) ? this.getLocalTime(data.beginTime) + '/' + this.getLocalTime(data.currentTime) + '/' + this.getLocalTime(data.serverTime) : data.currentTime + '/' + data.duration}`}); } }
+                        onVideoPause={(data) => { this.setState({ paused: true, eventInfo: `暂停…… ${(data.beginTime) ? this.getLocalTime(data.beginTime) + '/' + this.getLocalTime(data.currentTime) + '/' + this.getLocalTime(data.serverTime) : data.currentTime + '/' + data.duration}` }); } }
+                        onVideoResume={(data) => { this.setState({ paused: false, eventInfo: `恢复播放……  ${(data.beginTime) ? this.getLocalTime(data.beginTime) + '/' + this.getLocalTime(data.currentTime) + '/' + this.getLocalTime(data.serverTime) : data.currentTime + '/' + data.duration}` }); } }
                         onVideoEnd={() => { this.setState({ eventInfo: '播放完毕！' }); } }
                         onAdvertStart={() => { this.setState({ advertInfo: '广告开始！' }); } }
                         onAdvertProgress={(data) => { this.setState({ advertInfo: `广告播放中……倒计时${data.AdTime}` }); } }
@@ -363,7 +363,11 @@ class VideoPlayer extends Component {
                 {/*onOrientationChange={(data) => { this.setState({ orientation: data.orientation }); }}*/}
 
                 <View style={styles.displays}>
-                    <Text style={[styles.DisplayOption]} onPress={this.handleBack} > 返 回 </Text>
+                    <View style={{flex: 1, flexDirection: 'row', justifyContent: 'center', paddingBottom: 20}}>
+                        <Text style={styles.controlOption} onPress={this.handleBack} > 返 回 </Text>
+                        <Text style={styles.controlOption} onPress={() => { this.setState({ seek: this.state.currentTime + 30 }); } } > + 30s </Text>
+                        <Text style={styles.controlOption} onPress={() => { this.setState({ seek: this.state.currentTime - 30 }); } } > - 30s </Text>
+                    </View>
                     <View style={styles.infoDisplays}>
                         <View style={styles.bufferDisplay}>
                             <Text style={styles.DisplayOption}>
@@ -424,14 +428,11 @@ class VideoPlayer extends Component {
                         {this.renderBrightnessControl(50)}
                         {this.renderBrightnessControl(100)}
                     </View>
-
                     <View style={styles.trackingControls}>
-                        <TouchableOpacity onPress={() => { this.setState({ seek: this.state.currentTime + 30 }); } }>
-                            <View style={styles.progress}>
-                                <View style={[styles.innerProgressCompleted, { flex: flexCompleted }]} />
-                                <View style={[styles.innerProgressRemaining, { flex: flexRemaining }]} />
-                            </View>
-                        </TouchableOpacity>
+                        <View style={styles.progress}>
+                            <View style={[styles.innerProgressCompleted, { flex: flexCompleted }]} />
+                            <View style={[styles.innerProgressRemaining, { flex: flexRemaining }]} />
+                        </View>
                     </View>
                 </View>
 
@@ -535,7 +536,7 @@ const styles = StyleSheet.create({
     },
     controlOption: {
         alignSelf: 'center',
-        fontSize: 14,
+        fontSize: 13,
         color: "white",
         paddingLeft: 2,
         paddingRight: 2,
