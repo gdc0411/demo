@@ -467,7 +467,7 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
      * @param paused paused
      */
     public void setPaused(final boolean paused) {
-        if (!mLePlayerValid) {
+        if (!mLePlayerValid || mPaused == paused ) {
             return;
         }
 

@@ -156,7 +156,7 @@
                                                  name:UIDeviceOrientationDidChangeNotification
                                                object:nil];
     
-    [[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications]; //开始生成设备旋转通知
+//    [[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications]; //开始生成设备旋转通知
     
     
   }
@@ -205,11 +205,13 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
 
 - (void)setPaused:(BOOL)paused
 {
-  NSLog(@"外部控制——— 播放暂停：%@", paused?@"YES":@"NO");
-  if(_lePlayer == nil  )
+  if(_lePlayer == nil || _paused == paused )
     return;
+  
   paused? [self pause]: [self play];
   _paused = paused;
+  NSLog(@"外部控制——— 播放暂停：%@", paused?@"YES":@"NO");
+  
 }
 
 
@@ -577,7 +579,7 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
 #pragma mark - 播放控制
 - (void)play
 {
-  if (_isPlay) {
+  if (_isPlay || _lePlayer == nil ) {
     return;
   }
   __weak typeof(self) wSelf = self;
@@ -589,9 +591,25 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
   }];
 }
 
+- (void)resume
+{
+  if (_isPlay || _lePlayer == nil) {
+    return;
+  }
+
+  [_lePlayer resume];
+  
+  if (_onVideoResume) {
+    _onVideoResume(@{@"duration":[NSNumber numberWithDouble:_lePlayer.duration],@"currentTime":[NSNumber numberWithDouble:_lePlayer.position],});
+  }
+  
+  _paused = YES;
+  _isPlay = NO;
+}
+
 - (void)stop
 {
-  if (!_isPlay){
+  if (!_isPlay || _lePlayer == nil){
     return;
   }
   __weak typeof(self) wSelf = self;
@@ -600,7 +618,7 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
 
 - (void)pause
 {
-  if (!_isPlay){
+  if (!_isPlay || _lePlayer == nil){
     return;
   }
   
@@ -916,6 +934,37 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
   }
 }
 
+//判断设备的朝向
+- (void)handleDeviceOrientationDidChange:(UIInterfaceOrientation)interfaceOrientation
+{
+  int deviceOrientation = -1;
+  int value =[UIDevice currentDevice].orientation;
+  
+  switch (value) {
+    case UIDeviceOrientationLandscapeLeft: //正横屏
+      deviceOrientation = 0;
+      break;
+    case UIDeviceOrientationLandscapeRight: //反横屏
+      deviceOrientation = 8;
+      break;
+    case UIDeviceOrientationPortrait: //正竖屏
+      deviceOrientation = 1;
+      break;
+    case UIDeviceOrientationPortraitUpsideDown: //反竖屏
+      deviceOrientation = 9;
+      break;
+    default:
+      break;
+  }
+  
+  if( deviceOrientation!= -1 && _onOrientationChange){
+    _onOrientationChange(@{@"orientation": [NSNumber numberWithInt:deviceOrientation]});
+  }
+  
+  NSLog(@"设备方向变化！！——— orientation：%d", deviceOrientation);
+}
+
+
 #pragma mark 广告正片切换
 - (void) lecPlayer:(LECPlayer *) player contentTypeChanged:(LECPlayerContentType) contentType
 {
@@ -1009,6 +1058,8 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
   [subview removeFromSuperview];
 }
 
+#pragma mark - View lifecycle
+
 - (void)layoutSubviews
 {
   NSLog(@"layoutSubviews消息");
@@ -1017,14 +1068,11 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
   _playerViewController.view.frame = self.bounds;
   
   // also adjust all subviews of contentOverlayView
-  //    for (UIView* subview in _playerViewController.contentOverlayView.subviews) {
-  //      subview.frame = self.bounds;
-  //    }
+//      for (UIView* subview in _playerViewController.contentOverlayView.subviews) {
+//        subview.frame = self.bounds;
+//      }
 }
 
-
-
-#pragma mark - View lifecycle
 - (void)removeFromSuperview
 {
   NSLog(@"removeFromSuperview消息");
@@ -1051,7 +1099,7 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
   
   [[NSNotificationCenter defaultCenter] removeObserver:self];
   
-  [[UIDevice currentDevice]endGeneratingDeviceOrientationNotifications];
+//  [[UIDevice currentDevice]endGeneratingDeviceOrientationNotifications];
   
   [super removeFromSuperview];
 }
@@ -1061,56 +1109,18 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
 
 - (void)applicationWillResignActive:(NSNotification *)notification
 {
-  if (_playInBackground || _playWhenInactive || _paused) return;
+  if (_paused) return;
   [self pause];
 }
 
 - (void)applicationDidEnterBackground:(NSNotification *)notification
 {
-  if (_playInBackground) {
-    // Needed to play sound in background. See https://developer.apple.com/library/ios/qa/qa1668/_index.html
-    //[_playerLayer setPlayer:nil];
-    [self pause];
-  }
 }
 
 - (void)applicationWillEnterForeground:(NSNotification *)notification
 {
-  [self applyModifiers];
-  if (_playInBackground) {
-    //[_playerLayer setPlayer:_player];
-    //[self play];
-  }
-}
-
-//判断设备的朝向
-- (void)handleDeviceOrientationDidChange:(UIInterfaceOrientation)interfaceOrientation
-{
-  int deviceOrientation = -1;
-  int value =[UIDevice currentDevice].orientation;
-  
-  switch (value) {
-    case UIDeviceOrientationLandscapeLeft: //正横屏
-      deviceOrientation = 0;
-      break;
-    case UIDeviceOrientationLandscapeRight: //反横屏
-      deviceOrientation = 8;
-      break;
-    case UIDeviceOrientationPortrait: //正竖屏
-      deviceOrientation = 1;
-      break;
-    case UIDeviceOrientationPortraitUpsideDown: //反竖屏
-      deviceOrientation = 9;
-      break;
-    default:
-      break;
-  }
-  
-  if( deviceOrientation!= -1 && _onOrientationChange){
-    _onOrientationChange(@{@"orientation": [NSNumber numberWithInt:deviceOrientation]});
-  }
-  
-  NSLog(@"设备方向变化！！——— orientation：%d", deviceOrientation);
+//  [self applyModifiers];
+  [self resume];
 }
 
 

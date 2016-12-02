@@ -335,8 +335,8 @@ class VideoPlayer extends Component {
                         onVideoRendingStart={() => { this.setState({ eventInfo: '渲染第一帧……' }); } }
                         onVideoSeek={(data) => { this.setState({ eventInfo: `跳转到……${data.currentTime}+${data.seekTime}` }); } }
                         onVideoSeekComplete={(data) => { this.setState({ eventInfo: `跳转完毕！` }); } }
-                        onVideoPause={(data) => { this.setState({ eventInfo: `暂停…… ${data.currentTime}/${data.duration}` }); } }
-                        onVideoResume={(data) => { this.setState({ eventInfo: `恢复播放…… ${data.currentTime}/${data.duration}` }); } }
+                        onVideoPause={(data) => { this.setState({ paused: true, eventInfo: `暂停…… ${data.currentTime}/${data.duration}` }); } }
+                        onVideoResume={(data) => { this.setState({ paused: false, eventInfo: `恢复播放…… ${data.currentTime}/${data.duration}` }); } }
                         onVideoEnd={() => { this.setState({ eventInfo: '播放完毕！' }); } }
                         onAdvertStart={() => { this.setState({ advertInfo: '广告开始！' }); } }
                         onAdvertProgress={(data) => { this.setState({ advertInfo: `广告播放中……倒计时${data.AdTime}` }); } }
@@ -350,6 +350,7 @@ class VideoPlayer extends Component {
                         onVideoError={(data) => { this.setState({ errorInfo: `出错啦！状态码：${data.statusCode} 错误码：${data.errorCode} 错误：${data.errorMsg} 事件：${data.what}` }); } }
                         />
                 </TouchableOpacity>
+                {/*onOrientationChange={(data) => { this.setState({ orientation: data.orientation }); }}*/}
 
                 <View style={styles.displays}>
                     <Text style={[styles.DisplayOption]} onPress={this.handleBack} > 返 回 </Text>
