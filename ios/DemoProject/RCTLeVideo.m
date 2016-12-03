@@ -215,7 +215,7 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
 }
 
 
-- (void)setSeek:(float)seek
+- (void)setSeek:(int)seek
 {
   if( seek < 0 || _lePlayer == nil)
     return;
@@ -230,9 +230,9 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
   }];
   
   if(_onVideoSeek){
-    _onVideoSeek(@{@"currentTime": [NSNumber numberWithDouble:_lastPosition], @"seekTime":[NSNumber numberWithDouble:seek]});
+    _onVideoSeek(@{@"currentTime": [NSNumber numberWithLong:_lastPosition], @"seekTime":[NSNumber numberWithInt:seek]});
   }
-  NSLog(@"外部控制——— SEEK TO: %f", seek);
+  NSLog(@"外部控制——— SEEK TO: %d", seek);
 }
 
 - (void)setRate:(NSString*)rate
