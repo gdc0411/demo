@@ -362,14 +362,23 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
         mLePlayerValid = false;
         isCompleted = false;
         isSeeking = false;
+
+        mVideoTitle = "";
         mVideoDuration = 0;
+        mVideoWidth = 0;
+        mVideoHeight = 0;
         mVideoBufferedDuration = 0;
         mLastPosition = 0;
-        mCurrentRate = "";
+        mCurrentRate = mDefaultRate = "";
+        mCurrentLiveId = "";
+        mCurrentTime = 0;
+        mServerTime = 0;
+        mBeginTime = 0;
 
         mRateList = null;
         mCoverConfig = null;
         mActionInfo = null;
+        mCurrentLiveInfo = null;
     }
 
     /**

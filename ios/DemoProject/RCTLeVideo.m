@@ -79,43 +79,48 @@
   /* Required to connect JS */
   __weak RCTBridge *_bridge;
   
-  BOOL _playerItemObserversSet;
-  BOOL _playerBufferEmpty;
+  //  BOOL _playerItemObserversSet;
+  //  BOOL _playerBufferEmpty;
   
-  LCBaseViewController *_playerViewController;
+  __weak LCBaseViewController *_playerViewController;
   NSURL *_videoURL;
   
   int _playMode; //当前播放模式
   int _currentOritentation; //当前屏幕方向
-  int _width; //当前视频宽度
-  int _height; //当前视频高度
-  NSString *_currentRate; //当前码率
-  long _duration; //视频总厂
-  long _lastPosition; //最后位置
-  NSArray *_ratesList; //可用码率列表
-  int _currentBrightness;  //屏幕亮度百分比 0-100
-  
-  LECActivityItem *_activityItem; //直播信息
-  LECActivityConfigItem* _activityConfigItem; //直播配置信息
-  NSString* _currentLive; //当前机位
-  
   __block NSString *_title; //视频标题
   
+  int _width; //视频宽度
+  int _height; //视频高度
+  
+  long _currentTime; //当前时间
+  long _duration; //视频总长度
+  long _cacheDuration; //视频缓冲长度
+  long _lastPosition; //最后位置
+  
+  NSArray *_ratesList; //可用码率列表
+  NSString *_currentRate; //当前码率
+  NSString *_defaultRate; //默认码率
+  
+  
+  LECActivityItem *_activityItem; //直播信息
+  LECActivityConfigItem *_activityConfigItem; //直播配置信息
+  LECActivityLiveItem *_activityLiveItem; //直播机位信息
+  NSString* _currentLive; //当前机位
+  
+  long _serverTime; //当前服务时间
+  long _beginTime; //活动开始时间
+  long _endTime; //活动结束时间
   
   bool _pendingSeek;
   float _pendingSeekTime;
   float _lastSeekTime;
   
-  /* For sending videoProgress events */
-  Float64 _progressUpdateInterval;
-  //  BOOL _controls;
   
   /* Keep track of any modifiers, need to be applied after each play */
-  int _volume;
+  int _volume; //音量
+  int _currentBrightness;  //屏幕亮度百分比 0-100
   
   BOOL _paused;
-  BOOL _repeat;
-  BOOL _playbackStalled;
   BOOL _playInBackground;
   BOOL _playWhenInactive;
   NSString * _resizeMode;
@@ -156,7 +161,7 @@
                                                  name:UIDeviceOrientationDidChangeNotification
                                                object:nil];
     
-//    [[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications]; //开始生成设备旋转通知
+    //    [[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications]; //开始生成设备旋转通知
     
     
   }
@@ -186,13 +191,11 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
   if(source == nil)
     return;
   
-  if (_lePlayer) {
-    [self stop];
-    [_lePlayer unregister];
-    _lePlayer.delegate = nil;
-    _lePlayer = nil;
-  }
-  _option = nil;
+  //重置播放器
+  [self resetPlayerAndController];
+  
+  //重置所有状态
+  [self initFieldParaStates];
   
   [_playerViewController.view removeFromSuperview];
   _playerViewController = nil;
@@ -259,7 +262,7 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
 {
   if( [[self class]isBlankString:liveId] || _lePlayer == nil || _activityItem == nil || [_activityItem.activityLiveItemList count]==0)
     return;
-
+  
   [_lePlayer stop];
   [_lePlayer unregister];
   
@@ -495,7 +498,7 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
               isEnable = [(LECActivityPlayer*)wSelf.lePlayer registerWithLiveId:lItem.liveId completion:^(BOOL result) {
                 if (result) {
                   [wSelf play];//自动播放
-//                  LECStreamRateItem * lItem = wSelf.lePlayer.selectedStreamRateItem;
+                  //                  LECStreamRateItem * lItem = wSelf.lePlayer.selectedStreamRateItem;
                   //[weakSelf.playerRateBtn setTitle:lItem.name forState:(UIControlStateNormal)];
                   NSLog(@"活动机位数目:%lu",(unsigned long)aItem.activityLiveItemList.count);
                 }
@@ -574,6 +577,44 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
   [self setPaused:_paused];
 }
 
+/*重置播放器*/
+- (void) resetPlayerAndController
+{
+  if (_lePlayer) {
+    [self stop];
+    [_lePlayer unregister];
+    _lePlayer.delegate = nil;
+    _lePlayer = nil;
+  }
+  _option = nil;
+  
+  [_playerViewController.view removeFromSuperview];
+  _playerViewController = nil;
+}
+
+/*重置状态量*/
+- (void) initFieldParaStates
+{
+  _isSeeking = false;
+  
+  _title = nil;
+  _duration = 0;
+  _width = 0;
+  _height = 0;
+  _cacheDuration = 0;
+  _lastPosition = 0;
+  _currentRate = @"";
+  _currentLive = @"";
+  _currentTime = 0;
+  _serverTime = 0;
+  _beginTime = 0;
+  
+  _ratesList = nil;
+  _activityItem = nil;
+  _activityConfigItem = nil;
+  _activityLiveItem = nil;
+  
+}
 
 
 #pragma mark - 播放控制
@@ -585,7 +626,13 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
   __weak typeof(self) wSelf = self;
   [_lePlayer playWithCompletion:^{
     if (wSelf.onVideoResume) {
-      wSelf.onVideoResume(@{@"duration":[NSNumber numberWithDouble:_lePlayer.duration],@"currentTime":[NSNumber numberWithDouble:_lePlayer.position],});
+      if( _playMode == LCPlayerVod)
+        wSelf.onVideoResume(@{@"duration":[NSNumber numberWithLong:_duration],
+                         @"currentTime":[NSNumber numberWithLong:_currentTime],});
+      else if(_playMode == LCPlayerActionLive)
+        wSelf.onVideoResume(@{@"beginTime":[NSNumber numberWithLong:_beginTime],
+                         @"serverTime":[NSNumber numberWithLong:_serverTime],
+                         @"currentTime":[NSNumber numberWithLong:_currentTime],});
     }
     _isPlay = YES;
   }];
@@ -596,11 +643,17 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
   if (_isPlay || _lePlayer == nil) {
     return;
   }
-
+  
   [_lePlayer resume];
   
   if (_onVideoResume) {
-    _onVideoResume(@{@"duration":[NSNumber numberWithDouble:_lePlayer.duration],@"currentTime":[NSNumber numberWithDouble:_lePlayer.position],});
+    if( _playMode == LCPlayerVod)
+      _onVideoResume(@{@"duration":[NSNumber numberWithLong:_duration],
+                       @"currentTime":[NSNumber numberWithLong:_currentTime],});
+    else if(_playMode == LCPlayerActionLive)
+      _onVideoResume(@{@"beginTime":[NSNumber numberWithLong:_beginTime],
+                       @"serverTime":[NSNumber numberWithLong:_serverTime],
+                       @"currentTime":[NSNumber numberWithLong:_currentTime],});
   }
   
   _paused = YES;
@@ -625,7 +678,16 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
   [_lePlayer pause];
   
   if (_onVideoPause) {
-    _onVideoPause(@{@"duration":[NSNumber numberWithDouble:_lePlayer.duration], @"currentTime":[NSNumber numberWithDouble:_lePlayer.position],});
+    
+    if( _playMode == LCPlayerVod)
+      _onVideoPause(@{@"duration":[NSNumber numberWithLong:_duration],
+                      @"currentTime":[NSNumber numberWithLong:_currentTime],});
+    
+    else if(_playMode == LCPlayerActionLive)
+      _onVideoPause(@{@"beginTime":[NSNumber numberWithLong:_beginTime],
+                      @"serverTime":[NSNumber numberWithLong:_serverTime],
+                      @"currentTime":[NSNumber numberWithLong:_currentTime],});
+    
   }
   _isPlay = NO;
 }
@@ -675,8 +737,8 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
   }
   LECStreamRateItem * lItem = _lePlayer.selectedStreamRateItem;
   if( lItem ){
-    _currentRate = lItem.code;
-    [event setValue:lItem.code forKey:@"defaultRate"]; //默认码率
+    _currentRate = _defaultRate = lItem.code;
+    [event setValue:_defaultRate forKey:@"defaultRate"]; //默认码率
     [event setValue:_currentRate forKey:@"currentRate"]; //当前码率
   }
   
@@ -718,6 +780,7 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
                               @"liveStatus": [NSNumber numberWithInt:(int)element.status]}];
           
           if(element.status == LCActivityLiveStatusUsing){ //默认机位
+            _activityLiveItem = element;
             _currentLive = element.liveId;
             [actionLive setValue:element.liveId forKey:@"currentLive"];
           }
@@ -861,24 +924,30 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
 {
   
   if(_playMode == LCPlayerVod){
-    _lastPosition = position;
+    _currentTime = _lastPosition = position;
     _duration = duration;
+    _cacheDuration = cacheDuration;
     
     if(_onVideoProgress){
-      _onVideoProgress(@{@"currentTime": [NSNumber numberWithDouble:position],
-                         @"duration": [NSNumber numberWithDouble:duration],
-                         @"playableDuration": [NSNumber numberWithDouble:cacheDuration],});
+      _onVideoProgress(@{@"currentTime": [NSNumber numberWithLong:_currentTime],
+                         @"duration": [NSNumber numberWithLong:_duration],
+                         @"playableDuration": [NSNumber numberWithLong:_cacheDuration],});
     }
     if(_onVideoBufferPercent){
       _onVideoBufferPercent(@{@"bufferpercent": [NSNumber numberWithInt: (int) ((((float)position + (float)cacheDuration)/(float)duration) * 100) ]});
     }
+    
   }else if(_playMode == LCPlayerActionLive){
+    _currentTime = _lastPosition = ((LECActivityPlayer*)player).currentPlayTimestamp;
+    _beginTime = ((LECActivityPlayer*)player).streamStartTimestamp;
+    _serverTime = ((LECActivityPlayer*)player).serverRealTimestamp;
+    _endTime = ((LECActivityPlayer*)player).streamEndTimestamp;
     
     if(_onActionTimeShift){
-      _onActionTimeShift(@{@"currentTime": [NSNumber numberWithInt:(int)((LECActivityPlayer*)player).currentPlayTimestamp],
-                           @"beginTime": [NSNumber numberWithInt:(int)((LECActivityPlayer*)player).streamStartTimestamp],
-                           @"serverTime": [NSNumber numberWithInt:(int)((LECActivityPlayer*)player).serverRealTimestamp],
-                           @"endTime": [NSNumber numberWithInt:(int)((LECActivityPlayer*)player).streamEndTimestamp], });
+      _onActionTimeShift(@{@"currentTime": [NSNumber numberWithLong:_currentTime],
+                           @"beginTime": [NSNumber numberWithLong:_beginTime],
+                           @"serverTime": [NSNumber numberWithLong:_serverTime],
+                           @"endTime": [NSNumber numberWithLong:_endTime], });
     }
   }
   //  NSLog(@"播放位置:%lld,缓冲位置:%lld,总时长:%lld",position,cacheDuration,duration);
@@ -913,10 +982,12 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
       }
       
       if(_onActionStatusChange){
+        _beginTime = manager.activityItem.beginTime;
+        _endTime = manager.activityItem.endTime;
         _onActionStatusChange(@{@"actionState": [NSNumber numberWithInt:(int)manager.activityItem.status],
                                 @"actionId": manager.activityId,
-                                @"beginTime": [NSNumber numberWithInt:(int)manager.activityItem.beginTime],
-                                @"endTime": [NSNumber numberWithInt:(int)manager.activityItem.endTime],
+                                @"beginTime": [NSNumber numberWithLong:_beginTime],
+                                @"endTime": [NSNumber numberWithLong:_endTime],
                                 @"errorMsg": errorMsg});
       }
       NSLog(@"活动状态变化:%d,",(int)manager.activityItem.status);
@@ -1068,9 +1139,9 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
   _playerViewController.view.frame = self.bounds;
   
   // also adjust all subviews of contentOverlayView
-//      for (UIView* subview in _playerViewController.contentOverlayView.subviews) {
-//        subview.frame = self.bounds;
-//      }
+  //      for (UIView* subview in _playerViewController.contentOverlayView.subviews) {
+  //        subview.frame = self.bounds;
+  //      }
 }
 
 - (void)removeFromSuperview
@@ -1099,7 +1170,7 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
   
   [[NSNotificationCenter defaultCenter] removeObserver:self];
   
-//  [[UIDevice currentDevice]endGeneratingDeviceOrientationNotifications];
+  //  [[UIDevice currentDevice]endGeneratingDeviceOrientationNotifications];
   
   [super removeFromSuperview];
 }
@@ -1119,7 +1190,7 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
 
 - (void)applicationWillEnterForeground:(NSNotification *)notification
 {
-//  [self applyModifiers];
+  //  [self applyModifiers];
   [self resume];
 }
 
