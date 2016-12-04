@@ -18,11 +18,12 @@ import com.facebook.react.bridge.WritableMap;
  */
 
 public class DeviceIdentifier extends ReactContextBaseJavaModule {
-    private static ReactContext mReactContext;
+
+    private final ReactApplicationContext mContext;
 
     public DeviceIdentifier(ReactApplicationContext reactContext) {
         super(reactContext);
-        this.mReactContext = reactContext;
+        mContext = reactContext;
     }
 
     @Override
@@ -37,8 +38,8 @@ public class DeviceIdentifier extends ReactContextBaseJavaModule {
      */
     @ReactMethod
     public void getDeviceIdentifier(Promise promise) {
-        if (mReactContext != null){
-            TelephonyManager tm = (TelephonyManager) mReactContext.getSystemService(Context.TELEPHONY_SERVICE);
+        if (mContext != null){
+            TelephonyManager tm = (TelephonyManager) mContext.getSystemService(Context.TELEPHONY_SERVICE);
 
             WritableMap map = Arguments.createMap();
             map.putString("DeviceId", tm.getDeviceId());      //设备唯一标识
@@ -48,7 +49,7 @@ public class DeviceIdentifier extends ReactContextBaseJavaModule {
             map.putString("DeviceManufacture", Build.MANUFACTURER); //获取手机厂商：
             map.putString("VersionSdk", Build.VERSION.SDK);         // 设备SDK版本
             map.putString("VersionRelease", Build.VERSION.RELEASE); // 设备的系统版本
-            map.putString("PackageName",getAppInfo(mReactContext));            //包名
+            map.putString("PackageName",getAppInfo(mContext));            //包名
 
             promise.resolve(map);
         }else{
