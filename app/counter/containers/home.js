@@ -21,6 +21,7 @@ import * as calcActions from '../actions/calcAction';
 
 import Counter from '../componets/Counter';
 import PlayItem from '../componets/PlayItem';
+import InfoItem from '../componets/InfoItem';
 
 //取得屏幕宽高
 const {height: SCREEN_HEIGHT, width: SCREEN_WIDTH} = Dimensions.get('window');
@@ -37,6 +38,13 @@ class home extends Component {
         const {navigator} = this.props;
         // this.props.actions.play(source);
         navigator.push({ location: '/play/' + source, });
+    }
+
+    //跳转到设备查看页
+    skipToViewDevice = () => {
+        const {navigator} = this.props;
+        // this.props.actions.play(source);
+        navigator.push({ location: '/device' });
     }
 
     //加
@@ -76,6 +84,9 @@ class home extends Component {
                 :
                 <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }} >
                     <View style={{ flexDirection: 'column', width: SCREEN_WIDTH }} >
+                        <View style={{ flexDirection: 'row', justifyContent: 'space-around' }} >
+                            <InfoItem imgUrl={img1} desc={'设备信息'} color={'green'} onViewInfo={this.skipToViewDevice} />
+                        </View>
                         <View style={{ flexDirection: 'row', justifyContent: 'space-around' }} >
                             <PlayItem source={0} imgUrl={img1} desc={'第三方URL'} color={'black'} onPlay={this.skipToPlayer} />
                             <PlayItem source={1} imgUrl={img2} desc={'云点播-长片'} color={'blue'} onPlay={this.skipToPlayer} />

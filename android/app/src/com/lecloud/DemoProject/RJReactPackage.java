@@ -13,6 +13,7 @@ import com.facebook.react.bridge.JavaScriptModule;
 import com.facebook.react.bridge.NativeModule;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.uimanager.ViewManager;
+import com.lecloud.DemoProject.utils.DeviceIdentifier;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -38,6 +39,7 @@ public class RJReactPackage implements ReactPackage {
         modules.add(new PromiseModule(reactContext));
         modules.add(new EmbedModule(reactContext));
         modules.add(new ConstModule(reactContext));
+        modules.add(new DeviceIdentifier(reactContext));
         return modules;
     }
 

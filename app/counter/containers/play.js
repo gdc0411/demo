@@ -27,7 +27,7 @@ import Video from '../componets/RCTLeVideo';
 const {height: SCREEN_HEIGHT, width: SCREEN_WIDTH} = Dimensions.get('window');
 const STATUS_BAR_HEIGHT = (Platform.OS === 'ios' ? 20 : 0);
 
-class VideoPlayer extends Component {
+class play extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -75,7 +75,7 @@ class VideoPlayer extends Component {
             errorInfo: '',
         };
 
-        this.onLoad = this.onLoad.bind(this);
+        // this.onLoad = this.onLoad.bind(this);
     }
 
 
@@ -336,7 +336,7 @@ class VideoPlayer extends Component {
                         live={this.state.live}
                         clickAd={this.state.clickAd}
                         onVideoSourceLoad={(data) => { this.setState({ sourceInfo: `视频源: ${data.src}` }); } }
-                        onVideoLoad={this.onLoad}
+                        onVideoLoad={(data) => this.onLoad }
                         onVideoProgress={(data) => { this.setState({ currentTime: data.currentTime, duration: data.duration, eventInfo: `播放中…… ${data.currentTime}/${data.duration}` }); } }
                         onVideoBufferPercent={(data) => { this.setState({ buffPercent: data.bufferpercent }); } }
                         onBufferStart={() => { this.setState({ eventInfo: '缓冲开始！' }); } }
@@ -557,4 +557,4 @@ const mapDispatchToProps = dispatch => ({
 });
 
 //连接Redux
-export default connect(mapStateToProps, mapDispatchToProps)(VideoPlayer);
+export default connect(mapStateToProps, mapDispatchToProps)(play);

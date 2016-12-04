@@ -5,15 +5,12 @@ import android.os.Build;
 import android.telephony.TelephonyManager;
 
 import com.facebook.react.bridge.Arguments;
-
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.WritableMap;
-
-import static com.lecloud.app.openappdev.utils.GetDeviceInfo.getPhoneNumber;
 
 
 /**
@@ -34,13 +31,17 @@ public class DeviceIdentifier extends ReactContextBaseJavaModule {
     }
 
 
+    /**
+     * 获取设备唯一ID
+     * @param promise promose对象
+     */
     @ReactMethod
     public void getDeviceIdentifier(Promise promise) {
-
         if (mReactContext != null){
             TelephonyManager tm = (TelephonyManager) mReactContext.getSystemService(Context.TELEPHONY_SERVICE);
+
             WritableMap map = Arguments.createMap();
-            map.putString("DeviceId", tm.getDeviceId());                        //设备唯一标识
+            map.putString("DeviceId", tm.getDeviceId());      //设备唯一标识
             map.putString("DeviceSoftwareVersion", tm.getDeviceSoftwareVersion());  //设备的软件版本号
             map.putInt("PhoneType", tm.getPhoneType());                             //手机类型： PHONE_TYPE_NONE 无信号 PHONE_TYPE_GSM GSM信号  PHONE_TYPE_CDMA  CDMA信号
             map.putString("DeviceModel", Build.MODEL);              // 设备型号
@@ -48,7 +49,10 @@ public class DeviceIdentifier extends ReactContextBaseJavaModule {
             map.putString("VersionSdk", Build.VERSION.SDK);         // 设备SDK版本
             map.putString("VersionRelease", Build.VERSION.RELEASE); // 设备的系统版本
             map.putString("PackageName",getAppInfo(mReactContext));            //包名
+
             promise.resolve(map);
+        }else{
+            promise.reject("-1", "无法创建原生桥会话，获取设备ID失败！");
         }
     }
 

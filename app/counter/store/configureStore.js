@@ -5,7 +5,7 @@ import thunk from 'redux-thunk';
 import createLogger from 'redux-logger';  //日志工具
 
 //导入所有的reducer
-import rootReducer from '../reducers/reducer';
+import rootReducer from '../reducers/index';
 
 const dev_env = (process.env.NODE_ENV !== 'production');
 const middleware = [thunk];
