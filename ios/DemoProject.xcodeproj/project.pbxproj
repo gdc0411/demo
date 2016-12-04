@@ -22,6 +22,7 @@
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		140ED2AC1D01E1AD002B40FF /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 146834041AC3E56700842450 /* libReact.a */; };
 		146834051AC3E58100842450 /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 146834041AC3E56700842450 /* libReact.a */; };
+		2D19AC981DF3DCF100D21BDC /* libRCTAnimation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D19AC861DF3DBA600D21BDC /* libRCTAnimation.a */; };
 		2D6B1CD81DE9BB5E00EA494B /* libLECLivePlayerSDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D6B1CD11DE9BB5E00EA494B /* libLECLivePlayerSDK.a */; };
 		2D6B1CD91DE9BB5E00EA494B /* libLECLivePlayerUISDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D6B1CD21DE9BB5E00EA494B /* libLECLivePlayerUISDK.a */; };
 		2D6B1CDA1DE9BB5E00EA494B /* libLECPlayerFoundation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D6B1CD31DE9BB5E00EA494B /* libLECPlayerFoundation.a */; };
@@ -121,6 +122,20 @@
 			remoteGlobalIDString = 83CBBA2E1A601D0E00E9B192;
 			remoteInfo = React;
 		};
+		2D19AC851DF3DBA600D21BDC /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 2D19AC801DF3DBA600D21BDC /* RCTAnimation.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 134814201AA4EA6300B7C361;
+			remoteInfo = RCTAnimation;
+		};
+		2D19AC871DF3DBA600D21BDC /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 2D19AC801DF3DBA600D21BDC /* RCTAnimation.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 2D2A28201D9B03D100D4039D;
+			remoteInfo = "RCTAnimation-tvOS";
+		};
 		2D1C9A431DC1EAB60020E496 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 17750468756A4148AF35D158 /* CodePush.xcodeproj */;
@@ -214,6 +229,7 @@
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = DemoProject/main.m; sourceTree = "<group>"; };
 		146833FF1AC3E56700842450 /* React.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = React.xcodeproj; path = "../node_modules/react-native/React/React.xcodeproj"; sourceTree = "<group>"; };
 		17750468756A4148AF35D158 /* CodePush.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = CodePush.xcodeproj; path = "../node_modules/react-native-code-push/ios/CodePush.xcodeproj"; sourceTree = "<group>"; };
+		2D19AC801DF3DBA600D21BDC /* RCTAnimation.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTAnimation.xcodeproj; path = "../node_modules/react-native/Libraries/NativeAnimation/RCTAnimation.xcodeproj"; sourceTree = "<group>"; };
 		2D6B1CD11DE9BB5E00EA494B /* libLECLivePlayerSDK.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libLECLivePlayerSDK.a; path = ../../../XcodeProjects/lecloud_iOS_vrp_SDK_v4.3.1_20160923/SDK4.3.1/Libs/libLECLivePlayerSDK.a; sourceTree = "<group>"; };
 		2D6B1CD21DE9BB5E00EA494B /* libLECLivePlayerUISDK.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libLECLivePlayerUISDK.a; path = ../../../XcodeProjects/lecloud_iOS_vrp_SDK_v4.3.1_20160923/SDK4.3.1/Libs/libLECLivePlayerUISDK.a; sourceTree = "<group>"; };
 		2D6B1CD31DE9BB5E00EA494B /* libLECPlayerFoundation.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libLECPlayerFoundation.a; path = ../../../XcodeProjects/lecloud_iOS_vrp_SDK_v4.3.1_20160923/SDK4.3.1/Libs/libLECPlayerFoundation.a; sourceTree = "<group>"; };
@@ -269,6 +285,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2D19AC981DF3DCF100D21BDC /* libRCTAnimation.a in Frameworks */,
 				2DA207131DE8C0A80004CE1D /* libReachbility.a in Frameworks */,
 				2DA207121DE8BAAC0004CE1D /* libz.1.2.5.tbd in Frameworks */,
 				2DA207101DE8BA990004CE1D /* libxml2.2.tbd in Frameworks */,
@@ -410,6 +427,15 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		2D19AC811DF3DBA600D21BDC /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				2D19AC861DF3DBA600D21BDC /* libRCTAnimation.a */,
+				2D19AC881DF3DBA600D21BDC /* libRCTAnimation-tvOS.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		2D1C9A401DC1EAB50020E496 /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -504,6 +530,7 @@
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
+				2D19AC801DF3DBA600D21BDC /* RCTAnimation.xcodeproj */,
 				146833FF1AC3E56700842450 /* React.xcodeproj */,
 				00C302A71ABCB8CE00DB3ED1 /* RCTActionSheet.xcodeproj */,
 				00C302B51ABCB90400DB3ED1 /* RCTGeolocation.xcodeproj */,
@@ -631,6 +658,10 @@
 					ProjectRef = 00C302A71ABCB8CE00DB3ED1 /* RCTActionSheet.xcodeproj */;
 				},
 				{
+					ProductGroup = 2D19AC811DF3DBA600D21BDC /* Products */;
+					ProjectRef = 2D19AC801DF3DBA600D21BDC /* RCTAnimation.xcodeproj */;
+				},
+				{
 					ProductGroup = 00C302B61ABCB90400DB3ED1 /* Products */;
 					ProjectRef = 00C302B51ABCB90400DB3ED1 /* RCTGeolocation.xcodeproj */;
 				},
@@ -730,6 +761,20 @@
 			fileType = archive.ar;
 			path = libReact.a;
 			remoteRef = 146834031AC3E56700842450 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		2D19AC861DF3DBA600D21BDC /* libRCTAnimation.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRCTAnimation.a;
+			remoteRef = 2D19AC851DF3DBA600D21BDC /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		2D19AC881DF3DBA600D21BDC /* libRCTAnimation-tvOS.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = "libRCTAnimation-tvOS.a";
+			remoteRef = 2D19AC871DF3DBA600D21BDC /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		2D1C9A441DC1EAB60020E496 /* libCodePush.a */ = {
