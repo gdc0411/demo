@@ -6,8 +6,11 @@
 //  Copyright © 2016年 Facebook. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 
-@interface DeviceModule : NSObject
+#import <Foundation/Foundation.h>
+#import "RCTBridgeModule.h"
+
+@interface DeviceModule : NSObject <RCTBridgeModule>
 
 @end

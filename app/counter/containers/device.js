@@ -17,7 +17,6 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
 import * as deviceActions from '../actions/deviceAction';
-//import { selectDevice, fetchPostsIfNeeded, invalidateDevice } from '../actions/deviceAction';
 
 class device extends Component {
 
@@ -68,12 +67,12 @@ class device extends Component {
                     : <Text >设备信息:{'\r\n'}
                     ======================================{'\r\n'}
                     设备ID：{posts.DeviceId} {'\r\n'}
-                    软件版本：{posts.DeviceSoftwareVersion} {'\r\n'}
-                    手机型号：{posts.PhoneType} {'\r\n'}
+                    网络制式：{posts.PhoneType} {'\r\n'}
                     设备型号：{posts.DeviceModel} {'\r\n'}
-                    手机厂商：{posts.DeviceManufacture} {'\r\n'}
+                    生产厂商：{posts.DeviceManufacture} {'\r\n'}
+                    OS版本：{posts.DeviceSoftwareVersion} {'\r\n'}
                     SDK版本：{posts.VersionSdk} {'\r\n'}
-                    系统版本：{posts.VersionRelease} {'\r\n'}
+                    软件版本：{posts.VersionRelease} {'\r\n'}
                     包名：{posts.PackageName} {'\r\n'}
                     ======================================{'\r\n'}
                     </Text>}

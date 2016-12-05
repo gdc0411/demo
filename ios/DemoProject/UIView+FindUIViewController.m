@@ -1,5 +1,10 @@
-//  Source: http://stackoverflow.com/a/3732812/1123156
-
+//
+//  UIView+FindUIViewController.m
+//  RCTLeVideo
+//
+//  Created by RaoJia on 28.11.2016.
+//  Copyright © 2016 LeCloud. All rights reserved.
+//
 #import "UIView+FindUIViewController.h"
 
 @implementation UIView (FindUIViewController)

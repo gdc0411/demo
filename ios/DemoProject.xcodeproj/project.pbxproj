@@ -23,6 +23,8 @@
 		140ED2AC1D01E1AD002B40FF /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 146834041AC3E56700842450 /* libReact.a */; };
 		146834051AC3E58100842450 /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 146834041AC3E56700842450 /* libReact.a */; };
 		2D19AC981DF3DCF100D21BDC /* libRCTAnimation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D19AC861DF3DBA600D21BDC /* libRCTAnimation.a */; };
+		2D19ACBB1DF5679900D21BDC /* DeviceModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D19ACBA1DF5679900D21BDC /* DeviceModule.m */; };
+		2D19ACC31DF572FB00D21BDC /* KeyChainStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D19ACC21DF572FB00D21BDC /* KeyChainStore.m */; };
 		2D6B1CD81DE9BB5E00EA494B /* libLECLivePlayerSDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D6B1CD11DE9BB5E00EA494B /* libLECLivePlayerSDK.a */; };
 		2D6B1CD91DE9BB5E00EA494B /* libLECLivePlayerUISDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D6B1CD21DE9BB5E00EA494B /* libLECLivePlayerUISDK.a */; };
 		2D6B1CDA1DE9BB5E00EA494B /* libLECPlayerFoundation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D6B1CD31DE9BB5E00EA494B /* libLECPlayerFoundation.a */; };
@@ -230,6 +232,12 @@
 		146833FF1AC3E56700842450 /* React.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = React.xcodeproj; path = "../node_modules/react-native/React/React.xcodeproj"; sourceTree = "<group>"; };
 		17750468756A4148AF35D158 /* CodePush.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = CodePush.xcodeproj; path = "../node_modules/react-native-code-push/ios/CodePush.xcodeproj"; sourceTree = "<group>"; };
 		2D19AC801DF3DBA600D21BDC /* RCTAnimation.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTAnimation.xcodeproj; path = "../node_modules/react-native/Libraries/NativeAnimation/RCTAnimation.xcodeproj"; sourceTree = "<group>"; };
+		2D19ACB91DF5679900D21BDC /* DeviceModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DeviceModule.h; path = DemoProject/DeviceModule.h; sourceTree = "<group>"; };
+		2D19ACBA1DF5679900D21BDC /* DeviceModule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DeviceModule.m; path = DemoProject/DeviceModule.m; sourceTree = "<group>"; };
+		2D19ACBC1DF570FA00D21BDC /* DemoProject.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = DemoProject.entitlements; path = DemoProject/DemoProject.entitlements; sourceTree = "<group>"; };
+		2D19ACC11DF572FB00D21BDC /* KeyChainStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = KeyChainStore.h; path = DemoProject/KeyChainStore.h; sourceTree = "<group>"; };
+		2D19ACC21DF572FB00D21BDC /* KeyChainStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = KeyChainStore.m; path = DemoProject/KeyChainStore.m; sourceTree = "<group>"; };
+		2D19ACC51DF5740900D21BDC /* pchFile.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = pchFile.pch; sourceTree = "<group>"; };
 		2D6B1CD11DE9BB5E00EA494B /* libLECLivePlayerSDK.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libLECLivePlayerSDK.a; path = ../../../XcodeProjects/lecloud_iOS_vrp_SDK_v4.3.1_20160923/SDK4.3.1/Libs/libLECLivePlayerSDK.a; sourceTree = "<group>"; };
 		2D6B1CD21DE9BB5E00EA494B /* libLECLivePlayerUISDK.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libLECLivePlayerUISDK.a; path = ../../../XcodeProjects/lecloud_iOS_vrp_SDK_v4.3.1_20160923/SDK4.3.1/Libs/libLECLivePlayerUISDK.a; sourceTree = "<group>"; };
 		2D6B1CD31DE9BB5E00EA494B /* libLECPlayerFoundation.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libLECPlayerFoundation.a; path = ../../../XcodeProjects/lecloud_iOS_vrp_SDK_v4.3.1_20160923/SDK4.3.1/Libs/libLECPlayerFoundation.a; sourceTree = "<group>"; };
@@ -406,6 +414,9 @@
 		13B07FAE1A68108700A75B9A /* DemoProject */ = {
 			isa = PBXGroup;
 			children = (
+				2D19ACC41DF573E000D21BDC /* pch */,
+				2D19ACBC1DF570FA00D21BDC /* DemoProject.entitlements */,
+				2D19ACB61DF5666D00D21BDC /* Modules */,
 				2D7B19561DE6E50600354A05 /* RCTLeVideo */,
 				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
@@ -434,6 +445,25 @@
 				2D19AC881DF3DBA600D21BDC /* libRCTAnimation-tvOS.a */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		2D19ACB61DF5666D00D21BDC /* Modules */ = {
+			isa = PBXGroup;
+			children = (
+				2D19ACC11DF572FB00D21BDC /* KeyChainStore.h */,
+				2D19ACC21DF572FB00D21BDC /* KeyChainStore.m */,
+				2D19ACB91DF5679900D21BDC /* DeviceModule.h */,
+				2D19ACBA1DF5679900D21BDC /* DeviceModule.m */,
+			);
+			name = Modules;
+			sourceTree = "<group>";
+		};
+		2D19ACC41DF573E000D21BDC /* pch */ = {
+			isa = PBXGroup;
+			children = (
+				2D19ACC51DF5740900D21BDC /* pchFile.pch */,
+			);
+			name = pch;
 			sourceTree = "<group>";
 		};
 		2D1C9A401DC1EAB50020E496 /* Products */ = {
@@ -634,6 +664,11 @@
 					13B07F861A680F5B00A75B9A = {
 						DevelopmentTeam = YEU3TF59V3;
 						ProvisioningStyle = Automatic;
+						SystemCapabilities = {
+							com.apple.Keychain = {
+								enabled = 1;
+							};
+						};
 					};
 				};
 			};
@@ -905,9 +940,11 @@
 				2D7B19781DE6F38500354A05 /* UIView+FindUIViewController.m in Sources */,
 				2DB026341DEEFE2E00687584 /* LCBaseViewController.m in Sources */,
 				2D7B197B1DE6F38500354A05 /* RCTLeVideo.m in Sources */,
+				2D19ACC31DF572FB00D21BDC /* KeyChainStore.m in Sources */,
 				13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */,
 				2D7B19791DE6F38500354A05 /* RCTLeVideoManager.m in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
+				2D19ACBB1DF5679900D21BDC /* DeviceModule.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -979,6 +1016,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = DemoProject/DemoProject.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = NO;
@@ -1013,6 +1051,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = DemoProject/DemoProject.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = YEU3TF59V3;
@@ -1069,6 +1108,7 @@
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREFIX_HEADER = "$(SRCROOT)/pchFile.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
@@ -1118,6 +1158,7 @@
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_PREFIX_HEADER = "$(SRCROOT)/pchFile.pch";
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;

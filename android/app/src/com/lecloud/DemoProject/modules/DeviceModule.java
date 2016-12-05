@@ -1,6 +1,8 @@
 package com.lecloud.DemoProject.modules;
 
 import android.content.Context;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.telephony.TelephonyManager;
 
@@ -43,13 +45,13 @@ public class DeviceModule extends ReactContextBaseJavaModule {
 
             WritableMap map = Arguments.createMap();
             map.putString("DeviceId", tm.getDeviceId());      //设备唯一标识
-            map.putString("DeviceSoftwareVersion", tm.getDeviceSoftwareVersion());  //设备的软件版本号
-            map.putInt("PhoneType", tm.getPhoneType());                             //手机类型： PHONE_TYPE_NONE 无信号 PHONE_TYPE_GSM GSM信号  PHONE_TYPE_CDMA  CDMA信号
-            map.putString("DeviceModel", Build.MODEL);              // 设备型号
-            map.putString("DeviceManufacture", Build.MANUFACTURER); //获取手机厂商：
-            map.putString("VersionSdk", Build.VERSION.SDK);         // 设备SDK版本
-            map.putString("VersionRelease", Build.VERSION.RELEASE); // 设备的系统版本
-            map.putString("PackageName",getAppInfo(mContext));            //包名
+            map.putString("DeviceSoftwareVersion", "Android " + Build.VERSION.RELEASE);  //软件版本号，如6.0.1
+            map.putInt("PhoneType", tm.getPhoneType());     //手机制式： PHONE_TYPE_NONE 无信号 PHONE_TYPE_GSM GSM信号  PHONE_TYPE_CDMA  CDMA信号
+            map.putString("DeviceModel", Build.MODEL);              // 设备型号，如Nexus
+            map.putString("DeviceManufacture", Build.MANUFACTURER); //获取手机厂商：LGE
+            map.putString("VersionSdk", "4.3.1");         // 播放器SDK版本
+            map.putString("VersionRelease", getPackageInfo(mContext).versionName ); // 软件版本名
+            map.putString("PackageName",mContext.getPackageName());         //包名
 
             promise.resolve(map);
         }else{
@@ -58,14 +60,15 @@ public class DeviceModule extends ReactContextBaseJavaModule {
     }
 
 
-    private String getAppInfo(ReactContext mReactContext) {
+    private static PackageInfo getPackageInfo(Context context) {
+        PackageInfo pi = null;
         try {
-            String pkName = mReactContext.getPackageName();
-//            String versionName = mReactContext.getPackageManager().getPackageInfo(pkName, 0).versionName;
-//            int versionCode = mReactContext.getPackageManager().getPackageInfo(pkName, 0).versionCode;
-            return pkName;
+            PackageManager pm = context.getPackageManager();
+            pi = pm.getPackageInfo(context.getPackageName(), PackageManager.GET_CONFIGURATIONS);
+            return pi;
         } catch (Exception e) {
+            e.printStackTrace();
         }
-        return null;
+        return pi;
     }
 }

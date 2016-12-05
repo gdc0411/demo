@@ -16,7 +16,6 @@
 #import "LECPlayerFoundation.h"
 
 
-
 #define kLCTestBundleID   @"com.lecloud.sdkTest"
 
 
@@ -69,7 +68,6 @@
   // yes:打开日志 no:关闭日志 （下面分别是控制台和写入文件log）
   [[LECPlayerFoundation sharedFoundation]fileLogEnable:NO];
   [[LECPlayerFoundation sharedFoundation] consoleLogEnable:YES];
-  //设置乐视SDK结束
   
 
   RCTRootView *rootView = [[RCTRootView alloc] initWithBundleURL:jsCodeLocation
