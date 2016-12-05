@@ -1,4 +1,4 @@
-package com.lecloud.DemoProject.utils;
+package com.lecloud.DemoProject.modules;
 
 import android.content.Context;
 import android.os.Build;
@@ -17,18 +17,18 @@ import com.facebook.react.bridge.WritableMap;
  * Created by admin on 2016/10/26.
  */
 
-public class DeviceIdentifier extends ReactContextBaseJavaModule {
+public class DeviceModule extends ReactContextBaseJavaModule {
 
     private final ReactApplicationContext mContext;
 
-    public DeviceIdentifier(ReactApplicationContext reactContext) {
+    public DeviceModule(ReactApplicationContext reactContext) {
         super(reactContext);
         mContext = reactContext;
     }
 
     @Override
     public String getName() {
-        return "DeviceIdentifier";
+        return "DeviceModule";
     }
 
 
