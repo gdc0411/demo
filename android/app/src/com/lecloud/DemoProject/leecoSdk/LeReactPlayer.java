@@ -392,15 +392,15 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
             return;
         }
 
-        if (mPlayMode == PlayerParams.VALUE_PLAYER_VOD && sec <= mVideoDuration) { //点播
-            WritableMap event = Arguments.createMap();
-            event.putInt(EVENT_PROP_CURRENT_TIME, (int) (getCurrentPosition() / 1000));
-            event.putInt(EVENT_PROP_SEEK_TIME, sec);
-            mEventEmitter.receiveEvent(getId(), Events.EVENT_SEEK.toString(), event);
+        if (mPlayMode == PlayerParams.VALUE_PLAYER_VOD) { //点播
 
-            seekTo(sec * 1000);
+            if(sec <= mVideoDuration) {
+                seekTo(sec * 1000);
+            }else{
+                seekTo(mVideoDuration * 1000);
+            }
 
-            mLastPosition = 0; // 上一位置不再可用?
+//            mLastPosition = 0; // 上一位置不再可用?
 
             if (isCompleted && mVideoDuration != 0 && sec < mVideoDuration) {
                 isCompleted = false;
@@ -421,6 +421,10 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
             Log.d(TAG, LogUtils.getTraceInfo() + "外部控制——— SEEK TIMESHIFT：" + sec);
         }
 
+        WritableMap event = Arguments.createMap();
+        event.putInt(EVENT_PROP_CURRENT_TIME, (int) (getCurrentPosition() / 1000));
+        event.putInt(EVENT_PROP_SEEK_TIME, sec);
+        mEventEmitter.receiveEvent(getId(), Events.EVENT_SEEK.toString(), event);
 
     }
 

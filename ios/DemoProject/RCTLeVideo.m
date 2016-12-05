@@ -222,20 +222,31 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
 {
   if( seek < 0 || _lePlayer == nil)
     return;
+  
   _isSeeking = YES;
   
-  __weak typeof(self) wSelf = self;
-  [_lePlayer seekToPosition:seek completion:^{
-    _isSeeking = NO;
-    if (wSelf.onVideoSeekComplete) {
-      wSelf.onVideoSeekComplete(nil);
-    }
-  }];
-  
-  if(_onVideoSeek){
-    _onVideoSeek(@{@"currentTime": [NSNumber numberWithLong:_lastPosition], @"seekTime":[NSNumber numberWithInt:seek]});
+  if(_playMode == LCPlayerVod){
+    
+    __weak typeof(self) wSelf = self;
+    [_lePlayer seekToPosition: seek > _duration ? (int)_duration : seek completion:^{
+      _isSeeking = NO;
+      if (wSelf.onVideoSeekComplete) wSelf.onVideoSeekComplete(nil);
+    }];
+    NSLog(@"外部控制——— SEEK TO: %d", seek);
+
+  }else if(_playMode == LCPlayerActionLive){
+    
+    __weak typeof(self) wSelf = self;
+    [_lePlayer seekToPosition: seek > _serverTime ? (int)_serverTime : seek < _beginTime ? (int)_beginTime : seek completion:^{
+      _isSeeking = NO;
+      if (wSelf.onVideoSeekComplete) wSelf.onVideoSeekComplete(nil);
+    }];
+    NSLog(@"外部控制——— SEEK TIMESHIFT: %d", seek);
   }
-  NSLog(@"外部控制——— SEEK TO: %d", seek);
+  
+  if(_onVideoSeek)
+    _onVideoSeek(@{@"currentTime": [NSNumber numberWithLong:_lastPosition], @"seekTime":[NSNumber numberWithInt:seek]});
+  
 }
 
 - (void)setRate:(NSString*)rate
@@ -459,6 +470,7 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
     _lePlayer = [[LECActivityPlayer alloc] init];
     _lePlayer.delegate = self;
     
+    self.frame = LCRect_PlayerHalfFrame;
     _lePlayer.videoView.frame = self.bounds;
     _lePlayer.videoView.contentMode = UIViewContentModeScaleAspectFit;
     _lePlayer.videoView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin| UIViewAutoresizingFlexibleWidth| UIViewAutoresizingFlexibleHeight;
@@ -628,11 +640,11 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
     if (wSelf.onVideoResume) {
       if( _playMode == LCPlayerVod)
         wSelf.onVideoResume(@{@"duration":[NSNumber numberWithLong:_duration],
-                         @"currentTime":[NSNumber numberWithLong:_currentTime],});
+                              @"currentTime":[NSNumber numberWithLong:_currentTime],});
       else if(_playMode == LCPlayerActionLive)
         wSelf.onVideoResume(@{@"beginTime":[NSNumber numberWithLong:_beginTime],
-                         @"serverTime":[NSNumber numberWithLong:_serverTime],
-                         @"currentTime":[NSNumber numberWithLong:_currentTime],});
+                              @"serverTime":[NSNumber numberWithLong:_serverTime],
+                              @"currentTime":[NSNumber numberWithLong:_currentTime],});
     }
     _isPlay = YES;
   }];
@@ -808,9 +820,7 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
   [event setValue:[NSNumber numberWithInt:_currentBrightness] forKey:@"brightness"]; //屏幕亮度
   
   
-  if(_onVideoLoad){
-    _onVideoLoad(event);
-  }
+  if(_onVideoLoad) _onVideoLoad(event);
   
   [self applyModifiers];
   
@@ -822,8 +832,7 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
 {
   _isPlay = NO;
   
-  if (_onVideoEnd)
-    _onVideoEnd(nil);
+  if (_onVideoEnd) _onVideoEnd(nil);
 }
 
 /*缓冲事件*/
@@ -852,9 +861,8 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
 {
   _width =  player.actualVideoWidth;
   _height = player.actualVideoHeight;
-  if (_onVideoSizeChange) {
-    _onVideoSizeChange(@{@"width": [NSNumber numberWithInt:_width],@"height": [NSNumber numberWithInt:_height],});
-  }
+  if (_onVideoSizeChange) _onVideoSizeChange(@{@"width": [NSNumber numberWithInt:_width],@"height": [NSNumber numberWithInt:_height],});
+  
 }
 
 
