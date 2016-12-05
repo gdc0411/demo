@@ -1,33 +1,38 @@
-
+import {NativeModules} from 'react-native';
 import * as types from './types';
 
 export const selectDevice = device => ({
-  type: SELECT_DEVICE,
+  type: types.SELECT_DEVICE,
   device
 });
 
 export const invalidateDevice = device => ({
-  type: INVALIDATE_DEVICE,
+  type: types.INVALIDATE_DEVICE,
   device
 });
 
 export const requestPosts = device => ({
-  type: REQUEST_POSTS,
+  type: types.REQUEST_POSTS,
   device
 });
 
 export const receivePosts = (device, json) => ({
-  type: RECEIVE_POSTS,
+  type: types.RECEIVE_POSTS,
   device,
-  posts: json.data.children.map(child => child.data),
+  posts: json,
   receivedAt: Date.now()
 });
+// posts: json.data.children.map(child => child.data),
 
 const fetchPosts = device => dispatch => {
   dispatch(requestPosts(device));
-  return fetch(`https://www.device.com/r/${device}.json`)
-    .then(response => response.json())
-    .then(json => dispatch(receivePosts(device, json)));
+  // return fetch(`https://www.reddit.com/r/${device}.json`)
+  //   .then(response => response.json())
+  //   .then(json => dispatch(receivePosts(device, json)));
+
+  return NativeModules.DeviceModule.getDeviceIdentifier()
+      .then(json => {dispatch(receivePosts(device, json)); console.log(json); } )
+      .catch(err => dispatch(receivePosts(device, err)));
 };
 
 const shouldFetchPosts = (state, device) => {

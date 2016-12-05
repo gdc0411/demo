@@ -3,7 +3,7 @@
  */
 import { combineReducers } from 'redux';
 import calculate  from './calc';
-import device from './device';
+import { selectedDevice, postsByDevice } from './device';
 import play from './play';
 
 /**
@@ -12,7 +12,8 @@ import play from './play';
 const rootReducer = combineReducers({
     calculate,
     play,
-    device
+    selectedDevice,
+    postsByDevice
 });
 
 export default rootReducer;

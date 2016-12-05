@@ -540,7 +540,7 @@ const styles = StyleSheet.create({
         color: "white",
         paddingLeft: 2,
         paddingRight: 2,
-        lineHeight: 12,
+        lineHeight: 13,
     },
 });
 

@@ -12,7 +12,7 @@ export const selectedDevice = (state = 'reactjs', action) => {
     }
 };
 
-const posts = (state = { isFetching: false, didInvalidate: false, items: [] }, action) => {
+const posts = (state = { isFetching: false, didInvalidate: false, items: {} }, action) => {
     switch (action.type) {
         case types.INVALIDATE_DEVICE:
             return {

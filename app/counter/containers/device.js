@@ -17,52 +17,90 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
 import * as deviceActions from '../actions/deviceAction';
-
-import { selectDevice, fetchPostsIfNeeded, invalidateDevice } from '../actions/deviceAction';
+//import { selectDevice, fetchPostsIfNeeded, invalidateDevice } from '../actions/deviceAction';
 
 class device extends Component {
 
     static propTypes = {
         selectedDevice: PropTypes.string.isRequired,
-        posts: PropTypes.array.isRequired,
+        posts: PropTypes.shape({
+            DeviceId: PropTypes.string,
+            DeviceSoftwareVersion: PropTypes.string,
+            PhoneType: PropTypes.number,
+            DeviceModel: PropTypes.string,
+            DeviceManufacture: PropTypes.string,
+            VersionSdk: PropTypes.string,
+            VersionRelease: PropTypes.string,
+            PackageName: PropTypes.string,
+        }).isRequired,
         isFetching: PropTypes.bool.isRequired,
         lastUpdated: PropTypes.number,
         dispatch: PropTypes.func.isRequired
     }
 
+    //跳转到播放页
+    handleBack = () => {
+        const {navigator} = this.props;
+        navigator.pop();
+    }
+
     componentDidMount() {
         const { dispatch, selectedDevice } = this.props;
-        dispatch(fetchPostsIfNeeded(selectedDevice));
+        dispatch(deviceActions.fetchPostsIfNeeded(selectedDevice));
     }
 
     componentWillReceiveProps(nextProps) {
         if (nextProps.selectedDevice !== this.props.selectedDevice) {
             const { dispatch, selectedDevice } = nextProps;
-            dispatch(fetchPostsIfNeeded(selectedDevice));
+            dispatch(deviceActions.fetchPostsIfNeeded(selectedDevice));
         }
     }
 
     render() {
         const { selectedDevice, posts, isFetching, lastUpdated } = this.props;
+        const isEmpty = posts === null;
+
         let {deviceInfo} = this.props;
         return (
-            <View>
-                {deviceInfo ? <Text >设备信息: {deviceInfo} </Text> : null}
+            <View style={{ backgroundColor: "transparent", borderRadius: 5, position: 'absolute', bottom: 50, left: 20, right: 20 }} >
+                {isEmpty ?
+                    (isFetching ? <Text>加载中...</Text> : <Text>没有数据.</Text>)
+                    : <Text >设备信息:{'\r\n'}
+                    ======================================{'\r\n'}
+                    设备ID：{posts.DeviceId} {'\r\n'}
+                    软件版本：{posts.DeviceSoftwareVersion} {'\r\n'}
+                    手机型号：{posts.PhoneType} {'\r\n'}
+                    设备型号：{posts.DeviceModel} {'\r\n'}
+                    手机厂商：{posts.DeviceManufacture} {'\r\n'}
+                    SDK版本：{posts.VersionSdk} {'\r\n'}
+                    系统版本：{posts.VersionRelease} {'\r\n'}
+                    包名：{posts.PackageName} {'\r\n'}
+                    ======================================{'\r\n'}
+                    </Text>}
+                {lastUpdated &&
+                    <Text>
+                        上次更新时间： {new Date(lastUpdated).toLocaleTimeString()}.
+                    </Text>
+                }
+                <Text>{'\r\n\r\n'}</Text>
+                <Text style={{ alignSelf: 'center', fontSize: 14, color: "black", paddingLeft: 2, paddingRight: 2, lineHeight: 14 }}
+                    onPress={() => this.handleBack()} > 返 回 </Text>
             </View>
         );
     }
 }
 
+
 //配置Map映射表，拿到自己关心的数据
 const mapStateToProps = state => {
     const { selectedDevice, postsByDevice } = state;
-    const { 
-        isFetching, 
-        lastUpdated, 
-        items: posts 
-    } = postsByDevice[selectedDevice] || { 
-        isFetching: true, 
-        items: [] 
+    const {
+        isFetching,
+        lastUpdated,
+        items: posts
+    } = postsByDevice[selectedDevice] || {
+        isFetching: true,
+        items: {},
     };
     return {
         selectedDevice,
