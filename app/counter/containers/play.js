@@ -336,7 +336,7 @@ class play extends Component {
                         live={this.state.live}
                         clickAd={this.state.clickAd}
                         onVideoSourceLoad={(data) => { this.setState({ sourceInfo: `视频源: ${data.src}` }); } }
-                        onVideoLoad={(data) => this.onLoad }
+                        onVideoLoad={(data) => this.onLoad(data) }
                         onVideoProgress={(data) => { this.setState({ currentTime: data.currentTime, duration: data.duration, eventInfo: `播放中…… ${data.currentTime}/${data.duration}` }); } }
                         onVideoBufferPercent={(data) => { this.setState({ buffPercent: data.bufferpercent }); } }
                         onBufferStart={() => { this.setState({ eventInfo: '缓冲开始！' }); } }
