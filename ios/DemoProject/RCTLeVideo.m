@@ -233,14 +233,21 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
       if (wSelf.onVideoSeekComplete) wSelf.onVideoSeekComplete(nil);
     }];
     NSLog(@"外部控制——— SEEK TO: %d", seek);
-
+    
   }else if(_playMode == LCPlayerActionLive){
     
     __weak typeof(self) wSelf = self;
-    [_lePlayer seekToPosition: seek > _serverTime ? (int)_serverTime : seek < _beginTime ? (int)_beginTime : seek completion:^{
-      _isSeeking = NO;
-      if (wSelf.onVideoSeekComplete) wSelf.onVideoSeekComplete(nil);
-    }];
+    if(seek >= _serverTime){
+      [(LECActivityPlayer*)_lePlayer backToLiveWithCompletion:^{
+        _isSeeking = NO;
+        if (wSelf.onVideoSeekComplete) wSelf.onVideoSeekComplete(nil);
+      }];
+    }else{
+      [_lePlayer seekToPosition: seek < _beginTime ? (int)_beginTime : seek completion:^{
+        _isSeeking = NO;
+        if (wSelf.onVideoSeekComplete) wSelf.onVideoSeekComplete(nil);
+      }];
+    }
     NSLog(@"外部控制——— SEEK TIMESHIFT: %d", seek);
   }
   
