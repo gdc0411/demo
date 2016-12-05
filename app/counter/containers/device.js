@@ -31,6 +31,8 @@ class device extends Component {
             VersionSdk: PropTypes.string,
             VersionRelease: PropTypes.string,
             PackageName: PropTypes.string,
+            Language: PropTypes.string,
+            Country: PropTypes.string,
         }).isRequired,
         isFetching: PropTypes.bool.isRequired,
         lastUpdated: PropTypes.number,
@@ -74,6 +76,8 @@ class device extends Component {
                     SDK版本：{posts.VersionSdk} {'\r\n'}
                     软件版本：{posts.VersionRelease} {'\r\n'}
                     包名：{posts.PackageName} {'\r\n'}
+                    语言：{posts.Language} {'\r\n'}
+                    国家：{posts.Country} {'\r\n'}
                     ======================================{'\r\n'}
                     </Text>}
                 {lastUpdated &&

@@ -19,7 +19,6 @@ RCT_REMAP_METHOD(getDeviceIdentifier,
                  resolver:(RCTPromiseResolveBlock)resolve
                  rejecter:(RCTPromiseRejectBlock)reject) {
   
-  
   NSDictionary* dict = @{@"DeviceId": [[self class]getUUID],
                          @"PhoneType": [NSNumber numberWithInt:1],
                          @"DeviceModel":[[UIDevice currentDevice] model],
@@ -29,7 +28,9 @@ RCT_REMAP_METHOD(getDeviceIdentifier,
                                                     [[UIDevice currentDevice] systemVersion]],
                          @"VersionSdk":@"4.3.1",
                          @"VersionRelease":[[[NSBundle mainBundle] infoDictionary]objectForKey:@"CFBundleShortVersionString"],
-                         @"PackageName":[[NSBundle mainBundle] bundleIdentifier]};
+                         @"PackageName":[[NSBundle mainBundle] bundleIdentifier],
+                         @"Language":[[NSLocale preferredLanguages] objectAtIndex:0],
+                         @"Country":[[NSLocale currentLocale] localeIdentifier]};
   resolve(dict);
   
   //reject(@"-1001", @"not respond this method", nil);

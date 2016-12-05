@@ -14,6 +14,8 @@ import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.WritableMap;
 
+import java.util.Locale;
+
 
 /**
  * Created by admin on 2016/10/26.
@@ -52,7 +54,8 @@ public class DeviceModule extends ReactContextBaseJavaModule {
             map.putString("VersionSdk", "4.3.1");         // 播放器SDK版本
             map.putString("VersionRelease", getPackageInfo(mContext).versionName ); // 软件版本名
             map.putString("PackageName",mContext.getPackageName());         //包名
-
+            map.putString("Language", Locale.getDefault().getLanguage());  //语言
+            map.putString("Country", Locale.getDefault().getCountry());  //国家
             promise.resolve(map);
         }else{
             promise.reject("-1", "无法创建原生桥会话，获取设备ID失败！");
