@@ -562,6 +562,47 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
     
   }else{ //普通URL
     
+    NSLog(@"URL数据源");
+    
+    _playMode = LCPlayerVod;
+    
+    // 创建播放器
+    _lePlayer = [[LECPlayer alloc] init];
+    _lePlayer.delegate = self;
+    
+    self.frame = LCRect_PlayerHalfFrame;
+    _lePlayer.videoView.frame = self.bounds;
+    _lePlayer.videoView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin| UIViewAutoresizingFlexibleWidth| UIViewAutoresizingFlexibleHeight;
+    _lePlayer.videoView.contentMode = UIViewContentModeScaleAspectFit;
+    
+    [self addSubview:_lePlayer.videoView];
+    [self sendSubviewToBack:_lePlayer.videoView];
+    
+    NSString* url = [source objectForKey:@"uri"];
+    
+    if (url.length != 0 ) {
+      [self usePlayerViewController]; // 创建controller
+      _playerViewController.url = url;
+    }
+    
+    __weak typeof(self) wSelf = self;
+    [_lePlayer registerWithURLString:url completion:^(BOOL result) {
+      if (wSelf.onVideoSourceLoad) {//数据源回显
+        wSelf.onVideoSourceLoad(@{@"src": [[wSelf class] returnJSONStringWithDictionary:source useSystem:YES]});
+      }
+      
+      if (result){
+        NSLog(@"播放器注册成功");
+        
+        [wSelf play];//注册完成后自动播放
+        
+      }else{
+        if (wSelf.onVideoError) {
+          wSelf.onVideoError(@{@"errorCode":@"-1",@"errorMsg":@"播放器注册失败,请检查URL"});
+        }
+      }
+    }];
+    
   }
 }
 
@@ -648,6 +689,7 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
       if( _playMode == LCPlayerVod)
         wSelf.onVideoResume(@{@"duration":[NSNumber numberWithLong:_duration],
                               @"currentTime":[NSNumber numberWithLong:_currentTime],});
+      
       else if(_playMode == LCPlayerActionLive)
         wSelf.onVideoResume(@{@"beginTime":[NSNumber numberWithLong:_beginTime],
                               @"serverTime":[NSNumber numberWithLong:_serverTime],
@@ -717,7 +759,7 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
 {
   NSLog(@"Prepared Event!");
   
-  if( [player isMemberOfClass: [LECVODPlayer class]] ){ //点播模式
+  if( [player isMemberOfClass: [LECVODPlayer class]] || [player isMemberOfClass: [LECPlayer class]] ){ //点播模式
     _playMode = LCPlayerVod;
   }else if( [player isMemberOfClass: [LECActivityPlayer class]] ){ //活动模式
     _playMode = LCPlayerActionLive;
@@ -754,7 +796,7 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
     }
     [event setValue:ratesList forKey:@"rateList"]; //可用码率
   }
-  LECStreamRateItem * lItem = _lePlayer.selectedStreamRateItem;
+  LECStreamRateItem * lItem = player.selectedStreamRateItem;
   if( lItem ){
     _currentRate = _defaultRate = lItem.code;
     [event setValue:_defaultRate forKey:@"defaultRate"]; //默认码率
@@ -763,7 +805,7 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
   
   // 视频封面信息: 加载
   if(_playMode == LCPlayerVod){
-    if (((LECVODPlayer*)player).loadingIconUrl) {
+    if ( [player isMemberOfClass:[LECVODPlayer class]] && ((LECVODPlayer*)player).loadingIconUrl) {
       [event setValue:@{@"pic": ((LECVODPlayer*)player).loadingIconUrl} forKey:@"loading"];  // LOADING信息
     }
   }else if(_playMode == LCPlayerActionLive){
@@ -773,7 +815,7 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
   }
   
   if (_playMode == LCPlayerVod) { //VOD模式下参数
-    [event setValue:[NSNumber numberWithLong:(_duration==0)?((LECVODPlayer*)player).duration==0:_duration] forKey:@"duration"]; //视频总长度（VOD）
+    [event setValue:[NSNumber numberWithLong:(_duration==0)?player.duration==0:_duration] forKey:@"duration"]; //视频总长度（VOD）
     [event setValue:[NSNumber numberWithLong:_lastPosition] forKey:@"currentTime"]; //当前播放位置（VOD）
     
   } else if(_playMode == LCPlayerActionLive ) { //ACTION模式参数
@@ -1133,6 +1175,8 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
 - (void)insertReactSubview:(UIView *)view atIndex:(NSInteger)atIndex
 {
   NSLog(@"insertReactSubview消息");
+  [super insertReactSubview:view atIndex:atIndex];
+
   view.frame = self.bounds;
   //[_playerViewController.contentOverlayView insertSubview:view atIndex:atIndex];
 }
@@ -1142,6 +1186,7 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
   NSLog(@"removeReactSubview消息");
   
   [subview removeFromSuperview];
+  [super removeReactSubview:subview];
 }
 
 #pragma mark - View lifecycle
