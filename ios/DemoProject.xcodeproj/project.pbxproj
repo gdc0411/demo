@@ -25,6 +25,7 @@
 		2D19AC981DF3DCF100D21BDC /* libRCTAnimation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D19AC861DF3DBA600D21BDC /* libRCTAnimation.a */; };
 		2D19ACBB1DF5679900D21BDC /* DeviceModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D19ACBA1DF5679900D21BDC /* DeviceModule.m */; };
 		2D19ACC31DF572FB00D21BDC /* KeyChainStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D19ACC21DF572FB00D21BDC /* KeyChainStore.m */; };
+		2D19AD6B1DF6AE6B00D21BDC /* libCodePush.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D1C9A441DC1EAB60020E496 /* libCodePush.a */; };
 		2D6B1CD81DE9BB5E00EA494B /* libLECLivePlayerSDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D6B1CD11DE9BB5E00EA494B /* libLECLivePlayerSDK.a */; };
 		2D6B1CD91DE9BB5E00EA494B /* libLECLivePlayerUISDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D6B1CD21DE9BB5E00EA494B /* libLECLivePlayerUISDK.a */; };
 		2D6B1CDA1DE9BB5E00EA494B /* libLECPlayerFoundation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D6B1CD31DE9BB5E00EA494B /* libLECPlayerFoundation.a */; };
@@ -56,7 +57,6 @@
 		2DA207131DE8C0A80004CE1D /* libReachbility.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2DA206DC1DE8B5B10004CE1D /* libReachbility.a */; };
 		2DB026341DEEFE2E00687584 /* LCBaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2DB026331DEEFE2E00687584 /* LCBaseViewController.m */; };
 		392D188B09B145E0B6613D6D /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 930FF21BCF8F403D8916C7DE /* libz.tbd */; };
-		7A4698B093D14EAB946AF44D /* libCodePush.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D213FCE7C1E742FAB43DE238 /* libCodePush.a */; };
 		832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
 /* End PBXBuildFile section */
 
@@ -277,7 +277,6 @@
 		78C398B01ACF4ADC00677621 /* RCTLinking.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTLinking.xcodeproj; path = "../node_modules/react-native/Libraries/LinkingIOS/RCTLinking.xcodeproj"; sourceTree = "<group>"; };
 		832341B01AAA6A8300B99B32 /* RCTText.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTText.xcodeproj; path = "../node_modules/react-native/Libraries/Text/RCTText.xcodeproj"; sourceTree = "<group>"; };
 		930FF21BCF8F403D8916C7DE /* libz.tbd */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
-		D213FCE7C1E742FAB43DE238 /* libCodePush.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libCodePush.a; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -293,41 +292,41 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2D19AC981DF3DCF100D21BDC /* libRCTAnimation.a in Frameworks */,
-				2DA207131DE8C0A80004CE1D /* libReachbility.a in Frameworks */,
 				2DA207121DE8BAAC0004CE1D /* libz.1.2.5.tbd in Frameworks */,
 				2DA207101DE8BA990004CE1D /* libxml2.2.tbd in Frameworks */,
 				2DA2070E1DE8BA8C0004CE1D /* libstdc++.6.0.9.tbd in Frameworks */,
 				392D188B09B145E0B6613D6D /* libz.tbd in Frameworks */,
 				2DA2070A1DE8BA510004CE1D /* libiconv.tbd in Frameworks */,
+				2DA207131DE8C0A80004CE1D /* libReachbility.a in Frameworks */,
+				2D6B1CDB1DE9BB5E00EA494B /* libLECPlayerUIKit.a in Frameworks */,
+				2D6B1CDA1DE9BB5E00EA494B /* libLECPlayerFoundation.a in Frameworks */,
 				2D6B1CDC1DE9BB5E00EA494B /* libLECVodPlayerSDK.a in Frameworks */,
+				2D6B1CDD1DE9BB5E00EA494B /* libLECVodPlayerUISDK.a in Frameworks */,
+				2D6B1CD81DE9BB5E00EA494B /* libLECLivePlayerSDK.a in Frameworks */,
 				2D6B1CD91DE9BB5E00EA494B /* libLECLivePlayerUISDK.a in Frameworks */,
+				2D6B1CDE1DE9BB5E00EA494B /* libZipArchive.a in Frameworks */,
 				2DA207011DE8B9950004CE1D /* AudioToolbox.framework in Frameworks */,
+				2DA206F71DE8B89B0004CE1D /* AdSupport.framework in Frameworks */,
 				2DA207021DE8B9950004CE1D /* CoreData.framework in Frameworks */,
 				2DA207031DE8B9950004CE1D /* CoreLocation.framework in Frameworks */,
-				2D6B1CDB1DE9BB5E00EA494B /* libLECPlayerUIKit.a in Frameworks */,
 				2DA207041DE8B9950004CE1D /* CoreMedia.framework in Frameworks */,
-				2D6B1CDD1DE9BB5E00EA494B /* libLECVodPlayerUISDK.a in Frameworks */,
 				2DA207051DE8B9950004CE1D /* CoreTelephony.framework in Frameworks */,
 				2DA207061DE8B9950004CE1D /* JavaScriptCore.framework in Frameworks */,
+				2DA206F81DE8B89B0004CE1D /* MediaPlayer.framework in Frameworks */,
 				2DA207071DE8B9950004CE1D /* SystemConfiguration.framework in Frameworks */,
 				2DA207081DE8B9950004CE1D /* VideoToolbox.framework in Frameworks */,
-				2DA206F71DE8B89B0004CE1D /* AdSupport.framework in Frameworks */,
-				2DA206F81DE8B89B0004CE1D /* MediaPlayer.framework in Frameworks */,
 				146834051AC3E58100842450 /* libReact.a in Frameworks */,
+				2D19AC981DF3DCF100D21BDC /* libRCTAnimation.a in Frameworks */,
 				00C302E51ABCBA2D00DB3ED1 /* libRCTActionSheet.a in Frameworks */,
 				00C302E71ABCBA2D00DB3ED1 /* libRCTGeolocation.a in Frameworks */,
 				00C302E81ABCBA2D00DB3ED1 /* libRCTImage.a in Frameworks */,
-				2D6B1CDE1DE9BB5E00EA494B /* libZipArchive.a in Frameworks */,
 				133E29F31AD74F7200F7D852 /* libRCTLinking.a in Frameworks */,
-				2D6B1CDA1DE9BB5E00EA494B /* libLECPlayerFoundation.a in Frameworks */,
 				00C302E91ABCBA2D00DB3ED1 /* libRCTNetwork.a in Frameworks */,
-				2D6B1CD81DE9BB5E00EA494B /* libLECLivePlayerSDK.a in Frameworks */,
 				139105C61AF99C1200B5F7CC /* libRCTSettings.a in Frameworks */,
 				832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */,
 				00C302EA1ABCBA2D00DB3ED1 /* libRCTVibration.a in Frameworks */,
 				139FDEF61B0652A700C62182 /* libRCTWebSocket.a in Frameworks */,
-				7A4698B093D14EAB946AF44D /* libCodePush.a in Frameworks */,
+				2D19AD6B1DF6AE6B00D21BDC /* libCodePush.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -658,7 +657,7 @@
 				TargetAttributes = {
 					00E356ED1AD99517003FC87E = {
 						CreatedOnToolsVersion = 6.2;
-						DevelopmentTeam = YEU3TF59V3;
+						ProvisioningStyle = Automatic;
 						TestTargetID = 13B07F861A680F5B00A75B9A;
 					};
 					13B07F861A680F5B00A75B9A = {
@@ -975,7 +974,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
-				DEVELOPMENT_TEAM = YEU3TF59V3;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEVELOPMENT_TEAM = "";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
@@ -997,8 +997,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
-				DEVELOPMENT_TEAM = YEU3TF59V3;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = DemoProjectTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
@@ -1036,6 +1037,7 @@
 					"$(PROJECT_DIR)",
 					"$(PROJECT_DIR)/../../../XcodeProjects/lecloud_iOS_vrp_SDK_v4.3.1_20160923/SDK4.3.1/**",
 				);
+				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-lc++",
@@ -1043,6 +1045,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.lecloud.DemoProject;
 				PRODUCT_NAME = DemoProject;
+				TEST_HOST = "";
+				VALID_ARCHS = "arm64 armv7 armv7s";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Debug;
@@ -1070,6 +1074,7 @@
 					"$(PROJECT_DIR)",
 					"$(PROJECT_DIR)/../../../XcodeProjects/lecloud_iOS_vrp_SDK_v4.3.1_20160923/SDK4.3.1/**",
 				);
+				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-lc++",
@@ -1077,6 +1082,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.lecloud.DemoProject;
 				PRODUCT_NAME = DemoProject;
+				TEST_HOST = "";
+				VALID_ARCHS = "arm64 armv7 armv7s";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;
