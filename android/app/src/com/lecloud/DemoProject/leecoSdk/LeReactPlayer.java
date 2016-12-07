@@ -62,7 +62,7 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
     private RCTEventEmitter mEventEmitter;
     private int mViewId;
     /// 水印
-    protected WaterMarkView mWaterMarkView;
+    private WaterMarkView mWaterMarkView;
 
     /*
     * 设备控制

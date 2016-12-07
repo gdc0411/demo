@@ -8,8 +8,15 @@ package com.lecloud.DemoProject.leecoSdk;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.PixelFormat;
+import android.graphics.PorterDuff;
+import android.graphics.Rect;
 import android.os.Bundle;
+import android.view.SurfaceHolder;
+import android.view.SurfaceView;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.RelativeLayout;
@@ -19,6 +26,10 @@ import com.facebook.react.uimanager.events.RCTEventEmitter;
 import com.lecloud.DemoProject.R;
 import com.lecloud.DemoProject.leecoSdk.A1.VideoLayoutParams;
 import com.lecloud.DemoProject.leecoSdk.watermark.WaterMarkView;
+import com.lecloud.sdk.api.md.entity.action.WaterConfig;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by JiaRao on 2016/12/07.
@@ -51,21 +62,27 @@ public class LeReactVideoView extends RelativeLayout {
      */
     public void setSrc(final Bundle bundle) {
 
-        WaterMarkView waterMarkView = new WaterMarkView(mThemedReactContext.getBaseContext());
+        WaterMarkView waterMarkView = new WaterMarkView(mThemedReactContext);
 
         mLePlayer = new LeReactPlayer(mThemedReactContext, mEventEmitter, getId(), waterMarkView);
+//        mLePlayer.setAlpha(0.1f);
 
         //将播放器放入容器
 //        View.inflate(mThemedReactContext, R.layout.video_play, this);
 //        RelativeLayout videoContainer = (RelativeLayout) findViewById(R.id.videoContainer);
 //        videoContainer.addView(mLePlayer, VideoLayoutParams.computeContainerSize(mThemedReactContext, 16, 9));
         LayoutParams params = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
-
         addView(mLePlayer, params);
+        
+//        List<WaterConfig> marks = new ArrayList<WaterConfig>();
+//        WaterConfig wc = new WaterConfig("http://i1.letvimg.com/lc04_leju/201601/08/15/24/lecloud/watermarking.png","http://i1.letvimg.com/lc04_leju/201601/08/15/24/lecloud/watermarking.png","2");
+//        marks.add(wc);
+//        waterMarkView.setWaterMarks(marks);
+        addView(waterMarkView, params);
 
         mLePlayer.setSrc(bundle);
 
-        addView(waterMarkView, params);
+
 
     }
 
