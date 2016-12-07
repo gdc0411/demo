@@ -8,8 +8,10 @@ import android.os.Bundle;
 import android.util.AttributeSet;
 import android.view.Surface;
 import android.view.TextureView;
+import android.view.ViewGroup;
 
 import com.lecloud.DemoProject.R;
+import com.lecloud.DemoProject.leecoSdk.watermark.WaterMarkView;
 import com.lecloud.DemoProject.utils.LogUtils;
 
 import com.lecloud.sdk.api.linepeople.OnlinePeopleChangeListener;
@@ -34,6 +36,8 @@ public class LeTextureView extends TextureView implements TextureView.SurfaceTex
     public static final String TAG = LogUtils.TAG;
 
     protected IPlayer mMediaPlayer;
+    protected WaterMarkView waterMarkView;
+
     protected ScalableType mScalableType = ScalableType.NONE;
 
     public LeTextureView(Context context) {
@@ -59,6 +63,11 @@ public class LeTextureView extends TextureView implements TextureView.SurfaceTex
         int scaleType = a.getInt(R.styleable.scaleStyle_scalableType, ScalableType.NONE.ordinal());
         a.recycle();
         mScalableType = ScalableType.values()[scaleType];
+    }
+
+    protected void initWaterMarkView(Context context) {
+        waterMarkView = new WaterMarkView(context);
+//        addView(waterMarkView, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
     }
 
     @Override
