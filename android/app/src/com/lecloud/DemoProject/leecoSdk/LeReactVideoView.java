@@ -39,6 +39,8 @@ public class LeReactVideoView extends RelativeLayout {
         super(context);
         mThemedReactContext = context;
         mEventEmitter = mThemedReactContext.getJSModule(RCTEventEmitter.class);
+
+//        View.inflate(context, R.layout.view_check_item, this);
     }
 
     /**
@@ -58,10 +60,13 @@ public class LeReactVideoView extends RelativeLayout {
 //        RelativeLayout videoContainer = (RelativeLayout) findViewById(R.id.videoContainer);
 //        videoContainer.addView(mLePlayer, VideoLayoutParams.computeContainerSize(mThemedReactContext, 16, 9));
         LayoutParams params = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
-        addView(waterMarkView, params);
+
         addView(mLePlayer, params);
 
         mLePlayer.setSrc(bundle);
+
+        addView(waterMarkView, params);
+
     }
 
     /**

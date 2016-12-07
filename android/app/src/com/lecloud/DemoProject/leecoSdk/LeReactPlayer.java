@@ -849,7 +849,6 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
                 waterMarkList.pushMap(map);
             }
             event.putArray(EVENT_PROP_WMARKS, waterMarkList);  // 水印信息
-            showWaterMark(mCoverConfig); //显示水印
         }
 
         if (mPlayMode == PlayerParams.VALUE_PLAYER_VOD) { //VOD模式下参数
@@ -936,6 +935,9 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
             case StatusCode.PLAY_INFO_VIDEO_RENDERING_START://500006
                 //渲染第一帧完成
                 mEventEmitter.receiveEvent(mViewId, Events.EVENT_VIDEO_RENDING_START.toString(), null);
+
+                showWaterMark(mCoverConfig); //显示水印
+
                 break;
             case StatusCode.PLAY_INFO_VIDEO_BUFFERPERCENT://600006
                 //视频缓冲时的进度，开始转圈
