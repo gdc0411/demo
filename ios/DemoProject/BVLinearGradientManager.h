@@ -6,8 +6,8 @@
 //  Copyright © 2016年 Facebook. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
+#import "RCTViewManager.h"
 
-@interface BVLinearGradientManager : NSObject
+@interface BVLinearGradientManager : RCTViewManager
 
 @end

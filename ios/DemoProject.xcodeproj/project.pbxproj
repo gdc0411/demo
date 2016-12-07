@@ -26,6 +26,8 @@
 		2D19ACBB1DF5679900D21BDC /* DeviceModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D19ACBA1DF5679900D21BDC /* DeviceModule.m */; };
 		2D19ACC31DF572FB00D21BDC /* KeyChainStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D19ACC21DF572FB00D21BDC /* KeyChainStore.m */; };
 		2D19AD6B1DF6AE6B00D21BDC /* libCodePush.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D1C9A441DC1EAB60020E496 /* libCodePush.a */; };
+		2D19ADB31DF7AC5F00D21BDC /* BVLinearGradient.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D19ADB21DF7AC5F00D21BDC /* BVLinearGradient.m */; };
+		2D19ADB61DF7ACC100D21BDC /* BVLinearGradientManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D19ADB51DF7ACC100D21BDC /* BVLinearGradientManager.m */; };
 		2D6B1CD81DE9BB5E00EA494B /* libLECLivePlayerSDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D6B1CD11DE9BB5E00EA494B /* libLECLivePlayerSDK.a */; };
 		2D6B1CD91DE9BB5E00EA494B /* libLECLivePlayerUISDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D6B1CD21DE9BB5E00EA494B /* libLECLivePlayerUISDK.a */; };
 		2D6B1CDA1DE9BB5E00EA494B /* libLECPlayerFoundation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D6B1CD31DE9BB5E00EA494B /* libLECPlayerFoundation.a */; };
@@ -238,6 +240,10 @@
 		2D19ACC11DF572FB00D21BDC /* KeyChainStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = KeyChainStore.h; path = DemoProject/KeyChainStore.h; sourceTree = "<group>"; };
 		2D19ACC21DF572FB00D21BDC /* KeyChainStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = KeyChainStore.m; path = DemoProject/KeyChainStore.m; sourceTree = "<group>"; };
 		2D19ACC51DF5740900D21BDC /* pchFile.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = pchFile.pch; sourceTree = "<group>"; };
+		2D19ADB11DF7AC5F00D21BDC /* BVLinearGradient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BVLinearGradient.h; path = DemoProject/BVLinearGradient.h; sourceTree = "<group>"; };
+		2D19ADB21DF7AC5F00D21BDC /* BVLinearGradient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BVLinearGradient.m; path = DemoProject/BVLinearGradient.m; sourceTree = "<group>"; };
+		2D19ADB41DF7ACC100D21BDC /* BVLinearGradientManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BVLinearGradientManager.h; path = DemoProject/BVLinearGradientManager.h; sourceTree = "<group>"; };
+		2D19ADB51DF7ACC100D21BDC /* BVLinearGradientManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BVLinearGradientManager.m; path = DemoProject/BVLinearGradientManager.m; sourceTree = "<group>"; };
 		2D6B1CD11DE9BB5E00EA494B /* libLECLivePlayerSDK.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libLECLivePlayerSDK.a; path = ../../../XcodeProjects/lecloud_iOS_vrp_SDK_v4.3.1_20160923/SDK4.3.1/Libs/libLECLivePlayerSDK.a; sourceTree = "<group>"; };
 		2D6B1CD21DE9BB5E00EA494B /* libLECLivePlayerUISDK.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libLECLivePlayerUISDK.a; path = ../../../XcodeProjects/lecloud_iOS_vrp_SDK_v4.3.1_20160923/SDK4.3.1/Libs/libLECLivePlayerUISDK.a; sourceTree = "<group>"; };
 		2D6B1CD31DE9BB5E00EA494B /* libLECPlayerFoundation.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libLECPlayerFoundation.a; path = ../../../XcodeProjects/lecloud_iOS_vrp_SDK_v4.3.1_20160923/SDK4.3.1/Libs/libLECPlayerFoundation.a; sourceTree = "<group>"; };
@@ -414,6 +420,7 @@
 			isa = PBXGroup;
 			children = (
 				2D19ACC41DF573E000D21BDC /* pch */,
+				2D19ADB01DF7ABFB00D21BDC /* Views */,
 				2D19ACB61DF5666D00D21BDC /* Modules */,
 				2D7B19561DE6E50600354A05 /* RCTLeVideo */,
 				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
@@ -463,6 +470,17 @@
 				2D19ACC51DF5740900D21BDC /* pchFile.pch */,
 			);
 			name = pch;
+			sourceTree = "<group>";
+		};
+		2D19ADB01DF7ABFB00D21BDC /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				2D19ADB11DF7AC5F00D21BDC /* BVLinearGradient.h */,
+				2D19ADB21DF7AC5F00D21BDC /* BVLinearGradient.m */,
+				2D19ADB41DF7ACC100D21BDC /* BVLinearGradientManager.h */,
+				2D19ADB51DF7ACC100D21BDC /* BVLinearGradientManager.m */,
+			);
+			name = Views;
 			sourceTree = "<group>";
 		};
 		2D1C9A401DC1EAB50020E496 /* Products */ = {
@@ -936,9 +954,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				2D7B197A1DE6F38500354A05 /* RCTLeVideoPlayerViewController.m in Sources */,
+				2D19ADB61DF7ACC100D21BDC /* BVLinearGradientManager.m in Sources */,
 				2D7B19781DE6F38500354A05 /* UIView+FindUIViewController.m in Sources */,
 				2DB026341DEEFE2E00687584 /* LCBaseViewController.m in Sources */,
 				2D7B197B1DE6F38500354A05 /* RCTLeVideo.m in Sources */,
+				2D19ADB31DF7AC5F00D21BDC /* BVLinearGradient.m in Sources */,
 				2D19ACC31DF572FB00D21BDC /* KeyChainStore.m in Sources */,
 				13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */,
 				2D7B19791DE6F38500354A05 /* RCTLeVideoManager.m in Sources */,

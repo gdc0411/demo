@@ -14,6 +14,7 @@ import com.facebook.react.bridge.NativeModule;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.uimanager.ViewManager;
 import com.lecloud.DemoProject.modules.DeviceModule;
+import com.lecloud.DemoProject.views.LinearGradientManager;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -53,9 +54,8 @@ public class RJReactPackage implements ReactPackage {
         List<ViewManager> viewManagers = new ArrayList<>();
         viewManagers.add(new KenBurnsViewManager());
         viewManagers.add(new CheckItemViewManager());
-//        viewManagers.add(new LeVideoViewManager());
-//        viewManagers.add(new VideoViewManager());
         viewManagers.add(new LeReactPlayerManager());
+        viewManagers.add(new LinearGradientManager());
 
         return viewManagers;
     }
