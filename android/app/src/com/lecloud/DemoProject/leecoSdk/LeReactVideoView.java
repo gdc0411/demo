@@ -6,30 +6,12 @@
  ************************************************************************/
 package com.lecloud.DemoProject.leecoSdk;
 
-import android.app.Activity;
-import android.content.Context;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.PixelFormat;
-import android.graphics.PorterDuff;
-import android.graphics.Rect;
 import android.os.Bundle;
-import android.view.SurfaceHolder;
-import android.view.SurfaceView;
-import android.view.View;
-import android.view.WindowManager;
 import android.widget.RelativeLayout;
 
 import com.facebook.react.uimanager.ThemedReactContext;
 import com.facebook.react.uimanager.events.RCTEventEmitter;
-import com.lecloud.DemoProject.R;
-import com.lecloud.DemoProject.leecoSdk.A1.VideoLayoutParams;
 import com.lecloud.DemoProject.leecoSdk.watermark.WaterMarkView;
-import com.lecloud.sdk.api.md.entity.action.WaterConfig;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by JiaRao on 2016/12/07.
