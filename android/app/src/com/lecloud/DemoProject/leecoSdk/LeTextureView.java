@@ -86,7 +86,7 @@ public class LeTextureView extends TextureView implements TextureView.SurfaceTex
     @Override
     public boolean onSurfaceTextureDestroyed(SurfaceTexture surface) {
 //        Log.i(TAG, LogUtils.getTraceInfo() + "onSurfaceTextureAvailable..." + surface);
-
+        //todo 删除surface
         return false;
     }
 
