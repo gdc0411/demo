@@ -36,7 +36,6 @@ public class LeTextureView extends TextureView implements TextureView.SurfaceTex
     public static final String TAG = LogUtils.TAG;
 
     protected IPlayer mMediaPlayer;
-    protected WaterMarkView waterMarkView;
 
     protected ScalableType mScalableType = ScalableType.NONE;
 
@@ -66,7 +65,6 @@ public class LeTextureView extends TextureView implements TextureView.SurfaceTex
     }
 
     protected void initWaterMarkView(Context context) {
-        waterMarkView = new WaterMarkView(context);
 //        addView(waterMarkView, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
     }
 

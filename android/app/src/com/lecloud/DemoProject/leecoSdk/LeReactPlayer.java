@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.WindowManager;
 
 
+import com.lecloud.DemoProject.leecoSdk.watermark.WaterMarkView;
 import com.lecloud.DemoProject.utils.LogUtils;
 import com.lecloud.DemoProject.utils.OrientationSensorUtils;
 import com.lecloud.DemoProject.utils.ScreenBrightnessManager;
@@ -59,6 +60,9 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
 
     private ThemedReactContext mThemedReactContext;
     private RCTEventEmitter mEventEmitter;
+    private int mViewId;
+    /// 水印
+    protected WaterMarkView mWaterMarkView;
 
     /*
     * 设备控制
@@ -91,7 +95,7 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
             }
             WritableMap event = Arguments.createMap();
             event.putInt(EVENT_PROP_ORIENTATION, orient);
-            mEventEmitter.receiveEvent(getId(), Events.EVENT_ORIENTATION_CHANG.toString(), event);
+            mEventEmitter.receiveEvent(mViewId, Events.EVENT_ORIENTATION_CHANG.toString(), event);
 
             Log.d(TAG, LogUtils.getTraceInfo() + "设备转屏事件——— orientation：" + orient);
 
@@ -149,7 +153,7 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
                 event.putInt(EVENT_PROP_CURRENT_TIME, (int) (getCurrentPosition() / 1000.0));
                 event.putInt(EVENT_PROP_DURATION, mVideoDuration);
                 event.putInt(EVENT_PROP_PLAYABLE_DURATION, mVideoBufferedDuration);
-                mEventEmitter.receiveEvent(getId(), Events.EVENT_PROGRESS.toString(), event);
+                mEventEmitter.receiveEvent(mViewId, Events.EVENT_PROGRESS.toString(), event);
             }
             mProgressUpdateHandler.postDelayed(mProgressUpdateRunnable, 250);
         }
@@ -176,12 +180,14 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
 
     /*============================= 播放器构造 ===================================*/
 
-    public LeReactPlayer(ThemedReactContext context) {
+    public LeReactPlayer(ThemedReactContext context, RCTEventEmitter eventEmitter, int viewId, WaterMarkView waterMarkView) {
         super(context);
         mThemedReactContext = context;
 
-        //创建与RN之间的回调
-        mEventEmitter = mThemedReactContext.getJSModule(RCTEventEmitter.class);
+        mEventEmitter = eventEmitter;
+        mViewId = viewId;
+        mWaterMarkView = waterMarkView;
+
         mThemedReactContext.addLifecycleEventListener(this);
 
         setSurfaceTextureListener(this);
@@ -218,7 +224,7 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
                     event.putInt(EVENT_PROP_SERVER_TIME, mServerTime);
                     event.putInt(EVENT_PROP_CURRENT_TIME, mCurrentTime);
                     event.putInt(EVENT_PROP_LIVE_BEGIN_TIME, mBeginTime);
-                    mEventEmitter.receiveEvent(getId(), Events.EVENT_ACTION_TIME_SHIFT.toString(), event);
+                    mEventEmitter.receiveEvent(mViewId, Events.EVENT_ACTION_TIME_SHIFT.toString(), event);
                 }
             };
             setTimeShiftListener(mTimeShiftListener);
@@ -241,7 +247,7 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
                     event.putString(EVENT_PROP_ERROR_CODE, actionStatus.getErrCode());
                     event.putString(EVENT_PROP_ERROR_MSG, actionStatus.getErrMsg());
 
-                    mEventEmitter.receiveEvent(getId(), Events.EVENT_ACTION_STATUS_CHANGE.toString(), event);
+                    mEventEmitter.receiveEvent(mViewId, Events.EVENT_ACTION_STATUS_CHANGE.toString(), event);
                 }
             };
 
@@ -257,7 +263,7 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
 
                     WritableMap event = Arguments.createMap();
                     event.putString(EVENT_PROP_ONLINE_NUM, s);
-                    mEventEmitter.receiveEvent(getId(), Events.EVENT_ONLINE_NUM_CHANGE.toString(), event);
+                    mEventEmitter.receiveEvent(mViewId, Events.EVENT_ONLINE_NUM_CHANGE.toString(), event);
                 }
             };
 
@@ -354,7 +360,7 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
 
             WritableMap event = Arguments.createMap();
             event.putString(PROP_SRC, bundle.toString());
-            mEventEmitter.receiveEvent(getId(), Events.EVENT_LOAD_SOURCE.toString(), event);
+            mEventEmitter.receiveEvent(mViewId, Events.EVENT_LOAD_SOURCE.toString(), event);
         }
     }
 
@@ -424,7 +430,7 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
         WritableMap event = Arguments.createMap();
         event.putInt(EVENT_PROP_CURRENT_TIME, (int) (getCurrentPosition() / 1000));
         event.putInt(EVENT_PROP_SEEK_TIME, sec);
-        mEventEmitter.receiveEvent(getId(), Events.EVENT_SEEK.toString(), event);
+        mEventEmitter.receiveEvent(mViewId, Events.EVENT_SEEK.toString(), event);
 
     }
 
@@ -450,7 +456,7 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
             WritableMap event = Arguments.createMap();
             event.putString(EVENT_PROP_CURRENT_RATE, mCurrentRate);
             event.putString(EVENT_PROP_NEXT_RATE, rate);
-            mEventEmitter.receiveEvent(getId(), Events.EVENT_RATE_CHANG.toString(), event);
+            mEventEmitter.receiveEvent(mViewId, Events.EVENT_RATE_CHANG.toString(), event);
         }
         Log.d(TAG, LogUtils.getTraceInfo() + "外部控制——— 切换码率 current:" + mCurrentRate + " next:" + rate);
     }
@@ -479,7 +485,7 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
             WritableMap event = Arguments.createMap();
             event.putString(EVENT_PROP_CURRENT_LIVE, mCurrentLiveId);
             event.putString(EVENT_PROP_NEXT_LIVE, liveId);
-            mEventEmitter.receiveEvent(getId(), Events.EVENT_ACTION_LIVE_CHANGE.toString(), event);
+            mEventEmitter.receiveEvent(mViewId, Events.EVENT_ACTION_LIVE_CHANGE.toString(), event);
         }
         Log.d(TAG, LogUtils.getTraceInfo() + "外部控制——— 切换机位 current:" + mCurrentLiveId + " next:" + liveId);
     }
@@ -522,7 +528,7 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
 
 
         WritableMap event = Arguments.createMap();
-        mEventEmitter.receiveEvent(getId(), Events.EVENT_AD_CLICK.toString(), event);
+        mEventEmitter.receiveEvent(mViewId, Events.EVENT_AD_CLICK.toString(), event);
         Log.d(TAG, LogUtils.getTraceInfo() + "外部控制——— 点击广告:" + clicked);
     }
 
@@ -624,7 +630,7 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
 
         WritableMap event = Arguments.createMap();
         event.putDouble(EVENT_PROP_ORIENTATION, mCurrentOritentation);
-//        mEventEmitter.receiveEvent(getId(), Events.EVENT_ORIENTATION_CHANG.toString(), event);
+//        mEventEmitter.receiveEvent(mViewId, Events.EVENT_ORIENTATION_CHANG.toString(), event);
 
         Log.d(TAG, LogUtils.getTraceInfo() + "外部控制——— 设置方向 orientation:" + requestedOrientation);
 
@@ -654,7 +660,7 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
                     WritableMap event = Arguments.createMap();
                     event.putInt(EVENT_PROP_DURATION, mVideoDuration);
                     event.putInt(EVENT_PROP_CURRENT_TIME, (int) (getCurrentPosition() / 1000));
-                    mEventEmitter.receiveEvent(getId(), Events.EVENT_PAUSE.toString(), event);
+                    mEventEmitter.receiveEvent(mViewId, Events.EVENT_PAUSE.toString(), event);
 
                 } else if (mPlayMode == PlayerParams.VALUE_PLAYER_ACTION_LIVE && mTimeShiftListener != null) {
                     //stopTimeShift();
@@ -663,7 +669,7 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
                     event.putInt(EVENT_PROP_LIVE_BEGIN_TIME, mBeginTime);
                     event.putInt(EVENT_PROP_CURRENT_TIME, mCurrentTime);
                     event.putInt(EVENT_PROP_SERVER_TIME, mServerTime);
-                    mEventEmitter.receiveEvent(getId(), Events.EVENT_PAUSE.toString(), event);
+                    mEventEmitter.receiveEvent(mViewId, Events.EVENT_PAUSE.toString(), event);
                 }
 
                 Log.d(TAG, LogUtils.getTraceInfo() + "外部控制——— 暂停播放 pause ");
@@ -680,7 +686,7 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
                     WritableMap event = Arguments.createMap();
                     event.putInt(EVENT_PROP_DURATION, mVideoDuration);
                     event.putInt(EVENT_PROP_CURRENT_TIME, (int) (getCurrentPosition() / 1000.0));
-                    mEventEmitter.receiveEvent(getId(), Events.EVENT_RESUME.toString(), event);
+                    mEventEmitter.receiveEvent(mViewId, Events.EVENT_RESUME.toString(), event);
 
                 } else if (mPlayMode == PlayerParams.VALUE_PLAYER_ACTION_LIVE && mTimeShiftListener != null) {
                     startTimeShift();
@@ -689,7 +695,7 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
                     event.putInt(EVENT_PROP_LIVE_BEGIN_TIME, mBeginTime);
                     event.putInt(EVENT_PROP_CURRENT_TIME, mCurrentTime);
                     event.putInt(EVENT_PROP_SERVER_TIME, mServerTime);
-                    mEventEmitter.receiveEvent(getId(), Events.EVENT_RESUME.toString(), event);
+                    mEventEmitter.receiveEvent(mViewId, Events.EVENT_RESUME.toString(), event);
                 }
 
                 Log.d(TAG, LogUtils.getTraceInfo() + "外部控制——— 开始播放 start ");
@@ -752,6 +758,13 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
         }
     }
 
+
+    private void showWaterMark(CoverConfig coverConfig) {
+        if (coverConfig != null && coverConfig.getWaterMarks() != null && coverConfig.getWaterMarks().size() > 0) {
+            mWaterMarkView.setWaterMarks(coverConfig.getWaterMarks());
+            mWaterMarkView.show();
+        }
+    }
 
 /*============================= 事件回调处理 ===================================*/
 
@@ -836,6 +849,7 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
                 waterMarkList.pushMap(map);
             }
             event.putArray(EVENT_PROP_WMARKS, waterMarkList);  // 水印信息
+            showWaterMark(mCoverConfig); //显示水印
         }
 
         if (mPlayMode == PlayerParams.VALUE_PLAYER_VOD) { //VOD模式下参数
@@ -890,7 +904,7 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
         event.putInt(EVENT_PROP_VOLUME, volume); //声音百分比
         event.putInt(EVENT_PROP_BRIGHTNESS, mCurrentBrightness); //屏幕亮度
 
-        mEventEmitter.receiveEvent(getId(), Events.EVENT_LOAD.toString(), event);
+        mEventEmitter.receiveEvent(mViewId, Events.EVENT_LOAD.toString(), event);
 
         // 执行播放器控制
         applyModifiers();
@@ -913,25 +927,25 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
             case StatusCode.PLAY_INFO_BUFFERING_START://500004
                 //缓冲开始
                 isSeeking = true;
-                mEventEmitter.receiveEvent(getId(), Events.EVENT_BUFFER_START.toString(), null);
+                mEventEmitter.receiveEvent(mViewId, Events.EVENT_BUFFER_START.toString(), null);
                 break;
             case StatusCode.PLAY_INFO_BUFFERING_END://500005
                 //缓冲结束
-                mEventEmitter.receiveEvent(getId(), Events.EVENT_BUFFER_END.toString(), null);
+                mEventEmitter.receiveEvent(mViewId, Events.EVENT_BUFFER_END.toString(), null);
                 break;
             case StatusCode.PLAY_INFO_VIDEO_RENDERING_START://500006
                 //渲染第一帧完成
-                mEventEmitter.receiveEvent(getId(), Events.EVENT_VIDEO_RENDING_START.toString(), null);
+                mEventEmitter.receiveEvent(mViewId, Events.EVENT_VIDEO_RENDING_START.toString(), null);
                 break;
             case StatusCode.PLAY_INFO_VIDEO_BUFFERPERCENT://600006
                 //视频缓冲时的进度，开始转圈
                 WritableMap event = Arguments.createMap();
                 event.putInt(EVENT_PROP_VIDEO_BUFF, bundle.containsKey(EVENT_PROP_VIDEO_BUFF) ? bundle.getInt(EVENT_PROP_VIDEO_BUFF) : 0);
-                mEventEmitter.receiveEvent(getId(), Events.EVENT_BUFFER_PERCENT.toString(), event);
+                mEventEmitter.receiveEvent(mViewId, Events.EVENT_BUFFER_PERCENT.toString(), event);
                 break;
             default:
                 if (mPlayMode != PlayerParams.VALUE_PLAYER_VOD)
-                    mEventEmitter.receiveEvent(getId(), Events.EVENT_BUFFER_START.toString(), null);
+                    mEventEmitter.receiveEvent(mViewId, Events.EVENT_BUFFER_START.toString(), null);
 
         }
         return false;
@@ -951,7 +965,7 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
         WritableMap event = Arguments.createMap();
         event.putInt(EVENT_PROP_VIDEO_BUFF, (bundle != null && bundle.containsKey(PlayerParams.KEY_VIDEO_BUFFER)) ?
                 bundle.getInt(PlayerParams.KEY_VIDEO_BUFFER) : 0);
-        mEventEmitter.receiveEvent(getId(), Events.EVENT_BUFFER_PERCENT.toString(), event);
+        mEventEmitter.receiveEvent(mViewId, Events.EVENT_BUFFER_PERCENT.toString(), event);
         return false;
     }
 
@@ -965,7 +979,7 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
     private boolean processSeekComplete(int what, Bundle bundle) {
         //视频缓冲转圈加载完成
         saveLastPostion(); //TODO 待驗證
-        mEventEmitter.receiveEvent(getId(), Events.EVENT_SEEK_COMPLETE.toString(), null);
+        mEventEmitter.receiveEvent(mViewId, Events.EVENT_SEEK_COMPLETE.toString(), null);
         return false;
     }
 
@@ -984,7 +998,7 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
         WritableMap event = Arguments.createMap();
         event.putInt(EVENT_PROP_WIDTH, mVideoWidth);
         event.putInt(EVENT_PROP_HEIGHT, mVideoHeight);
-        mEventEmitter.receiveEvent(getId(), Events.EVENT_CHANGESIZE.toString(), event);
+        mEventEmitter.receiveEvent(mViewId, Events.EVENT_CHANGESIZE.toString(), event);
         return true;
     }
 
@@ -1005,7 +1019,7 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
 
         WritableMap event = Arguments.createMap();
         event.putInt(EVENT_PROP_PLAY_BUFFERPERCENT, percent);
-        mEventEmitter.receiveEvent(getId(), Events.EVENT_PLAYABLE_PERCENT.toString(), event);
+        mEventEmitter.receiveEvent(mViewId, Events.EVENT_PLAYABLE_PERCENT.toString(), event);
         return true;
     }
 
@@ -1023,7 +1037,7 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
 
         WritableMap event = Arguments.createMap();
         event.putInt(EVENT_PROP_PLAY_BUFFERPERCENT, percent);
-        mEventEmitter.receiveEvent(getId(), Events.EVENT_PLAYABLE_PERCENT.toString(), event);
+        mEventEmitter.receiveEvent(mViewId, Events.EVENT_PLAYABLE_PERCENT.toString(), event);
         return true;
     }
 
@@ -1037,7 +1051,7 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
      */
     private boolean processCompletion(int what, Bundle bundle) {
         isCompleted = true;
-        mEventEmitter.receiveEvent(getId(), Events.EVENT_END.toString(), null);
+        mEventEmitter.receiveEvent(mViewId, Events.EVENT_END.toString(), null);
         return true;
     }
 
@@ -1058,7 +1072,7 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
         error.putInt(EVENT_PROP_MMS_STATCODE, statusCode);
         error.putString(EVENT_PROP_ERROR_CODE, errorCode);
         error.putString(EVENT_PROP_ERROR_MSG, errorMsg);
-        mEventEmitter.receiveEvent(getId(), Events.EVENT_ERROR.toString(), error);
+        mEventEmitter.receiveEvent(mViewId, Events.EVENT_ERROR.toString(), error);
         return true;
     }
 
@@ -1204,7 +1218,7 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
         error.putInt(EVENT_PROP_MMS_STATCODE, statusCode);
         error.putString(EVENT_PROP_ERROR_CODE, errorCode);
         error.putString(EVENT_PROP_ERROR_MSG, errorMsg);
-        mEventEmitter.receiveEvent(getId(), Events.EVENT_ERROR.toString(), error);
+        mEventEmitter.receiveEvent(mViewId, Events.EVENT_ERROR.toString(), error);
         return true;
     }
 
@@ -1280,7 +1294,7 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
         error.putInt(EVENT_PROP_MMS_STATCODE, statusCode);
         error.putString(EVENT_PROP_ERROR_CODE, errorCode);
         error.putString(EVENT_PROP_ERROR_MSG, errorMsg);
-        mEventEmitter.receiveEvent(getId(), Events.EVENT_ERROR.toString(), error);
+        mEventEmitter.receiveEvent(mViewId, Events.EVENT_ERROR.toString(), error);
         return true;
     }
 
@@ -1297,7 +1311,7 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
         event.putInt(EVENT_PROP_MMS_STATCODE, (bundle != null && bundle.containsKey(PlayerParams.KEY_RESULT_STATUS_CODE)) ? bundle.getInt(PlayerParams.KEY_RESULT_STATUS_CODE) : -1);
 //        event.putString(EVENT_PROP_RET_DATA, (bundle != null && bundle.containsKey(EVENT_PROP_RET_DATA)) ? bundle.getString(EVENT_PROP_RET_DATA) : "");
         event.putInt(EVENT_PROP_MMS_HTTPCODE, (bundle != null && bundle.containsKey(PlayerParams.KEY_HTTP_CODE)) ? bundle.getInt(PlayerParams.KEY_HTTP_CODE) : -1);
-//        mEventEmitter.receiveEvent(getId(), Events.EVENT_MEDIA_PLAYURL.toString(), event);
+//        mEventEmitter.receiveEvent(mViewId, Events.EVENT_MEDIA_PLAYURL.toString(), event);
         return true;
     }
 
@@ -1310,7 +1324,7 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
      */
     private boolean processAdvertStart(int what, Bundle bundle) {
         //mLePlayerValid = true; //广告不允许暂停
-        mEventEmitter.receiveEvent(getId(), Events.EVENT_AD_START.toString(), null);
+        mEventEmitter.receiveEvent(mViewId, Events.EVENT_AD_START.toString(), null);
         return true;
     }
 
@@ -1323,7 +1337,7 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
      */
     private boolean processAdvertComplete(int what, Bundle bundle) {
         mLePlayerValid = true;
-        mEventEmitter.receiveEvent(getId(), Events.EVENT_AD_COMPLETE.toString(), null);
+        mEventEmitter.receiveEvent(mViewId, Events.EVENT_AD_COMPLETE.toString(), null);
         return true;
     }
 
@@ -1337,7 +1351,7 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
     private boolean processAdvertProgress(int what, Bundle bundle) {
         WritableMap event = Arguments.createMap();
         event.putInt(EVENT_PROP_AD_TIME, (bundle != null && bundle.containsKey(EVENT_PROP_AD_TIME)) ? bundle.getInt(EVENT_PROP_AD_TIME) : 0);
-        mEventEmitter.receiveEvent(getId(), Events.EVENT_AD_PROGRESS.toString(), event);
+        mEventEmitter.receiveEvent(mViewId, Events.EVENT_AD_PROGRESS.toString(), event);
         return true;
     }
 
@@ -1366,7 +1380,7 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
         other.putString(EVENT_PROP_EXTRA, (bundle != null) ? bundle.toString() : "");
         WritableMap event = Arguments.createMap();
         event.putMap(EVENT_PROP_EVENT, other);
-        mEventEmitter.receiveEvent(getId(), Events.EVENT_OTHER_EVENT.toString(), event);
+        mEventEmitter.receiveEvent(mViewId, Events.EVENT_OTHER_EVENT.toString(), event);
         return true;
     }
 

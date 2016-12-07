@@ -1,6 +1,7 @@
 package com.lecloud.DemoProject;
 
 import com.lecloud.DemoProject.leecoSdk.LeReactPlayerManager;
+import com.lecloud.DemoProject.leecoSdk.LeReactVideoViewManager;
 import com.lecloud.DemoProject.sample.CallbackModule;
 import com.lecloud.DemoProject.sample.CheckItemViewManager;
 import com.lecloud.DemoProject.sample.ConstModule;
@@ -54,7 +55,8 @@ public class RJReactPackage implements ReactPackage {
         List<ViewManager> viewManagers = new ArrayList<>();
         viewManagers.add(new KenBurnsViewManager());
         viewManagers.add(new CheckItemViewManager());
-        viewManagers.add(new LeReactPlayerManager());
+//        viewManagers.add(new LeReactPlayerManager());
+        viewManagers.add(new LeReactVideoViewManager());
         viewManagers.add(new LinearGradientManager());
 
         return viewManagers;

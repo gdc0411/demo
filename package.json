@@ -18,10 +18,9 @@
     "redux-thunk": "^2.1.0"
   },
   "devDependencies": {
-    "react-dom": "15.3.2",
+    "react-dom": "^15.4.1",
     "react-native-mock": "^0.2.7",
     "redux-logger": "^2.7.4",
-    "remotedev-app": "0.9.0",
-    "typescript": "1.8.10"
+    "remotedev-app": "^0.10.2"
   }
 }

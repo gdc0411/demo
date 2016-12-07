@@ -42,7 +42,7 @@ public class LeReactPlayerManager extends SimpleViewManager<LeReactPlayer> {
     protected LeReactPlayer createViewInstance(ThemedReactContext reactContext) {
         Log.d(TAG, LogUtils.getTraceInfo() + "生命周期事件 createViewInstance 调起！");
         mReactContext = reactContext;
-        return new LeReactPlayer(mReactContext);
+        return new LeReactPlayer(mReactContext,null,0,null);
     }
 
     @Override

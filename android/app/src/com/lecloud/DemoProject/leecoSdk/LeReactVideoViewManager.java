@@ -21,35 +21,11 @@ import java.util.Map;
 
 import javax.annotation.Nullable;
 
-import static com.lecloud.DemoProject.leecoSdk.Constants.PROP_BRIGHTNESS;
-import static com.lecloud.DemoProject.leecoSdk.Constants.PROP_CLICKAD;
-import static com.lecloud.DemoProject.leecoSdk.Constants.PROP_LIVE;
-import static com.lecloud.DemoProject.leecoSdk.Constants.PROP_ORIENTATION;
-import static com.lecloud.DemoProject.leecoSdk.Constants.PROP_PAUSED;
-import static com.lecloud.DemoProject.leecoSdk.Constants.PROP_PLAY_IN_BACKGROUND;
-import static com.lecloud.DemoProject.leecoSdk.Constants.PROP_PLAY_MODE;
-import static com.lecloud.DemoProject.leecoSdk.Constants.PROP_RATE;
-import static com.lecloud.DemoProject.leecoSdk.Constants.PROP_SEEK;
-import static com.lecloud.DemoProject.leecoSdk.Constants.PROP_SRC;
-import static com.lecloud.DemoProject.leecoSdk.Constants.PROP_SRC_ALIVE_ACTIONID;
-import static com.lecloud.DemoProject.leecoSdk.Constants.PROP_SRC_ALIVE_BUSINESSLINE;
-import static com.lecloud.DemoProject.leecoSdk.Constants.PROP_SRC_ALIVE_CUID;
-import static com.lecloud.DemoProject.leecoSdk.Constants.PROP_SRC_ALIVE_CUSTOMERID;
-import static com.lecloud.DemoProject.leecoSdk.Constants.PROP_SRC_ALIVE_IS_USEHLS;
-import static com.lecloud.DemoProject.leecoSdk.Constants.PROP_SRC_ALIVE_UTIOKEN;
-import static com.lecloud.DemoProject.leecoSdk.Constants.PROP_SRC_HAS_SKIN;
-import static com.lecloud.DemoProject.leecoSdk.Constants.PROP_SRC_IS_PANO;
-import static com.lecloud.DemoProject.leecoSdk.Constants.PROP_SRC_VOD_BUSINESSLINE;
-import static com.lecloud.DemoProject.leecoSdk.Constants.PROP_SRC_VOD_SAAS;
-import static com.lecloud.DemoProject.leecoSdk.Constants.PROP_SRC_VOD_UUID;
-import static com.lecloud.DemoProject.leecoSdk.Constants.PROP_SRC_VOD_VUID;
-import static com.lecloud.DemoProject.leecoSdk.Constants.PROP_URI;
-import static com.lecloud.DemoProject.leecoSdk.Constants.PROP_VOLUME;
-import static com.lecloud.DemoProject.leecoSdk.Constants.REACT_CLASS;
+import static com.lecloud.DemoProject.leecoSdk.Constants.*;
 import static com.lecloud.DemoProject.utils.LogUtils.TAG;
 
 /**
- * Created by JiaRao on 2016/31/10.
+ * Created by JiaRao on 2016/07/12.
  */
 public class LeReactVideoViewManager extends SimpleViewManager<LeReactVideoView> {
 
@@ -64,11 +40,11 @@ public class LeReactVideoViewManager extends SimpleViewManager<LeReactVideoView>
     protected LeReactVideoView createViewInstance(ThemedReactContext reactContext) {
         Log.d(TAG, LogUtils.getTraceInfo() + "生命周期事件 createViewInstance 调起！");
         mReactContext = reactContext;
-        return new LeReactPlayer(mReactContext);
+        return new LeReactVideoView(mReactContext);
     }
 
     @Override
-    public void onDropViewInstance(LeReactPlayer videoView) {
+    public void onDropViewInstance(LeReactVideoView videoView) {
         Log.d(TAG, LogUtils.getTraceInfo() + "生命周期事件 onDropViewInstance 调起！");
 //        videoView.cleanupMediaPlayerResources();
         super.onDropViewInstance(videoView);
@@ -103,7 +79,7 @@ public class LeReactVideoViewManager extends SimpleViewManager<LeReactVideoView>
      * @param src 数据源包
      */
     @ReactProp(name = PROP_SRC)
-    public void setDataSource(final LeReactPlayer videoView, final ReadableMap src) {
+    public void setDataSource(final LeReactVideoView videoView, final ReadableMap src) {
         if (src == null || !src.hasKey(PROP_PLAY_MODE) || src.getInt(PROP_PLAY_MODE) == -1 ) {
             return;
         }
@@ -157,7 +133,7 @@ public class LeReactVideoViewManager extends SimpleViewManager<LeReactVideoView>
 
 
     @ReactProp(name = PROP_PAUSED, defaultBoolean = false)
-    public void setPaused(final LeReactPlayer videoView, final boolean paused) {
+    public void setPaused(final LeReactVideoView videoView, final boolean paused) {
         videoView.setPaused(paused);
     }
 
@@ -169,7 +145,7 @@ public class LeReactVideoViewManager extends SimpleViewManager<LeReactVideoView>
      * @param seek the msec
      */
     @ReactProp(name = PROP_SEEK)
-    public void setSeek(final LeReactPlayer videoView, final int seek) {
+    public void setSeek(final LeReactVideoView videoView, final int seek) {
         videoView.setSeekTo(seek);
     }
 
@@ -179,7 +155,7 @@ public class LeReactVideoViewManager extends SimpleViewManager<LeReactVideoView>
      * @param rate 码率值
      */
     @ReactProp(name = PROP_RATE)
-    public void setRate(final LeReactPlayer videoView, final String rate) {
+    public void setRate(final LeReactVideoView videoView, final String rate) {
         videoView.setRate(rate);
     }
 
@@ -189,13 +165,13 @@ public class LeReactVideoViewManager extends SimpleViewManager<LeReactVideoView>
      * @param liveId 机位ID
      */
     @ReactProp(name = PROP_LIVE)
-    public void setLive(final LeReactPlayer videoView, final String liveId) {
+    public void setLive(final LeReactVideoView videoView, final String liveId) {
         videoView.setLive(liveId);
     }
 
 
     @ReactProp(name = PROP_CLICKAD, defaultBoolean = false)
-    public void setClickAd(final LeReactPlayer videoView, final boolean isClicked) {
+    public void setClickAd(final LeReactVideoView videoView, final boolean isClicked) {
         videoView.setClickAd(isClicked);
     }
 
@@ -215,7 +191,7 @@ public class LeReactVideoViewManager extends SimpleViewManager<LeReactVideoView>
      * @param volume  音量控制 0-100
      */
     @ReactProp(name = PROP_VOLUME)
-    public void setVolume(final LeReactPlayer videoView, final int volume) {
+    public void setVolume(final LeReactVideoView videoView, final int volume) {
         videoView.setVolumePercent(volume);
     }
 
@@ -226,7 +202,7 @@ public class LeReactVideoViewManager extends SimpleViewManager<LeReactVideoView>
      * @param brightness 取值0-1
      */
     @ReactProp(name = PROP_BRIGHTNESS)
-    public void setBrightness(final LeReactPlayer videoView, final int brightness) {
+    public void setBrightness(final LeReactVideoView videoView, final int brightness) {
         videoView.setScreenBrightness( brightness);
     }
 
@@ -237,7 +213,7 @@ public class LeReactVideoViewManager extends SimpleViewManager<LeReactVideoView>
      * @param orientation 0-横屏，1-竖屏
      */
     @ReactProp(name = PROP_ORIENTATION)
-    public void setOrientation(final LeReactPlayer videoView, final int orientation) {
+    public void setOrientation(final LeReactVideoView videoView, final int orientation) {
         videoView.setOrientation(orientation);
     }
 
@@ -249,7 +225,7 @@ public class LeReactVideoViewManager extends SimpleViewManager<LeReactVideoView>
      * @param playInBackground 是否支持
      */
     @ReactProp(name = PROP_PLAY_IN_BACKGROUND, defaultBoolean = false)
-    public void setPlayInBackground(final LeReactPlayer videoView, final boolean playInBackground) {
+    public void setPlayInBackground(final LeReactVideoView videoView, final boolean playInBackground) {
         videoView.setPlayInBackground(playInBackground);
     }
 
