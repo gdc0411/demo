@@ -15,6 +15,7 @@ import com.lecloud.DemoProject.leecoSdk.watermark.WaterMarkView;
 import com.lecloud.DemoProject.utils.LogUtils;
 
 import com.lecloud.sdk.api.linepeople.OnlinePeopleChangeListener;
+import com.lecloud.sdk.api.md.entity.action.WaterConfig;
 import com.lecloud.sdk.api.status.ActionStatusListener;
 import com.lecloud.sdk.api.timeshift.ItimeShiftListener;
 import com.lecloud.sdk.listener.AdPlayerListener;
@@ -27,6 +28,9 @@ import com.lecloud.sdk.player.IMediaDataPlayer;
 import com.lecloud.sdk.player.IPlayer;
 import com.letvcloud.cmf.MediaPlayer;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by raojia on 2016/11/10.
  */
@@ -36,6 +40,7 @@ public class LeTextureView extends TextureView implements TextureView.SurfaceTex
     public static final String TAG = LogUtils.TAG;
 
     protected IPlayer mMediaPlayer;
+    protected WaterMarkView mWaterMarkView;
 
     protected ScalableType mScalableType = ScalableType.NONE;
 

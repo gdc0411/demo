@@ -94,4 +94,6 @@ public class WaterMarkView extends RelativeLayout {
 //            child.setVisibility(INVISIBLE);
 //        }
     }
+
+
 }

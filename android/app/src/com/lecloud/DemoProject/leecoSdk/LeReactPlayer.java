@@ -11,9 +11,12 @@ import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.View;
 import android.view.WindowManager;
+import android.widget.RelativeLayout;
 
 
+import com.lecloud.DemoProject.R;
 import com.lecloud.DemoProject.leecoSdk.watermark.WaterMarkView;
 import com.lecloud.DemoProject.utils.LogUtils;
 import com.lecloud.DemoProject.utils.OrientationSensorUtils;
@@ -46,6 +49,7 @@ import com.letv.android.client.cp.sdk.player.live.CPLivePlayer;
 import com.letv.android.client.cp.sdk.player.vod.CPVodPlayer;
 import com.letvcloud.cmf.MediaPlayer;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -62,7 +66,7 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
     private RCTEventEmitter mEventEmitter;
     private int mViewId;
     /// 水印
-    private WaterMarkView mWaterMarkView;
+//    private WaterMarkView mWaterMarkView;
 
     /*
     * 设备控制
@@ -180,13 +184,14 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
 
     /*============================= 播放器构造 ===================================*/
 
-    public LeReactPlayer(ThemedReactContext context, RCTEventEmitter eventEmitter, int viewId, WaterMarkView waterMarkView) {
+    public LeReactPlayer(ThemedReactContext context, RCTEventEmitter eventEmitter, int viewId, WaterMarkView view) {
         super(context);
         mThemedReactContext = context;
 
         mEventEmitter = eventEmitter;
         mViewId = viewId;
-        mWaterMarkView = waterMarkView;
+
+        mWaterMarkView = view;
 
         mThemedReactContext.addLifecycleEventListener(this);
 
@@ -357,10 +362,25 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
             else
                 setDataSource(bundle);
 
-
             WritableMap event = Arguments.createMap();
             event.putString(PROP_SRC, bundle.toString());
             mEventEmitter.receiveEvent(mViewId, Events.EVENT_LOAD_SOURCE.toString(), event);
+
+//            mWaterMarkView.postDelayed(new Runnable() {
+//                @Override
+//                public void run() {
+////                    List<WaterConfig> marks = new ArrayList<>();
+////                    WaterConfig wc = new WaterConfig("http://i1.letvimg.com/lc04_leju/201601/08/15/24/lecloud/watermarking.png", "http://i1.letvimg.com/lc04_leju/201601/08/15/24/lecloud/watermarking.png", "2");
+////                    marks.add(wc);
+////                    mWaterMarkView.setWaterMarks(marks);
+//
+//                    if (mCoverConfig != null && mCoverConfig.getWaterMarks() != null && mCoverConfig.getWaterMarks().size() > 0) {
+//                        mWaterMarkView.setWaterMarks(mCoverConfig.getWaterMarks());
+//                        mWaterMarkView.show();
+//                    }
+//                }
+//            }, 80);
+
         }
     }
 
@@ -400,9 +420,9 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
 
         if (mPlayMode == PlayerParams.VALUE_PLAYER_VOD) { //点播
 
-            if(sec <= mVideoDuration) {
+            if (sec <= mVideoDuration) {
                 seekTo(sec * 1000);
-            }else{
+            } else {
                 seekTo(mVideoDuration * 1000);
             }
 
@@ -716,7 +736,7 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
             return;
         }
         //回到上次播放位置
-        if (mMediaPlayer != null && mPlayMode == PlayerParams.VALUE_PLAYER_VOD  && mLastPosition != 0) {
+        if (mMediaPlayer != null && mPlayMode == PlayerParams.VALUE_PLAYER_VOD && mLastPosition != 0) {
             seekToLastPostion(lastPosition * 1000);
             Log.d(TAG, LogUtils.getTraceInfo() + "外部控制——— 恢复位置 seekToLastPostion: " + mLastPosition);
         }
@@ -758,13 +778,12 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
         }
     }
 
-
-    private void showWaterMark(CoverConfig coverConfig) {
-        if (coverConfig != null && coverConfig.getWaterMarks() != null && coverConfig.getWaterMarks().size() > 0) {
-            mWaterMarkView.setWaterMarks(coverConfig.getWaterMarks());
-            mWaterMarkView.show();
-        }
-    }
+//    private void showWaterMark(CoverConfig coverConfig) {
+//        if (coverConfig != null && coverConfig.getWaterMarks() != null && coverConfig.getWaterMarks().size() > 0) {
+//            mWaterMarkView.setWaterMarks(coverConfig.getWaterMarks());
+//            mWaterMarkView.show();
+//        }
+//    }
 
 /*============================= 事件回调处理 ===================================*/
 
@@ -849,8 +868,8 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
                 waterMarkList.pushMap(map);
             }
             event.putArray(EVENT_PROP_WMARKS, waterMarkList);  // 水印信息
-            showWaterMark(mCoverConfig); //显示水印
-
+//            mWaterMarkView.setWaterMarks(mCoverConfig.getWaterMarks());
+//            showWaterMark(mCoverConfig); //显示水印
         }
 
         if (mPlayMode == PlayerParams.VALUE_PLAYER_VOD) { //VOD模式下参数
@@ -1112,7 +1131,6 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
 
                 //设置当前码率为默认
                 setDataSourceByRate(mCurrentRate);
-
                 break;
 
             default: //处理错误
@@ -1509,6 +1527,7 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
                 handled = true;
                 event = "MEDIADATA_VOD";
                 processMediaVodLoad(state, bundle);
+
                 break;
 
             case PlayerEvent.MEDIADATA_LIVE:  // 云直播返回的机位信息  6001

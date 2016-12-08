@@ -12,6 +12,11 @@ import android.widget.RelativeLayout;
 import com.facebook.react.uimanager.ThemedReactContext;
 import com.facebook.react.uimanager.events.RCTEventEmitter;
 import com.lecloud.DemoProject.leecoSdk.watermark.WaterMarkView;
+import com.lecloud.sdk.api.md.entity.action.CoverConfig;
+import com.lecloud.sdk.api.md.entity.action.WaterConfig;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by JiaRao on 2016/12/07.
@@ -20,6 +25,7 @@ public class LeReactVideoView extends RelativeLayout {
 
     private ThemedReactContext mThemedReactContext;
     private RCTEventEmitter mEventEmitter;
+    private WaterMarkView mWaterMarkView;
 
     /// 播放器
     private LeReactPlayer mLePlayer;
@@ -32,8 +38,7 @@ public class LeReactVideoView extends RelativeLayout {
         super(context);
         mThemedReactContext = context;
         mEventEmitter = mThemedReactContext.getJSModule(RCTEventEmitter.class);
-
-//        View.inflate(context, R.layout.view_check_item, this);
+        mWaterMarkView = new WaterMarkView(mThemedReactContext);
     }
 
     /**
@@ -44,29 +49,45 @@ public class LeReactVideoView extends RelativeLayout {
      */
     public void setSrc(final Bundle bundle) {
 
-        WaterMarkView waterMarkView = new WaterMarkView(mThemedReactContext);
-
-        mLePlayer = new LeReactPlayer(mThemedReactContext, mEventEmitter, getId(), waterMarkView);
-//        mLePlayer.setAlpha(0.1f);
-
-        //将播放器放入容器
-//        View.inflate(mThemedReactContext, R.layout.video_play, this);
-//        RelativeLayout videoContainer = (RelativeLayout) findViewById(R.id.videoContainer);
-//        videoContainer.addView(mLePlayer, VideoLayoutParams.computeContainerSize(mThemedReactContext, 16, 9));
+        mLePlayer = new LeReactPlayer(mThemedReactContext, mEventEmitter, getId(), mWaterMarkView);
         LayoutParams params = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
         addView(mLePlayer, params);
-        
-//        List<WaterConfig> marks = new ArrayList<WaterConfig>();
-//        WaterConfig wc = new WaterConfig("http://i1.letvimg.com/lc04_leju/201601/08/15/24/lecloud/watermarking.png","http://i1.letvimg.com/lc04_leju/201601/08/15/24/lecloud/watermarking.png","2");
-//        marks.add(wc);
-//        waterMarkView.setWaterMarks(marks);
-        addView(waterMarkView, params);
+        addView(mWaterMarkView, params);
 
         mLePlayer.setSrc(bundle);
 
-
+//        List<WaterConfig> marks = new ArrayList<>();
+//        WaterConfig wc = new WaterConfig("http://i1.letvimg.com/lc04_leju/201601/08/15/24/lecloud/watermarking.png","http://i1.letvimg.com/lc04_leju/201601/08/15/24/lecloud/watermarking.png","2");
+//        marks.add(wc);
+//        mWaterMarkView.setWaterMarks(marks);
 
     }
+
+
+    public void showWaterMark(CoverConfig coverConfig) {
+//        if (coverConfig != null && coverConfig.getLoadingConfig() != null && coverConfig.getLoadingConfig().getPicUrl() != null) {
+//            mVideoLoading.setLoadingUrl(coverConfig.getLoadingConfig().getPicUrl());
+//            mVideoLoading.showLoadingAnimation();
+//        }
+//        if (coverConfig != null && coverConfig.getWaterMarks() != null && coverConfig.getWaterMarks().size() > 0) {
+
+//        mWaterMarkView.post(new Runnable() {
+//            @Override
+//            public void run() {
+//                List<WaterConfig> marks = new ArrayList<>();
+//                WaterConfig wc = new WaterConfig("http://i1.letvimg.com/lc04_leju/201601/08/15/24/lecloud/watermarking.png", "http://i1.letvimg.com/lc04_leju/201601/08/15/24/lecloud/watermarking.png", "2");
+//                marks.add(wc);
+//                mWaterMarkView.setWaterMarks(marks);
+//            }
+//        });
+
+
+//
+////            mWaterMarkView.setWaterMarks(coverConfig.getWaterMarks());
+////            mWaterMarkView.show();
+//        }
+    }
+
 
     /**
      * 视频Seek到某一位置
