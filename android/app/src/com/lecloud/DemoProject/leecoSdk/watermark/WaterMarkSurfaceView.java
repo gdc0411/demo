@@ -50,7 +50,7 @@ public class WaterMarkSurfaceView extends SurfaceView {
     }
 
 
-    private void loadImage(String url) {
+    private void loadImage(String url, final int pos) {
         new AsyncTask<String, Integer, Bitmap>() {
             @Override
             protected Bitmap doInBackground(String... params) {
@@ -64,7 +64,7 @@ public class WaterMarkSurfaceView extends SurfaceView {
             protected void onPostExecute(Bitmap bitmap) {
                 super.onPostExecute(bitmap);
                 if (bitmap != null) {
-                    drawWaterMark(bitmap);
+                    drawWaterMark(bitmap, pos);
                 }
             }
         }.execute(url);
@@ -83,13 +83,14 @@ public class WaterMarkSurfaceView extends SurfaceView {
                 pos = Integer.parseInt(waterConfig.getPos());
             } catch (NumberFormatException e) {
             }
-            loadImage(waterConfig.getPicUrl());
+            loadImage(waterConfig.getPicUrl(), pos);
         }
     }
 
 
 
-    private void drawWaterMark(Bitmap bmp) {
+    private void drawWaterMark(Bitmap bmp, int pos) {
+
         Canvas canvas = mSurfaceHolder.lockCanvas();
 //        canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
 

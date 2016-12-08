@@ -22,27 +22,26 @@ import com.lecloud.DemoProject.utils.LogUtils;
  */
 public class LeReactVideoView extends RelativeLayout {
 
-    //定义日志
     public static final String TAG = LogUtils.TAG;
 
     private ThemedReactContext mThemedReactContext;
-    private RCTEventEmitter mEventEmitter;
-
-    /// 播放器
     private LeReactPlayer mLePlayer;
-    private WaterMarkSurfaceView mWaterMark;
 
-    /*
-    * 构造函数
-    */
     public LeReactVideoView(ThemedReactContext context) {
         super(context);
         mThemedReactContext = context;
-        mEventEmitter = mThemedReactContext.getJSModule(RCTEventEmitter.class);
-        mWaterMark = new WaterMarkSurfaceView(mThemedReactContext);
 
-        ((Activity) context.getBaseContext()).getWindow().setFormat(PixelFormat.TRANSLUCENT);
-        ((Activity) context.getBaseContext()).getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        WaterMarkSurfaceView mWaterMark = new WaterMarkSurfaceView(mThemedReactContext);
+        mWaterMark.setZOrderOnTop(true);
+        mWaterMark.getHolder().setFormat(PixelFormat.TRANSPARENT);
+
+        mLePlayer = new LeReactPlayer(mThemedReactContext);
+        mLePlayer.setEventEmitter(mThemedReactContext.getJSModule(RCTEventEmitter.class));
+        mLePlayer.setWaterMarkSurface(mWaterMark);
+
+        LayoutParams params = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+        addView(mLePlayer, params);
+        addView(mWaterMark, params);
     }
 
     /**
@@ -52,15 +51,11 @@ public class LeReactVideoView extends RelativeLayout {
      * @return
      */
     public void setSrc(final Bundle bundle) {
-        mLePlayer = new LeReactPlayer(mThemedReactContext, mEventEmitter, getId(), mWaterMark);
 
-        LayoutParams params = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
-        addView(mLePlayer, params);
-        addView(mWaterMark, params);
+        ((Activity) mThemedReactContext.getBaseContext()).getWindow().setFormat(PixelFormat.TRANSLUCENT);
+        ((Activity) mThemedReactContext.getBaseContext()).getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
-        mWaterMark.setZOrderOnTop(true);//处于顶层
-        mWaterMark.getHolder().setFormat(PixelFormat.TRANSPARENT);//设置surface为透明
-
+        mLePlayer.setViewId(getId());
         mLePlayer.setSrc(bundle);
     }
 

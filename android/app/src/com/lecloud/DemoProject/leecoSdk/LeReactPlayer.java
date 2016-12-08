@@ -17,7 +17,6 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.SurfaceHolder;
 
-
 import com.lecloud.DemoProject.leecoSdk.watermark.WaterMarkSurfaceView;
 import com.lecloud.DemoProject.utils.LogUtils;
 import com.lecloud.DemoProject.utils.OrientationSensorUtils;
@@ -184,15 +183,9 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
 
     /*============================= 播放器构造 ===================================*/
 
-    public LeReactPlayer(ThemedReactContext context, RCTEventEmitter eventEmitter, int viewId, WaterMarkSurfaceView view) {
+    public LeReactPlayer(ThemedReactContext context) {
         super(context);
         mThemedReactContext = context;
-
-        mEventEmitter = eventEmitter;
-        mViewId = viewId;
-
-        mWaterMarkSurfaceView = view;
-
         mThemedReactContext.addLifecycleEventListener(this);
 
         setSurfaceTextureListener(this);
@@ -205,6 +198,18 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
 
         // 屏幕方向
         mCurrentOritentation = ScreenUtils.getOrientation(context.getBaseContext());
+    }
+
+    public void setEventEmitter(RCTEventEmitter mEventEmitter) {
+        this.mEventEmitter = mEventEmitter;
+    }
+
+    public void setViewId(int mViewId) {
+        this.mViewId = mViewId;
+    }
+
+    public void setWaterMarkSurface(WaterMarkSurfaceView mWaterMarkSurfaceView) {
+        this.mWaterMarkSurfaceView = mWaterMarkSurfaceView;
     }
 
     private void initActionLiveListener() {
@@ -759,12 +764,6 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
         }
     }
 
-//    private void showWaterMark(CoverConfig coverConfig) {
-//        if (coverConfig != null && coverConfig.getWaterMarks() != null && coverConfig.getWaterMarks().size() > 0) {
-//            mWaterMarkSurfaceView.setWaterMarks(coverConfig.getWaterMarks());
-//            mWaterMarkSurfaceView.show();
-//        }
-//    }
 
 /*============================= 事件回调处理 ===================================*/
 
@@ -849,8 +848,6 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
                 waterMarkList.pushMap(map);
             }
             event.putArray(EVENT_PROP_WMARKS, waterMarkList);  // 水印信息
-//            mWaterMarkSurfaceView.setWaterMarks(mCoverConfig.getWaterMarks());
-//            showWaterMark(mCoverConfig); //显示水印
         }
 
         if (mPlayMode == PlayerParams.VALUE_PLAYER_VOD) { //VOD模式下参数
