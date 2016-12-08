@@ -2,15 +2,20 @@ package com.lecloud.DemoProject.leecoSdk;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.graphics.SurfaceTexture;
+import android.media.session.MediaController;
 import android.os.Bundle;
 import android.util.AttributeSet;
 import android.view.Surface;
+import android.view.SurfaceView;
 import android.view.TextureView;
+import android.view.View;
 import android.view.ViewGroup;
 
 import com.lecloud.DemoProject.R;
+import com.lecloud.DemoProject.leecoSdk.watermark.WaterMarkSurfaceView;
 import com.lecloud.DemoProject.leecoSdk.watermark.WaterMarkView;
 import com.lecloud.DemoProject.utils.LogUtils;
 
@@ -40,7 +45,6 @@ public class LeTextureView extends TextureView implements TextureView.SurfaceTex
     public static final String TAG = LogUtils.TAG;
 
     protected IPlayer mMediaPlayer;
-    protected WaterMarkView mWaterMarkView;
 
     protected ScalableType mScalableType = ScalableType.NONE;
 
@@ -80,6 +84,7 @@ public class LeTextureView extends TextureView implements TextureView.SurfaceTex
         if (mMediaPlayer != null) {
             mMediaPlayer.setDisplay(surface);
         }
+
     }
 
     @Override

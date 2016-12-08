@@ -867,7 +867,7 @@ public class ReactVodVideoView extends VodVideoView {
         super.onInterceptMediaDataError(event, bundle);
 //
 //        mVideoLoading.hide();
-//        mWaterMarkView.hide();
+//        mWaterMarkSurfaceView.hide();
 //        mNoticeView.processPlayerState(event, bundle);
     }
 

@@ -6,30 +6,31 @@
  ************************************************************************/
 package com.lecloud.DemoProject.leecoSdk;
 
+import android.app.Activity;
+import android.graphics.PixelFormat;
 import android.os.Bundle;
+import android.view.WindowManager;
 import android.widget.RelativeLayout;
 
 import com.facebook.react.uimanager.ThemedReactContext;
 import com.facebook.react.uimanager.events.RCTEventEmitter;
-import com.lecloud.DemoProject.leecoSdk.watermark.WaterMarkView;
-import com.lecloud.sdk.api.md.entity.action.CoverConfig;
-import com.lecloud.sdk.api.md.entity.action.WaterConfig;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.lecloud.DemoProject.leecoSdk.watermark.WaterMarkSurfaceView;
+import com.lecloud.DemoProject.utils.LogUtils;
 
 /**
  * Created by JiaRao on 2016/12/07.
  */
 public class LeReactVideoView extends RelativeLayout {
 
+    //定义日志
+    public static final String TAG = LogUtils.TAG;
+
     private ThemedReactContext mThemedReactContext;
     private RCTEventEmitter mEventEmitter;
-    private WaterMarkView mWaterMarkView;
 
     /// 播放器
     private LeReactPlayer mLePlayer;
-    /*============================= 播放器外部接口 ===================================*/
+    private WaterMarkSurfaceView mWaterMark;
 
     /*
     * 构造函数
@@ -38,7 +39,10 @@ public class LeReactVideoView extends RelativeLayout {
         super(context);
         mThemedReactContext = context;
         mEventEmitter = mThemedReactContext.getJSModule(RCTEventEmitter.class);
-        mWaterMarkView = new WaterMarkView(mThemedReactContext);
+        mWaterMark = new WaterMarkSurfaceView(mThemedReactContext);
+
+        ((Activity) context.getBaseContext()).getWindow().setFormat(PixelFormat.TRANSLUCENT);
+        ((Activity) context.getBaseContext()).getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
     }
 
     /**
@@ -48,44 +52,16 @@ public class LeReactVideoView extends RelativeLayout {
      * @return
      */
     public void setSrc(final Bundle bundle) {
+        mLePlayer = new LeReactPlayer(mThemedReactContext, mEventEmitter, getId(), mWaterMark);
 
-        mLePlayer = new LeReactPlayer(mThemedReactContext, mEventEmitter, getId(), mWaterMarkView);
         LayoutParams params = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
         addView(mLePlayer, params);
-        addView(mWaterMarkView, params);
+        addView(mWaterMark, params);
+
+        mWaterMark.setZOrderOnTop(true);//处于顶层
+        mWaterMark.getHolder().setFormat(PixelFormat.TRANSPARENT);//设置surface为透明
 
         mLePlayer.setSrc(bundle);
-
-//        List<WaterConfig> marks = new ArrayList<>();
-//        WaterConfig wc = new WaterConfig("http://i1.letvimg.com/lc04_leju/201601/08/15/24/lecloud/watermarking.png","http://i1.letvimg.com/lc04_leju/201601/08/15/24/lecloud/watermarking.png","2");
-//        marks.add(wc);
-//        mWaterMarkView.setWaterMarks(marks);
-
-    }
-
-
-    public void showWaterMark(CoverConfig coverConfig) {
-//        if (coverConfig != null && coverConfig.getLoadingConfig() != null && coverConfig.getLoadingConfig().getPicUrl() != null) {
-//            mVideoLoading.setLoadingUrl(coverConfig.getLoadingConfig().getPicUrl());
-//            mVideoLoading.showLoadingAnimation();
-//        }
-//        if (coverConfig != null && coverConfig.getWaterMarks() != null && coverConfig.getWaterMarks().size() > 0) {
-
-//        mWaterMarkView.post(new Runnable() {
-//            @Override
-//            public void run() {
-//                List<WaterConfig> marks = new ArrayList<>();
-//                WaterConfig wc = new WaterConfig("http://i1.letvimg.com/lc04_leju/201601/08/15/24/lecloud/watermarking.png", "http://i1.letvimg.com/lc04_leju/201601/08/15/24/lecloud/watermarking.png", "2");
-//                marks.add(wc);
-//                mWaterMarkView.setWaterMarks(marks);
-//            }
-//        });
-
-
-//
-////            mWaterMarkView.setWaterMarks(coverConfig.getWaterMarks());
-////            mWaterMarkView.show();
-//        }
     }
 
 

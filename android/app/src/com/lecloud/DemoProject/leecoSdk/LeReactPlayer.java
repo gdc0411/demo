@@ -4,20 +4,21 @@ import android.app.Activity;
 import android.app.Service;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
-import android.graphics.PixelFormat;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.graphics.Rect;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.View;
-import android.view.WindowManager;
-import android.widget.RelativeLayout;
+import android.view.SurfaceHolder;
 
 
-import com.lecloud.DemoProject.R;
-import com.lecloud.DemoProject.leecoSdk.watermark.WaterMarkView;
+import com.lecloud.DemoProject.leecoSdk.watermark.WaterMarkSurfaceView;
 import com.lecloud.DemoProject.utils.LogUtils;
 import com.lecloud.DemoProject.utils.OrientationSensorUtils;
 import com.lecloud.DemoProject.utils.ScreenBrightnessManager;
@@ -49,7 +50,6 @@ import com.letv.android.client.cp.sdk.player.live.CPLivePlayer;
 import com.letv.android.client.cp.sdk.player.vod.CPVodPlayer;
 import com.letvcloud.cmf.MediaPlayer;
 
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -66,7 +66,7 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
     private RCTEventEmitter mEventEmitter;
     private int mViewId;
     /// 水印
-//    private WaterMarkView mWaterMarkView;
+    private WaterMarkSurfaceView mWaterMarkSurfaceView;
 
     /*
     * 设备控制
@@ -184,14 +184,14 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
 
     /*============================= 播放器构造 ===================================*/
 
-    public LeReactPlayer(ThemedReactContext context, RCTEventEmitter eventEmitter, int viewId, WaterMarkView view) {
+    public LeReactPlayer(ThemedReactContext context, RCTEventEmitter eventEmitter, int viewId, WaterMarkSurfaceView view) {
         super(context);
         mThemedReactContext = context;
 
         mEventEmitter = eventEmitter;
         mViewId = viewId;
 
-        mWaterMarkView = view;
+        mWaterMarkSurfaceView = view;
 
         mThemedReactContext.addLifecycleEventListener(this);
 
@@ -284,9 +284,6 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
 
             Context ctx = mThemedReactContext.getBaseContext();
 
-            ((Activity) ctx).getWindow().setFormat(PixelFormat.TRANSLUCENT);
-            ((Activity) ctx).getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-
             switch (mPlayMode) {
                 case PlayerParams.VALUE_PLAYER_LIVE: //直播机位
                     mMediaPlayer = new CPLivePlayer(ctx);
@@ -365,22 +362,6 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
             WritableMap event = Arguments.createMap();
             event.putString(PROP_SRC, bundle.toString());
             mEventEmitter.receiveEvent(mViewId, Events.EVENT_LOAD_SOURCE.toString(), event);
-
-//            mWaterMarkView.postDelayed(new Runnable() {
-//                @Override
-//                public void run() {
-////                    List<WaterConfig> marks = new ArrayList<>();
-////                    WaterConfig wc = new WaterConfig("http://i1.letvimg.com/lc04_leju/201601/08/15/24/lecloud/watermarking.png", "http://i1.letvimg.com/lc04_leju/201601/08/15/24/lecloud/watermarking.png", "2");
-////                    marks.add(wc);
-////                    mWaterMarkView.setWaterMarks(marks);
-//
-//                    if (mCoverConfig != null && mCoverConfig.getWaterMarks() != null && mCoverConfig.getWaterMarks().size() > 0) {
-//                        mWaterMarkView.setWaterMarks(mCoverConfig.getWaterMarks());
-//                        mWaterMarkView.show();
-//                    }
-//                }
-//            }, 80);
-
         }
     }
 
@@ -780,8 +761,8 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
 
 //    private void showWaterMark(CoverConfig coverConfig) {
 //        if (coverConfig != null && coverConfig.getWaterMarks() != null && coverConfig.getWaterMarks().size() > 0) {
-//            mWaterMarkView.setWaterMarks(coverConfig.getWaterMarks());
-//            mWaterMarkView.show();
+//            mWaterMarkSurfaceView.setWaterMarks(coverConfig.getWaterMarks());
+//            mWaterMarkSurfaceView.show();
 //        }
 //    }
 
@@ -868,7 +849,7 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
                 waterMarkList.pushMap(map);
             }
             event.putArray(EVENT_PROP_WMARKS, waterMarkList);  // 水印信息
-//            mWaterMarkView.setWaterMarks(mCoverConfig.getWaterMarks());
+//            mWaterMarkSurfaceView.setWaterMarks(mCoverConfig.getWaterMarks());
 //            showWaterMark(mCoverConfig); //显示水印
         }
 
@@ -1053,7 +1034,7 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
      */
     private boolean processDownloadFinish(int what, Bundle bundle) {
         int percent = 100;
-        mVideoBufferedDuration = (int) mVideoDuration;
+        mVideoBufferedDuration = mVideoDuration;
 
         WritableMap event = Arguments.createMap();
         event.putInt(EVENT_PROP_PLAY_BUFFERPERCENT, percent);
@@ -1129,6 +1110,8 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
                 //获得加载和水印图
                 mCoverConfig = videoHolder.getCoverConfig();
 
+                mWaterMarkSurfaceView.setWaterMarks(mCoverConfig.getWaterMarks());
+
                 //设置当前码率为默认
                 setDataSourceByRate(mCurrentRate);
                 break;
@@ -1170,6 +1153,8 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
 
                 //获得加载和水印图
                 mCoverConfig = actionInfo.getCoverConfig();
+
+                mWaterMarkSurfaceView.setWaterMarks(mCoverConfig.getWaterMarks());
 
                 // 获得活动状态
                 int actionStatus = actionInfo.getActivityState();
