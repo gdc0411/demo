@@ -14,6 +14,7 @@ import android.util.AttributeSet;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
+import com.lecloud.DemoProject.utils.PxUtils;
 import com.lecloud.sdk.api.md.entity.action.WaterConfig;
 
 import java.io.InputStream;
@@ -29,6 +30,12 @@ public class WaterMarkSurfaceView extends SurfaceView {
     private Context mContext;
     private SurfaceHolder mSurfaceHolder;
     private List<WaterConfig> mWaterMarks;
+
+    private int mContainerWidth;
+    private int mContainerHeight;
+    private int mWaterMarkWidth;
+    private int mWaterMarkHeight;
+    private int mMargin;
 
     public WaterMarkSurfaceView(Context context) {
         super(context);
@@ -49,6 +56,18 @@ public class WaterMarkSurfaceView extends SurfaceView {
     private void init(Context context) {
         mContext = context;
         mSurfaceHolder = this.getHolder();
+
+        mWaterMarkWidth = PxUtils.dip2px(mContext, 40);
+        mWaterMarkHeight = PxUtils.dip2px(mContext, 26);
+        mMargin = PxUtils.dip2px(mContext, 12);
+    }
+
+    public void setContainerWidth(int mContainerWidth) {
+        this.mContainerWidth = mContainerWidth;// PxUtils.dip2px(mContext, mContainerWidth);
+    }
+
+    public void setContainerHeight(int mContainerHeight) {
+        this.mContainerHeight = mContainerHeight;//PxUtils.dip2px(mContext, mContainerHeight);
     }
 
 
@@ -59,7 +78,11 @@ public class WaterMarkSurfaceView extends SurfaceView {
                 if (params == null || params.length == 0) {
                     return null;
                 }
-                return getHttpBitmap(params[0]);
+                BitmapFactory.Options options = getHttpBitmapOption(params[0]);
+                if (options != null)
+                    return getHttpBitmap(params[0], options, mWaterMarkWidth, mWaterMarkHeight);
+
+                return null;
             }
 
             @Override
@@ -89,7 +112,7 @@ public class WaterMarkSurfaceView extends SurfaceView {
         }
     }
 
-    private void clearWaterMarks(){
+    private void clearWaterMarks() {
         Canvas canvas = mSurfaceHolder.lockCanvas();
         canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
         mSurfaceHolder.unlockCanvasAndPost(canvas);
@@ -100,9 +123,22 @@ public class WaterMarkSurfaceView extends SurfaceView {
 //        canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
 
         Matrix matrix = new Matrix();
-        matrix.setScale(0.15f, 0.15f);
-        matrix.postTranslate(100, 0);
-        canvas.drawBitmap(bmp, bmp.getWidth(), bmp.getHeight(), new Paint());
+//        matrix.setScale(0.15f, 0.15f);
+        switch (pos) {
+            case 1: //左上角
+                matrix.postTranslate(mMargin, mMargin);
+                break;
+            case 2: //右上角
+                matrix.postTranslate(mContainerWidth - mWaterMarkWidth, mMargin);
+                break;
+            case 3: //左下角
+                matrix.postTranslate(mMargin, mContainerHeight - mWaterMarkHeight);
+                break;
+            case 4: //右下角
+                matrix.postTranslate(mContainerWidth - mWaterMarkWidth, mContainerHeight - mWaterMarkHeight);
+                break;
+        }
+        canvas.drawBitmap(bmp, matrix, null);
 
         mSurfaceHolder.unlockCanvasAndPost(canvas);
 
@@ -123,7 +159,31 @@ public class WaterMarkSurfaceView extends SurfaceView {
         bmp.recycle();
     }
 
-    private static Bitmap getHttpBitmap(String url) {
+    private static synchronized BitmapFactory.Options getHttpBitmapOption(String url) {
+        BitmapFactory.Options options = null;
+        Bitmap bitmap = null;
+        try {
+            URL myBitmapUrl = new URL(url);
+            HttpURLConnection conn = (HttpURLConnection) myBitmapUrl.openConnection();
+            conn.setConnectTimeout(0);
+            conn.setDoInput(true);
+            conn.connect();
+
+            options = new BitmapFactory.Options();
+            options.inJustDecodeBounds = true;
+
+            InputStream is = conn.getInputStream();
+            bitmap = BitmapFactory.decodeStream(is, null, options);
+//            bitmap = BitmapFactory.decodeStream(is);
+            is.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return options;
+    }
+
+    private static synchronized Bitmap getHttpBitmap(String url, BitmapFactory.Options originOptions,
+                                                     int reqWidth, int reqHeight) {
         Bitmap bitmap = null;
         try {
             URL myBitmapUrl = new URL(url);
@@ -133,7 +193,8 @@ public class WaterMarkSurfaceView extends SurfaceView {
             conn.connect();
 
             InputStream is = conn.getInputStream();
-            bitmap = BitmapFactory.decodeStream(is);
+//            bitmap = BitmapFactory.decodeStream(is);
+            bitmap = decodeSampledBitmapFromStream(is, originOptions, reqWidth, reqHeight);
             is.close();
         } catch (Exception e) {
             e.printStackTrace();
@@ -141,7 +202,41 @@ public class WaterMarkSurfaceView extends SurfaceView {
         return bitmap;
     }
 
-    private static Bitmap readBitmap(Resources r, int resId) {
+
+    private static synchronized Bitmap decodeSampledBitmapFromStream(InputStream in, BitmapFactory.Options originOptions,
+                                                                     int reqWidth, int reqHeight) {
+
+        // First decode with inJustDecodeBounds=true to check dimensions
+        final BitmapFactory.Options options = new BitmapFactory.Options();
+
+        // Calculate inSampleSize
+        options.inSampleSize = calculateInSampleSize(originOptions, reqWidth, reqHeight);
+
+        // Decode bitmap with inSampleSize set
+        options.inJustDecodeBounds = false;
+        return BitmapFactory.decodeStream(in, null, options);
+    }
+
+
+    private static int calculateInSampleSize(BitmapFactory.Options options,
+                                             int reqWidth, int reqHeight) {
+        // Raw height and width of image
+        final int height = options.outHeight;
+        final int width = options.outWidth;
+        int inSampleSize = 1;
+
+        //先根据宽度进行缩小
+        while (width / inSampleSize > reqWidth) {
+            inSampleSize++;
+        }
+        //然后根据高度进行缩小
+        while (height / inSampleSize > reqHeight) {
+            inSampleSize++;
+        }
+        return inSampleSize;
+    }
+
+    private static synchronized Bitmap readBitmap(Resources r, int resId) {
         BitmapFactory.Options opt = new BitmapFactory.Options();
         opt.inPreferredConfig = Bitmap.Config.RGB_565;
         opt.inPurgeable = true;

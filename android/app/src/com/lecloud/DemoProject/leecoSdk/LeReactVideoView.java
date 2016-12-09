@@ -26,12 +26,13 @@ public class LeReactVideoView extends RelativeLayout {
 
     private ThemedReactContext mThemedReactContext;
     private LeReactPlayer mLePlayer;
+    private WaterMarkSurfaceView mWaterMark;
 
     public LeReactVideoView(ThemedReactContext context) {
         super(context);
         mThemedReactContext = context;
 
-        WaterMarkSurfaceView mWaterMark = new WaterMarkSurfaceView(mThemedReactContext);
+        mWaterMark = new WaterMarkSurfaceView(mThemedReactContext);
         mWaterMark.setZOrderOnTop(true);
         mWaterMark.getHolder().setFormat(PixelFormat.TRANSPARENT);
 
@@ -53,7 +54,9 @@ public class LeReactVideoView extends RelativeLayout {
     public void setSrc(final Bundle bundle) {
         if (mLePlayer != null) {
             mLePlayer.setViewId(getId());
+
             mLePlayer.setSrc(bundle);
+
         }
     }
 
@@ -155,4 +158,12 @@ public class LeReactVideoView extends RelativeLayout {
     }
 
 
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        if(mWaterMark!=null){
+            mWaterMark.setContainerWidth(this.getMeasuredWidth());
+            mWaterMark.setContainerHeight(this.getMeasuredHeight());
+        }
+    }
 }
