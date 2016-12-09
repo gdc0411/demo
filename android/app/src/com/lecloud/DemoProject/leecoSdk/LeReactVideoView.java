@@ -6,10 +6,8 @@
  ************************************************************************/
 package com.lecloud.DemoProject.leecoSdk;
 
-import android.app.Activity;
 import android.graphics.PixelFormat;
 import android.os.Bundle;
-import android.view.WindowManager;
 import android.widget.RelativeLayout;
 
 import com.facebook.react.uimanager.ThemedReactContext;
@@ -25,13 +23,13 @@ public class LeReactVideoView extends RelativeLayout {
 
     private ThemedReactContext mThemedReactContext;
     private LeReactPlayer mLePlayer;
-    private WaterMarkView mWaterMark;
+    private LeWaterMarkView mWaterMark;
 
     public LeReactVideoView(ThemedReactContext context) {
         super(context);
         mThemedReactContext = context;
 
-        mWaterMark = new WaterMarkView(mThemedReactContext);
+        mWaterMark = new LeWaterMarkView(mThemedReactContext);
         mWaterMark.setZOrderOnTop(true);
         mWaterMark.getHolder().setFormat(PixelFormat.TRANSPARENT);
 
@@ -160,9 +158,51 @@ public class LeReactVideoView extends RelativeLayout {
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+
+        int widthMode = MeasureSpec.getMode(widthMeasureSpec);// 得到模式
+        int widthSize = MeasureSpec.getSize(widthMeasureSpec);// 得到尺寸
+
+        int width = 0;
+        switch (widthMode) {
+            /**
+             * mode共有三种情况，取值分别为MeasureSpec.UNSPECIFIED, MeasureSpec.EXACTLY,
+             * MeasureSpec.AT_MOST。
+             *
+             *
+             * MeasureSpec.EXACTLY是精确尺寸，
+             * 当我们将控件的layout_width或layout_height指定为具体数值时如andorid
+             * :layout_width="50dip"，或者为FILL_PARENT是，都是控件大小已经确定的情况，都是精确尺寸。
+             *
+             *
+             * MeasureSpec.AT_MOST是最大尺寸，
+             * 当控件的layout_width或layout_height指定为WRAP_CONTENT时
+             * ，控件大小一般随着控件的子空间或内容进行变化，此时控件尺寸只要不超过父控件允许的最大尺寸即可
+             * 。因此，此时的mode是AT_MOST，size给出了父控件允许的最大尺寸。
+             *
+             *
+             * MeasureSpec.UNSPECIFIED是未指定尺寸，这种情况不多，一般都是父控件是AdapterView，
+             * 通过measure方法传入的模式。
+             */
+            case MeasureSpec.AT_MOST:
+            case MeasureSpec.EXACTLY:
+                width = widthSize;
+                break;
+        }
+
+        int heightMode = MeasureSpec.getMode(heightMeasureSpec);// 得到模式
+        int heightSize = MeasureSpec.getSize(heightMeasureSpec);// 得到尺寸
+
+        int height = 0;
+        switch (heightMode) {
+            case MeasureSpec.AT_MOST:
+            case MeasureSpec.EXACTLY:
+                height = heightSize;
+                break;
+        }
+
         if(mWaterMark!=null){
-            mWaterMark.setContainerWidth(this.getMeasuredWidth());
-            mWaterMark.setContainerHeight(this.getMeasuredHeight());
+            mWaterMark.setContainerWidth(width);
+            mWaterMark.setContainerHeight(height);
         }
     }
 }

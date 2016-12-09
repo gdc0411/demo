@@ -36,6 +36,8 @@ class play extends Component {
             /* 视频真实尺寸 */
             width: -1,
             height: -1,
+            /* 窗口尺寸 */
+            bottom: 200,
             /* 屏幕方向 */
             orientation: -1,
             /* 暂停/播放状态 */
@@ -207,24 +209,29 @@ class play extends Component {
     renderOrientationControl(orientation) {
         const isSelected = (this.state.orientation == orientation);
         let dispName = '';
+        let scrBottom = 0;
         switch (orientation) {
             case 0:
                 dispName = ' 正横屏 ';
+                scrBottom = 0;
                 break;
             case 1:
                 dispName = ' 正竖屏 ';
+                scrBottom = 200;
                 break;
             case 8:
                 dispName = ' 反横屏 ';
+                scrBottom = 0;
                 break;
             case 9:
                 dispName = ' 反竖屏 ';
+                scrBottom = 200;
                 break;
         }
 
         // if( this.state.ratesInfo.length > 0 ) alert(this.state.ratesInfo );
         return (
-            <TouchableOpacity onPress={() => { this.setState({ orientation: orientation }); } }>
+            <TouchableOpacity onPress={() => { this.setState({ orientation: orientation, bottom: scrBottom }); } }>
                 <Text style={[styles.controlOption, { fontWeight: isSelected ? "bold" : "normal" }]}>
                     {dispName}
                 </Text>
@@ -324,8 +331,8 @@ class play extends Component {
         return (
             <View style={styles.container}>
                 <StatusBar barStyle='light-content' style={{ height: STATUS_BAR_HEIGHT }} />
-                <TouchableOpacity style={[styles.fullScreen, { width: SCREEN_WIDTH, height: 180 }]} onPress={() => { this.setState({ paused: !this.state.paused }); } }>
-                    <Video style={[styles.fullScreen, { width: SCREEN_WIDTH, height: 180 }]}
+                <TouchableOpacity style={[styles.fullScreen, { bottom: this.state.bottom }]} onPress={() => { this.setState({ paused: !this.state.paused }); } }>
+                    <Video style={[styles.fullScreen, { bottom: this.state.bottom }]}
                         source={this.state.source}
                         seek={this.state.seek}
                         rate={this.state.rate}
@@ -453,6 +460,7 @@ const styles = StyleSheet.create({
         position: 'absolute',
         top: STATUS_BAR_HEIGHT,
         left: 0,
+        bottom: 0,
         right: 0,
     },
     controls: {
