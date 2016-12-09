@@ -39,9 +39,6 @@ import java.util.List;
  */
 public class LeTextureView extends TextureView implements TextureView.SurfaceTextureListener {
 
-    //定义日志
-    public static final String TAG = LogUtils.TAG;
-
     protected IPlayer mMediaPlayer;
 
     protected ScalableType mScalableType = ScalableType.NONE;

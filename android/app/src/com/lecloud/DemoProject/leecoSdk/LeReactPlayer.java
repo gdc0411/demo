@@ -49,6 +49,8 @@ import java.util.List;
 import java.util.Map;
 
 import static com.lecloud.DemoProject.leecoSdk.Constants.*;
+import static com.lecloud.DemoProject.utils.LogUtils.TAG;
+
 
 /**
  * Created by raojia on 2016/11/10.
