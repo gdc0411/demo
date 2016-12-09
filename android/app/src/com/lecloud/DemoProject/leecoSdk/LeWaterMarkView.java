@@ -24,7 +24,7 @@ import java.util.List;
 /**
  * Created by LizaRao on 2016/12/9.
  */
-public class WaterMarkView extends SurfaceView {
+public class LeWaterMarkView extends SurfaceView {
 
     private Context mContext;
     private SurfaceHolder mSurfaceHolder;
@@ -36,17 +36,17 @@ public class WaterMarkView extends SurfaceView {
     private int mWaterMarkHeight;
     private int mMargin;
 
-    public WaterMarkView(Context context) {
+    public LeWaterMarkView(Context context) {
         super(context);
         init(context);
     }
 
-    public WaterMarkView(Context context, AttributeSet attrs, int defStyle) {
+    public LeWaterMarkView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         init(context);
     }
 
-    public WaterMarkView(Context context, AttributeSet attrs) {
+    public LeWaterMarkView(Context context, AttributeSet attrs) {
         super(context, attrs);
         init(context);
 
