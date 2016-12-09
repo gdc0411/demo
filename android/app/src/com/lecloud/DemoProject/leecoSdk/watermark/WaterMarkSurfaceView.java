@@ -5,8 +5,10 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
+import android.graphics.PorterDuff;
 import android.os.AsyncTask;
 import android.util.AttributeSet;
 import android.view.SurfaceHolder;
@@ -74,8 +76,8 @@ public class WaterMarkSurfaceView extends SurfaceView {
     public void setWaterMarks(List<WaterConfig> marks) {
         if (mWaterMarks != null) {
             mWaterMarks = null;
+            clearWaterMarks();
         }
-
         mWaterMarks = marks;
         for (WaterConfig waterConfig : marks) {
             int pos = 1;
@@ -87,10 +89,13 @@ public class WaterMarkSurfaceView extends SurfaceView {
         }
     }
 
-
+    private void clearWaterMarks(){
+        Canvas canvas = mSurfaceHolder.lockCanvas();
+        canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
+        mSurfaceHolder.unlockCanvasAndPost(canvas);
+    }
 
     private void drawWaterMark(Bitmap bmp, int pos) {
-
         Canvas canvas = mSurfaceHolder.lockCanvas();
 //        canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
 

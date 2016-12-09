@@ -1116,7 +1116,11 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
                 //获得加载和水印图
                 mCoverConfig = videoHolder.getCoverConfig();
 
-                mWaterMarkSurfaceView.setWaterMarks(mCoverConfig.getWaterMarks());
+                if (mWaterMarkSurfaceView != null
+                        && mCoverConfig != null
+                        && mCoverConfig.getWaterMarks() != null
+                        && mCoverConfig.getWaterMarks().size() > 0)
+                    mWaterMarkSurfaceView.setWaterMarks(mCoverConfig.getWaterMarks());
 
                 //设置当前码率为默认
                 setDataSourceByRate(mCurrentRate);
@@ -1160,7 +1164,11 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
                 //获得加载和水印图
                 mCoverConfig = actionInfo.getCoverConfig();
 
-                mWaterMarkSurfaceView.setWaterMarks(mCoverConfig.getWaterMarks());
+                if (mWaterMarkSurfaceView != null
+                        && mCoverConfig != null
+                        && mCoverConfig.getWaterMarks() != null
+                        && mCoverConfig.getWaterMarks().size() > 0)
+                    mWaterMarkSurfaceView.setWaterMarks(mCoverConfig.getWaterMarks());
 
                 // 获得活动状态
                 int actionStatus = actionInfo.getActivityState();
@@ -1634,6 +1642,12 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
             new Handler().post(new Runnable() {
                 @Override
                 public void run() {
+                    if (mWaterMarkSurfaceView != null
+                            && mCoverConfig != null
+                            && mCoverConfig.getWaterMarks() != null
+                            && mCoverConfig.getWaterMarks().size() > 0)
+                        mWaterMarkSurfaceView.setWaterMarks(mCoverConfig.getWaterMarks());
+
                     if (mPlayMode == PlayerParams.VALUE_PLAYER_ACTION_LIVE && mTimeShiftListener != null)
                         startTimeShift();
                     // Restore original state
