@@ -7,6 +7,7 @@ import android.content.pm.ActivityInfo;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.PixelFormat;
 import android.graphics.PorterDuff;
 import android.graphics.Rect;
 import android.media.AudioManager;
@@ -16,6 +17,7 @@ import android.os.Message;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.SurfaceHolder;
+import android.view.WindowManager;
 
 import com.lecloud.DemoProject.leecoSdk.watermark.WaterMarkSurfaceView;
 import com.lecloud.DemoProject.utils.LogUtils;
@@ -288,6 +290,9 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
             mLePlayerValid = false;
 
             Context ctx = mThemedReactContext.getBaseContext();
+
+            ((Activity) mThemedReactContext.getBaseContext()).getWindow().setFormat(PixelFormat.TRANSLUCENT);
+            ((Activity) mThemedReactContext.getBaseContext()).getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
             switch (mPlayMode) {
                 case PlayerParams.VALUE_PLAYER_LIVE: //直播机位
@@ -762,6 +767,10 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
 
             mMediaPlayer = null;
         }
+
+        ((Activity) mThemedReactContext.getBaseContext()).getWindow().setFormat(PixelFormat.TRANSLUCENT);
+        ((Activity) mThemedReactContext.getBaseContext()).getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
     }
 
 
@@ -1609,7 +1618,8 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
         }
     }
 
-    /*============================= 容器生命周期方法 ===================================*/
+
+/*============================= 容器生命周期方法 ===================================*/
 
 
     @Override

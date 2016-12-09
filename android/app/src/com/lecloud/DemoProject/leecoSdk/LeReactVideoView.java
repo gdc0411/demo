@@ -51,12 +51,10 @@ public class LeReactVideoView extends RelativeLayout {
      * @return
      */
     public void setSrc(final Bundle bundle) {
-
-        ((Activity) mThemedReactContext.getBaseContext()).getWindow().setFormat(PixelFormat.TRANSLUCENT);
-        ((Activity) mThemedReactContext.getBaseContext()).getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-
-        mLePlayer.setViewId(getId());
-        mLePlayer.setSrc(bundle);
+        if (mLePlayer != null) {
+            mLePlayer.setViewId(getId());
+            mLePlayer.setSrc(bundle);
+        }
     }
 
 
