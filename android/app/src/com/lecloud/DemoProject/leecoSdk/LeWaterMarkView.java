@@ -13,6 +13,7 @@ import android.util.AttributeSet;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
+import com.lecloud.DemoProject.utils.LogUtils;
 import com.lecloud.DemoProject.utils.PxUtils;
 import com.lecloud.sdk.api.md.entity.action.WaterConfig;
 
@@ -26,7 +27,10 @@ import java.util.List;
  */
 public class LeWaterMarkView extends SurfaceView {
 
-    private Context mContext;
+    private static final int FIX_WATER_MARK_WIDTH = 48;
+    private static final int FIX_WATER_MARK_HEIGHT = 32;
+    private static final int FIX_WATER_MARK_MARGIN = 22;
+
     private SurfaceHolder mSurfaceHolder;
     private List<WaterConfig> mWaterMarks;
 
@@ -53,12 +57,11 @@ public class LeWaterMarkView extends SurfaceView {
     }
 
     private void init(Context context) {
-        mContext = context;
         mSurfaceHolder = this.getHolder();
 
-        mWaterMarkWidth = PxUtils.dip2px(mContext, 40);
-        mWaterMarkHeight = PxUtils.dip2px(mContext, 26);
-        mMargin = PxUtils.dip2px(mContext, 12);
+        mWaterMarkWidth = PxUtils.dip2px(context, FIX_WATER_MARK_WIDTH);
+        mWaterMarkHeight = PxUtils.dip2px(context, FIX_WATER_MARK_HEIGHT);
+        mMargin = PxUtils.dip2px(context, FIX_WATER_MARK_MARGIN);
     }
 
     public void setContainerWidth(int mContainerWidth) {
@@ -101,13 +104,18 @@ public class LeWaterMarkView extends SurfaceView {
             clearWaterMarks();
         }
         mWaterMarks = marks;
-        for (WaterConfig waterConfig : marks) {
-            int pos = 1;
-            try {
-                pos = Integer.parseInt(waterConfig.getPos());
-            } catch (NumberFormatException e) {
+    }
+
+    public void showWaterMarks() {
+        if (mWaterMarks != null) {
+            for (WaterConfig waterConfig : mWaterMarks) {
+                int pos = 1;
+                try {
+                    pos = Integer.parseInt(waterConfig.getPos());
+                } catch (NumberFormatException e) {
+                }
+                loadImage(waterConfig.getPicUrl(), pos);
             }
-            loadImage(waterConfig.getPicUrl(), pos);
         }
     }
 
@@ -118,25 +126,32 @@ public class LeWaterMarkView extends SurfaceView {
     }
 
     private void drawWaterMark(Bitmap bmp, int pos) {
+        if (!mSurfaceHolder.getSurface().isValid())
+            return;
+
         Canvas canvas = mSurfaceHolder.lockCanvas();
-//        canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
 
         Matrix matrix = new Matrix();
-//        matrix.setScale(0.15f, 0.15f);
+        float scaleWidth = mWaterMarkWidth / (float) bmp.getWidth();
+        float scaleHeight = mWaterMarkHeight / (float) bmp.getHeight();
+        float scale = (scaleWidth < scaleHeight) ? scaleWidth : scaleHeight;
+        matrix.setScale(scale, scale);
+
         switch (pos) {
             case 1: //左上角
                 matrix.postTranslate(mMargin, mMargin);
                 break;
             case 2: //右上角
-                matrix.postTranslate(mContainerWidth - mWaterMarkWidth, mMargin);
+                matrix.postTranslate(mContainerWidth - mWaterMarkWidth - mMargin, mMargin);
                 break;
             case 3: //左下角
-                matrix.postTranslate(mMargin, mContainerHeight - mWaterMarkHeight);
+                matrix.postTranslate(mMargin, mContainerHeight - mWaterMarkHeight - mMargin);
                 break;
             case 4: //右下角
-                matrix.postTranslate(mContainerWidth - mWaterMarkWidth, mContainerHeight - mWaterMarkHeight);
+                matrix.postTranslate(mContainerWidth - mWaterMarkWidth - mMargin, mContainerHeight - mWaterMarkHeight - mMargin);
                 break;
         }
+        
         canvas.drawBitmap(bmp, matrix, null);
 
         mSurfaceHolder.unlockCanvasAndPost(canvas);
@@ -160,7 +175,7 @@ public class LeWaterMarkView extends SurfaceView {
 
     private static synchronized BitmapFactory.Options getHttpBitmapOption(String url) {
         BitmapFactory.Options options = null;
-        Bitmap bitmap = null;
+        Bitmap bitmap;
         try {
             URL myBitmapUrl = new URL(url);
             HttpURLConnection conn = (HttpURLConnection) myBitmapUrl.openConnection();
@@ -172,9 +187,10 @@ public class LeWaterMarkView extends SurfaceView {
             options.inJustDecodeBounds = true;
 
             InputStream is = conn.getInputStream();
-            bitmap = BitmapFactory.decodeStream(is, null, options);
+            BitmapFactory.decodeStream(is, null, options);
 //            bitmap = BitmapFactory.decodeStream(is);
             is.close();
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -209,10 +225,12 @@ public class LeWaterMarkView extends SurfaceView {
         final BitmapFactory.Options options = new BitmapFactory.Options();
 
         // Calculate inSampleSize
+
         options.inSampleSize = calculateInSampleSize(originOptions, reqWidth, reqHeight);
 
         // Decode bitmap with inSampleSize set
         options.inJustDecodeBounds = false;
+        options.inPreferredConfig = Bitmap.Config.RGB_565;
         return BitmapFactory.decodeStream(in, null, options);
     }
 

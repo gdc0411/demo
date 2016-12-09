@@ -1112,8 +1112,10 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
                 if (mLeWaterMarkView != null
                         && mCoverConfig != null
                         && mCoverConfig.getWaterMarks() != null
-                        && mCoverConfig.getWaterMarks().size() > 0)
+                        && mCoverConfig.getWaterMarks().size() > 0) {
                     mLeWaterMarkView.setWaterMarks(mCoverConfig.getWaterMarks());
+                    mLeWaterMarkView.showWaterMarks();
+                }
 
                 //设置当前码率为默认
                 setDataSourceByRate(mCurrentRate);
@@ -1160,8 +1162,10 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
                 if (mLeWaterMarkView != null
                         && mCoverConfig != null
                         && mCoverConfig.getWaterMarks() != null
-                        && mCoverConfig.getWaterMarks().size() > 0)
+                        && mCoverConfig.getWaterMarks().size() > 0) {
                     mLeWaterMarkView.setWaterMarks(mCoverConfig.getWaterMarks());
+                    mLeWaterMarkView.showWaterMarks();
+                }
 
                 // 获得活动状态
                 int actionStatus = actionInfo.getActivityState();
@@ -1638,8 +1642,10 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
                     if (mLeWaterMarkView != null
                             && mCoverConfig != null
                             && mCoverConfig.getWaterMarks() != null
-                            && mCoverConfig.getWaterMarks().size() > 0)
-                        mLeWaterMarkView.setWaterMarks(mCoverConfig.getWaterMarks());
+                            && mCoverConfig.getWaterMarks().size() > 0) {
+                        //mLeWaterMarkView.setWaterMarks(mCoverConfig.getWaterMarks());
+                        mLeWaterMarkView.showWaterMarks();
+                    }
 
                     if (mPlayMode == PlayerParams.VALUE_PLAYER_ACTION_LIVE && mTimeShiftListener != null)
                         startTimeShift();
