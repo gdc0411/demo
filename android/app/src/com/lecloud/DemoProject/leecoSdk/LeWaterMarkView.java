@@ -151,7 +151,7 @@ public class LeWaterMarkView extends SurfaceView {
                 matrix.postTranslate(mContainerWidth - mWaterMarkWidth - mMargin, mContainerHeight - mWaterMarkHeight - mMargin);
                 break;
         }
-        
+
         canvas.drawBitmap(bmp, matrix, null);
 
         mSurfaceHolder.unlockCanvasAndPost(canvas);
