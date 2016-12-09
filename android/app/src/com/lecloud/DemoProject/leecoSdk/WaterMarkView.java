@@ -1,4 +1,4 @@
-package com.lecloud.DemoProject.leecoSdk.watermark;
+package com.lecloud.DemoProject.leecoSdk;
 
 import android.content.Context;
 import android.content.res.Resources;
@@ -7,7 +7,6 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
-import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.os.AsyncTask;
 import android.util.AttributeSet;
@@ -25,7 +24,7 @@ import java.util.List;
 /**
  * Created by LizaRao on 2016/12/9.
  */
-public class WaterMarkSurfaceView extends SurfaceView {
+public class WaterMarkView extends SurfaceView {
 
     private Context mContext;
     private SurfaceHolder mSurfaceHolder;
@@ -37,17 +36,17 @@ public class WaterMarkSurfaceView extends SurfaceView {
     private int mWaterMarkHeight;
     private int mMargin;
 
-    public WaterMarkSurfaceView(Context context) {
+    public WaterMarkView(Context context) {
         super(context);
         init(context);
     }
 
-    public WaterMarkSurfaceView(Context context, AttributeSet attrs, int defStyle) {
+    public WaterMarkView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         init(context);
     }
 
-    public WaterMarkSurfaceView(Context context, AttributeSet attrs) {
+    public WaterMarkView(Context context, AttributeSet attrs) {
         super(context, attrs);
         init(context);
 
