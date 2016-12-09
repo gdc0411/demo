@@ -15,8 +15,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.lecloud.DemoProject.R;
-import com.lecloud.DemoProject.leecoSdk.watermark.WaterMarkSurfaceView;
-import com.lecloud.DemoProject.leecoSdk.watermark.WaterMarkView;
 import com.lecloud.DemoProject.utils.LogUtils;
 
 import com.lecloud.sdk.api.linepeople.OnlinePeopleChangeListener;

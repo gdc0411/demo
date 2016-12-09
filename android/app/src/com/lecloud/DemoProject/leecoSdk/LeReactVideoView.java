@@ -14,7 +14,6 @@ import android.widget.RelativeLayout;
 
 import com.facebook.react.uimanager.ThemedReactContext;
 import com.facebook.react.uimanager.events.RCTEventEmitter;
-import com.lecloud.DemoProject.leecoSdk.watermark.WaterMarkSurfaceView;
 import com.lecloud.DemoProject.utils.LogUtils;
 
 /**
@@ -26,13 +25,13 @@ public class LeReactVideoView extends RelativeLayout {
 
     private ThemedReactContext mThemedReactContext;
     private LeReactPlayer mLePlayer;
-    private WaterMarkSurfaceView mWaterMark;
+    private WaterMarkView mWaterMark;
 
     public LeReactVideoView(ThemedReactContext context) {
         super(context);
         mThemedReactContext = context;
 
-        mWaterMark = new WaterMarkSurfaceView(mThemedReactContext);
+        mWaterMark = new WaterMarkView(mThemedReactContext);
         mWaterMark.setZOrderOnTop(true);
         mWaterMark.getHolder().setFormat(PixelFormat.TRANSPARENT);
 

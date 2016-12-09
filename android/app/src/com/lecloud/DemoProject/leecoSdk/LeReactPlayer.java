@@ -4,22 +4,15 @@ import android.app.Activity;
 import android.app.Service;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
 import android.graphics.PixelFormat;
-import android.graphics.PorterDuff;
-import android.graphics.Rect;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.SurfaceHolder;
 import android.view.WindowManager;
 
-import com.lecloud.DemoProject.leecoSdk.watermark.WaterMarkSurfaceView;
 import com.lecloud.DemoProject.utils.LogUtils;
 import com.lecloud.DemoProject.utils.OrientationSensorUtils;
 import com.lecloud.DemoProject.utils.ScreenBrightnessManager;
@@ -67,7 +60,7 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
     private RCTEventEmitter mEventEmitter;
     private int mViewId;
     /// 水印
-    private WaterMarkSurfaceView mWaterMarkSurfaceView;
+    private WaterMarkView mWaterMarkView;
 
     /*
     * 设备控制
@@ -210,8 +203,8 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
         this.mViewId = mViewId;
     }
 
-    public void setWaterMarkSurface(WaterMarkSurfaceView mWaterMarkSurfaceView) {
-        this.mWaterMarkSurfaceView = mWaterMarkSurfaceView;
+    public void setWaterMarkSurface(WaterMarkView mWaterMarkView) {
+        this.mWaterMarkView = mWaterMarkView;
     }
 
     private void initActionLiveListener() {
@@ -1116,11 +1109,11 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
                 //获得加载和水印图
                 mCoverConfig = videoHolder.getCoverConfig();
 
-                if (mWaterMarkSurfaceView != null
+                if (mWaterMarkView != null
                         && mCoverConfig != null
                         && mCoverConfig.getWaterMarks() != null
                         && mCoverConfig.getWaterMarks().size() > 0)
-                    mWaterMarkSurfaceView.setWaterMarks(mCoverConfig.getWaterMarks());
+                    mWaterMarkView.setWaterMarks(mCoverConfig.getWaterMarks());
 
                 //设置当前码率为默认
                 setDataSourceByRate(mCurrentRate);
@@ -1164,11 +1157,11 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
                 //获得加载和水印图
                 mCoverConfig = actionInfo.getCoverConfig();
 
-                if (mWaterMarkSurfaceView != null
+                if (mWaterMarkView != null
                         && mCoverConfig != null
                         && mCoverConfig.getWaterMarks() != null
                         && mCoverConfig.getWaterMarks().size() > 0)
-                    mWaterMarkSurfaceView.setWaterMarks(mCoverConfig.getWaterMarks());
+                    mWaterMarkView.setWaterMarks(mCoverConfig.getWaterMarks());
 
                 // 获得活动状态
                 int actionStatus = actionInfo.getActivityState();
@@ -1642,11 +1635,11 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
             new Handler().post(new Runnable() {
                 @Override
                 public void run() {
-                    if (mWaterMarkSurfaceView != null
+                    if (mWaterMarkView != null
                             && mCoverConfig != null
                             && mCoverConfig.getWaterMarks() != null
                             && mCoverConfig.getWaterMarks().size() > 0)
-                        mWaterMarkSurfaceView.setWaterMarks(mCoverConfig.getWaterMarks());
+                        mWaterMarkView.setWaterMarks(mCoverConfig.getWaterMarks());
 
                     if (mPlayMode == PlayerParams.VALUE_PLAYER_ACTION_LIVE && mTimeShiftListener != null)
                         startTimeShift();
