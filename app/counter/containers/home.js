@@ -17,6 +17,9 @@ import {
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
+import Orientation from '../componets/RCTOrientation';
+
+
 import * as calcActions from '../actions/calcAction';
 
 import Counter from '../componets/Counter';
@@ -33,6 +36,33 @@ const {height: SCREEN_HEIGHT, width: SCREEN_WIDTH} = Dimensions.get('window');
  */
 class home extends Component {
 
+    constructor() {
+        super();
+        const init = Orientation.getInitialOrientation();
+        this.state = {
+            init,
+            or: init,
+            sor: init,
+        };
+        this._updateOrientation = this._updateOrientation.bind(this);
+        Orientation.addOrientationListener(this._updateOrientation);
+        this._updateSpecificOrientation = this._updateSpecificOrientation.bind(this);
+        Orientation.addSpecificOrientationListener(this._updateSpecificOrientation);
+    }
+
+    _updateOrientation(or) {
+        this.setState({ or });
+    }
+
+    _updateSpecificOrientation(sor) {
+        this.setState({ sor });
+    }
+
+    componentWillMount() {
+        Orientation.lockToPortrait();
+    }
+
+
     //跳转到播放页
     skipToPlayer = (source) => {
         const {navigator} = this.props;
@@ -43,8 +73,13 @@ class home extends Component {
     //跳转到设备查看页
     skipToViewDevice = () => {
         const {navigator} = this.props;
-        // this.props.actions.play(source);
         navigator.push({ location: '/device' });
+    }
+
+    //跳转到转屏设置页
+    skipToTestOrientation = () => {
+        const {navigator} = this.props;
+        navigator.push({ location: '/orient' });
     }
 
     //加
@@ -86,6 +121,7 @@ class home extends Component {
                     <View style={{ flexDirection: 'column', width: SCREEN_WIDTH }} >
                         <View style={{ flexDirection: 'row', justifyContent: 'space-around' }} >
                             <InfoItem imgUrl={img1} desc={'设备信息'} color={'green'} onViewInfo={this.skipToViewDevice} />
+                            <Text onPress={this.skipToTestOrientation} >转屏测试</Text>
                         </View>
                         <View style={{ flexDirection: 'row', justifyContent: 'space-around' }} >
                             <PlayItem source={0} imgUrl={img1} desc={'第三方URL'} color={'black'} onPlay={this.skipToPlayer} />

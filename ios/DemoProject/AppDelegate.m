@@ -14,12 +14,17 @@
 #import "RCTRootView.h"
 
 #import "LECPlayerFoundation.h"
+#import "OrientationModule.h"
 
 
 #define kLCTestBundleID   @"com.lecloud.sdkTest"
 
 
 @implementation AppDelegate
+
+- (UIInterfaceOrientationMask)application:(UIApplication *)application supportedInterfaceOrientationsForWindow:(UIWindow *)window {
+  return [OrientationModule getOrientation];
+}
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
@@ -37,7 +42,7 @@
   /*
    确保App启动的屏幕方向
    */
-  [[UIApplication sharedApplication] setStatusBarOrientation:(UIInterfaceOrientationPortrait) animated:NO];
+//  [[UIApplication sharedApplication] setStatusBarOrientation:(UIInterfaceOrientationPortrait) animated:NO];
   
   /*
    *******************************************************************

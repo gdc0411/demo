@@ -255,12 +255,12 @@ class List extends Component {
                     <View style={styles.row} key={i} >
                         <Item title={goodsData[i].title}
                             url={goodsData[i].url}
-                            press={ (data) => this._addToCart(goodsData[i]) }
+                            press={(data) => this._addToCart(goodsData[i])}
                             />
 
                         <Item title={goodsData[parseInt(i) + 1].title}
                             url={goodsData[parseInt(i) + 1].url}
-                            press={ (data) => this._addToCart(goodsData[parseInt(i) + 1]) }
+                            press={(data) => this._addToCart(goodsData[parseInt(i) + 1])}
                             />
                     </View>
                 );
@@ -482,7 +482,7 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-start',
         flexDirection: 'row',
         flexWrap: 'wrap',
-        },
+    },
     container: {
 
         flex: 1,

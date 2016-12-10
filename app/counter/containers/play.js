@@ -21,6 +21,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as playActions from '../actions/playAction';
 
+import Orientation from '../componets/RCTOrientation';
 import Video from '../componets/RCTLeVideo';
 
 //取得屏幕宽高
@@ -90,6 +91,7 @@ class play extends Component {
         const { src } = this.props.params;
         const newSource = this.getFormatDatasource(src);
         this.setState({ source: newSource, });
+        Orientation.unlockAllOrientations();
     }
 
 

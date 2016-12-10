@@ -10,8 +10,6 @@ import {
     Text,
     View,
     Image,
-    NativeModules,
-    Platform,
 } from 'react-native';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';

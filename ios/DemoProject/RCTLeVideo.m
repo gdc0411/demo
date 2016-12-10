@@ -23,7 +23,7 @@
 #import "RCTLeVideoPlayerViewController.h"
 
 
-#define LCRect_PlayerHalfFrame    CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 250);
+#define LCRect_PlayerHalfFrame    CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height);
 
 @interface RCTLeVideo ()<LECPlayerDelegate, LCActivityManagerDelegate>
 {
@@ -262,7 +262,7 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
     return;
   
   for (LECStreamRateItem * lItem in _ratesList){
-    if (lItem.isEnabled && [rate isEqualToString:lItem.code] ){
+    if (lItem.isEnabled && [rate isEqualToString:lItem.code]){
       
       _currentRate = rate;
       __weak typeof(self) wSelf = self;
