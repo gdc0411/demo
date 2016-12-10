@@ -2,6 +2,7 @@ package com.lecloud.DemoProject;
 
 import com.lecloud.DemoProject.leecoSdk.LeReactPlayerManager;
 import com.lecloud.DemoProject.leecoSdk.LeReactVideoViewManager;
+import com.lecloud.DemoProject.modules.OrientationModule;
 import com.lecloud.DemoProject.sample.CallbackModule;
 import com.lecloud.DemoProject.sample.CheckItemViewManager;
 import com.lecloud.DemoProject.sample.ConstModule;
@@ -42,6 +43,7 @@ public class RJReactPackage implements ReactPackage {
         modules.add(new EmbedModule(reactContext));
         modules.add(new ConstModule(reactContext));
         modules.add(new DeviceModule(reactContext));
+        modules.add(new OrientationModule(reactContext));
         return modules;
     }
 
