@@ -22,6 +22,7 @@
 
 @implementation AppDelegate
 
+
 - (UIInterfaceOrientationMask)application:(UIApplication *)application supportedInterfaceOrientationsForWindow:(UIWindow *)window {
   return [OrientationModule getOrientation];
 }
@@ -30,7 +31,6 @@
 {
   
   NSURL *jsCodeLocation;
-  
   
 #ifdef DEBUG
   jsCodeLocation = [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"index.ios" fallbackResource:nil];

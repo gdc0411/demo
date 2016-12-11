@@ -72,6 +72,7 @@ RCT_EXPORT_VIEW_PROPERTY(onActionOnlineNumChange, RCTDirectEventBlock); // 云�
 RCT_EXPORT_VIEW_PROPERTY(onOrientationChange, RCTDirectEventBlock); //屏幕方向切换
 RCT_EXPORT_VIEW_PROPERTY(onOtherEventInfo, RCTDirectEventBlock); // 其他事件
 
+
 - (NSDictionary *)constantsToExport
 {
   return @{

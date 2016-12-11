@@ -97,7 +97,6 @@ class play extends Component {
     componentWillUnmount() {
         Orientation.lockToPortrait();
     }
-    
 
     /**
      * 获得视频和播放器初始信息

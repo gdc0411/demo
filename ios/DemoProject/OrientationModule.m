@@ -3,16 +3,14 @@
 //  DemoProject
 //
 //  Created by RaoJia on 2016/12/11.
-//  Copyright © 2016年 Facebook. All rights reserved.
+//  Copyright © 2016年 LeCloud. All rights reserved.
 //
 
-
 #import "OrientationModule.h"
-#import "RCTEventDispatcher.h"
+
 
 @implementation OrientationModule
 @synthesize bridge = _bridge;
-
 
 static UIInterfaceOrientationMask _orientation = UIInterfaceOrientationMaskAllButUpsideDown;
 + (void)setOrientation: (UIInterfaceOrientationMask)orientation {
@@ -36,14 +34,24 @@ static UIInterfaceOrientationMask _orientation = UIInterfaceOrientationMaskAllBu
   [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
+- (NSArray<NSString *> *)supportedEvents
+{
+  return @[@"onOrientationDidChange", @"specificOrientationDidChange", @"orientationDidChange" ];
+}
+
+
 - (void)deviceOrientationDidChange:(NSNotification *)notification
 {
   UIDeviceOrientation orientation = [[UIDevice currentDevice] orientation];
-  [self.bridge.eventDispatcher sendDeviceEventWithName:@"specificOrientationDidChange"
-                                                  body:@{@"specificOrientation": [self getSpecificOrientationStr:orientation]}];
   
-  [self.bridge.eventDispatcher sendDeviceEventWithName:@"orientationDidChange"
-                                                  body:@{@"orientation": [self getOrientationStr:orientation]}];
+  [self sendEventWithName:@"onOrientationDidChange"
+                     body:@{@"orientation": [self getSpecificOrientationStr:orientation]}];
+  
+  [self sendEventWithName:@"specificOrientationDidChange"
+                     body:@{@"specificOrientation": [self getSpecificOrientationStr:orientation]}];
+  
+  [self sendEventWithName:@"orientationDidChange"
+                     body:@{@"orientation": [self getOrientationStr:orientation]}];
   
 }
 
@@ -188,5 +196,9 @@ RCT_EXPORT_METHOD(unlockAllOrientations)
   
   return @{@"initialOrientation": orientationStr};
 }
+
+
+//RCT_EXPORT_VIEW_PROPERTY(onOrientationDidChange, RCTDirectEventBlock);  // 设备方向变化事件
+
 
 @end

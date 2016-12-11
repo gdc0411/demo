@@ -7,18 +7,19 @@
  ************************************************************************/
 'use strict';
 
-// import {
-//     NativeModules,
-//     DeviceEventEmitter
-// } from 'react-native';
-// var Orientation = NativeModules.Orientation;
+import {
+    NativeModules,
+    DeviceEventEmitter,
+    NativeEventEmitter
+} from 'react-native';
 
-var Orientation = require('react-native').NativeModules.OrientationModule;
-var DeviceEventEmitter = require('react-native').DeviceEventEmitter;
+const Orientation = NativeModules.OrientationModule;
+const myNativeEvt = new NativeEventEmitter(Orientation);  //创建自定义事件接口
 
 var listeners = {};
-var orientationDidChangeEvent = "orientationDidChange";
-var specificOrientationDidChangeEvent = "specificOrientationDidChange";
+const onOrientationDidChangeEvent = "onOrientationDidChange";
+const orientationDidChangeEvent = "orientationDidChange";
+const specificOrientationDidChangeEvent = "specificOrientationDidChange";
 
 var id = 0;
 var META = '__listener_id';
@@ -61,9 +62,24 @@ module.exports = {
     unlockAllOrientations() {
         Orientation.unlockAllOrientations();
     },
+    addOnOrientationListener(cb) {
+        var key = getKey(cb);
+        listeners[key] = myNativeEvt.addListener(onOrientationDidChangeEvent,
+            (body) => {
+                cb(body.orientation);
+            });
+    },
+    removeOnOrientationListener(cb) {
+        var key = getKey(cb);
+        if (!listeners[key]) {
+            return;
+        }
+        listeners[key].remove();
+        listeners[key] = null;
+    },
     addOrientationListener(cb) {
         var key = getKey(cb);
-        listeners[key] = DeviceEventEmitter.addListener(orientationDidChangeEvent,
+        listeners[key] = myNativeEvt.addListener(orientationDidChangeEvent,
             (body) => {
                 cb(body.orientation);
             });
@@ -78,7 +94,7 @@ module.exports = {
     },
     addSpecificOrientationListener(cb) {
         var key = getKey(cb);
-        listeners[key] = DeviceEventEmitter.addListener(specificOrientationDidChangeEvent,
+        listeners[key] = myNativeEvt.addListener(specificOrientationDidChangeEvent,
             (body) => {
                 cb(body.specificOrientation);
             });

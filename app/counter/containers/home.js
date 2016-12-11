@@ -36,32 +36,13 @@ const {height: SCREEN_HEIGHT, width: SCREEN_WIDTH} = Dimensions.get('window');
  */
 class home extends Component {
 
-    constructor() {
-        super();
-        const init = Orientation.getInitialOrientation();
-        this.state = {
-            init,
-            or: init,
-            sor: init,
-        };
-        this._updateOrientation = this._updateOrientation.bind(this);
-        Orientation.addOrientationListener(this._updateOrientation);
-        this._updateSpecificOrientation = this._updateSpecificOrientation.bind(this);
-        Orientation.addSpecificOrientationListener(this._updateSpecificOrientation);
-    }
-
-    _updateOrientation(or) {
-        this.setState({ or });
-    }
-
-    _updateSpecificOrientation(sor) {
-        this.setState({ sor });
-    }
-
     componentWillMount() {
         Orientation.lockToPortrait();
     }
 
+    componentWillUnmount() {
+        Orientation.unlockAllOrientations();
+    }
 
     //跳转到播放页
     skipToPlayer = (source) => {
