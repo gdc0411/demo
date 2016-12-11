@@ -68,7 +68,7 @@
 @property (nonatomic, copy) RCTDirectEventBlock onActionTimeShift; // 云直播进度
 @property (nonatomic, copy) RCTDirectEventBlock onActionStatusChange; // 云直播状态回调
 @property (nonatomic, copy) RCTDirectEventBlock onActionOnlineNumChange; // 云直播在线人数变化
-@property (nonatomic, copy) RCTDirectEventBlock onOrientationChange; //屏幕方向切换
+//@property (nonatomic, copy) RCTDirectEventBlock onOrientationChange; //屏幕方向切换
 @property (nonatomic, copy) RCTDirectEventBlock onOtherEventInfo;  // 其他事件
 
 
@@ -156,10 +156,10 @@
                                                  name:UIApplicationWillEnterForegroundNotification
                                                object:nil];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(handleDeviceOrientationDidChange:)
-                                                 name:UIDeviceOrientationDidChangeNotification
-                                               object:nil];
+//    [[NSNotificationCenter defaultCenter] addObserver:self
+//                                             selector:@selector(handleDeviceOrientationDidChange:)
+//                                                 name:UIDeviceOrientationDidChangeNotification
+//                                               object:nil];
     
     //    [[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications]; //开始生成设备旋转通知
     
@@ -321,36 +321,36 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
   NSLog(@"外部控制——— 调节亮度:%d", brightness );
 }
 
-- (void)setOrientation:(int)requestedOrientation
-{
-  if( requestedOrientation<0 || requestedOrientation == _currentOritentation )
-    return;
-  
-  _currentOritentation = requestedOrientation;
-  
-  int orientation = 1;
-  switch (requestedOrientation) {
-    case 0:
-      _isFullScreen = YES;
-      orientation = UIInterfaceOrientationLandscapeRight;
-      break;
-    case 1:
-      _isFullScreen = NO;
-      orientation = UIDeviceOrientationPortrait;
-      break;
-    case 8:
-      _isFullScreen = YES;
-      orientation = UIDeviceOrientationLandscapeLeft;
-      break;
-    case 9:
-      _isFullScreen = NO;
-      orientation = UIDeviceOrientationPortraitUpsideDown;
-      break;
-  }
-  [self changeScreenOrientation:[NSNumber numberWithInt:orientation]];
-  
-  NSLog(@"外部控制——— 设置方向 orientation:%d", requestedOrientation);
-}
+//- (void)setOrientation:(int)requestedOrientation
+//{
+//  if( requestedOrientation<0 || requestedOrientation == _currentOritentation )
+//    return;
+//  
+//  _currentOritentation = requestedOrientation;
+//  
+//  int orientation = 1;
+//  switch (requestedOrientation) {
+//    case 0:
+//      _isFullScreen = YES;
+//      orientation = UIInterfaceOrientationLandscapeRight;
+//      break;
+//    case 1:
+//      _isFullScreen = NO;
+//      orientation = UIDeviceOrientationPortrait;
+//      break;
+//    case 8:
+//      _isFullScreen = YES;
+//      orientation = UIDeviceOrientationLandscapeLeft;
+//      break;
+//    case 9:
+//      _isFullScreen = NO;
+//      orientation = UIDeviceOrientationPortraitUpsideDown;
+//      break;
+//  }
+//  [self changeScreenOrientation:[NSNumber numberWithInt:orientation]];
+//  
+//  NSLog(@"外部控制——— 设置方向 orientation:%d", requestedOrientation);
+//}
 
 - (void)setPlayInBackground:(BOOL)playInBackground
 {
@@ -1063,34 +1063,34 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
 }
 
 //判断设备的朝向
-- (void)handleDeviceOrientationDidChange:(UIInterfaceOrientation)interfaceOrientation
-{
-  int deviceOrientation = -1;
-  int value =[UIDevice currentDevice].orientation;
-  
-  switch (value) {
-    case UIDeviceOrientationLandscapeLeft: //正横屏
-      deviceOrientation = 0;
-      break;
-    case UIDeviceOrientationLandscapeRight: //反横屏
-      deviceOrientation = 8;
-      break;
-    case UIDeviceOrientationPortrait: //正竖屏
-      deviceOrientation = 1;
-      break;
-    case UIDeviceOrientationPortraitUpsideDown: //反竖屏
-      deviceOrientation = 9;
-      break;
-    default:
-      break;
-  }
-  
-  if( deviceOrientation!= -1 && _onOrientationChange){
-    _onOrientationChange(@{@"orientation": [NSNumber numberWithInt:deviceOrientation]});
-  }
-  
-  NSLog(@"设备方向变化！！——— orientation：%d", deviceOrientation);
-}
+//- (void)handleDeviceOrientationDidChange:(UIInterfaceOrientation)interfaceOrientation
+//{
+//  int deviceOrientation = -1;
+//  int value =[UIDevice currentDevice].orientation;
+//  
+//  switch (value) {
+//    case UIDeviceOrientationLandscapeLeft: //正横屏
+//      deviceOrientation = 0;
+//      break;
+//    case UIDeviceOrientationLandscapeRight: //反横屏
+//      deviceOrientation = 8;
+//      break;
+//    case UIDeviceOrientationPortrait: //正竖屏
+//      deviceOrientation = 1;
+//      break;
+//    case UIDeviceOrientationPortraitUpsideDown: //反竖屏
+//      deviceOrientation = 9;
+//      break;
+//    default:
+//      break;
+//  }
+//  
+//  if( deviceOrientation!= -1 && _onOrientationChange){
+//    _onOrientationChange(@{@"orientation": [NSNumber numberWithInt:deviceOrientation]});
+//  }
+//  
+//  NSLog(@"设备方向变化！！——— orientation：%d", deviceOrientation);
+//}
 
 
 #pragma mark 广告正片切换
@@ -1208,7 +1208,7 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
 {
   NSLog(@"removeFromSuperview消息");
   
-  [self setOrientation:1];
+//  [self setOrientation:1];
   
   if( _lePlayer ){
     [self stop];

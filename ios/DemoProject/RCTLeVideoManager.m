@@ -36,7 +36,7 @@ RCT_EXPORT_VIEW_PROPERTY(volume, int);  // 音量调节
 //RCT_EXPORT_VIEW_PROPERTY(track, float);  // 左右声道
 RCT_EXPORT_VIEW_PROPERTY(clickAd, BOOL);  // 点击广告
 RCT_EXPORT_VIEW_PROPERTY(brightness, int);  // 屏幕亮度调节
-RCT_EXPORT_VIEW_PROPERTY(orientation, int);  // 屏幕方向
+//RCT_EXPORT_VIEW_PROPERTY(orientation, int);  // 屏幕方向
 RCT_EXPORT_VIEW_PROPERTY(playInBackground, BOOL);  // 是否后台播放
 
 RCT_EXPORT_VIEW_PROPERTY(onVideoSourceLoad, RCTDirectEventBlock);  // 数据源事件
@@ -69,7 +69,7 @@ RCT_EXPORT_VIEW_PROPERTY(onActionLiveChange, RCTDirectEventBlock); // 云直播�
 RCT_EXPORT_VIEW_PROPERTY(onActionTimeShift, RCTDirectEventBlock); // 云直播进度
 RCT_EXPORT_VIEW_PROPERTY(onActionStatusChange, RCTDirectEventBlock); // 云直播状态回调
 RCT_EXPORT_VIEW_PROPERTY(onActionOnlineNumChange, RCTDirectEventBlock); // 云直播在线人数变化
-RCT_EXPORT_VIEW_PROPERTY(onOrientationChange, RCTDirectEventBlock); //屏幕方向切换
+//RCT_EXPORT_VIEW_PROPERTY(onOrientationChange, RCTDirectEventBlock); //屏幕方向切换
 RCT_EXPORT_VIEW_PROPERTY(onOtherEventInfo, RCTDirectEventBlock); // 其他事件
 
 
