@@ -37,11 +37,11 @@ const {height: SCREEN_HEIGHT, width: SCREEN_WIDTH} = Dimensions.get('window');
 class home extends Component {
 
     componentWillMount() {
-        Orientation.lockToPortrait();
+        Orientation.setOrientation(1);
     }
 
     componentWillUnmount() {
-        Orientation.unlockAllOrientations();
+        Orientation.setOrientation(-1);
     }
 
     //跳转到播放页

@@ -39,6 +39,7 @@ public class LeReactVideoView extends RelativeLayout {
         LayoutParams params = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
         addView(mLePlayer, params);
         addView(mWaterMark, params);
+
     }
 
     /**
@@ -141,15 +142,15 @@ public class LeReactVideoView extends RelativeLayout {
             mLePlayer.setScreenBrightness(brightness);
     }
 
-    /**
-     * 设置屏幕方向（VOD、LIVE）
-     *
-     * @param requestedOrientation 设置屏幕方向
-     */
-    public void setOrientation(int requestedOrientation) {
-        if (mLePlayer != null)
-            mLePlayer.setOrientation(requestedOrientation);
-    }
+//    /**
+//     * 设置屏幕方向（VOD、LIVE）
+//     *
+//     * @param requestedOrientation 设置屏幕方向
+//     */
+//    public void setOrientation(int requestedOrientation) {
+//        if (mLePlayer != null)
+//            mLePlayer.setOrientation(requestedOrientation);
+//    }
 
 
     @Override

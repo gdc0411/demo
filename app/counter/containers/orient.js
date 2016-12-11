@@ -18,20 +18,14 @@ class orient extends Component {
     this.state = {
       init,
       or: init,
-      sor: init,
+      // sor: init,
     };
     this._updateOrientation = this._updateOrientation.bind(this);
-    Orientation.addOrientationListener(this._updateOrientation);
-    this._updateSpecificOrientation = this._updateSpecificOrientation.bind(this);
-    Orientation.addSpecificOrientationListener(this._updateSpecificOrientation);
+    Orientation.addOnOrientationListener(this._updateOrientation);
   }
 
   _updateOrientation(or) {
     this.setState({ or });
-  }
-
-  _updateSpecificOrientation(sor) {
-    this.setState({ sor });
   }
 
   render() {
@@ -39,56 +33,53 @@ class orient extends Component {
     return (
       <View style={styles.container}>
         <Text style={styles.welcome}>
-          Welcome to React Native Orientation Demo!
+          锁定测试页面
         </Text>
         <Text style={styles.instructions}>
-          {`Initial Orientation: ${init}`}
+          {`初始方向: ${init}`}
         </Text>
         <Text style={styles.instructions}>
-          {`Current Orientation: ${or}`}
-        </Text>
-        <Text style={styles.instructions}>
-          {`Specific Orientation: ${sor}`}
+          {`当前方向: ${or}`}
         </Text>
         <TouchableOpacity
-          onPress={Orientation.unlockAllOrientations}
+          onPress={(para) => Orientation.setOrientation(-1)}
           style={styles.button}
-        >
+          >
           <Text style={styles.instructions}>
-            Unlock All Orientations
+            解锁
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
-          onPress={Orientation.lockToPortrait}
+          onPress={(para) => Orientation.setOrientation(1)}
           style={styles.button}
-        >
+          >
           <Text style={styles.instructions}>
-            Lock To Portrait
+            锁定正竖屏
           </Text>
         </TouchableOpacity>
         <View style={styles.buttonContainer}>
           <TouchableOpacity
-            onPress={Orientation.lockToLandscapeLeft}
+            onPress={(para) => Orientation.setOrientation(0)}
             style={styles.button}
-          >
+            >
             <Text style={styles.instructions}>
-              Lock To Left
+              锁定正横屏
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
-            onPress={Orientation.lockToLandscape}
+            onPress={(para) => Orientation.setOrientation(8)}
             style={styles.button}
-          >
+            >
             <Text style={styles.instructions}>
-              Lock To Landscape
+              锁定反横屏
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
-            onPress={Orientation.lockToLandscapeRight}
+            onPress={(para) => Orientation.setOrientation(9)}
             style={styles.button}
-          >
+            >
             <Text style={styles.instructions}>
-              Lock To Right
+              锁定反竖屏
             </Text>
           </TouchableOpacity>
         </View>
@@ -132,13 +123,13 @@ const styles = StyleSheet.create({
 
 //配置Map映射表，拿到自己关心的数据
 const mapStateToProps = state => ({
-    //state.xxx必须与reducer同名
-    //datasource: state.play.datasource,
+  //state.xxx必须与reducer同名
+  //datasource: state.play.datasource,
 });
 
 
 const mapDispatchToProps = dispatch => ({
-    //actions: bindActionCreators(playActions, dispatch)
+  //actions: bindActionCreators(playActions, dispatch)
 });
 
 //连接Redux

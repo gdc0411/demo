@@ -92,7 +92,7 @@ export default class Video extends Component {
         /* 亮度值百分比0-100 */
         brightness: PropTypes.number,
         /* 设置屏幕方向 */
-        orientation: PropTypes.number,
+        /*orientation: PropTypes.number,*/
         paused: PropTypes.bool,
         clickAd: PropTypes.bool,
         /* 设置机位（直播） */
@@ -107,7 +107,7 @@ export default class Video extends Component {
         /* 数据源相关 */
         onVideoSourceLoad: PropTypes.func,
         /*设备相关*/
-        onOrientationChange: PropTypes.func,
+        /*onOrientationChange: PropTypes.func,*/
         /*播放相关*/
         onVideoSizeChange: PropTypes.func,
         onVideoLoad: PropTypes.func,

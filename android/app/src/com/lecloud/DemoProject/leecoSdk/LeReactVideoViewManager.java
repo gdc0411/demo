@@ -207,15 +207,15 @@ public class LeReactVideoViewManager extends SimpleViewManager<LeReactVideoView>
     }
 
     /**
-     /**
-     * 设置转屏方向（VOD、LIVE）
-     *
-     * @param orientation 0-横屏，1-竖屏
-     */
-    @ReactProp(name = PROP_ORIENTATION)
-    public void setOrientation(final LeReactVideoView videoView, final int orientation) {
-        videoView.setOrientation(orientation);
-    }
+//     /**
+//     * 设置转屏方向（VOD、LIVE）
+//     *
+//     * @param orientation 0-横屏，1-竖屏
+//     */
+//    @ReactProp(name = PROP_ORIENTATION)
+//    public void setOrientation(final LeReactVideoView videoView, final int orientation) {
+//        videoView.setOrientation(orientation);
+//    }
 
 
     /**

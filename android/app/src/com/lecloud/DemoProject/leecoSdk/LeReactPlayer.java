@@ -72,37 +72,37 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
     private int mCurrentBrightness;
     private OrientationSensorUtils mOrientationSensorUtils; //方向控制
 
-    private int mCurrentOritentation; //当前屏幕方向
-    private boolean isLockFlag = false;
-    private Handler mOrientationChangeHandler = new Handler() {
-
-        @Override
-        public void handleMessage(Message msg) {
-            int orient = -1;
-            switch (msg.what) {
-                case OrientationSensorUtils.ORIENTATION_8:// 反横屏
-                    orient = 8;
-                    break;
-                case OrientationSensorUtils.ORIENTATION_9:// 反竖屏
-                    orient = 9;
-                    break;
-                case OrientationSensorUtils.ORIENTATION_0:// 正横屏
-                    orient = 0;
-                    break;
-                case OrientationSensorUtils.ORIENTATION_1:// 正竖屏
-                    orient = 1;
-                    break;
-            }
-            WritableMap event = Arguments.createMap();
-            event.putInt(EVENT_PROP_ORIENTATION, orient);
-            mEventEmitter.receiveEvent(mViewId, Events.EVENT_ORIENTATION_CHANG.toString(), event);
-
-            Log.d(TAG, LogUtils.getTraceInfo() + "设备转屏事件——— orientation：" + orient);
-
-            super.handleMessage(msg);
-        }
-
-    };
+//    private int mCurrentOritentation; //当前屏幕方向
+//    private boolean isLockFlag = false;
+//    private Handler mOrientationChangeHandler = new Handler() {
+//
+//        @Override
+//        public void handleMessage(Message msg) {
+//            int orient = -1;
+//            switch (msg.what) {
+//                case OrientationSensorUtils.ORIENTATION_8:// 反横屏
+//                    orient = 8;
+//                    break;
+//                case OrientationSensorUtils.ORIENTATION_9:// 反竖屏
+//                    orient = 9;
+//                    break;
+//                case OrientationSensorUtils.ORIENTATION_0:// 正横屏
+//                    orient = 0;
+//                    break;
+//                case OrientationSensorUtils.ORIENTATION_1:// 正竖屏
+//                    orient = 1;
+//                    break;
+//            }
+//            WritableMap event = Arguments.createMap();
+//            event.putInt(EVENT_PROP_ORIENTATION, orient);
+//            mEventEmitter.receiveEvent(mViewId, Events.EVENT_ORIENTATION_CHANG.toString(), event);
+//
+//            Log.d(TAG, LogUtils.getTraceInfo() + "设备转屏事件——— orientation：" + orient);
+//
+//            super.handleMessage(msg);
+//        }
+//
+//    };
 
     /// 播放器设置
     private int mPlayMode = -1;
@@ -194,7 +194,7 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
         mCurrentBrightness = ScreenBrightnessManager.getScreenBrightness(context.getBaseContext()) * 100 / 255;
 
         // 屏幕方向
-        mCurrentOritentation = ScreenUtils.getOrientation(context.getBaseContext());
+//        mCurrentOritentation = ScreenUtils.getOrientation(context.getBaseContext());
     }
 
     public void setEventEmitter(RCTEventEmitter mEventEmitter) {
@@ -595,52 +595,52 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
         mLastPosition = (int) (getCurrentPosition() / 1000);
     }
 
-    /**
-     * 设置屏幕方向（VOD、LIVE）
-     *
-     * @param requestedOrientation 设置屏幕方向
-     */
-    public void setOrientation(int requestedOrientation) {
-        if (requestedOrientation < 0 || mCurrentOritentation == requestedOrientation) return;
-
-        if (mThemedReactContext.getBaseContext() instanceof Activity) {
-            Activity activity = (Activity) mThemedReactContext.getBaseContext();
-
-            switch (requestedOrientation) {
-                case ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE: //正横屏 0
-                    ScreenUtils.showFullScreen(activity, true);
-                    activity.setRequestedOrientation(requestedOrientation);
-                    mCurrentOritentation = requestedOrientation;
-                    break;
-
-                case ActivityInfo.SCREEN_ORIENTATION_PORTRAIT: //正竖屏 1
-                    ScreenUtils.showFullScreen(activity, false);
-                    activity.setRequestedOrientation(requestedOrientation);
-                    mCurrentOritentation = requestedOrientation;
-                    break;
-
-                case ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE: //反横屏 8
-                    ScreenUtils.showFullScreen(activity, true);
-                    activity.setRequestedOrientation(requestedOrientation);
-                    mCurrentOritentation = requestedOrientation;
-                    break;
-
-                case ActivityInfo.SCREEN_ORIENTATION_REVERSE_PORTRAIT: //反竖屏 9
-                    ScreenUtils.showFullScreen(activity, false);
-                    activity.setRequestedOrientation(requestedOrientation);
-                    mCurrentOritentation = requestedOrientation;
-                    break;
-            }
-            //ScreenUtils.getOrientation(activity);
-        }
-
-        WritableMap event = Arguments.createMap();
-        event.putDouble(EVENT_PROP_ORIENTATION, mCurrentOritentation);
-//        mEventEmitter.receiveEvent(mViewId, Events.EVENT_ORIENTATION_CHANG.toString(), event);
-
-        Log.d(TAG, LogUtils.getTraceInfo() + "外部控制——— 设置方向 orientation:" + requestedOrientation);
-
-    }
+//    /**
+//     * 设置屏幕方向（VOD、LIVE）
+//     *
+//     * @param requestedOrientation 设置屏幕方向
+//     */
+//    public void setOrientation(int requestedOrientation) {
+//        if (requestedOrientation < 0 || mCurrentOritentation == requestedOrientation) return;
+//
+//        if (mThemedReactContext.getBaseContext() instanceof Activity) {
+//            Activity activity = (Activity) mThemedReactContext.getBaseContext();
+//
+//            switch (requestedOrientation) {
+//                case ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE: //正横屏 0
+//                    ScreenUtils.showFullScreen(activity, true);
+//                    activity.setRequestedOrientation(requestedOrientation);
+//                    mCurrentOritentation = requestedOrientation;
+//                    break;
+//
+//                case ActivityInfo.SCREEN_ORIENTATION_PORTRAIT: //正竖屏 1
+//                    ScreenUtils.showFullScreen(activity, false);
+//                    activity.setRequestedOrientation(requestedOrientation);
+//                    mCurrentOritentation = requestedOrientation;
+//                    break;
+//
+//                case ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE: //反横屏 8
+//                    ScreenUtils.showFullScreen(activity, true);
+//                    activity.setRequestedOrientation(requestedOrientation);
+//                    mCurrentOritentation = requestedOrientation;
+//                    break;
+//
+//                case ActivityInfo.SCREEN_ORIENTATION_REVERSE_PORTRAIT: //反竖屏 9
+//                    ScreenUtils.showFullScreen(activity, false);
+//                    activity.setRequestedOrientation(requestedOrientation);
+//                    mCurrentOritentation = requestedOrientation;
+//                    break;
+//            }
+//            //ScreenUtils.getOrientation(activity);
+//        }
+//
+//        WritableMap event = Arguments.createMap();
+//        event.putDouble(EVENT_PROP_ORIENTATION, mCurrentOritentation);
+////        mEventEmitter.receiveEvent(mViewId, Events.EVENT_ORIENTATION_CHANG.toString(), event);
+//
+//        Log.d(TAG, LogUtils.getTraceInfo() + "外部控制——— 设置方向 orientation:" + requestedOrientation);
+//
+//    }
 
     /**
      * 设置视频暂停和启动（VOD、LIVE）
@@ -744,8 +744,8 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
     public void cleanupMediaPlayerResources() {
         Log.d(TAG, LogUtils.getTraceInfo() + "控件清理 cleanupMediaPlayerResources 调起！");
 
-        if (mCurrentOritentation != ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
-            setOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+//        if (mCurrentOritentation != ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
+//            setOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         if (mMediaPlayer != null) {
             mLePlayerValid = false;
@@ -785,7 +785,7 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
         // 当前播放模式
         event.putInt(EVENT_PROP_PLAY_MODE, mPlayMode);
         // 当前屏幕方向
-        event.putInt(EVENT_PROP_ORIENTATION, mCurrentOritentation);
+//        event.putInt(EVENT_PROP_ORIENTATION, mCurrentOritentation);
 
 
         // 视频基本信息，长/宽/方向
@@ -1599,13 +1599,13 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
     @Override
     protected void onAttachedToWindow() {
         Log.d(TAG, LogUtils.getTraceInfo() + "生命周期事件 onAttachedToWindow 调起！");
-        if (mOrientationSensorUtils == null) {
-            mOrientationSensorUtils = new OrientationSensorUtils((Activity) mThemedReactContext.getBaseContext(), mOrientationChangeHandler);
-        }
+//        if (mOrientationSensorUtils == null) {
+//            mOrientationSensorUtils = new OrientationSensorUtils((Activity) mThemedReactContext.getBaseContext(), mOrientationChangeHandler);
+//        }
 //        if(!mUseGravitySensor){
 //            return;
 //        }
-        mOrientationSensorUtils.onResume();
+//        mOrientationSensorUtils.onResume();
 
         super.onAttachedToWindow();
     }
@@ -1615,10 +1615,10 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
         Log.d(TAG, LogUtils.getTraceInfo() + "生命周期事件 onDetachedFromWindow 调起！");
         super.onDetachedFromWindow();
 
-        if (mOrientationSensorUtils != null) {
-            mOrientationSensorUtils.onPause();
-        }
-        mOrientationChangeHandler.removeCallbacksAndMessages(null);
+//        if (mOrientationSensorUtils != null) {
+//            mOrientationSensorUtils.onPause();
+//        }
+//        mOrientationChangeHandler.removeCallbacksAndMessages(null);
 
         if (mMediaPlayer != null) {
             cleanupMediaPlayerResources();
@@ -1674,7 +1674,6 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
                 stopTimeShift();
 
             pause();
-
 //            setPausedModifier(mPaused);
         }
     }

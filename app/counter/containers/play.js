@@ -79,8 +79,9 @@ class play extends Component {
         };
 
         // this.onLoad = this.onLoad.bind(this);
+        this.updateOrientation = this.updateOrientation.bind(this);
+        Orientation.addOnOrientationListener(this.updateOrientation);
     }
-
 
     componentWillMount() {
         //alert(this.props.datasource);
@@ -91,11 +92,14 @@ class play extends Component {
         const { src } = this.props.params;
         const newSource = this.getFormatDatasource(src);
         this.setState({ source: newSource, });
-        Orientation.unlockAllOrientations();
+
+        Orientation.setOrientation(1);
     }
 
+
     componentWillUnmount() {
-        Orientation.lockToPortrait();
+        Orientation.setOrientation(1);
+        Orientation.removeOnOrientationListener(this.updateOrientation);
     }
 
     /**
@@ -103,11 +107,9 @@ class play extends Component {
      * @param {any} data
      * @memberOf VideoPlayer
      */
-    onLoad(data) {
-
+    onLoad = (data) => {
         let ratesStr = '';
         // alert(this.props.params.source);
-
         let arr = data.rateList; //获得码率列表
         // alert(this.state.ratesInfo);
         if (arr instanceof Array && arr.length > 0) {
@@ -160,13 +162,33 @@ class play extends Component {
         });
     }
 
+    updateOrientation = (orientation) => {
+        let bottom = 0;
+        switch (orientation) {
+            case 0:
+                bottom = 0;
+                break;
+            case 1:
+                bottom = 200;
+                break;
+            case 8:
+                bottom = 0;
+                break;
+            case 9:
+                bottom = 200;
+                break;
+        }
+        this.setState({ orientation, bottom });
+        Orientation.setOrientation(this.state.orientation);
+    }
+
     /**
      * 渲染码率控件，设置码率
      * @param {any} volume 码率
      * @returns
      * @memberOf VideoPlayer
      */
-    renderRateControl(rate) {
+    renderRateControl = (rate) => {
         const isSelected = (this.state.rate == rate);
         let rateName = '';
         switch (rate) {
@@ -194,11 +216,10 @@ class play extends Component {
 
     /**
    * 渲染机位控件，设置机位
-   * @param {any} volume 码率
-   * @returns
+   * @param {any} live 机位
    * @memberOf VideoPlayer
    */
-    renderLiveControl(live) {
+    renderLiveControl = (live) => {
         const isSelected = (this.state.live == live);
         let liveName = '机位1';
         // if( this.state.ratesInfo.length > 0 ) alert(this.state.ratesInfo );
@@ -211,32 +232,31 @@ class play extends Component {
         );
     }
 
-    renderOrientationControl(orientation) {
+    renderOrientationControl = (orientation) => {
         const isSelected = (this.state.orientation == orientation);
         let dispName = '';
-        let scrBottom = 0;
+        let bottom = 0;
         switch (orientation) {
             case 0:
                 dispName = ' 正横屏 ';
-                scrBottom = 0;
+                bottom = 0;
                 break;
             case 1:
                 dispName = ' 正竖屏 ';
-                scrBottom = 200;
+                bottom = 210;
                 break;
             case 8:
                 dispName = ' 反横屏 ';
-                scrBottom = 0;
+                bottom = 0;
                 break;
             case 9:
                 dispName = ' 反竖屏 ';
-                scrBottom = 200;
+                bottom = 210;
                 break;
         }
-
         // if( this.state.ratesInfo.length > 0 ) alert(this.state.ratesInfo );
         return (
-            <TouchableOpacity onPress={() => { this.setState({ orientation: orientation, bottom: scrBottom }); } }>
+            <TouchableOpacity onPress={() => { this.setState({ orientation, bottom }); Orientation.setOrientation(this.state.orientation); } }>
                 <Text style={[styles.controlOption, { fontWeight: isSelected ? "bold" : "normal" }]}>
                     {dispName}
                 </Text>
@@ -244,7 +264,7 @@ class play extends Component {
         );
     }
 
-    renderVolumeControl(volume) {
+    renderVolumeControl = (volume) => {
         const isSelected = (this.state.volume == volume);
         return (
             <TouchableOpacity onPress={() => { this.setState({ volume: volume }); } }>
@@ -255,7 +275,7 @@ class play extends Component {
         );
     }
 
-    renderBrightnessControl(brightness) {
+    renderBrightnessControl = (brightness) => {
         const isSelected = (this.state.brightness == brightness);
         return (
             <TouchableOpacity onPress={() => { this.setState({ brightness: brightness }); } }>
@@ -271,7 +291,7 @@ class play extends Component {
      * @returns
      * @memberOf VideoPlayer
      */
-    getCurrentTimePercentage() {
+    getCurrentTimePercentage = () => {
         if (this.state.currentTime > 0) {
             return parseFloat(this.state.currentTime) / parseFloat(this.state.duration);
         } else {
@@ -279,7 +299,7 @@ class play extends Component {
         }
     }
 
-    getFormatDatasource(key) {
+    getFormatDatasource = (key) => {
         let source;
         switch (key) {
             case '1': //点播 乐视云测试数据
@@ -316,6 +336,9 @@ class play extends Component {
         const {navigator} = this.props;
         // this.props.actions.play(source);
         navigator.pop();
+
+        Orientation.setOrientation(1);
+        Orientation.removeOnOrientationListener(this.updateOrientation);
     }
 
     getLocalTime = (timestamp) => {
@@ -341,14 +364,13 @@ class play extends Component {
                         source={this.state.source}
                         seek={this.state.seek}
                         rate={this.state.rate}
-                        orientation={this.state.orientation}
                         volume={this.state.volume}
                         brightness={this.state.brightness}
                         paused={this.state.paused}
                         live={this.state.live}
                         clickAd={this.state.clickAd}
                         onVideoSourceLoad={(data) => { this.setState({ sourceInfo: `视频源: ${data.src}` }); } }
-                        onVideoLoad={(data) => this.onLoad(data) }
+                        onVideoLoad={(data) => this.onLoad(data)}
                         onVideoProgress={(data) => { this.setState({ currentTime: data.currentTime, duration: data.duration, eventInfo: `播放中…… ${data.currentTime}/${data.duration}` }); } }
                         onVideoBufferPercent={(data) => { this.setState({ buffPercent: data.bufferpercent }); } }
                         onBufferStart={() => { this.setState({ eventInfo: '缓冲开始！' }); } }
@@ -375,7 +397,7 @@ class play extends Component {
                 {/*onOrientationChange={(data) => { this.setState({ orientation: data.orientation }); }}*/}
 
                 <View style={styles.displays}>
-                    <View style={{flex: 1, flexDirection: 'row', justifyContent: 'center', paddingBottom: 20}}>
+                    <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'center', paddingBottom: 20 }}>
                         <Text style={styles.controlOption} onPress={this.handleBack} > 返 回 </Text>
                         <Text style={styles.controlOption} onPress={() => { this.setState({ seek: this.state.currentTime + 30 }); } } > + 30s </Text>
                         <Text style={styles.controlOption} onPress={() => { this.setState({ seek: this.state.currentTime - 30 }); } } > - 30s </Text>
