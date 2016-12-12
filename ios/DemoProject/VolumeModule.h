@@ -8,6 +8,11 @@
 
 #import <Foundation/Foundation.h>
 
+
 @interface VolumeModule : NSObject
+
++ (float) getVolumeValue;
+
++ (void) setVolumeValue:(float)volume;
 
 @end

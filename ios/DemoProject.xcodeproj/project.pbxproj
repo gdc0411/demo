@@ -22,6 +22,7 @@
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		140ED2AC1D01E1AD002B40FF /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 146834041AC3E56700842450 /* libReact.a */; };
 		146834051AC3E58100842450 /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 146834041AC3E56700842450 /* libReact.a */; };
+		2D0FC5FC1DFF588A007641A4 /* VolumeModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D0FC5FB1DFF588A007641A4 /* VolumeModule.m */; };
 		2D19AC981DF3DCF100D21BDC /* libRCTAnimation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D19AC861DF3DBA600D21BDC /* libRCTAnimation.a */; };
 		2D19ACBB1DF5679900D21BDC /* DeviceModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D19ACBA1DF5679900D21BDC /* DeviceModule.m */; };
 		2D19ACC31DF572FB00D21BDC /* KeyChainStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D19ACC21DF572FB00D21BDC /* KeyChainStore.m */; };
@@ -234,6 +235,8 @@
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = DemoProject/main.m; sourceTree = "<group>"; };
 		146833FF1AC3E56700842450 /* React.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = React.xcodeproj; path = "../node_modules/react-native/React/React.xcodeproj"; sourceTree = "<group>"; };
 		17750468756A4148AF35D158 /* CodePush.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = CodePush.xcodeproj; path = "../node_modules/react-native-code-push/ios/CodePush.xcodeproj"; sourceTree = "<group>"; };
+		2D0FC5FA1DFF588A007641A4 /* VolumeModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VolumeModule.h; path = DemoProject/VolumeModule.h; sourceTree = "<group>"; };
+		2D0FC5FB1DFF588A007641A4 /* VolumeModule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = VolumeModule.m; path = DemoProject/VolumeModule.m; sourceTree = "<group>"; };
 		2D19AC801DF3DBA600D21BDC /* RCTAnimation.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTAnimation.xcodeproj; path = "../node_modules/react-native/Libraries/NativeAnimation/RCTAnimation.xcodeproj"; sourceTree = "<group>"; };
 		2D19ACB91DF5679900D21BDC /* DeviceModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DeviceModule.h; path = DemoProject/DeviceModule.h; sourceTree = "<group>"; };
 		2D19ACBA1DF5679900D21BDC /* DeviceModule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DeviceModule.m; path = DemoProject/DeviceModule.m; sourceTree = "<group>"; };
@@ -465,6 +468,8 @@
 				2D19ACBA1DF5679900D21BDC /* DeviceModule.m */,
 				2D5B5A641DFC61C50028534D /* OrientationModule.h */,
 				2D5B5A651DFC61C50028534D /* OrientationModule.m */,
+				2D0FC5FA1DFF588A007641A4 /* VolumeModule.h */,
+				2D0FC5FB1DFF588A007641A4 /* VolumeModule.m */,
 			);
 			name = Modules;
 			sourceTree = "<group>";
@@ -967,6 +972,7 @@
 				2D19ADB31DF7AC5F00D21BDC /* BVLinearGradient.m in Sources */,
 				2D19ACC31DF572FB00D21BDC /* KeyChainStore.m in Sources */,
 				13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */,
+				2D0FC5FC1DFF588A007641A4 /* VolumeModule.m in Sources */,
 				2D7B19791DE6F38500354A05 /* RCTLeVideoManager.m in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
 				2D19ACBB1DF5679900D21BDC /* DeviceModule.m in Sources */,

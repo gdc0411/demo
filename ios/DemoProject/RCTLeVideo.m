@@ -5,13 +5,12 @@
 //  Created by RaoJia on 25.11.2016.
 //  Copyright © 2016 LeCloud. All rights reserved.
 //
+#import "RCTLeVideo.h"
 
 #import "RCTConvert.h"
-#import "RCTLeVideo.h"
-//#import "RCTBridge.h"
-//#import "RCTBridgeModule.h"
-//#import "RCTEventDispatcher.h"
 #import "UIView+React.h"
+
+#import "VolumeModule.h"
 
 #import "LECVODPlayer.h"
 #import "LECActivityPlayer.h"
@@ -22,6 +21,8 @@
 
 #import "RCTLeVideoPlayerViewController.h"
 
+#import <MediaPlayer/MediaPlayer.h>
+#import <AVFoundation/AVFoundation.h>
 
 #define LCRect_PlayerHalfFrame    CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height);
 
@@ -306,7 +307,8 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
     return;
   }
   _volume = volume;
-  _lePlayer.volume = volume;
+  //  _lePlayer.volume = volume;
+  [VolumeModule setVolumeValue: (float)volume/100 ];
   
   NSLog(@"外部控制——— 音量调节:%d", volume );
   
@@ -608,23 +610,6 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
   }
 }
 
-/*设置屏幕方向*/
-- (void)changeScreenOrientation:(NSNumber*) orientation
-{
-  if ([[UIDevice currentDevice] respondsToSelector:@selector(setOrientation:)]){
-    [[UIDevice currentDevice] performSelector:@selector(setOrientation:) withObject:(id)orientation];
-    [UIViewController attemptRotationToDeviceOrientation];
-  }
-  
-  SEL selector=NSSelectorFromString(@"setOrientation:");
-  NSInvocation *invocation =[NSInvocation invocationWithMethodSignature:[UIDevice instanceMethodSignatureForSelector:selector]];
-  [invocation setSelector:selector];
-  [invocation setTarget:[UIDevice currentDevice]];
-  int val = _isFullScreen?UIInterfaceOrientationLandscapeRight:UIInterfaceOrientationPortrait;
-  [invocation setArgument:&val atIndex:2];
-  [invocation invoke];
-}
-
 - (BOOL)shouldAutorotate
 {
   return YES;
@@ -861,8 +846,10 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
   }
   
   // 设备信息： 音量和亮度
-  _volume = player.volume;
-  //  _volume = [[AVAudioSession sharedInstance] outputVolume];
+  //  _volume = player.volume;
+  // retrieve system volume
+  _volume = [VolumeModule getVolumeValue] * 100;
+  
   
   _screenBrightness = [UIScreen mainScreen].brightness;
   _currentBrightness = _screenBrightness * 100;
@@ -980,6 +967,7 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
      cacheDuration:(int64_t) cacheDuration
           duration:(int64_t) duration
 {
+  //  _volume = [VolumeModule getVolumeLevel] * 100;
   
   if(_playMode == LCPlayerVod){
     _currentTime = _lastPosition = position;
