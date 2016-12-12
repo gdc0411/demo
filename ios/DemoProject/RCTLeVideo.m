@@ -27,8 +27,9 @@
 
 @interface RCTLeVideo ()<LECPlayerDelegate, LCActivityManagerDelegate>
 {
-  __block BOOL _isPlay;
+  __block BOOL _isPlaying;
   __block BOOL _isSeeking;
+  __block BOOL _isAdPlaying;
   BOOL _isFullScreen;
   
 }
@@ -136,8 +137,9 @@
     _bridge = bridge;
     
     _isFullScreen = NO;
-    _isPlay = NO;
+    _isPlaying = NO;
     _isSeeking = NO;
+    _isAdPlaying = NO;
     
     _currentOritentation = 1;
     
@@ -156,10 +158,10 @@
                                                  name:UIApplicationWillEnterForegroundNotification
                                                object:nil];
     
-//    [[NSNotificationCenter defaultCenter] addObserver:self
-//                                             selector:@selector(handleDeviceOrientationDidChange:)
-//                                                 name:UIDeviceOrientationDidChangeNotification
-//                                               object:nil];
+    //    [[NSNotificationCenter defaultCenter] addObserver:self
+    //                                             selector:@selector(handleDeviceOrientationDidChange:)
+    //                                                 name:UIDeviceOrientationDidChangeNotification
+    //                                               object:nil];
     
     //    [[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications]; //开始生成设备旋转通知
     
@@ -325,9 +327,9 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
 //{
 //  if( requestedOrientation<0 || requestedOrientation == _currentOritentation )
 //    return;
-//  
+//
 //  _currentOritentation = requestedOrientation;
-//  
+//
 //  int orientation = 1;
 //  switch (requestedOrientation) {
 //    case 0:
@@ -348,7 +350,7 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
 //      break;
 //  }
 //  [self changeScreenOrientation:[NSNumber numberWithInt:orientation]];
-//  
+//
 //  NSLog(@"外部控制——— 设置方向 orientation:%d", requestedOrientation);
 //}
 
@@ -610,7 +612,6 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
 - (void)changeScreenOrientation:(NSNumber*) orientation
 {
   if ([[UIDevice currentDevice] respondsToSelector:@selector(setOrientation:)]){
-    
     [[UIDevice currentDevice] performSelector:@selector(setOrientation:) withObject:(id)orientation];
     [UIViewController attemptRotationToDeviceOrientation];
   }
@@ -680,7 +681,7 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
 #pragma mark - 播放控制
 - (void)play
 {
-  if (_isPlay || _lePlayer == nil ) {
+  if (_isPlaying || _lePlayer == nil ) {
     return;
   }
   __weak typeof(self) wSelf = self;
@@ -695,13 +696,13 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
                               @"serverTime":[NSNumber numberWithLong:_serverTime],
                               @"currentTime":[NSNumber numberWithLong:_currentTime],});
     }
-    _isPlay = YES;
+    _isPlaying = YES;
   }];
 }
 
 - (void)resume
 {
-  if (_isPlay || _lePlayer == nil) {
+  if (_isPlaying || _lePlayer == nil) {
     return;
   }
   
@@ -718,21 +719,21 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
   }
   
   _paused = YES;
-  _isPlay = NO;
+  _isPlaying = NO;
 }
 
 - (void)stop
 {
-  if (!_isPlay || _lePlayer == nil){
+  if (!_isPlaying || _lePlayer == nil){
     return;
   }
   __weak typeof(self) wSelf = self;
-  [_lePlayer stopWithCompletion:^{ _isPlay = NO; }];
+  [_lePlayer stopWithCompletion:^{ _isPlaying = NO; }];
 }
 
 - (void)pause
 {
-  if (!_isPlay || _lePlayer == nil){
+  if (!_isPlaying || _lePlayer == nil){
     return;
   }
   
@@ -750,7 +751,7 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
                       @"currentTime":[NSNumber numberWithLong:_currentTime],});
     
   }
-  _isPlay = NO;
+  _isPlaying = NO;
 }
 
 #pragma mark - 事件处理
@@ -879,7 +880,7 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
 - (void) processCompleted:(LECPlayer *) player
               playerEvent:(LECPlayerPlayEvent) playerEvent
 {
-  _isPlay = NO;
+  _isPlaying = NO;
   
   if (_onVideoEnd) _onVideoEnd(nil);
 }
@@ -1067,7 +1068,7 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
 //{
 //  int deviceOrientation = -1;
 //  int value =[UIDevice currentDevice].orientation;
-//  
+//
 //  switch (value) {
 //    case UIDeviceOrientationLandscapeLeft: //正横屏
 //      deviceOrientation = 0;
@@ -1084,11 +1085,11 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
 //    default:
 //      break;
 //  }
-//  
+//
 //  if( deviceOrientation!= -1 && _onOrientationChange){
 //    _onOrientationChange(@{@"orientation": [NSNumber numberWithInt:deviceOrientation]});
 //  }
-//  
+//
 //  NSLog(@"设备方向变化！！——— orientation：%d", deviceOrientation);
 //}
 
@@ -1099,10 +1100,16 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
   switch (contentType){
     case LECPlayerContentTypeFeature:
       NSLog(@"正在播放正片");
+      if(_isAdPlaying){
+        _isAdPlaying = NO;
+        if(_onAdvertComplete) _onAdvertComplete(nil);
+      }
       break;
     case LECPlayerContentTypeAdv:
       NSLog(@"正在播放广告");
       //      [_loadIndicatorView stopAnimating];
+      _isAdPlaying = YES;
+      if(_onAdvertStart) _onAdvertStart(nil);
       break;
       
     default:
@@ -1176,7 +1183,7 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
 {
   NSLog(@"insertReactSubview消息");
   [super insertReactSubview:view atIndex:atIndex];
-
+  
   view.frame = self.bounds;
   //[_playerViewController.contentOverlayView insertSubview:view atIndex:atIndex];
 }
@@ -1208,7 +1215,7 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
 {
   NSLog(@"removeFromSuperview消息");
   
-//  [self setOrientation:1];
+  //  [self setOrientation:1];
   
   if( _lePlayer ){
     [self stop];

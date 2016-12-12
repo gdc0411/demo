@@ -8,6 +8,12 @@
 
 #import "OrientationModule.h"
 
+@interface OrientationModule()
+{
+  __block BOOL _isRotating;
+  BOOL _isFullScreen;
+}
+@end
 
 @implementation OrientationModule
 @synthesize bridge = _bridge;
@@ -42,11 +48,12 @@ static UIInterfaceOrientationMask _orientation = UIInterfaceOrientationMaskAllBu
 - (void)deviceOrientationDidChange:(NSNotification *)notification
 {
   UIDeviceOrientation orientation = [[UIDevice currentDevice] orientation];
- 
-  if(orientation != UIDeviceOrientationPortrait
-     && orientation != UIDeviceOrientationPortraitUpsideDown
+  
+  if( _isRotating ||
+     (orientation != UIDeviceOrientationPortrait
      && orientation != UIDeviceOrientationLandscapeLeft
-     && orientation != UIDeviceOrientationLandscapeRight) return;
+     && orientation != UIDeviceOrientationLandscapeRight
+     && orientation != UIDeviceOrientationPortraitUpsideDown)) return;
   
   int orientationInt = [self getOrientationInt:orientation];
   NSString* orientationStr = [self getOrientationStr:orientation];
@@ -106,6 +113,7 @@ static UIInterfaceOrientationMask _orientation = UIInterfaceOrientationMaskAllBu
     case UIDeviceOrientationPortraitUpsideDown:
       orientationInt = 9;
       break;
+      
     default:
       orientationInt = 1;
       
@@ -129,41 +137,48 @@ RCT_EXPORT_METHOD(setOrientation:(int)requestedOrientation)
 #if DEBUG
   NSLog(@"外部控制——— 设置方向 orientation: %d", requestedOrientation);
 #endif
-  switch (requestedOrientation) {
-    case 1:
-      [OrientationModule setOrientation:UIInterfaceOrientationMaskPortrait];
-      [[NSOperationQueue mainQueue] addOperationWithBlock:^ {
-        [[UIDevice currentDevice] setValue:[NSNumber numberWithInteger: UIInterfaceOrientationPortrait] forKey:@"orientation"];
-      }];
-      break;
-      
-    case 0:
-      [OrientationModule setOrientation:UIInterfaceOrientationMaskLandscapeLeft];
-      [[NSOperationQueue mainQueue] addOperationWithBlock:^ {
-        [[UIDevice currentDevice] setValue:[NSNumber numberWithInteger: UIInterfaceOrientationLandscapeLeft] forKey:@"orientation"];
-      }];
-      break;
-      
-    case 8:
-      [OrientationModule setOrientation:UIInterfaceOrientationMaskLandscapeRight];
-      [[NSOperationQueue mainQueue] addOperationWithBlock:^ {
-        // this seems counter intuitive
-        [[UIDevice currentDevice] setValue:[NSNumber numberWithInteger: UIInterfaceOrientationLandscapeRight] forKey:@"orientation"];
-      }];
-      break;
-      
-    case 9:
-      [OrientationModule setOrientation:UIInterfaceOrientationMaskPortraitUpsideDown];
-      [[NSOperationQueue mainQueue] addOperationWithBlock:^ {
-        [[UIDevice currentDevice] setValue:[NSNumber numberWithInteger: UIInterfaceOrientationMaskPortraitUpsideDown] forKey:@"orientation"];
-      }];
-      break;
-      
-    default:
-      [OrientationModule setOrientation:UIInterfaceOrientationMaskAllButUpsideDown];
-      //  AppDelegate *delegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-      //  delegate.orientation = 3;
-      break;
+  
+  if(_isRotating) return;
+  
+  if (requestedOrientation == 1) {
+    _isRotating = YES;
+
+    [OrientationModule setOrientation:UIInterfaceOrientationMaskPortrait];
+    [[NSOperationQueue mainQueue] addOperationWithBlock:^ {
+      [[UIDevice currentDevice] setValue:[NSNumber numberWithInteger: UIInterfaceOrientationPortrait] forKey:@"orientation"];
+      _isRotating = NO;
+    }];
+    
+  }else if(requestedOrientation == 8){
+    _isRotating = YES;
+    
+    [OrientationModule setOrientation:UIInterfaceOrientationMaskLandscapeLeft];
+    [[NSOperationQueue mainQueue] addOperationWithBlock:^ {
+      [[UIDevice currentDevice] setValue:[NSNumber numberWithInteger: UIInterfaceOrientationLandscapeLeft] forKey:@"orientation"];
+      _isRotating = NO;
+    }];
+    
+  }else if(requestedOrientation == 0){
+    _isRotating = YES;
+
+    [OrientationModule setOrientation:UIInterfaceOrientationMaskLandscapeRight];
+    [[NSOperationQueue mainQueue] addOperationWithBlock:^ {
+      // this seems counter intuitive
+      [[UIDevice currentDevice] setValue:[NSNumber numberWithInteger: UIInterfaceOrientationLandscapeRight] forKey:@"orientation"];
+      _isRotating = NO;
+    }];
+    
+  }else if(requestedOrientation == 9){
+    //      [OrientationModule setOrientation:UIInterfaceOrientationMaskPortraitUpsideDown];
+    //      [[NSOperationQueue mainQueue] addOperationWithBlock:^ {
+    //        [[UIDevice currentDevice] setValue:[NSNumber numberWithInteger: UIInterfaceOrientationMaskPortraitUpsideDown] forKey:@"orientation"];
+    //      }];
+    _isRotating = NO;
+  }else if(requestedOrientation == -1){
+    [OrientationModule setOrientation:UIInterfaceOrientationMaskAllButUpsideDown];
+    //  AppDelegate *delegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    //  delegate.orientation = 3;
+    _isRotating = NO;
   }
 }
 

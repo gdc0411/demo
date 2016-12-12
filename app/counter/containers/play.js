@@ -96,6 +96,11 @@ class play extends Component {
         Orientation.setOrientation(1);
     }
 
+    // componentWillUpdate(nextProps, nextState) {
+    //     if(nextState.orientation){
+    //         Orientation.setOrientation(nextState.orientation);
+    //     }
+    // }
 
     componentWillUnmount() {
         Orientation.setOrientation(1);
@@ -164,22 +169,29 @@ class play extends Component {
 
     updateOrientation = (orientation) => {
         let bottom = 0;
+        let needUpdate = false;
         switch (orientation) {
             case 0:
                 bottom = 0;
+                needUpdate = true;
                 break;
             case 1:
                 bottom = 200;
+                needUpdate = true;
                 break;
             case 8:
                 bottom = 0;
+                needUpdate = true;
                 break;
             case 9:
-                bottom = 200;
+                // bottom = 200;
+                needUpdate = true;
                 break;
         }
-        this.setState({ orientation, bottom });
-        Orientation.setOrientation(this.state.orientation);
+        if (needUpdate) {
+            this.setState({ orientation, bottom });
+            Orientation.setOrientation(orientation);
+        }
     }
 
     /**
@@ -256,7 +268,7 @@ class play extends Component {
         }
         // if( this.state.ratesInfo.length > 0 ) alert(this.state.ratesInfo );
         return (
-            <TouchableOpacity onPress={() => { this.setState({ orientation, bottom }); Orientation.setOrientation(this.state.orientation); } }>
+            <TouchableOpacity onPress={() => { this.setState({ orientation, bottom }); Orientation.setOrientation(orientation); } }>
                 <Text style={[styles.controlOption, { fontWeight: isSelected ? "bold" : "normal" }]}>
                     {dispName}
                 </Text>
@@ -355,7 +367,6 @@ class play extends Component {
     render() {
         const flexCompleted = this.getCurrentTimePercentage() * 100;
         const flexRemaining = (1 - this.getCurrentTimePercentage()) * 100;
-
         return (
             <View style={styles.container}>
                 <StatusBar barStyle='light-content' style={{ height: STATUS_BAR_HEIGHT }} />
