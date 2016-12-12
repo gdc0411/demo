@@ -42,7 +42,7 @@
   /*
    确保App启动的屏幕方向
    */
-//  [[UIApplication sharedApplication] setStatusBarOrientation:(UIInterfaceOrientationPortrait) animated:NO];
+  [[UIApplication sharedApplication] setStatusBarOrientation:(UIInterfaceOrientationPortrait) animated:NO];
   
   /*
    *******************************************************************

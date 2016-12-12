@@ -185,7 +185,7 @@ class play extends Component {
                 break;
             case 9:
                 // bottom = 200;
-                needUpdate = true;
+                // needUpdate = true;
                 break;
         }
         if (needUpdate) {
@@ -263,7 +263,7 @@ class play extends Component {
                 break;
             case 9:
                 dispName = ' 反竖屏 ';
-                bottom = 210;
+                // bottom = 210;
                 break;
         }
         // if( this.state.ratesInfo.length > 0 ) alert(this.state.ratesInfo );
