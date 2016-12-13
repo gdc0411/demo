@@ -128,8 +128,17 @@ class play extends Component {
 
         //获得直播信息
         let livesStr = '';
+        let needFullView = '';
+        let needTimeShift = '';
+        let isNeedAd = '';
+        let ark = '';
         // alert(this.state.ratesInfo);
         if (data.actionLive !== undefined) {
+            needFullView = (data.actionLive.needFullView !== undefined) ? `需要全屏:${data.actionLive.needFullView}` : '';
+            needTimeShift = (data.actionLive.needTimeShift !== undefined) ? `可时移:${data.actionLive.needTimeShift}` : '';
+            isNeedAd = (data.actionLive.isNeedAd !== undefined) ? `有广告:${data.actionLive.isNeedAd}` : '';
+            ark = (data.actionLive.ar !== undefined) ? `ARK:${data.actionLive.ark}` : '';
+
             livesStr += `\n{actionState:${data.actionLive.actionState},currentLive:${data.actionLive.currentLive}`;
             // livesStr += `{actionState:${data.actionLive.actionState},coverImgUrl:${data.actionLive.coverImgUrl},playerPageUrl:${data.actionLive.playerPageUrl}`;
             // livesStr += `,beginTime:${data.actionLive.beginTime},startTime:${data.actionLive.startTime}`;
@@ -146,10 +155,7 @@ class play extends Component {
 
         let isDownload = (data.isDownload !== undefined) ? `下载:${data.isDownload}` : '';
         let isPano = (data.isPano !== undefined) ? `Pano:${data.isPano}` : '';
-        let needFullView = (data.needFullView !== undefined) ? `需要全屏:${data.needFullView}` : '';
-        let needTimeShift = (data.needTimeShift !== undefined) ? `可时移:${data.needTimeShift}` : '';
-        let isNeedAd = (data.isNeedAd !== undefined) ? `有广告:${data.isNeedAd}` : '';
-        let ark = (data.ar !== undefined) ? `ARK:${data.ark}` : '';
+        
 
         let volume = (data.volume !== undefined) ? `音量:${data.volume}` : '';
         let brightness = (data.brightness !== undefined) ? `亮度:${data.brightness}` : '';

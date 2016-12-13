@@ -783,6 +783,8 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
       [actionLive setValue:[NSNumber numberWithInt:(int)_activityItem.endTime] forKey:@"endTime"];
       [actionLive setValue:_activityItem.activityDesc forKey:@"actionDesc"];
       [actionLive setValue:[NSNumber numberWithBool:((LECActivityPlayer*)player).isPanorama] forKey:@"isPano"]; //是否全景（LIVE）
+      [actionLive setValue:[NSNumber numberWithBool:((LECActivityPlayer*)player).supportSeekOperation] forKey:@"needTimeShift"]; //是否支持timeshift（LIVE）
+      [actionLive setValue:[NSNumber numberWithBool:((LECActivityPlayer*)player).contentType == LECPlayerContentTypeAdv] forKey:@"isNeedAd"]; //是否广告（LIVE）
       
       NSArray* liveInfos =  _activityItem.activityLiveItemList;
       NSMutableArray* lives = [NSMutableArray arrayWithCapacity:[liveInfos count]];
