@@ -159,14 +159,6 @@
                                                  name:UIApplicationWillEnterForegroundNotification
                                                object:nil];
     
-    //    [[NSNotificationCenter defaultCenter] addObserver:self
-    //                                             selector:@selector(handleDeviceOrientationDidChange:)
-    //                                                 name:UIDeviceOrientationDidChangeNotification
-    //                                               object:nil];
-    
-    //    [[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications]; //开始生成设备旋转通知
-    
-    
   }
   return self;
 }
@@ -233,7 +225,7 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
     __weak typeof(self) wSelf = self;
     [_lePlayer seekToPosition: seek > _duration ? (int)_duration : seek completion:^{
       _isSeeking = NO;
-      if (wSelf.onVideoSeekComplete) wSelf.onVideoSeekComplete(nil);
+      wSelf.onVideoSeekComplete?wSelf.onVideoSeekComplete(nil):nil;
     }];
     NSLog(@"外部控制——— SEEK TO: %d", seek);
     
@@ -243,19 +235,18 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
     if(seek >= _serverTime){
       [(LECActivityPlayer*)_lePlayer backToLiveWithCompletion:^{
         _isSeeking = NO;
-        if (wSelf.onVideoSeekComplete) wSelf.onVideoSeekComplete(nil);
+        wSelf.onVideoSeekComplete?wSelf.onVideoSeekComplete(nil):nil;
       }];
     }else{
       [_lePlayer seekToPosition: seek < _beginTime ? (int)_beginTime : seek completion:^{
         _isSeeking = NO;
-        if (wSelf.onVideoSeekComplete) wSelf.onVideoSeekComplete(nil);
+        wSelf.onVideoSeekComplete?wSelf.onVideoSeekComplete(nil):nil;
       }];
     }
     NSLog(@"外部控制——— SEEK TIMESHIFT: %d", seek);
   }
   
-  if(_onVideoSeek)
-    _onVideoSeek(@{@"currentTime": [NSNumber numberWithLong:_lastPosition], @"seekTime":[NSNumber numberWithInt:seek]});
+  _onVideoSeek? _onVideoSeek(@{@"currentTime": [NSNumber numberWithLong:_lastPosition], @"seekTime":[NSNumber numberWithInt:seek]}):nil;
   
 }
 
@@ -270,9 +261,7 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
       _currentRate = rate;
       __weak typeof(self) wSelf = self;
       [wSelf.lePlayer switchSelectStreamRateItem:lItem completion:^{
-        if (wSelf.onVideoRateChange) {
-          wSelf.onVideoRateChange(@{@"currentRate":_currentRate,@"nextRate":lItem.code});
-        }
+        wSelf.onVideoRateChange?wSelf.onVideoRateChange(@{@"currentRate":_currentRate,@"nextRate":lItem.code}):nil;
       }];
     }
   }
@@ -289,9 +278,7 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
   
   __weak typeof(self) wSelf = self;
   [(LECActivityPlayer*)_lePlayer registerWithLiveId:liveId completion:^(BOOL result) {
-    if (wSelf.onActionLiveChange) {
-      wSelf.onActionLiveChange(@{@"currentLive":_currentLive,@"nextLive":liveId});
-    }
+    wSelf.onActionLiveChange?wSelf.onActionLiveChange(@{@"currentLive":_currentLive,@"nextLive":liveId}):nil;
   }];
   NSLog(@"外部控制——— 切换机位 current:%@ next:%@", _currentLive, liveId);
 }
@@ -324,37 +311,6 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
   [[UIScreen mainScreen] setBrightness: (float)brightness / 100];
   NSLog(@"外部控制——— 调节亮度:%d", brightness );
 }
-
-//- (void)setOrientation:(int)requestedOrientation
-//{
-//  if( requestedOrientation<0 || requestedOrientation == _currentOritentation )
-//    return;
-//
-//  _currentOritentation = requestedOrientation;
-//
-//  int orientation = 1;
-//  switch (requestedOrientation) {
-//    case 0:
-//      _isFullScreen = YES;
-//      orientation = UIInterfaceOrientationLandscapeRight;
-//      break;
-//    case 1:
-//      _isFullScreen = NO;
-//      orientation = UIDeviceOrientationPortrait;
-//      break;
-//    case 8:
-//      _isFullScreen = YES;
-//      orientation = UIDeviceOrientationLandscapeLeft;
-//      break;
-//    case 9:
-//      _isFullScreen = NO;
-//      orientation = UIDeviceOrientationPortraitUpsideDown;
-//      break;
-//  }
-//  [self changeScreenOrientation:[NSNumber numberWithInt:orientation]];
-//
-//  NSLog(@"外部控制——— 设置方向 orientation:%d", requestedOrientation);
-//}
 
 - (void)setPlayInBackground:(BOOL)playInBackground
 {
@@ -449,9 +405,9 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
                       resumeFromLastRateType:YES
                                   completion:^(BOOL result) {
                                     
-                                    if (wSelf.onVideoSourceLoad) {//数据源回显
-                                      wSelf.onVideoSourceLoad(@{@"src": [[wSelf class] returnJSONStringWithDictionary:source useSystem:YES]});
-                                    }
+                                    //数据源回显
+                                    wSelf.onVideoSourceLoad?
+                                    wSelf.onVideoSourceLoad(@{@"src": [[wSelf class] returnJSONStringWithDictionary:source useSystem:YES]}):nil;
                                     
                                     if (result){
                                       NSLog(@"播放器注册成功");
@@ -461,9 +417,7 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
                                       
                                     }else{
                                       //[_playerViewController showTips:@"播放器注册失败,请检查UU和VU"];
-                                      if (wSelf.onVideoError) {
-                                        wSelf.onVideoError(@{@"errorCode":@"-1",@"errorMsg":@"播放器注册失败,请检查UU和VU"});
-                                      }
+                                      wSelf.onVideoError?wSelf.onVideoError(@{@"errorCode":@"-1",@"errorMsg":@"播放器注册失败,请检查UU和VU"}):nil;
                                     }
                                   }];
     
@@ -530,9 +484,7 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
                                       wSelf.lePlayer.errorCode,
                                       wSelf.lePlayer.errorDescription];
                   NSLog(@"%@",error);
-                  if (wSelf.onVideoError) {
-                    wSelf.onVideoError(@{@"errorCode":wSelf.lePlayer.errorCode,@"errorMsg":wSelf.lePlayer.errorDescription});
-                  }
+                  wSelf.onVideoError?wSelf.onVideoError(@{@"errorCode":wSelf.lePlayer.errorCode,@"errorMsg":wSelf.lePlayer.errorDescription}):nil;
                 }
               }];
               if (isEnable) {
@@ -544,23 +496,17 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
         }
         if (!isEnable) {
           NSLog(@"没有可用的直播机位");
-          if (wSelf.onVideoError) {
-            wSelf.onVideoError(@{@"errorCode":@"-1",@"errorMsg":@"没有可用的直播机位"});
-          }
+          wSelf.onVideoError?wSelf.onVideoError(@{@"errorCode":@"-1",@"errorMsg":@"没有可用的直播机位"}):nil;
         }
       } else {
-        if (wSelf.onVideoError) {
-          wSelf.onVideoError(@{@"errorCode":@"-1",@"errorMsg":@"直播活动注册失败"});
-        }
         NSLog(@"直播活动注册失败");
+        wSelf.onVideoError?wSelf.onVideoError(@{@"errorCode":@"-1",@"errorMsg":@"直播活动注册失败"}):nil;
       }
     }];
     
     if (!requestSuccess) {
       NSLog(@"活动事件Manager注册失败");
-      if (wSelf.onVideoError) {
-        wSelf.onVideoError(@{@"errorCode":@"-1",@"errorMsg":@"活动事件Manager注册失败"});
-      }
+      wSelf.onVideoError?wSelf.onVideoError(@{@"errorCode":@"-1",@"errorMsg":@"活动事件Manager注册失败"}):nil;
     }
     
     
@@ -591,22 +537,17 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
     
     __weak typeof(self) wSelf = self;
     [_lePlayer registerWithURLString:url completion:^(BOOL result) {
-      if (wSelf.onVideoSourceLoad) {//数据源回显
-        wSelf.onVideoSourceLoad(@{@"src": [[wSelf class] returnJSONStringWithDictionary:source useSystem:YES]});
-      }
+      //数据源回显
+      wSelf.onVideoSourceLoad?wSelf.onVideoSourceLoad(@{@"src": [[wSelf class] returnJSONStringWithDictionary:source useSystem:YES]}):nil;
       
       if (result){
         NSLog(@"播放器注册成功");
-        
         [wSelf play];//注册完成后自动播放
         
       }else{
-        if (wSelf.onVideoError) {
-          wSelf.onVideoError(@{@"errorCode":@"-1",@"errorMsg":@"播放器注册失败,请检查URL"});
-        }
+        wSelf.onVideoError?wSelf.onVideoError(@{@"errorCode":@"-1",@"errorMsg":@"播放器注册失败,请检查URL"}):nil;
       }
     }];
-    
   }
 }
 
@@ -671,16 +612,14 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
   }
   __weak typeof(self) wSelf = self;
   [_lePlayer playWithCompletion:^{
-    if (wSelf.onVideoResume) {
-      if( _playMode == LCPlayerVod)
-        wSelf.onVideoResume(@{@"duration":[NSNumber numberWithLong:_duration],
-                              @"currentTime":[NSNumber numberWithLong:_currentTime],});
-      
-      else if(_playMode == LCPlayerActionLive)
-        wSelf.onVideoResume(@{@"beginTime":[NSNumber numberWithLong:_beginTime],
-                              @"serverTime":[NSNumber numberWithLong:_serverTime],
-                              @"currentTime":[NSNumber numberWithLong:_currentTime],});
-    }
+    
+    if( _playMode == LCPlayerVod)
+      wSelf.onVideoResume?wSelf.onVideoResume(@{@"duration":[NSNumber numberWithLong:_duration],
+                                                @"currentTime":[NSNumber numberWithLong:_currentTime],}):nil;
+    else if(_playMode == LCPlayerActionLive)
+      wSelf.onVideoResume?wSelf.onVideoResume(@{@"beginTime":[NSNumber numberWithLong:_beginTime],
+                                                @"serverTime":[NSNumber numberWithLong:_serverTime],
+                                                @"currentTime":[NSNumber numberWithLong:_currentTime],}):nil;
     _isPlaying = YES;
   }];
 }
@@ -693,16 +632,14 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
   
   [_lePlayer resume];
   
-  if (_onVideoResume) {
-    if( _playMode == LCPlayerVod)
-      _onVideoResume(@{@"duration":[NSNumber numberWithLong:_duration],
-                       @"currentTime":[NSNumber numberWithLong:_currentTime],});
-    else if(_playMode == LCPlayerActionLive)
-      _onVideoResume(@{@"beginTime":[NSNumber numberWithLong:_beginTime],
-                       @"serverTime":[NSNumber numberWithLong:_serverTime],
-                       @"currentTime":[NSNumber numberWithLong:_currentTime],});
-  }
   
+  if( _playMode == LCPlayerVod)
+    _onVideoResume?_onVideoResume(@{@"duration":[NSNumber numberWithLong:_duration],
+                                    @"currentTime":[NSNumber numberWithLong:_currentTime],}):nil;
+  else if(_playMode == LCPlayerActionLive)
+    _onVideoResume?_onVideoResume(@{@"beginTime":[NSNumber numberWithLong:_beginTime],
+                                    @"serverTime":[NSNumber numberWithLong:_serverTime],
+                                    @"currentTime":[NSNumber numberWithLong:_currentTime],}):nil;
   _paused = YES;
   _isPlaying = NO;
 }
@@ -724,18 +661,16 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
   
   [_lePlayer pause];
   
-  if (_onVideoPause) {
-    
+  
     if( _playMode == LCPlayerVod)
-      _onVideoPause(@{@"duration":[NSNumber numberWithLong:_duration],
-                      @"currentTime":[NSNumber numberWithLong:_currentTime],});
+      _onVideoPause?_onVideoPause(@{@"duration":[NSNumber numberWithLong:_duration],
+                                    @"currentTime":[NSNumber numberWithLong:_currentTime],}):nil;
     
     else if(_playMode == LCPlayerActionLive)
-      _onVideoPause(@{@"beginTime":[NSNumber numberWithLong:_beginTime],
+      _onVideoPause?_onVideoPause(@{@"beginTime":[NSNumber numberWithLong:_beginTime],
                       @"serverTime":[NSNumber numberWithLong:_serverTime],
-                      @"currentTime":[NSNumber numberWithLong:_currentTime],});
-    
-  }
+                                    @"currentTime":[NSNumber numberWithLong:_currentTime],}):nil;
+  
   _isPlaying = NO;
 }
 
@@ -856,8 +791,7 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
   [event setValue:[NSNumber numberWithInt:_volume] forKey:@"volume"]; //声音百分比
   [event setValue:[NSNumber numberWithInt:_currentBrightness] forKey:@"brightness"]; //屏幕亮度
   
-  
-  if(_onVideoLoad) _onVideoLoad(event);
+  _onVideoLoad?_onVideoLoad(event):nil;
   
   [self applyModifiers];
   
@@ -868,8 +802,7 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
               playerEvent:(LECPlayerPlayEvent) playerEvent
 {
   _isPlaying = NO;
-  
-  if (_onVideoEnd) _onVideoEnd(nil);
+  _onVideoEnd?_onVideoEnd(nil):nil;
 }
 
 /*缓冲事件*/
@@ -898,7 +831,7 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
 {
   _width =  player.actualVideoWidth;
   _height = player.actualVideoHeight;
-  if (_onVideoSizeChange) _onVideoSizeChange(@{@"width": [NSNumber numberWithInt:_width],@"height": [NSNumber numberWithInt:_height],});
+  _onVideoSizeChange?_onVideoSizeChange(@{@"width": [NSNumber numberWithInt:_width],@"height": [NSNumber numberWithInt:_height],}):nil;
   
 }
 
@@ -908,7 +841,7 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
                  playerEvent:(LECPlayerPlayEvent) playerEvent
 {
   _isSeeking = NO;
-  if (_onVideoSeekComplete) _onVideoSeekComplete(nil);
+  _onVideoSeekComplete?_onVideoSeekComplete(nil):nil;
 }
 
 /*播放出错*/
@@ -918,10 +851,8 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
   NSString * error = [NSString stringWithFormat:@"%@:%@",player.errorCode,player.errorDescription];
   NSLog(@"播放器错误:%@",error);
   //[_playerViewController showTips:error]; //弹出提示
+  _onVideoError?_onVideoError(@{@"errorCode": player.errorCode,@"errorMsg": player.errorDescription}):nil;
   
-  if (_onVideoError) {
-    _onVideoError(@{@"errorCode": player.errorCode,@"errorMsg": player.errorDescription});
-  }
 }
 
 /*播放器状态事件*/
@@ -974,14 +905,11 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
     _duration = duration;
     _cacheDuration = cacheDuration;
     
-    if(_onVideoProgress){
-      _onVideoProgress(@{@"currentTime": [NSNumber numberWithLong:_currentTime],
-                         @"duration": [NSNumber numberWithLong:_duration],
-                         @"playableDuration": [NSNumber numberWithLong:_cacheDuration],});
-    }
-    if(_onVideoBufferPercent){
-      _onVideoBufferPercent(@{@"bufferpercent": [NSNumber numberWithInt: (int) ((((float)position + (float)cacheDuration)/(float)duration) * 100) ]});
-    }
+    _onVideoProgress?_onVideoProgress(@{@"currentTime": [NSNumber numberWithLong:_currentTime],
+                                        @"duration": [NSNumber numberWithLong:_duration],
+                                        @"playableDuration": [NSNumber numberWithLong:_cacheDuration],}):nil;
+    _onVideoBufferPercent?
+    _onVideoBufferPercent(@{@"bufferpercent": [NSNumber numberWithInt:(int) ((((float)position + (float)cacheDuration)/(float)duration) * 100) ]}):nil;
     
   }else if(_playMode == LCPlayerActionLive){
     _currentTime = _lastPosition = ((LECActivityPlayer*)player).currentPlayTimestamp;
@@ -989,12 +917,11 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
     _serverTime = ((LECActivityPlayer*)player).serverRealTimestamp;
     _endTime = ((LECActivityPlayer*)player).streamEndTimestamp;
     
-    if(_onActionTimeShift){
-      _onActionTimeShift(@{@"currentTime": [NSNumber numberWithLong:_currentTime],
-                           @"beginTime": [NSNumber numberWithLong:_beginTime],
-                           @"serverTime": [NSNumber numberWithLong:_serverTime],
-                           @"endTime": [NSNumber numberWithLong:_endTime], });
-    }
+    _onActionTimeShift?_onActionTimeShift(@{@"currentTime": [NSNumber numberWithLong:_currentTime],
+                                            @"beginTime": [NSNumber numberWithLong:_beginTime],
+                                            @"serverTime": [NSNumber numberWithLong:_serverTime],
+                                            @"endTime": [NSNumber numberWithLong:_endTime], }):nil;
+    
   }
   //  NSLog(@"播放位置:%lld,缓冲位置:%lld,总时长:%lld",position,cacheDuration,duration);
 }
@@ -1040,9 +967,9 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
       break;
     }
     case LCActivityEventOnlineAudiencesNumberUpdate: {
-      if(_onActionOnlineNumChange){
-        _onActionOnlineNumChange(@{@"onlineNum": [NSNumber numberWithLong:(long)manager.onlineAudiencesNumber] });
-      }
+      
+      _onActionOnlineNumChange?_onActionOnlineNumChange(@{@"onlineNum": [NSNumber numberWithLong:(long)manager.onlineAudiencesNumber] }):nil;
+      
       NSLog(@"活动在线人数:%ld,",(long)manager.onlineAudiencesNumber);
       break;
     }
@@ -1050,37 +977,6 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
       break;
   }
 }
-
-//判断设备的朝向
-//- (void)handleDeviceOrientationDidChange:(UIInterfaceOrientation)interfaceOrientation
-//{
-//  int deviceOrientation = -1;
-//  int value =[UIDevice currentDevice].orientation;
-//
-//  switch (value) {
-//    case UIDeviceOrientationLandscapeLeft: //正横屏
-//      deviceOrientation = 0;
-//      break;
-//    case UIDeviceOrientationLandscapeRight: //反横屏
-//      deviceOrientation = 8;
-//      break;
-//    case UIDeviceOrientationPortrait: //正竖屏
-//      deviceOrientation = 1;
-//      break;
-//    case UIDeviceOrientationPortraitUpsideDown: //反竖屏
-//      deviceOrientation = 9;
-//      break;
-//    default:
-//      break;
-//  }
-//
-//  if( deviceOrientation!= -1 && _onOrientationChange){
-//    _onOrientationChange(@{@"orientation": [NSNumber numberWithInt:deviceOrientation]});
-//  }
-//
-//  NSLog(@"设备方向变化！！——— orientation：%d", deviceOrientation);
-//}
-
 
 #pragma mark 广告正片切换
 - (void) lecPlayer:(LECPlayer *) player contentTypeChanged:(LECPlayerContentType) contentType
@@ -1090,14 +986,14 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
       NSLog(@"正在播放正片");
       if(_isAdPlaying){
         _isAdPlaying = NO;
-        if(_onAdvertComplete) _onAdvertComplete(nil);
+        _onAdvertComplete?_onAdvertComplete(nil):nil;
       }
       break;
     case LECPlayerContentTypeAdv:
       NSLog(@"正在播放广告");
       //      [_loadIndicatorView stopAnimating];
       _isAdPlaying = YES;
-      if(_onAdvertStart) _onAdvertStart(nil);
+      _onAdvertStart?_onAdvertStart(nil):nil;
       break;
       
     default:
