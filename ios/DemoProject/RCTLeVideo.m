@@ -321,7 +321,7 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
   }
   _currentBrightness = brightness;
   
-  [[UIScreen mainScreen] setBrightness: brightness / 100];
+  [[UIScreen mainScreen] setBrightness: (float)brightness / 100];
   NSLog(@"外部控制——— 调节亮度:%d", brightness );
 }
 
