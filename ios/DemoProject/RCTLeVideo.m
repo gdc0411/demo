@@ -215,14 +215,17 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
 
 - (void)setSeek:(int)seek
 {
-  if( seek < 0 || _lePlayer == nil)
-    return;
+  if(seek < 0) return;
+  _lastPosition = seek;
   
-  _isSeeking = YES;
+  if(_lePlayer == nil ) return;
   
-  if(_playMode == LCPlayerVod){
+  if(_playMode == LCPlayerVod && _duration != 0){
+  
+    _isSeeking = YES;
     
     __weak typeof(self) wSelf = self;
+    _lastPosition = seek > _duration ? _duration : seek;
     [_lePlayer seekToPosition: seek > _duration ? (int)_duration : seek completion:^{
       _isSeeking = NO;
       wSelf.onVideoSeekComplete?wSelf.onVideoSeekComplete(nil):nil;
@@ -230,14 +233,18 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
     NSLog(@"外部控制——— SEEK TO: %d", seek);
     
   }else if(_playMode == LCPlayerActionLive){
+  
+    _isSeeking = YES;
     
     __weak typeof(self) wSelf = self;
     if(seek >= _serverTime){
+      _lastPosition = _serverTime;
       [(LECActivityPlayer*)_lePlayer backToLiveWithCompletion:^{
         _isSeeking = NO;
         wSelf.onVideoSeekComplete?wSelf.onVideoSeekComplete(nil):nil;
       }];
     }else{
+      _lastPosition = seek < _beginTime ? (int)_beginTime : seek;
       [_lePlayer seekToPosition: seek < _beginTime ? (int)_beginTime : seek completion:^{
         _isSeeking = NO;
         wSelf.onVideoSeekComplete?wSelf.onVideoSeekComplete(nil):nil;
@@ -249,6 +256,28 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
   _onVideoSeek? _onVideoSeek(@{@"currentTime": [NSNumber numberWithLong:_lastPosition], @"seekTime":[NSNumber numberWithInt:seek]}):nil;
   
 }
+
+//回到上次播放位置
+- (void)setLastPosModifier:(long)lastPosition
+{
+  if(lastPosition ==0) return;
+  
+  _lastPosition = lastPosition;
+  
+  if (_lePlayer == nil || _duration == 0) {
+    return;
+  }
+  
+  if (_playMode == LCPlayerVod && _lastPosition != 0) {
+    if (_lastPosition < _duration)
+      [_lePlayer seekToPosition:_lastPosition];
+    else
+      [_lePlayer seekToPosition:_duration];
+    
+    NSLog(@"外部控制——— 恢复位置 seekToLastPostion: %ld", _lastPosition);
+  }
+}
+
 
 - (void)setRate:(NSString*)rate
 {
@@ -562,6 +591,7 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
   //  [self setResizeMode:_resizeMode];
   //  [self setRepeat:_repeat];
   [self setPaused:_paused];
+//  [self setLastPosModifier:_lastPosition];
 }
 
 /*重置播放器*/
@@ -736,8 +766,10 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
   }
   
   if (_playMode == LCPlayerVod) { //VOD模式下参数
-    [event setValue:[NSNumber numberWithLong:(_duration==0)?player.duration==0:_duration] forKey:@"duration"]; //视频总长度（VOD）
+    [event setValue:[NSNumber numberWithLong:(_duration==0)?player.duration:_duration] forKey:@"duration"]; //视频总长度（VOD）
     [event setValue:[NSNumber numberWithLong:_lastPosition] forKey:@"currentTime"]; //当前播放位置（VOD）
+    [event setValue:[NSNumber numberWithBool:((LECVODPlayer*)player).isPanorama] forKey:@"isPano"]; //是否全景（VOD）
+    [event setValue:[NSNumber numberWithBool:((LECVODPlayer*)player).allowDownload] forKey:@"isDownload"]; //是否可以下载（VOD）
     
   } else if(_playMode == LCPlayerActionLive ) { //ACTION模式参数
     
@@ -750,6 +782,7 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
       [actionLive setValue:[NSNumber numberWithInt:(int)_activityItem.beginTime] forKey:@"beginTime"];
       [actionLive setValue:[NSNumber numberWithInt:(int)_activityItem.endTime] forKey:@"endTime"];
       [actionLive setValue:_activityItem.activityDesc forKey:@"actionDesc"];
+      [actionLive setValue:[NSNumber numberWithBool:((LECActivityPlayer*)player).isPanorama] forKey:@"isPano"]; //是否全景（LIVE）
       
       NSArray* liveInfos =  _activityItem.activityLiveItemList;
       NSMutableArray* lives = [NSMutableArray arrayWithCapacity:[liveInfos count]];
@@ -769,6 +802,7 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
         }
         [actionLive setValue:lives forKey:@"lives"];
       }
+      
       [event setValue:actionLive forKey:@"actionLive"];
     }
     
@@ -812,13 +846,14 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
   switch (playerEvent) {
     case LECPlayerPlayEventBufferStart:
       _isSeeking = YES;
-      if (_onBufferStart) _onBufferStart(nil);
+      _onBufferStart?_onBufferStart(nil):nil;
       break;
     case LECPlayerPlayEventRenderFirstPic:
-      if (_onVideoRendingStart) _onVideoRendingStart(nil);
+      _isSeeking = NO;
+      _onVideoRendingStart?_onVideoRendingStart(nil):nil;
       break;
     case LECPlayerPlayEventBufferEnd:
-      if (_onBufferEnd) _onBufferEnd(nil);
+      _onBufferEnd?_onBufferEnd(nil):nil;
       break;
     default:
       break;

@@ -44,7 +44,7 @@ class play extends Component {
             /* 暂停/播放状态 */
             paused: false,
             /* 跳转 */
-            seek: -1,
+            seek: 300,
             /* 播放码率 */
             rate: '',
             /* 云直播机位切换 */
