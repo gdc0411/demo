@@ -793,10 +793,10 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
                 actionLive.putInt(EVENT_PROP_LIVE_ACTION_STATE, mActionInfo.getActivityState()); //直播状态（LIVE）
                 actionLive.putString(EVENT_PROP_CURRENT_LIVE, mCurrentLiveId); //当前机位（LIVE）
 
-                event.putInt(EVENT_PROP_LIVE_NEED_FULLVIEW, mActionInfo.getNeedFullView()); //是否全屏播放（LIVE)
-                event.putInt(EVENT_PROP_LIVE_NEED_TIMESHIFT, mActionInfo.getNeedTimeShift()); //是否支持时移（LIVE）
-                event.putInt(EVENT_PROP_LIVE_IS_NEED_AD, mActionInfo.getIsNeedAd()); //是否有广告（LIVE）
-                event.putString(EVENT_PROP_LIVE_ARK, mActionInfo.getArk()); //是否有广告（LIVE）
+                actionLive.putBoolean(EVENT_PROP_LIVE_NEED_FULLVIEW, mActionInfo.getNeedFullView()!= 0); //是否全屏播放（LIVE)
+                actionLive.putBoolean(EVENT_PROP_LIVE_NEED_TIMESHIFT, mActionInfo.getNeedTimeShift()!=0); //是否支持时移（LIVE）
+                actionLive.putBoolean(EVENT_PROP_LIVE_IS_NEED_AD, mActionInfo.getIsNeedAd()!=0); //是否有广告（LIVE）
+                actionLive.putString(EVENT_PROP_LIVE_ARK, mActionInfo.getArk()); //ARK（LIVE）
 
                 if (mCurrentLiveInfo != null) {
                     actionLive.putString(EVENT_PROP_LIVE_BEGIN_TIME, mCurrentLiveInfo.getLiveBeginTime()); //开始时间（LIVE）
