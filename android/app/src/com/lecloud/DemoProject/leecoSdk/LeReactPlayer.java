@@ -364,10 +364,8 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
      * @param sec 单位秒
      */
     public void setSeekTo(final int sec) {
-        if (sec < 0 || !mLePlayerValid) {
-            if (sec > 0) mLastPosition = sec; //保存上次位置
-            return;
-        }
+        if (sec < 0 ) return; mLastPosition = sec; //保存上次位置
+        if (!mLePlayerValid) return;
 
         if (mPlayMode == PlayerParams.VALUE_PLAYER_VOD) { //点播
 
