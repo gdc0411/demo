@@ -76,6 +76,8 @@ public interface Constants {
     String EVENT_PROP_PLAY_BUFFERPERCENT = "bufferpercent"; //二级进度长度百分比（VOD）
     String EVENT_PROP_CURRENT_TIME = "currentTime"; //当前时长（VOD，LIVE）
     String EVENT_PROP_SEEK_TIME = "seekTime"; //跳转时间（VOD）
+    String EVENT_PROP_VOD_IS_DOWNLOAD = "isDownload"; //是否允许下载（VOD）
+    String EVENT_PROP_VOD_IS_PANO = "isPano"; //是否全景（VOD）
     String EVENT_PROP_NATURALSIZE = "naturalSize"; //视频原始尺寸（VOD，LIVE）
     String EVENT_PROP_VIDEO_BUFF = "videobuff";  //缓冲加载进度百分比（VOD）
     String EVENT_PROP_RATELIST = "rateList";  //可选择的码率（VOD，LIVE）
@@ -83,6 +85,10 @@ public interface Constants {
     String EVENT_PROP_DEFAULT_RATE = "defaultRate"; //默认码率（VOD，LIVE）
     String EVENT_PROP_NEXT_RATE = "nextRate"; //下一个码率（VOD，LIVE）
 
+    String EVENT_PROP_LIVE_NEED_FULLVIEW = "needFullView"; //是否全屏（LIVE）
+    String EVENT_PROP_LIVE_NEED_TIMESHIFT = "needTimeShift"; //是否支持时移（LIVE）
+    String EVENT_PROP_LIVE_IS_NEED_AD = "isNeedAd"; //是否有广告（LIVE）
+    String EVENT_PROP_LIVE_ARK = "ark"; //ARK（LIVE）
     String EVENT_PROP_CURRENT_LIVE = "currentLive"; //当前机位（LIVE）
     String EVENT_PROP_NEXT_LIVE = "nextLive"; //切换后的机位（LIVE）
     String EVENT_PROP_SERVER_TIME = "serverTime"; //服务器时间（LIVE）

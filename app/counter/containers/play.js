@@ -113,13 +113,16 @@ class play extends Component {
      * @memberOf VideoPlayer
      */
     onLoad = (data) => {
+
         let ratesStr = '';
-        // alert(this.props.params.source);
-        let arr = data.rateList; //获得码率列表
-        // alert(this.state.ratesInfo);
-        if (arr instanceof Array && arr.length > 0) {
-            for (var i = 0; i < arr.length; i++) {
-                ratesStr += `{${arr[i].rateKey},${arr[i].rateValue}}`;
+        if (data.rateList !== undefined) {
+            let arr = data.rateList; //获得码率列表
+            // alert(this.state.ratesInfo);
+            if (arr instanceof Array && arr.length > 0) {
+                ratesStr = '码率：';
+                for (var i = 0; i < arr.length; i++) {
+                    ratesStr += `{${arr[i].rateKey},${arr[i].rateValue}}`;
+                }
             }
         }
 
@@ -127,7 +130,7 @@ class play extends Component {
         let livesStr = '';
         // alert(this.state.ratesInfo);
         if (data.actionLive !== undefined) {
-            livesStr += `{actionState:${data.actionLive.actionState},currentLive:${data.actionLive.currentLive}`;
+            livesStr += `\n{actionState:${data.actionLive.actionState},currentLive:${data.actionLive.currentLive}`;
             // livesStr += `{actionState:${data.actionLive.actionState},coverImgUrl:${data.actionLive.coverImgUrl},playerPageUrl:${data.actionLive.playerPageUrl}`;
             // livesStr += `,beginTime:${data.actionLive.beginTime},startTime:${data.actionLive.startTime}`;
             let liveArr = data.actionLive.lives;
@@ -138,6 +141,18 @@ class play extends Component {
             }
             livesStr += '}';
         }
+
+        let defaultRate = (data.defaultRate) ? `默认码率:${data.defaultRate}` : '';
+
+        let isDownload = (data.isDownload !== undefined) ? `下载:${data.isDownload}` : '';
+        let isPano = (data.isPano !== undefined) ? `Pano:${data.isPano}` : '';
+        let needFullView = (data.needFullView !== undefined) ? `需要全屏:${data.needFullView}` : '';
+        let needTimeShift = (data.needTimeShift !== undefined) ? `可时移:${data.needTimeShift}` : '';
+        let isNeedAd = (data.isNeedAd !== undefined) ? `有广告:${data.isNeedAd}` : '';
+        let ark = (data.ar !== undefined) ? `ARK:${data.ark}` : '';
+
+        let volume = (data.volume !== undefined) ? `音量:${data.volume}` : '';
+        let brightness = (data.brightness !== undefined) ? `亮度:${data.brightness}` : '';
 
         // 查看使用可以把下面注释去掉 raojia 2016/11/3
         // //logo
@@ -153,8 +168,6 @@ class play extends Component {
         // alert('水印 target:'+(data.waterMarks)[0].target);
         // alert('水印 pos:'+(data.waterMarks)[0].pos);
 
-        // alert('音量：' + data.volume);
-        // alert('亮度：' + data.brightness);
 
         this.setState({
             duration: data.duration,
@@ -163,7 +176,7 @@ class play extends Component {
             ratesInfo: data.rateList,
             eventInfo: 'Player准备完毕',
             videoInfo: `片名：${data.title} 长度：${data.duration} 宽高:${data.naturalSize.width}，${data.naturalSize.height} \n`
-            + `码率：${ratesStr} 默认：${data.defaultRate} \n音量：${data.volume} 亮度:${data.brightness} \n ${livesStr}`
+            + `${ratesStr} ${defaultRate} ${isDownload} ${isPano} ${needFullView} ${needTimeShift} ${isNeedAd} ${ark} ${livesStr}\n${volume} ${brightness}`
         });
     }
 

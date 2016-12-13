@@ -67,51 +67,16 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
     /*
     * 设备控制
     */
-    // 设备信息
     private final AudioManager mAudioManager;
     private int mCurrentBrightness;
-    private OrientationSensorUtils mOrientationSensorUtils; //方向控制
-
-//    private int mCurrentOritentation; //当前屏幕方向
-//    private boolean isLockFlag = false;
-//    private Handler mOrientationChangeHandler = new Handler() {
-//
-//        @Override
-//        public void handleMessage(Message msg) {
-//            int orient = -1;
-//            switch (msg.what) {
-//                case OrientationSensorUtils.ORIENTATION_8:// 反横屏
-//                    orient = 8;
-//                    break;
-//                case OrientationSensorUtils.ORIENTATION_9:// 反竖屏
-//                    orient = 9;
-//                    break;
-//                case OrientationSensorUtils.ORIENTATION_0:// 正横屏
-//                    orient = 0;
-//                    break;
-//                case OrientationSensorUtils.ORIENTATION_1:// 正竖屏
-//                    orient = 1;
-//                    break;
-//            }
-//            WritableMap event = Arguments.createMap();
-//            event.putInt(EVENT_PROP_ORIENTATION, orient);
-//            mEventEmitter.receiveEvent(mViewId, Events.EVENT_ORIENTATION_CHANG.toString(), event);
-//
-//            Log.d(TAG, LogUtils.getTraceInfo() + "设备转屏事件——— orientation：" + orient);
-//
-//            super.handleMessage(msg);
-//        }
-//
-//    };
 
     /// 播放器设置
     private int mPlayMode = -1;
 
-    private boolean mHasSkin = false; //是否有皮肤
+    private boolean mDownload = false; //是否可以下载
     private boolean mPano = false;  //是否全景
     // 播放器可用状态，prepared, started, paused，completed 时为true
     private boolean mLePlayerValid = false;
-
 
     /*
     * 视频媒资信息
@@ -158,6 +123,7 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
             mProgressUpdateHandler.postDelayed(mProgressUpdateRunnable, 250);
         }
     };
+
     /*
      * == 云直播状态变量 =====================
     */
@@ -177,8 +143,7 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
     private OnlinePeopleChangeListener mOnlinePeopleChangeListener;
     private ActionStatusListener mActionStatusListener;
 
-
-    /*============================= 播放器构造 ===================================*/
+/*============================= 播放器构造 ===================================*/
 
     public LeReactPlayer(ThemedReactContext context) {
         super(context);
@@ -341,14 +306,13 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
         if (bundle == null) return;
 
         // 播放模式切换，重新创建Player
-        int newPlayMode = (bundle.containsKey(PROP_PLAY_MODE) ? bundle.getInt(PROP_PLAY_MODE) : -1);
+        int newPlayMode = bundle.containsKey(PROP_PLAY_MODE) ? bundle.getInt(PROP_PLAY_MODE) : -1;
         if (mPlayMode != -1 && newPlayMode != mPlayMode) {
             cleanupMediaPlayerResources();
         }
 
         mPlayMode = newPlayMode;
-        mPano = (bundle.containsKey(PROP_SRC_IS_PANO) && bundle.getBoolean(PROP_SRC_IS_PANO));
-        mHasSkin = (bundle.containsKey(PROP_SRC_HAS_SKIN) && bundle.getBoolean(PROP_SRC_HAS_SKIN));
+        mPano = bundle.containsKey(PROP_SRC_IS_PANO) && bundle.getBoolean(PROP_SRC_IS_PANO);
 
         //创建播放器
         initLePlayerIfNeeded();
@@ -401,18 +365,19 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
      */
     public void setSeekTo(final int sec) {
         if (sec < 0 || !mLePlayerValid) {
+            if (sec > 0) mLastPosition = sec; //保存上次位置
             return;
         }
 
         if (mPlayMode == PlayerParams.VALUE_PLAYER_VOD) { //点播
 
             if (sec <= mVideoDuration) {
+                mLastPosition = sec;
                 seekTo(sec * 1000);
             } else {
+                mLastPosition = mVideoDuration * 1000;
                 seekTo(mVideoDuration * 1000);
             }
-
-//            mLastPosition = 0; // 上一位置不再可用?
 
             if (isCompleted && mVideoDuration != 0 && sec < mVideoDuration) {
                 isCompleted = false;
@@ -656,6 +621,7 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
 
         if (mPaused) {
             if (isPlaying()) {
+
                 pause();
 
                 //暂停更新进度
@@ -683,6 +649,7 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
             }
         } else {
             if (!isPlaying()) {
+
                 start();
 
                 //启动更新进度
@@ -723,7 +690,12 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
         }
         //回到上次播放位置
         if (mMediaPlayer != null && mPlayMode == PlayerParams.VALUE_PLAYER_VOD && mLastPosition != 0) {
-            seekToLastPostion(lastPosition * 1000);
+
+            if (mLastPosition < mVideoDuration)
+                seekToLastPostion(lastPosition * 1000);
+            else
+                seekToLastPostion(mVideoDuration * 1000);
+
             Log.d(TAG, LogUtils.getTraceInfo() + "外部控制——— 恢复位置 seekToLastPostion: " + mLastPosition);
         }
 
@@ -784,9 +756,6 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
 
         // 当前播放模式
         event.putInt(EVENT_PROP_PLAY_MODE, mPlayMode);
-        // 当前屏幕方向
-//        event.putInt(EVENT_PROP_ORIENTATION, mCurrentOritentation);
-
 
         // 视频基本信息，长/宽/方向
         WritableMap naturalSize = Arguments.createMap();
@@ -857,19 +826,26 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
         if (mPlayMode == PlayerParams.VALUE_PLAYER_VOD) { //VOD模式下参数
             event.putDouble(EVENT_PROP_DURATION, mVideoDuration);  //视频总长度（VOD）
             event.putDouble(EVENT_PROP_CURRENT_TIME, mLastPosition);  //当前播放位置（VOD）
-        }
+            event.putBoolean(EVENT_PROP_VOD_IS_DOWNLOAD, mDownload); //是否允许下载（VOD）
+            event.putBoolean(EVENT_PROP_VOD_IS_PANO, mPano); //是否全景（VOD）
 
-        if (mPlayMode == PlayerParams.VALUE_PLAYER_ACTION_LIVE) { //LIVE模式参数
+        } else if (mPlayMode == PlayerParams.VALUE_PLAYER_ACTION_LIVE) { //LIVE模式参数
+
             WritableMap actionLive = Arguments.createMap();
             if (mActionInfo != null) {
-                actionLive.putString(EVENT_PROP_LIVE_COVER_IMG, mActionInfo.getCoverImgUrl()); //直播封面图
-                actionLive.putString(EVENT_PROP_LIVE_PLAYER_URL, mActionInfo.getPlayerPageUrl()); //直播页面URL
-                actionLive.putInt(EVENT_PROP_LIVE_ACTION_STATE, mActionInfo.getActivityState()); //直播状态
-                actionLive.putString(EVENT_PROP_CURRENT_LIVE, mCurrentLiveId); //当前机位
+                actionLive.putString(EVENT_PROP_LIVE_COVER_IMG, mActionInfo.getCoverImgUrl()); //直播封面图（LIVE）
+                actionLive.putString(EVENT_PROP_LIVE_PLAYER_URL, mActionInfo.getPlayerPageUrl()); //直播页面URL（LIVE）
+                actionLive.putInt(EVENT_PROP_LIVE_ACTION_STATE, mActionInfo.getActivityState()); //直播状态（LIVE）
+                actionLive.putString(EVENT_PROP_CURRENT_LIVE, mCurrentLiveId); //当前机位（LIVE）
+
+                event.putInt(EVENT_PROP_LIVE_NEED_FULLVIEW, mActionInfo.getNeedFullView()); //是否全屏播放（LIVE)
+                event.putInt(EVENT_PROP_LIVE_NEED_TIMESHIFT, mActionInfo.getNeedTimeShift()); //是否支持时移（LIVE）
+                event.putInt(EVENT_PROP_LIVE_IS_NEED_AD, mActionInfo.getIsNeedAd()); //是否有广告（LIVE）
+                event.putString(EVENT_PROP_LIVE_ARK, mActionInfo.getArk()); //是否有广告（LIVE）
 
                 if (mCurrentLiveInfo != null) {
-                    actionLive.putString(EVENT_PROP_LIVE_BEGIN_TIME, mCurrentLiveInfo.getLiveBeginTime()); //开始时间
-                    actionLive.putString(EVENT_PROP_LIVE_START_TIME, mCurrentLiveInfo.getLiveStartTime()); //结束时间
+                    actionLive.putString(EVENT_PROP_LIVE_BEGIN_TIME, mCurrentLiveInfo.getLiveBeginTime()); //开始时间（LIVE）
+                    actionLive.putString(EVENT_PROP_LIVE_START_TIME, mCurrentLiveInfo.getLiveStartTime()); //结束时间（LIVE）
                 }
 
                 final List<LiveInfo> liveInfos = mActionInfo.getLiveInfos();
@@ -878,14 +854,14 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
                     for (int i = 0; i < liveInfos.size(); i++) {
                         WritableMap map = Arguments.createMap();
                         LiveInfo liveInfo = liveInfos.get(i);
-                        map.putString(EVENT_PROP_LIVE_ID, liveInfo.getLiveId());
-                        map.putInt(EVENT_PROP_LIVE_MACHINE, liveInfo.getMachine());
-                        map.putString(EVENT_PROP_LIVE_PRV_STEAMID, liveInfo.getPreviewStreamId());
-                        map.putString(EVENT_PROP_LIVE_PRV_STEAMURL, liveInfo.getPreviewStreamPlayUrl());
-                        map.putInt(EVENT_PROP_LIVE_STATUS, liveInfo.getStatus());
+                        map.putString(EVENT_PROP_LIVE_ID, liveInfo.getLiveId()); // 机位ID （LIVE）
+                        map.putInt(EVENT_PROP_LIVE_MACHINE, liveInfo.getMachine()); // 机位名称 （LIVE）
+                        map.putString(EVENT_PROP_LIVE_PRV_STEAMID, liveInfo.getPreviewStreamId()); // 流ID （LIVE）
+                        map.putString(EVENT_PROP_LIVE_PRV_STEAMURL, liveInfo.getPreviewStreamPlayUrl()); // 流预览信息 （LIVE）
+                        map.putInt(EVENT_PROP_LIVE_STATUS, liveInfo.getStatus()); // 机位状态 （LIVE）
                         liveList.pushMap(map);
                     }
-                    actionLive.putArray(EVENT_PROP_LIVES, liveList);  // 机位信息
+                    actionLive.putArray(EVENT_PROP_LIVES, liveList);  // 机位信息 （LIVE）
                 }
             }
             event.putMap(EVENT_PROP_ACTIONLIVE, actionLive); //云直播数据
@@ -1106,6 +1082,8 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
                 //获得默认码率和码率列表
                 if (mRateList != null) mRateList.clear();
                 mRateList = videoHolder.getVtypes();
+                mDownload = videoHolder.isDownload();
+                mPano = videoHolder.isPano();
                 mCurrentRate = mDefaultRate = videoHolder.getDefaultVtype();
 
                 //获得加载和水印图

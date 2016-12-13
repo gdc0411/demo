@@ -81,7 +81,7 @@ public class OrientationModule extends ReactContextBaseJavaModule implements Lif
 
                 WritableMap event = Arguments.createMap();
                 event.putInt(EVENT_PROP_ORIENTATION, orient);
-                ctx.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class).emit("onOrientationDidChange", event);
+                ctx.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class).emit(Events.EVENT_ORIENTATION_CHANG.toString(), event);
 
                 Log.d(TAG, LogUtils.getTraceInfo() + "设备转屏事件——— orientation：" + orient);
 
