@@ -388,10 +388,13 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
         } else if (mPlayMode == PlayerParams.VALUE_PLAYER_ACTION_LIVE) { //直播
 
             if (sec > mServerTime) {
+                mLastPosition = mServerTime;
                 retry();
             } else if (sec < mBeginTime) {
+                mLastPosition = mBeginTime;
                 seekTimeShift(mBeginTime);
             } else {
+                mLastPosition = sec;
                 seekTimeShift(sec);
             }
 
@@ -560,52 +563,6 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
         mLastPosition = (int) (getCurrentPosition() / 1000);
     }
 
-//    /**
-//     * 设置屏幕方向（VOD、LIVE）
-//     *
-//     * @param requestedOrientation 设置屏幕方向
-//     */
-//    public void setOrientation(int requestedOrientation) {
-//        if (requestedOrientation < 0 || mCurrentOritentation == requestedOrientation) return;
-//
-//        if (mThemedReactContext.getBaseContext() instanceof Activity) {
-//            Activity activity = (Activity) mThemedReactContext.getBaseContext();
-//
-//            switch (requestedOrientation) {
-//                case ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE: //正横屏 0
-//                    ScreenUtils.showFullScreen(activity, true);
-//                    activity.setRequestedOrientation(requestedOrientation);
-//                    mCurrentOritentation = requestedOrientation;
-//                    break;
-//
-//                case ActivityInfo.SCREEN_ORIENTATION_PORTRAIT: //正竖屏 1
-//                    ScreenUtils.showFullScreen(activity, false);
-//                    activity.setRequestedOrientation(requestedOrientation);
-//                    mCurrentOritentation = requestedOrientation;
-//                    break;
-//
-//                case ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE: //反横屏 8
-//                    ScreenUtils.showFullScreen(activity, true);
-//                    activity.setRequestedOrientation(requestedOrientation);
-//                    mCurrentOritentation = requestedOrientation;
-//                    break;
-//
-//                case ActivityInfo.SCREEN_ORIENTATION_REVERSE_PORTRAIT: //反竖屏 9
-//                    ScreenUtils.showFullScreen(activity, false);
-//                    activity.setRequestedOrientation(requestedOrientation);
-//                    mCurrentOritentation = requestedOrientation;
-//                    break;
-//            }
-//            //ScreenUtils.getOrientation(activity);
-//        }
-//
-//        WritableMap event = Arguments.createMap();
-//        event.putDouble(EVENT_PROP_ORIENTATION, mCurrentOritentation);
-////        mEventEmitter.receiveEvent(mViewId, Events.EVENT_ORIENTATION_CHANG.toString(), event);
-//
-//        Log.d(TAG, LogUtils.getTraceInfo() + "外部控制——— 设置方向 orientation:" + requestedOrientation);
-//
-//    }
 
     /**
      * 设置视频暂停和启动（VOD、LIVE）
