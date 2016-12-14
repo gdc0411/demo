@@ -113,7 +113,7 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
 
         @Override
         public void run() {
-            if (mLePlayerValid && !mPaused && !isSeeking && !isCompleted) {
+            if (mLePlayerValid && !isCompleted) {
                 WritableMap event = Arguments.createMap();
                 event.putInt(EVENT_PROP_CURRENT_TIME, (int) (getCurrentPosition() / 1000.0));
                 event.putInt(EVENT_PROP_DURATION, mVideoDuration);

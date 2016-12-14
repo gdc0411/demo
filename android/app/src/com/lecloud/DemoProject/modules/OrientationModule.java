@@ -151,7 +151,8 @@ public class OrientationModule extends ReactContextBaseJavaModule implements Lif
     Map<String, Object> getConstants() {
         HashMap<String, Object> constants = new HashMap<String, Object>();
         final Activity activity = getCurrentActivity();
-        int orientationInt = ScreenUtils.getOrientation(activity);
+        int orientationInt = getReactApplicationContext().getResources().getConfiguration().orientation;
+//        int orientationInt = ScreenUtils.getOrientation(activity);
 
         String orientation = this.getOrientationString(orientationInt);
         if (orientation.equals("null")) {

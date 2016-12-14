@@ -203,7 +203,7 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
 
 - (void)setPaused:(BOOL)paused
 {
-  if(_lePlayer == nil || _paused == paused )
+  if(_lePlayer == nil || _isAdPlaying || _paused == paused )
     return;
   
   paused? [self pause]: [self play];
@@ -260,7 +260,7 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
 //回到上次播放位置
 - (void)setLastPosModifier:(long)lastPosition
 {
-  if(lastPosition ==0) return;
+  if(lastPosition == 0) return;
   
   _lastPosition = lastPosition;
   
@@ -591,7 +591,7 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
   //  [self setResizeMode:_resizeMode];
   //  [self setRepeat:_repeat];
   [self setPaused:_paused];
-//  [self setLastPosModifier:_lastPosition];
+  [self setLastPosModifier:_lastPosition];
 }
 
 /*重置播放器*/
@@ -1045,7 +1045,7 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
     
     // to prevent video from being animated when resizeMode is 'cover'
     // resize mode must be set before subview is added
-    [self addSubview:_playerViewController.view];
+//    [self addSubview:_playerViewController.view];
   }
 }
 
@@ -1104,7 +1104,6 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
 {
   NSLog(@"insertReactSubview消息");
   [super insertReactSubview:view atIndex:atIndex];
-  
   view.frame = self.bounds;
   //[_playerViewController.contentOverlayView insertSubview:view atIndex:atIndex];
 }

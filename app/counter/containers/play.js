@@ -155,7 +155,7 @@ class play extends Component {
 
         let isDownload = (data.isDownload !== undefined) ? `下载:${data.isDownload}` : '';
         let isPano = (data.isPano !== undefined) ? `Pano:${data.isPano}` : '';
-        
+
 
         let volume = (data.volume !== undefined) ? `音量:${data.volume}` : '';
         let brightness = (data.brightness !== undefined) ? `亮度:${data.brightness}` : '';
