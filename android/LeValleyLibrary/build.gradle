@@ -19,6 +19,20 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    sourceSets {
+        main {
+//            manifest.srcFile 'AndroidManifest.xml'
+//            java.srcDirs = ['src']
+//            resources.srcDirs = ['src']
+//            aidl.srcDirs = ['src']
+//            renderscript.srcDirs = ['src']
+//            res.srcDirs = ['res']
+//            assets.srcDirs = ['assets']
+            jniLibs.srcDirs = ['libs']  //设置目标的so存放路径
+            jni.srcDirs = [] //disable automatic ndk-build call
+        }
+    }
 }
 
 dependencies {
@@ -26,7 +40,6 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    compile project(':LePlayerSdk')
     compile 'com.android.support:appcompat-v7:23.4.0'
     compile 'com.facebook.react:react-native:+'
     testCompile 'junit:junit:4.12'
