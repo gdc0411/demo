@@ -48,3 +48,5 @@ npm-debug.log
 .buckconfig
 .flowconfig
 libLECPlayerFoundation.a
+index.android.bundle
+index.android.bundle.meta
