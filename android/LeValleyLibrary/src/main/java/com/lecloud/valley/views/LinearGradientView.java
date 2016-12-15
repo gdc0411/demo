@@ -1,8 +1,5 @@
 package com.lecloud.valley.views;
 
-import com.facebook.react.bridge.ReadableArray;
-import com.facebook.react.uimanager.PixelUtil;
-
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.LinearGradient;
@@ -11,6 +8,9 @@ import android.graphics.Path;
 import android.graphics.RectF;
 import android.graphics.Shader;
 import android.view.View;
+
+import com.facebook.react.bridge.ReadableArray;
+import com.facebook.react.uimanager.PixelUtil;
 
 /**
  * Created by raojia on 2016/12/7.

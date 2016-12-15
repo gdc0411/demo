@@ -13,8 +13,7 @@ import android.util.AttributeSet;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
-import com.lecloud.DemoProject.utils.LogUtils;
-import com.lecloud.DemoProject.utils.PxUtils;
+import com.lecloud.valley.utils.PxUtils;
 import com.lecloud.sdk.api.md.entity.action.WaterConfig;
 
 import java.io.InputStream;

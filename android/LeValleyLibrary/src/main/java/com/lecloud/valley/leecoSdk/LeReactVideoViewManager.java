@@ -14,39 +14,15 @@ import com.facebook.react.common.MapBuilder;
 import com.facebook.react.uimanager.SimpleViewManager;
 import com.facebook.react.uimanager.ThemedReactContext;
 import com.facebook.react.uimanager.annotations.ReactProp;
-import com.lecloud.DemoProject.utils.LogUtils;
+import com.lecloud.valley.utils.LogUtils;
 import com.lecloud.sdk.constant.PlayerParams;
 
 import java.util.Map;
 
 import javax.annotation.Nullable;
 
-import static com.lecloud.DemoProject.leecoSdk.Constants.*;
-import static com.lecloud.DemoProject.leecoSdk.Constants.PROP_BRIGHTNESS;
-import static com.lecloud.DemoProject.leecoSdk.Constants.PROP_CLICKAD;
-import static com.lecloud.DemoProject.leecoSdk.Constants.PROP_LIVE;
-import static com.lecloud.DemoProject.leecoSdk.Constants.PROP_PAUSED;
-import static com.lecloud.DemoProject.leecoSdk.Constants.PROP_PLAY_IN_BACKGROUND;
-import static com.lecloud.DemoProject.leecoSdk.Constants.PROP_PLAY_MODE;
-import static com.lecloud.DemoProject.leecoSdk.Constants.PROP_RATE;
-import static com.lecloud.DemoProject.leecoSdk.Constants.PROP_SEEK;
-import static com.lecloud.DemoProject.leecoSdk.Constants.PROP_SRC;
-import static com.lecloud.DemoProject.leecoSdk.Constants.PROP_SRC_ALIVE_ACTIONID;
-import static com.lecloud.DemoProject.leecoSdk.Constants.PROP_SRC_ALIVE_BUSINESSLINE;
-import static com.lecloud.DemoProject.leecoSdk.Constants.PROP_SRC_ALIVE_CUID;
-import static com.lecloud.DemoProject.leecoSdk.Constants.PROP_SRC_ALIVE_CUSTOMERID;
-import static com.lecloud.DemoProject.leecoSdk.Constants.PROP_SRC_ALIVE_IS_USEHLS;
-import static com.lecloud.DemoProject.leecoSdk.Constants.PROP_SRC_ALIVE_UTIOKEN;
-import static com.lecloud.DemoProject.leecoSdk.Constants.PROP_SRC_HAS_SKIN;
-import static com.lecloud.DemoProject.leecoSdk.Constants.PROP_SRC_IS_PANO;
-import static com.lecloud.DemoProject.leecoSdk.Constants.PROP_SRC_VOD_BUSINESSLINE;
-import static com.lecloud.DemoProject.leecoSdk.Constants.PROP_SRC_VOD_SAAS;
-import static com.lecloud.DemoProject.leecoSdk.Constants.PROP_SRC_VOD_UUID;
-import static com.lecloud.DemoProject.leecoSdk.Constants.PROP_SRC_VOD_VUID;
-import static com.lecloud.DemoProject.leecoSdk.Constants.PROP_URI;
-import static com.lecloud.DemoProject.leecoSdk.Constants.PROP_VOLUME;
-import static com.lecloud.DemoProject.leecoSdk.Constants.REACT_CLASS;
-import static com.lecloud.DemoProject.utils.LogUtils.TAG;
+import static com.lecloud.valley.leecoSdk.Constants.*;
+import static com.lecloud.valley.utils.LogUtils.TAG;
 
 /**
  * Created by JiaRao on 2016/07/12.

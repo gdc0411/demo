@@ -1,8 +1,8 @@
 package com.lecloud.DemoProject;
 
-import com.lecloud.DemoProject.leecoSdk.LeReactPlayerManager;
-import com.lecloud.DemoProject.leecoSdk.LeReactVideoViewManager;
-import com.lecloud.DemoProject.modules.OrientationModule;
+import com.lecloud.valley.leecoSdk.LeReactPlayerManager;
+import com.lecloud.valley.leecoSdk.LeReactVideoViewManager;
+import com.lecloud.valley.modules.OrientationModule;
 import com.lecloud.DemoProject.sample.CallbackModule;
 import com.lecloud.DemoProject.sample.CheckItemViewManager;
 import com.lecloud.DemoProject.sample.ConstModule;
@@ -15,8 +15,8 @@ import com.facebook.react.bridge.JavaScriptModule;
 import com.facebook.react.bridge.NativeModule;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.uimanager.ViewManager;
-import com.lecloud.DemoProject.modules.DeviceModule;
-import com.lecloud.DemoProject.views.LinearGradientManager;
+import com.lecloud.valley.modules.DeviceModule;
+import com.lecloud.valley.views.LinearGradientManager;
 
 import java.util.ArrayList;
 import java.util.Collections;

@@ -6,8 +6,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
 
-import com.lecloud.DemoProject.handler.CrashHandler;
-import com.lecloud.DemoProject.utils.LogUtils;
+import com.lecloud.valley.handler.CrashHandler;
+import com.lecloud.valley.utils.LogUtils;
 import com.facebook.react.ReactApplication;
 import com.lecloud.sdk.config.LeCloudPlayerConfig;
 import com.lecloud.sdk.listener.OnInitCmfListener;
@@ -16,7 +16,7 @@ import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
 
-import static com.lecloud.DemoProject.utils.LogUtils.TAG;
+import static com.lecloud.valley.utils.LogUtils.TAG;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;

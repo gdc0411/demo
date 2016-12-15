@@ -2,10 +2,9 @@ package com.lecloud.valley.views;
 
 
 import com.facebook.react.bridge.ReadableArray;
-import com.facebook.react.uimanager.annotations.ReactProp;
-import com.facebook.react.uimanager.PixelUtil;
 import com.facebook.react.uimanager.SimpleViewManager;
 import com.facebook.react.uimanager.ThemedReactContext;
+import com.facebook.react.uimanager.annotations.ReactProp;
 
 /**
  * Created by raojia on 2016/12/7.

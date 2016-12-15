@@ -9,7 +9,6 @@ import android.os.Build;
 import android.os.Handler;
 import android.view.Surface;
 
-import com.lecloud.skin.ui.orientation.OrientationSensorUtils;
 
 
 /**
@@ -69,19 +68,19 @@ public class OrientationSensorListener implements SensorEventListener {
             int rt = activity.getWindowManager().getDefaultDisplay().getRotation();
             if (rt == Surface.ROTATION_0) {
                 if (rotateHandler != null) {
-                    rotateHandler.obtainMessage(com.lecloud.skin.ui.orientation.OrientationSensorUtils.ORIENTATION_1).sendToTarget();
+                    rotateHandler.obtainMessage(OrientationSensorUtils.ORIENTATION_1).sendToTarget();
                 }
             } else if (rt == Surface.ROTATION_90) {
                 if (rotateHandler != null) {
-                    rotateHandler.obtainMessage(com.lecloud.skin.ui.orientation.OrientationSensorUtils.ORIENTATION_0).sendToTarget();
+                    rotateHandler.obtainMessage(OrientationSensorUtils.ORIENTATION_0).sendToTarget();
                 }
             } else if (rt == Surface.ROTATION_180) {
                 if (rotateHandler != null) {
-                    rotateHandler.obtainMessage(com.lecloud.skin.ui.orientation.OrientationSensorUtils.ORIENTATION_9).sendToTarget();
+                    rotateHandler.obtainMessage(OrientationSensorUtils.ORIENTATION_9).sendToTarget();
                 }
             } else if (rt == Surface.ROTATION_270) {
                 if (rotateHandler != null) {
-                    rotateHandler.obtainMessage(com.lecloud.skin.ui.orientation.OrientationSensorUtils.ORIENTATION_8).sendToTarget();
+                    rotateHandler.obtainMessage(OrientationSensorUtils.ORIENTATION_8).sendToTarget();
                 }
             }
             return;
@@ -117,7 +116,7 @@ public class OrientationSensorListener implements SensorEventListener {
                         return;
                     }
                     if (rotateHandler != null) {
-                        rotateHandler.obtainMessage(com.lecloud.skin.ui.orientation.OrientationSensorUtils.ORIENTATION_8).sendToTarget();
+                        rotateHandler.obtainMessage(OrientationSensorUtils.ORIENTATION_8).sendToTarget();
                     }
                 }
             } else {
@@ -131,7 +130,7 @@ public class OrientationSensorListener implements SensorEventListener {
                             return;
                         }
                         if (rotateHandler != null) {
-                            rotateHandler.obtainMessage(com.lecloud.skin.ui.orientation.OrientationSensorUtils.ORIENTATION_8).sendToTarget();
+                            rotateHandler.obtainMessage(OrientationSensorUtils.ORIENTATION_8).sendToTarget();
                         }
                     }
                 }
@@ -146,7 +145,7 @@ public class OrientationSensorListener implements SensorEventListener {
                         return;
                     }
                     if (rotateHandler != null) {
-                        rotateHandler.obtainMessage(com.lecloud.skin.ui.orientation.OrientationSensorUtils.ORIENTATION_9).sendToTarget();
+                        rotateHandler.obtainMessage(OrientationSensorUtils.ORIENTATION_9).sendToTarget();
                     }
                 }
             } else {
@@ -160,7 +159,7 @@ public class OrientationSensorListener implements SensorEventListener {
                             return;
                         }
                         if (rotateHandler != null) {
-                            rotateHandler.obtainMessage(com.lecloud.skin.ui.orientation.OrientationSensorUtils.ORIENTATION_9).sendToTarget();
+                            rotateHandler.obtainMessage(OrientationSensorUtils.ORIENTATION_9).sendToTarget();
                         }
                     }
                 }
@@ -175,7 +174,7 @@ public class OrientationSensorListener implements SensorEventListener {
                         return;
                     }
                     if (rotateHandler != null) {
-                        rotateHandler.obtainMessage(com.lecloud.skin.ui.orientation.OrientationSensorUtils.ORIENTATION_0).sendToTarget();
+                        rotateHandler.obtainMessage(OrientationSensorUtils.ORIENTATION_0).sendToTarget();
                     }
                 }
             } else {
@@ -189,7 +188,7 @@ public class OrientationSensorListener implements SensorEventListener {
                             return;
                         }
                         if (rotateHandler != null) {
-                            rotateHandler.obtainMessage(com.lecloud.skin.ui.orientation.OrientationSensorUtils.ORIENTATION_0).sendToTarget();
+                            rotateHandler.obtainMessage(OrientationSensorUtils.ORIENTATION_0).sendToTarget();
                         }
                     }
                 }
@@ -204,7 +203,7 @@ public class OrientationSensorListener implements SensorEventListener {
                         return;
                     }
                     if (rotateHandler != null) {
-                        rotateHandler.obtainMessage(com.lecloud.skin.ui.orientation.OrientationSensorUtils.ORIENTATION_1).sendToTarget();
+                        rotateHandler.obtainMessage(OrientationSensorUtils.ORIENTATION_1).sendToTarget();
                     }
                 }
             } else {

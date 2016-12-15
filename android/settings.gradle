@@ -1,6 +1,7 @@
 rootProject.name = 'DemoProject'
 
-include ':app'
+include ':app', ':LeValleyLibrary'
+
 include ':LePlayerSdk'
 include ':LePlayerSkin'
 include ':react-native-code-push'

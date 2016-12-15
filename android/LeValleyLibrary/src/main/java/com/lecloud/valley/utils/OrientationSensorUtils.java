@@ -8,8 +8,6 @@ import android.hardware.SensorManager;
 import android.os.Build;
 import android.os.Handler;
 
-import com.lecloud.skin.ui.orientation.OrientationSensorListener;
-
 
 /**
  * Created by raojia on 2016/11/14.

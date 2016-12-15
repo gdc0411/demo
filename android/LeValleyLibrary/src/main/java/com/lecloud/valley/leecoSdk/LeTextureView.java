@@ -9,9 +9,7 @@ import android.util.AttributeSet;
 import android.view.Surface;
 import android.view.TextureView;
 
-import com.lecloud.DemoProject.R;
-import com.lecloud.DemoProject.utils.LogUtils;
-
+import com.lecloud.valley.R;
 import com.lecloud.sdk.api.linepeople.OnlinePeopleChangeListener;
 import com.lecloud.sdk.api.status.ActionStatusListener;
 import com.lecloud.sdk.api.timeshift.ItimeShiftListener;

@@ -15,18 +15,18 @@ import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
-import com.lecloud.DemoProject.leecoSdk.Events;
-import com.lecloud.DemoProject.utils.LogUtils;
-import com.lecloud.DemoProject.utils.OrientationSensorUtils;
-import com.lecloud.DemoProject.utils.ScreenUtils;
+import com.lecloud.valley.leecoSdk.Events;
+import com.lecloud.valley.utils.LogUtils;
+import com.lecloud.valley.utils.OrientationSensorUtils;
+import com.lecloud.valley.utils.ScreenUtils;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.annotation.Nullable;
 
-import static com.lecloud.DemoProject.leecoSdk.Constants.EVENT_PROP_ORIENTATION;
-import static com.lecloud.DemoProject.utils.LogUtils.TAG;
+import static com.lecloud.valley.leecoSdk.Constants.EVENT_PROP_ORIENTATION;
+import static com.lecloud.valley.utils.LogUtils.TAG;
 
 /**
  * Created by LizaRao on 2016/12/11.

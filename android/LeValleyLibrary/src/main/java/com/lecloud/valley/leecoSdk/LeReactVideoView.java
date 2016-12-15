@@ -12,7 +12,6 @@ import android.widget.RelativeLayout;
 
 import com.facebook.react.uimanager.ThemedReactContext;
 import com.facebook.react.uimanager.events.RCTEventEmitter;
-import com.lecloud.DemoProject.utils.LogUtils;
 
 /**
  * Created by JiaRao on 2016/12/07.
