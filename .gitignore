@@ -35,6 +35,7 @@ android/build
 android/app/build
 android/gradle
 android/keystores
+android/src/main/res/drawable*/
 
 # node.js
 #
