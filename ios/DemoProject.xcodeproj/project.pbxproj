@@ -32,6 +32,7 @@
 		2D8D20A41E031A80004EC569 /* libLECVodPlayerUISDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D8D209C1E031A80004EC569 /* libLECVodPlayerUISDK.a */; };
 		2D8D20A51E031A80004EC569 /* libReachbility.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D8D209D1E031A80004EC569 /* libReachbility.a */; };
 		2D8D20A61E031A80004EC569 /* libZipArchive.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D8D209E1E031A80004EC569 /* libZipArchive.a */; };
+		2D8D220A1E0328F2004EC569 /* libLECValleyUIKit.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D8D21F61E0328B6004EC569 /* libLECValleyUIKit.a */; };
 		2DA206F11DE8B7CD0004CE1D /* LECPlayerResource.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 2DA206EE1DE8B7CD0004CE1D /* LECPlayerResource.bundle */; };
 		2DA206F21DE8B7CD0004CE1D /* LECPlayerUIResource.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 2DA206EF1DE8B7CD0004CE1D /* LECPlayerUIResource.bundle */; };
 		2DA206F31DE8B7CD0004CE1D /* LECVodPlayerResource.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 2DA206F01DE8B7CD0004CE1D /* LECVodPlayerResource.bundle */; };
@@ -187,6 +188,13 @@
 			remoteGlobalIDString = 2D2A28131D9B038B00D4039D;
 			remoteInfo = "React-tvOS";
 		};
+		2D8D21F51E0328B6004EC569 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 2D8D21CB1E03240E004EC569 /* LECValleyUIKit.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 2D8D21E51E0324FE004EC569;
+			remoteInfo = LECValleyUIKit;
+		};
 		78C398B81ACF4ADC00677621 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 78C398B01ACF4ADC00677621 /* RCTLinking.xcodeproj */;
@@ -234,6 +242,7 @@
 		2D8D209C1E031A80004EC569 /* libLECVodPlayerUISDK.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libLECVodPlayerUISDK.a; path = ../../../XcodeProjects/lecloud_iOS_vrp_SDK_v4.3.1_20160923/SDK4.3.1/Libs/libLECVodPlayerUISDK.a; sourceTree = "<group>"; };
 		2D8D209D1E031A80004EC569 /* libReachbility.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libReachbility.a; path = ../../../XcodeProjects/lecloud_iOS_vrp_SDK_v4.3.1_20160923/SDK4.3.1/Libs/libReachbility.a; sourceTree = "<group>"; };
 		2D8D209E1E031A80004EC569 /* libZipArchive.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libZipArchive.a; path = ../../../XcodeProjects/lecloud_iOS_vrp_SDK_v4.3.1_20160923/SDK4.3.1/Libs/libZipArchive.a; sourceTree = "<group>"; };
+		2D8D21CB1E03240E004EC569 /* LECValleyUIKit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = LECValleyUIKit.xcodeproj; path = LECValleyUIKit/LECValleyUIKit.xcodeproj; sourceTree = "<group>"; };
 		2DA206EE1DE8B7CD0004CE1D /* LECPlayerResource.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = LECPlayerResource.bundle; path = ../../../XcodeProjects/lecloud_iOS_vrp_SDK_v4.3.1_20160923/SDK4.3.1/LECPlayerResource.bundle; sourceTree = "<group>"; };
 		2DA206EF1DE8B7CD0004CE1D /* LECPlayerUIResource.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = LECPlayerUIResource.bundle; path = ../../../XcodeProjects/lecloud_iOS_vrp_SDK_v4.3.1_20160923/SDK4.3.1/LECPlayerUIResource.bundle; sourceTree = "<group>"; };
 		2DA206F01DE8B7CD0004CE1D /* LECVodPlayerResource.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = LECVodPlayerResource.bundle; path = ../../../XcodeProjects/lecloud_iOS_vrp_SDK_v4.3.1_20160923/SDK4.3.1/LECVodPlayerResource.bundle; sourceTree = "<group>"; };
@@ -304,6 +313,7 @@
 				00C302EA1ABCBA2D00DB3ED1 /* libRCTVibration.a in Frameworks */,
 				139FDEF61B0652A700C62182 /* libRCTWebSocket.a in Frameworks */,
 				2D19AD6B1DF6AE6B00D21BDC /* libCodePush.a in Frameworks */,
+				2D8D220A1E0328F2004EC569 /* libLECValleyUIKit.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -443,6 +453,14 @@
 			name = Libs;
 			sourceTree = "<group>";
 		};
+		2D8D21CC1E03240E004EC569 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				2D8D21F61E0328B6004EC569 /* libLECValleyUIKit.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		2DA206ED1DE8B7B10004CE1D /* Bundles */ = {
 			isa = PBXGroup;
 			children = (
@@ -487,6 +505,7 @@
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
+				2D8D21CB1E03240E004EC569 /* LECValleyUIKit.xcodeproj */,
 				2D19AC801DF3DBA600D21BDC /* RCTAnimation.xcodeproj */,
 				146833FF1AC3E56700842450 /* React.xcodeproj */,
 				00C302A71ABCB8CE00DB3ED1 /* RCTActionSheet.xcodeproj */,
@@ -615,6 +634,10 @@
 				{
 					ProductGroup = 2D1C9A401DC1EAB50020E496 /* Products */;
 					ProjectRef = 17750468756A4148AF35D158 /* CodePush.xcodeproj */;
+				},
+				{
+					ProductGroup = 2D8D21CC1E03240E004EC569 /* Products */;
+					ProjectRef = 2D8D21CB1E03240E004EC569 /* LECValleyUIKit.xcodeproj */;
 				},
 				{
 					ProductGroup = 00C302A81ABCB8CE00DB3ED1 /* Products */;
@@ -796,6 +819,13 @@
 			remoteRef = 2D1C9A621DC1EAB60020E496 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
+		2D8D21F61E0328B6004EC569 /* libLECValleyUIKit.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libLECValleyUIKit.a;
+			remoteRef = 2D8D21F51E0328B6004EC569 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		78C398B91ACF4ADC00677621 /* libRCTLinking.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
@@ -945,6 +975,7 @@
 				DEAD_CODE_STRIPPING = NO;
 				DEVELOPMENT_TEAM = YEU3TF59V3;
 				ENABLE_BITCODE = NO;
+				GCC_PREFIX_HEADER = "";
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
@@ -982,6 +1013,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = YEU3TF59V3;
 				ENABLE_BITCODE = NO;
+				GCC_PREFIX_HEADER = "";
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
@@ -1037,7 +1069,7 @@
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREFIX_HEADER = "$(SRCROOT)/pchFile.pch";
+				GCC_PREFIX_HEADER = "";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
@@ -1054,8 +1086,9 @@
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 					"$(SRCROOT)/../node_modules/react-native/React/**",
 					"$(SRCROOT)/../node_modules/react-native-code-push/ios/CodePush/**",
+					"$(SRCROOT)/LECValleyUIKit",
 				);
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -1087,7 +1120,7 @@
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_NO_COMMON_BLOCKS = YES;
-				GCC_PREFIX_HEADER = "$(SRCROOT)/pchFile.pch";
+				GCC_PREFIX_HEADER = "";
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
@@ -1099,8 +1132,9 @@
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 					"$(SRCROOT)/../node_modules/react-native/React/**",
 					"$(SRCROOT)/../node_modules/react-native-code-push/ios/CodePush/**",
+					"$(SRCROOT)/LECValleyUIKit",
 				);
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;

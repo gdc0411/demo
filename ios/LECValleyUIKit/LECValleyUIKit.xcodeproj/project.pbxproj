@@ -7,23 +7,22 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		2D8D21A41E032396004EC569 /* DeviceModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D8D219F1E032396004EC569 /* DeviceModule.m */; };
-		2D8D21A51E032396004EC569 /* KeyChainStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D8D21A11E032396004EC569 /* KeyChainStore.m */; };
-		2D8D21A61E032396004EC569 /* OrientationModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D8D21A31E032396004EC569 /* OrientationModule.m */; };
-		2D8D21A91E03239F004EC569 /* VolumeModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D8D21A81E03239F004EC569 /* VolumeModule.m */; };
-		2D8D21AE1E0323AA004EC569 /* BVLinearGradient.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D8D21AB1E0323AA004EC569 /* BVLinearGradient.m */; };
-		2D8D21AF1E0323AA004EC569 /* BVLinearGradientManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D8D21AD1E0323AA004EC569 /* BVLinearGradientManager.m */; };
-		2D8D21BD1E0323BC004EC569 /* LCBaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D8D21B11E0323BC004EC569 /* LCBaseViewController.m */; };
-		2D8D21BE1E0323BC004EC569 /* LECValleyUIKit.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D8D21B31E0323BC004EC569 /* LECValleyUIKit.m */; };
-		2D8D21BF1E0323BC004EC569 /* LeValleyUIKit.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D8D21B51E0323BC004EC569 /* LeValleyUIKit.m */; };
-		2D8D21C01E0323BC004EC569 /* RCTLeVideo.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D8D21B71E0323BC004EC569 /* RCTLeVideo.m */; };
-		2D8D21C11E0323BC004EC569 /* RCTLeVideoManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D8D21B91E0323BC004EC569 /* RCTLeVideoManager.m */; };
-		2D8D21C21E0323BC004EC569 /* RCTLeVideoPlayerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D8D21BB1E0323BC004EC569 /* RCTLeVideoPlayerViewController.m */; };
-		31CAFB211CADA8CD009BCF6F /* UIView+FindUIViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 31CAFB201CADA8CD009BCF6F /* UIView+FindUIViewController.m */; };
+		2D8D22271E032DB1004EC569 /* BVLinearGradient.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D8D22241E032DB1004EC569 /* BVLinearGradient.m */; };
+		2D8D22281E032DB1004EC569 /* BVLinearGradientManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D8D22261E032DB1004EC569 /* BVLinearGradientManager.m */; };
+		2D8D22311E032DC9004EC569 /* DeviceModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D8D222A1E032DC9004EC569 /* DeviceModule.m */; };
+		2D8D22321E032DC9004EC569 /* KeyChainStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D8D222C1E032DC9004EC569 /* KeyChainStore.m */; };
+		2D8D22331E032DC9004EC569 /* OrientationModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D8D222E1E032DC9004EC569 /* OrientationModule.m */; };
+		2D8D22341E032DC9004EC569 /* VolumeModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D8D22301E032DC9004EC569 /* VolumeModule.m */; };
+		2D8D22421E032DD3004EC569 /* LCBaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D8D22361E032DD3004EC569 /* LCBaseViewController.m */; };
+		2D8D22431E032DD3004EC569 /* LECValleyUIKit.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D8D22381E032DD3004EC569 /* LECValleyUIKit.m */; };
+		2D8D22441E032DD3004EC569 /* RCTLeVideo.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D8D223A1E032DD3004EC569 /* RCTLeVideo.m */; };
+		2D8D22451E032DD3004EC569 /* RCTLeVideoManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D8D223C1E032DD3004EC569 /* RCTLeVideoManager.m */; };
+		2D8D22461E032DD3004EC569 /* RCTLeVideoPlayerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D8D223E1E032DD3004EC569 /* RCTLeVideoPlayerViewController.m */; };
+		2D8D22471E032DD3004EC569 /* UIView+FindUIViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D8D22411E032DD3004EC569 /* UIView+FindUIViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		58B511D91A9E6C8500147676 /* CopyFiles */ = {
+		2D8D21E11E0324FE004EC569 /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "include/$(PRODUCT_NAME)";
@@ -35,39 +34,37 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		134814201AA4EA6300B7C361 /* libLECValleyUIKit.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libLECValleyUIKit.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		2D8D219D1E032386004EC569 /* pchFile.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pchFile.pch; sourceTree = "<group>"; };
-		2D8D219E1E032396004EC569 /* DeviceModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DeviceModule.h; sourceTree = "<group>"; };
-		2D8D219F1E032396004EC569 /* DeviceModule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DeviceModule.m; sourceTree = "<group>"; };
-		2D8D21A01E032396004EC569 /* KeyChainStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeyChainStore.h; sourceTree = "<group>"; };
-		2D8D21A11E032396004EC569 /* KeyChainStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KeyChainStore.m; sourceTree = "<group>"; };
-		2D8D21A21E032396004EC569 /* OrientationModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OrientationModule.h; sourceTree = "<group>"; };
-		2D8D21A31E032396004EC569 /* OrientationModule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OrientationModule.m; sourceTree = "<group>"; };
-		2D8D21A71E03239F004EC569 /* VolumeModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VolumeModule.h; sourceTree = "<group>"; };
-		2D8D21A81E03239F004EC569 /* VolumeModule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VolumeModule.m; sourceTree = "<group>"; };
-		2D8D21AA1E0323AA004EC569 /* BVLinearGradient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BVLinearGradient.h; sourceTree = "<group>"; };
-		2D8D21AB1E0323AA004EC569 /* BVLinearGradient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BVLinearGradient.m; sourceTree = "<group>"; };
-		2D8D21AC1E0323AA004EC569 /* BVLinearGradientManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BVLinearGradientManager.h; sourceTree = "<group>"; };
-		2D8D21AD1E0323AA004EC569 /* BVLinearGradientManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BVLinearGradientManager.m; sourceTree = "<group>"; };
-		2D8D21B01E0323BC004EC569 /* LCBaseViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LCBaseViewController.h; sourceTree = "<group>"; };
-		2D8D21B11E0323BC004EC569 /* LCBaseViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LCBaseViewController.m; sourceTree = "<group>"; };
-		2D8D21B21E0323BC004EC569 /* LECValleyUIKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LECValleyUIKit.h; sourceTree = "<group>"; };
-		2D8D21B31E0323BC004EC569 /* LECValleyUIKit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LECValleyUIKit.m; sourceTree = "<group>"; };
-		2D8D21B41E0323BC004EC569 /* LeValleyUIKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LeValleyUIKit.h; sourceTree = "<group>"; };
-		2D8D21B51E0323BC004EC569 /* LeValleyUIKit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LeValleyUIKit.m; sourceTree = "<group>"; };
-		2D8D21B61E0323BC004EC569 /* RCTLeVideo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCTLeVideo.h; sourceTree = "<group>"; };
-		2D8D21B71E0323BC004EC569 /* RCTLeVideo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCTLeVideo.m; sourceTree = "<group>"; };
-		2D8D21B81E0323BC004EC569 /* RCTLeVideoManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCTLeVideoManager.h; sourceTree = "<group>"; };
-		2D8D21B91E0323BC004EC569 /* RCTLeVideoManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCTLeVideoManager.m; sourceTree = "<group>"; };
-		2D8D21BA1E0323BC004EC569 /* RCTLeVideoPlayerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCTLeVideoPlayerViewController.h; sourceTree = "<group>"; };
-		2D8D21BB1E0323BC004EC569 /* RCTLeVideoPlayerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCTLeVideoPlayerViewController.m; sourceTree = "<group>"; };
-		2D8D21BC1E0323BC004EC569 /* RCTLeVideoPlayerViewControllerDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCTLeVideoPlayerViewControllerDelegate.h; sourceTree = "<group>"; };
-		31CAFB1F1CADA8CD009BCF6F /* UIView+FindUIViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+FindUIViewController.h"; sourceTree = "<group>"; };
-		31CAFB201CADA8CD009BCF6F /* UIView+FindUIViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+FindUIViewController.m"; sourceTree = "<group>"; };
+		2D8D21E51E0324FE004EC569 /* libLECValleyUIKit.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libLECValleyUIKit.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		2D8D22231E032DB1004EC569 /* BVLinearGradient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BVLinearGradient.h; sourceTree = "<group>"; };
+		2D8D22241E032DB1004EC569 /* BVLinearGradient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BVLinearGradient.m; sourceTree = "<group>"; };
+		2D8D22251E032DB1004EC569 /* BVLinearGradientManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BVLinearGradientManager.h; sourceTree = "<group>"; };
+		2D8D22261E032DB1004EC569 /* BVLinearGradientManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BVLinearGradientManager.m; sourceTree = "<group>"; };
+		2D8D22291E032DC9004EC569 /* DeviceModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DeviceModule.h; sourceTree = "<group>"; };
+		2D8D222A1E032DC9004EC569 /* DeviceModule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DeviceModule.m; sourceTree = "<group>"; };
+		2D8D222B1E032DC9004EC569 /* KeyChainStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeyChainStore.h; sourceTree = "<group>"; };
+		2D8D222C1E032DC9004EC569 /* KeyChainStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KeyChainStore.m; sourceTree = "<group>"; };
+		2D8D222D1E032DC9004EC569 /* OrientationModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OrientationModule.h; sourceTree = "<group>"; };
+		2D8D222E1E032DC9004EC569 /* OrientationModule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OrientationModule.m; sourceTree = "<group>"; };
+		2D8D222F1E032DC9004EC569 /* VolumeModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VolumeModule.h; sourceTree = "<group>"; };
+		2D8D22301E032DC9004EC569 /* VolumeModule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VolumeModule.m; sourceTree = "<group>"; };
+		2D8D22351E032DD3004EC569 /* LCBaseViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LCBaseViewController.h; sourceTree = "<group>"; };
+		2D8D22361E032DD3004EC569 /* LCBaseViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LCBaseViewController.m; sourceTree = "<group>"; };
+		2D8D22371E032DD3004EC569 /* LECValleyUIKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LECValleyUIKit.h; sourceTree = "<group>"; };
+		2D8D22381E032DD3004EC569 /* LECValleyUIKit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LECValleyUIKit.m; sourceTree = "<group>"; };
+		2D8D22391E032DD3004EC569 /* RCTLeVideo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCTLeVideo.h; sourceTree = "<group>"; };
+		2D8D223A1E032DD3004EC569 /* RCTLeVideo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCTLeVideo.m; sourceTree = "<group>"; };
+		2D8D223B1E032DD3004EC569 /* RCTLeVideoManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCTLeVideoManager.h; sourceTree = "<group>"; };
+		2D8D223C1E032DD3004EC569 /* RCTLeVideoManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCTLeVideoManager.m; sourceTree = "<group>"; };
+		2D8D223D1E032DD3004EC569 /* RCTLeVideoPlayerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCTLeVideoPlayerViewController.h; sourceTree = "<group>"; };
+		2D8D223E1E032DD3004EC569 /* RCTLeVideoPlayerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCTLeVideoPlayerViewController.m; sourceTree = "<group>"; };
+		2D8D223F1E032DD3004EC569 /* RCTLeVideoPlayerViewControllerDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCTLeVideoPlayerViewControllerDelegate.h; sourceTree = "<group>"; };
+		2D8D22401E032DD3004EC569 /* UIView+FindUIViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+FindUIViewController.h"; sourceTree = "<group>"; };
+		2D8D22411E032DD3004EC569 /* UIView+FindUIViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+FindUIViewController.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		58B511D81A9E6C8500147676 /* Frameworks */ = {
+		2D8D21E01E0324FE004EC569 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -80,7 +77,6 @@
 		134814211AA4EA7D00B7C361 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				134814201AA4EA6300B7C361 /* libLECValleyUIKit.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -96,21 +92,19 @@
 		2D8D219A1E032338004EC569 /* RCTLeVideo */ = {
 			isa = PBXGroup;
 			children = (
-				2D8D21B01E0323BC004EC569 /* LCBaseViewController.h */,
-				2D8D21B11E0323BC004EC569 /* LCBaseViewController.m */,
-				2D8D21B21E0323BC004EC569 /* LECValleyUIKit.h */,
-				2D8D21B31E0323BC004EC569 /* LECValleyUIKit.m */,
-				2D8D21B41E0323BC004EC569 /* LeValleyUIKit.h */,
-				2D8D21B51E0323BC004EC569 /* LeValleyUIKit.m */,
-				2D8D21B61E0323BC004EC569 /* RCTLeVideo.h */,
-				2D8D21B71E0323BC004EC569 /* RCTLeVideo.m */,
-				2D8D21B81E0323BC004EC569 /* RCTLeVideoManager.h */,
-				2D8D21B91E0323BC004EC569 /* RCTLeVideoManager.m */,
-				2D8D21BA1E0323BC004EC569 /* RCTLeVideoPlayerViewController.h */,
-				2D8D21BB1E0323BC004EC569 /* RCTLeVideoPlayerViewController.m */,
-				2D8D21BC1E0323BC004EC569 /* RCTLeVideoPlayerViewControllerDelegate.h */,
-				31CAFB1F1CADA8CD009BCF6F /* UIView+FindUIViewController.h */,
-				31CAFB201CADA8CD009BCF6F /* UIView+FindUIViewController.m */,
+				2D8D22351E032DD3004EC569 /* LCBaseViewController.h */,
+				2D8D22361E032DD3004EC569 /* LCBaseViewController.m */,
+				2D8D22371E032DD3004EC569 /* LECValleyUIKit.h */,
+				2D8D22381E032DD3004EC569 /* LECValleyUIKit.m */,
+				2D8D22391E032DD3004EC569 /* RCTLeVideo.h */,
+				2D8D223A1E032DD3004EC569 /* RCTLeVideo.m */,
+				2D8D223B1E032DD3004EC569 /* RCTLeVideoManager.h */,
+				2D8D223C1E032DD3004EC569 /* RCTLeVideoManager.m */,
+				2D8D223D1E032DD3004EC569 /* RCTLeVideoPlayerViewController.h */,
+				2D8D223E1E032DD3004EC569 /* RCTLeVideoPlayerViewController.m */,
+				2D8D223F1E032DD3004EC569 /* RCTLeVideoPlayerViewControllerDelegate.h */,
+				2D8D22401E032DD3004EC569 /* UIView+FindUIViewController.h */,
+				2D8D22411E032DD3004EC569 /* UIView+FindUIViewController.m */,
 			);
 			name = RCTLeVideo;
 			sourceTree = "<group>";
@@ -118,14 +112,14 @@
 		2D8D219B1E032341004EC569 /* Modules */ = {
 			isa = PBXGroup;
 			children = (
-				2D8D21A71E03239F004EC569 /* VolumeModule.h */,
-				2D8D21A81E03239F004EC569 /* VolumeModule.m */,
-				2D8D219E1E032396004EC569 /* DeviceModule.h */,
-				2D8D219F1E032396004EC569 /* DeviceModule.m */,
-				2D8D21A01E032396004EC569 /* KeyChainStore.h */,
-				2D8D21A11E032396004EC569 /* KeyChainStore.m */,
-				2D8D21A21E032396004EC569 /* OrientationModule.h */,
-				2D8D21A31E032396004EC569 /* OrientationModule.m */,
+				2D8D22291E032DC9004EC569 /* DeviceModule.h */,
+				2D8D222A1E032DC9004EC569 /* DeviceModule.m */,
+				2D8D222B1E032DC9004EC569 /* KeyChainStore.h */,
+				2D8D222C1E032DC9004EC569 /* KeyChainStore.m */,
+				2D8D222D1E032DC9004EC569 /* OrientationModule.h */,
+				2D8D222E1E032DC9004EC569 /* OrientationModule.m */,
+				2D8D222F1E032DC9004EC569 /* VolumeModule.h */,
+				2D8D22301E032DC9004EC569 /* VolumeModule.m */,
 			);
 			name = Modules;
 			sourceTree = "<group>";
@@ -133,10 +127,10 @@
 		2D8D219C1E03234C004EC569 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				2D8D21AA1E0323AA004EC569 /* BVLinearGradient.h */,
-				2D8D21AB1E0323AA004EC569 /* BVLinearGradient.m */,
-				2D8D21AC1E0323AA004EC569 /* BVLinearGradientManager.h */,
-				2D8D21AD1E0323AA004EC569 /* BVLinearGradientManager.m */,
+				2D8D22231E032DB1004EC569 /* BVLinearGradient.h */,
+				2D8D22241E032DB1004EC569 /* BVLinearGradient.m */,
+				2D8D22251E032DB1004EC569 /* BVLinearGradientManager.h */,
+				2D8D22261E032DB1004EC569 /* BVLinearGradientManager.m */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -149,27 +143,28 @@
 				2D8D219B1E032341004EC569 /* Modules */,
 				2D8D219C1E03234C004EC569 /* Views */,
 				134814211AA4EA7D00B7C361 /* Products */,
+				2D8D21E51E0324FE004EC569 /* libLECValleyUIKit.a */,
 			);
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		58B511DA1A9E6C8500147676 /* RCTVideo */ = {
+		2D8D21D11E0324FE004EC569 /* LECValleyUIKit */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 58B511EF1A9E6C8500147676 /* Build configuration list for PBXNativeTarget "RCTVideo" */;
+			buildConfigurationList = 2D8D21E21E0324FE004EC569 /* Build configuration list for PBXNativeTarget "LECValleyUIKit" */;
 			buildPhases = (
-				58B511D71A9E6C8500147676 /* Sources */,
-				58B511D81A9E6C8500147676 /* Frameworks */,
-				58B511D91A9E6C8500147676 /* CopyFiles */,
+				2D8D21D21E0324FE004EC569 /* Sources */,
+				2D8D21E01E0324FE004EC569 /* Frameworks */,
+				2D8D21E11E0324FE004EC569 /* CopyFiles */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
-			name = RCTVideo;
+			name = LECValleyUIKit;
 			productName = RCTDataManager;
-			productReference = 134814201AA4EA6300B7C361 /* libLECValleyUIKit.a */;
+			productReference = 2D8D21E51E0324FE004EC569 /* libLECValleyUIKit.a */;
 			productType = "com.apple.product-type.library.static";
 		};
 /* End PBXNativeTarget section */
@@ -180,11 +175,6 @@
 			attributes = {
 				LastUpgradeCheck = 0720;
 				ORGANIZATIONNAME = Facebook;
-				TargetAttributes = {
-					58B511DA1A9E6C8500147676 = {
-						CreatedOnToolsVersion = 6.1.1;
-					};
-				};
 			};
 			buildConfigurationList = 58B511D61A9E6C8500147676 /* Build configuration list for PBXProject "LECValleyUIKit" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -198,35 +188,72 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				58B511DA1A9E6C8500147676 /* RCTVideo */,
+				2D8D21D11E0324FE004EC569 /* LECValleyUIKit */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXSourcesBuildPhase section */
-		58B511D71A9E6C8500147676 /* Sources */ = {
+		2D8D21D21E0324FE004EC569 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2D8D21AE1E0323AA004EC569 /* BVLinearGradient.m in Sources */,
-				2D8D21AF1E0323AA004EC569 /* BVLinearGradientManager.m in Sources */,
-				2D8D21C11E0323BC004EC569 /* RCTLeVideoManager.m in Sources */,
-				2D8D21BF1E0323BC004EC569 /* LeValleyUIKit.m in Sources */,
-				2D8D21C01E0323BC004EC569 /* RCTLeVideo.m in Sources */,
-				2D8D21BD1E0323BC004EC569 /* LCBaseViewController.m in Sources */,
-				2D8D21BE1E0323BC004EC569 /* LECValleyUIKit.m in Sources */,
-				2D8D21A61E032396004EC569 /* OrientationModule.m in Sources */,
-				2D8D21C21E0323BC004EC569 /* RCTLeVideoPlayerViewController.m in Sources */,
-				31CAFB211CADA8CD009BCF6F /* UIView+FindUIViewController.m in Sources */,
-				2D8D21A51E032396004EC569 /* KeyChainStore.m in Sources */,
-				2D8D21A41E032396004EC569 /* DeviceModule.m in Sources */,
-				2D8D21A91E03239F004EC569 /* VolumeModule.m in Sources */,
+				2D8D22451E032DD3004EC569 /* RCTLeVideoManager.m in Sources */,
+				2D8D22311E032DC9004EC569 /* DeviceModule.m in Sources */,
+				2D8D22341E032DC9004EC569 /* VolumeModule.m in Sources */,
+				2D8D22461E032DD3004EC569 /* RCTLeVideoPlayerViewController.m in Sources */,
+				2D8D22431E032DD3004EC569 /* LECValleyUIKit.m in Sources */,
+				2D8D22281E032DB1004EC569 /* BVLinearGradientManager.m in Sources */,
+				2D8D22471E032DD3004EC569 /* UIView+FindUIViewController.m in Sources */,
+				2D8D22271E032DB1004EC569 /* BVLinearGradient.m in Sources */,
+				2D8D22441E032DD3004EC569 /* RCTLeVideo.m in Sources */,
+				2D8D22421E032DD3004EC569 /* LCBaseViewController.m in Sources */,
+				2D8D22321E032DC9004EC569 /* KeyChainStore.m in Sources */,
+				2D8D22331E032DC9004EC569 /* OrientationModule.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
+		2D8D21E31E0324FE004EC569 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = NO;
+				GCC_PREFIX_HEADER = "$(SRCROOT)/pchFile.pch";
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					"$(SRCROOT)/../../react-native/React/**",
+					"$(SRCROOT)/../../node_modules/react-native/React/**",
+					"$(SRCROOT)/../../../../XcodeProjects/lecloud_iOS_vrp_SDK_v4.3.1_20160923/SDK4.3.1/**",
+				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		2D8D21E41E0324FE004EC569 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = NO;
+				GCC_PREFIX_HEADER = "$(SRCROOT)/pchFile.pch";
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					"$(SRCROOT)/../../react-native/React/**",
+					"$(SRCROOT)/../../node_modules/react-native/React/**",
+					"$(SRCROOT)/../../../../XcodeProjects/lecloud_iOS_vrp_SDK_v4.3.1_20160923/SDK4.3.1/**",
+				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
 		58B511ED1A9E6C8500147676 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -261,7 +288,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -295,62 +322,30 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
 		};
-		58B511F01A9E6C8500147676 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				HEADER_SEARCH_PATHS = (
-					"$(inherited)",
-					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
-					"$(SRCROOT)/../../react-native/React/**",
-					"$(SRCROOT)/../node_modules/react-native/React/**",
-				);
-				LIBRARY_SEARCH_PATHS = "$(inherited)";
-				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_NAME = LECValleyUIKit;
-				SKIP_INSTALL = YES;
-			};
-			name = Debug;
-		};
-		58B511F11A9E6C8500147676 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				HEADER_SEARCH_PATHS = (
-					"$(inherited)",
-					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
-					"$(SRCROOT)/../../react-native/React/**",
-					"$(SRCROOT)/../node_modules/react-native/React/**",
-				);
-				LIBRARY_SEARCH_PATHS = "$(inherited)";
-				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_NAME = LECValleyUIKit;
-				SKIP_INSTALL = YES;
-			};
-			name = Release;
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		2D8D21E21E0324FE004EC569 /* Build configuration list for PBXNativeTarget "LECValleyUIKit" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2D8D21E31E0324FE004EC569 /* Debug */,
+				2D8D21E41E0324FE004EC569 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		58B511D61A9E6C8500147676 /* Build configuration list for PBXProject "LECValleyUIKit" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				58B511ED1A9E6C8500147676 /* Debug */,
 				58B511EE1A9E6C8500147676 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		58B511EF1A9E6C8500147676 /* Build configuration list for PBXNativeTarget "RCTVideo" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				58B511F01A9E6C8500147676 /* Debug */,
-				58B511F11A9E6C8500147676 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
