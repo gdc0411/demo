@@ -50,6 +50,8 @@
 		2DA2070E1DE8BA8C0004CE1D /* libstdc++.6.0.9.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 2DA2070D1DE8BA8C0004CE1D /* libstdc++.6.0.9.tbd */; };
 		2DA207101DE8BA990004CE1D /* libxml2.2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 2DA2070F1DE8BA990004CE1D /* libxml2.2.tbd */; };
 		2DA207121DE8BAAC0004CE1D /* libz.1.2.5.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 2DA207111DE8BAAC0004CE1D /* libz.1.2.5.tbd */; };
+		2DFAE4A01E046732008937FD /* index.ios.jsbundle in Resources */ = {isa = PBXBuildFile; fileRef = 2DFAE49F1E046732008937FD /* index.ios.jsbundle */; };
+		2DFAE4B71E046743008937FD /* assets in Resources */ = {isa = PBXBuildFile; fileRef = 2DFAE4B61E046743008937FD /* assets */; };
 		392D188B09B145E0B6613D6D /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 930FF21BCF8F403D8916C7DE /* libz.tbd */; };
 		832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
 /* End PBXBuildFile section */
@@ -260,6 +262,8 @@
 		2DA2070D1DE8BA8C0004CE1D /* libstdc++.6.0.9.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libstdc++.6.0.9.tbd"; path = "usr/lib/libstdc++.6.0.9.tbd"; sourceTree = SDKROOT; };
 		2DA2070F1DE8BA990004CE1D /* libxml2.2.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libxml2.2.tbd; path = usr/lib/libxml2.2.tbd; sourceTree = SDKROOT; };
 		2DA207111DE8BAAC0004CE1D /* libz.1.2.5.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.1.2.5.tbd; path = usr/lib/libz.1.2.5.tbd; sourceTree = SDKROOT; };
+		2DFAE49F1E046732008937FD /* index.ios.jsbundle */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = index.ios.jsbundle; path = bundle/index.ios.jsbundle; sourceTree = "<group>"; };
+		2DFAE4B61E046743008937FD /* assets */ = {isa = PBXFileReference; lastKnownFileType = folder; name = assets; path = bundle/assets; sourceTree = "<group>"; };
 		78C398B01ACF4ADC00677621 /* RCTLinking.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTLinking.xcodeproj; path = "../node_modules/react-native/Libraries/LinkingIOS/RCTLinking.xcodeproj"; sourceTree = "<group>"; };
 		832341B01AAA6A8300B99B32 /* RCTText.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTText.xcodeproj; path = "../node_modules/react-native/Libraries/Text/RCTText.xcodeproj"; sourceTree = "<group>"; };
 		930FF21BCF8F403D8916C7DE /* libz.tbd */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
@@ -400,6 +404,8 @@
 		13B07FAE1A68108700A75B9A /* DemoProject */ = {
 			isa = PBXGroup;
 			children = (
+				2DFAE4B61E046743008937FD /* assets */,
+				2DFAE49F1E046732008937FD /* index.ios.jsbundle */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
 				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
@@ -855,7 +861,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2DFAE4A01E046732008937FD /* index.ios.jsbundle in Resources */,
 				2DA206F11DE8B7CD0004CE1D /* LECPlayerResource.bundle in Resources */,
+				2DFAE4B71E046743008937FD /* assets in Resources */,
 				2DA206F31DE8B7CD0004CE1D /* LECVodPlayerResource.bundle in Resources */,
 				2DA206F21DE8B7CD0004CE1D /* LECPlayerUIResource.bundle in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
