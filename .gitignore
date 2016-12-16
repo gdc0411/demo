@@ -48,9 +48,9 @@ npm-debug.log.*
 .eslintrc
 .buckconfig
 .flowconfig
-#ios/bundle/*
+ios/bundle/*
 !index.ios.jsbundle
-#ios/bundle/assets/*
+ios/bundle/assets/*
 !.empty
 libLECPlayerFoundation.a
 android/app/src/main/res/drawable*
