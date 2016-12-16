@@ -400,14 +400,15 @@
 		13B07FAE1A68108700A75B9A /* DemoProject */ = {
 			isa = PBXGroup;
 			children = (
-				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
+				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
 				2D19ACBC1DF570FA00D21BDC /* DemoProject.entitlements */,
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				13B07FB11A68108700A75B9A /* LaunchScreen.xib */,
 				13B07FB71A68108700A75B9A /* main.m */,
+				2D8D20941E031A00004EC569 /* Libs */,
 			);
 			name = DemoProject;
 			sourceTree = "<group>";
@@ -478,6 +479,7 @@
 				2DA2070F1DE8BA990004CE1D /* libxml2.2.tbd */,
 				2DA2070D1DE8BA8C0004CE1D /* libstdc++.6.0.9.tbd */,
 				2DA207091DE8BA510004CE1D /* libiconv.tbd */,
+				930FF21BCF8F403D8916C7DE /* libz.tbd */,
 				2DA206F91DE8B9950004CE1D /* AudioToolbox.framework */,
 				2DA206FA1DE8B9950004CE1D /* CoreData.framework */,
 				2DA206FB1DE8B9950004CE1D /* CoreLocation.framework */,
@@ -486,7 +488,6 @@
 				2DA206FE1DE8B9950004CE1D /* JavaScriptCore.framework */,
 				2DA206FF1DE8B9950004CE1D /* SystemConfiguration.framework */,
 				2DA207001DE8B9950004CE1D /* VideoToolbox.framework */,
-				930FF21BCF8F403D8916C7DE /* libz.tbd */,
 				2DA206F51DE8B89B0004CE1D /* AdSupport.framework */,
 				2DA206F61DE8B89B0004CE1D /* MediaPlayer.framework */,
 			);
@@ -534,7 +535,6 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
-				2D8D20941E031A00004EC569 /* Libs */,
 				2DA206ED1DE8B7B10004CE1D /* Bundles */,
 				13B07FAE1A68108700A75B9A /* DemoProject */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
@@ -605,6 +605,7 @@
 				TargetAttributes = {
 					00E356ED1AD99517003FC87E = {
 						CreatedOnToolsVersion = 6.2;
+						DevelopmentTeam = YEU3TF59V3;
 						ProvisioningStyle = Automatic;
 						TestTargetID = 13B07F861A680F5B00A75B9A;
 					};
@@ -927,7 +928,7 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = YEU3TF59V3;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
@@ -951,7 +952,7 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = YEU3TF59V3;
 				INFOPLIST_FILE = DemoProjectTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
