@@ -62,16 +62,16 @@ export default class SubVideo extends Component {
                 usehls: PropTypes.bool,
             }),
         ]).isRequired,
-        
+
         /* 数据源相关 */
-        onSubVideoSourceLoad: PropTypes.func,        
+        onSubVideoSourceLoad: PropTypes.func,
 
         /* Required by react-native */
         ...View.propTypes,
     };
 
     render() {
-        const source = resolveAssetSource(this.props.source) || {};        
+        const source = resolveAssetSource(this.props.source) || {};
         /* 组件属性赋值 */
         const nativeProps = Object.assign({}, this.props);
         Object.assign(nativeProps, {
@@ -84,6 +84,14 @@ export default class SubVideo extends Component {
             },
             /*回调函数属性赋值*/
             onSubVideoSourceLoad: (event) => { if (this.props.onSubVideoSourceLoad) this.props.onSubVideoSourceLoad(event.nativeEvent); },
+            onSubVideoSizeChange: (event) => { if (this.props.onSubVideoSizeChange) this.props.onSubVideoSizeChange(event.nativeEvent); },
+            onSubVideoLoad: (event) => { if (this.props.onSubVideoLoad) this.props.onSubVideoLoad(event.nativeEvent); },
+            onSubVideoError: (event) => { if (this.props.onSubVideoError) this.props.onSubVideoError(event.nativeEvent); },
+            onSubVideoPause: (event) => { if (this.props.onSubVideoPause) this.props.onSubVideoPause(event.nativeEvent); },
+            onSubVideoResume: (event) => { if (this.props.onSubVideoResume) this.props.onSubVideoResume(event.nativeEvent); },
+            onSubBufferStart: (event) => { if (this.props.onSubBufferStart) this.props.onSubBufferStart(event.nativeEvent); },
+            onSubBufferEnd: (event) => { if (this.props.onSubBufferEnd) this.props.onSubBufferEnd(event.nativeEvent); },
+            onSubVideoRendingStart: (event) => { if (this.props.onSubVideoRendingStart) this.props.onSubVideoRendingStart(event.nativeEvent); },
         });
 
         // console.log(nativeProps);
