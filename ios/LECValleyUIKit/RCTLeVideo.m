@@ -650,6 +650,7 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
             wSelf.onVideoResume?wSelf.onVideoResume(@{@"beginTime":[NSNumber numberWithLong:_beginTime],
                                                       @"serverTime":[NSNumber numberWithLong:_serverTime],
                                                       @"currentTime":[NSNumber numberWithLong:_currentTime],}):nil;
+        _paused = NO;
         _isPlaying = YES;
     }];
 }
@@ -670,8 +671,8 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
         _onVideoResume?_onVideoResume(@{@"beginTime":[NSNumber numberWithLong:_beginTime],
                                         @"serverTime":[NSNumber numberWithLong:_serverTime],
                                         @"currentTime":[NSNumber numberWithLong:_currentTime],}):nil;
-    _paused = YES;
-    _isPlaying = NO;
+    _paused = NO;
+    _isPlaying = YES;
 }
 
 - (void)stop
@@ -680,7 +681,9 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
         return;
     }
     __weak typeof(self) wSelf = self;
-    [_lePlayer stopWithCompletion:^{ _isPlaying = NO; }];
+    [_lePlayer stopWithCompletion:^{
+        _isPlaying = NO;
+    }];
 }
 
 - (void)pause
@@ -700,7 +703,7 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
         _onVideoPause?_onVideoPause(@{@"beginTime":[NSNumber numberWithLong:_beginTime],
                                       @"serverTime":[NSNumber numberWithLong:_serverTime],
                                       @"currentTime":[NSNumber numberWithLong:_currentTime],}):nil;
-    
+    _paused = YES;
     _isPlaying = NO;
 }
 

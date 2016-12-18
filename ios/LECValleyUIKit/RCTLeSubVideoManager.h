@@ -8,6 +8,6 @@
 
 #import "RCTViewManager.h"
 
-@interface RCLLeSubVideoManager : RCTViewManager
+@interface RCTLeSubVideoManager : RCTViewManager
 
 @end

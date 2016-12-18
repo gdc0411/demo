@@ -194,8 +194,28 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
     }
     
     __weak typeof(self) wSelf = self;
-    [(LECActivityPlayer*)_lePlayer registerWithStreamId:streamId
-                                            isLetvMedia:YES
+//    [(LECActivityPlayer*)_lePlayer registerWithStreamId:streamId
+//                                            isLetvMedia:YES
+//                                              mediaType:LECPlayerMediaTypeRTMP
+//                                                options:nil
+//                                             completion:^(BOOL result) {
+//                                                 
+//                                                 //数据源回显
+//                                                 wSelf.onSubVideoSourceLoad?
+//                                                 wSelf.onSubVideoSourceLoad(@{@"src": [[wSelf class] returnJSONStringWithDictionary:source useSystem:YES]}):nil;
+//                                                 
+//                                                 if (result){
+//                                                     NSLog(@"播放器注册成功");
+//                                                     [wSelf play];//注册完成后自动播放
+//                                                     
+//                                                 }else{
+//                                                     //[_playerViewController showTips:@"播放器注册失败,请检查UU和VU"];
+//                                                     wSelf.onSubVideoError?wSelf.onSubVideoError(@{@"errorCode":@"-1",@"errorMsg":@"播放器注册失败,请检查StreamId"}):nil;
+//                                                 }
+//                                             }];
+    
+    [(LECActivityPlayer*)_lePlayer registerWithLiveId: liveId
+                                          isLetvMedia:YES
                                               mediaType:LECPlayerMediaTypeRTMP
                                                 options:nil
                                              completion:^(BOOL result) {
@@ -255,6 +275,8 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
     __weak typeof(self) wSelf = self;
     [_lePlayer playWithCompletion:^{
         wSelf.onSubVideoResume?wSelf.onSubVideoResume(nil):nil;
+        
+        _paused = NO;
         _isPlaying = YES;
     }];
 }
@@ -264,11 +286,11 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
     if (_isPlaying || _lePlayer == nil) {
         return;
     }
-    
     [_lePlayer resume];
     _onSubVideoResume?_onSubVideoResume(nil):nil;
-    _paused = YES;
-    _isPlaying = NO;
+    
+    _paused = NO;
+    _isPlaying = YES;
 }
 
 - (void)stop
@@ -285,11 +307,11 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
     if (!_isPlaying || _lePlayer == nil){
         return;
     }
-    
     [_lePlayer pause];
     
-        _onSubVideoPause?_onSubVideoPause(nil):nil;
+    _onSubVideoPause?_onSubVideoPause(nil):nil;
     
+    _paused = YES;
     _isPlaying = NO;
 }
 
@@ -309,7 +331,6 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
                       @"height":[NSNumber numberWithInt:_height],
                       @"videoOrientation":(_width>_height)? @"landscape" : @"portrait"}
              forKey:@"naturalSize"];
-    
     
     _onSubVideoLoad?_onSubVideoLoad(event):nil;
     
@@ -477,8 +498,6 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
     
     
     [[NSNotificationCenter defaultCenter] removeObserver:self];
-    
-    //  [[UIDevice currentDevice]endGeneratingDeviceOrientationNotifications];
     
     [super removeFromSuperview];
 }
