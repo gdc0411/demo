@@ -19,6 +19,8 @@
 		2D8D22451E032DD3004EC569 /* RCTLeVideoManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D8D223C1E032DD3004EC569 /* RCTLeVideoManager.m */; };
 		2D8D22461E032DD3004EC569 /* RCTLeVideoPlayerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D8D223E1E032DD3004EC569 /* RCTLeVideoPlayerViewController.m */; };
 		2D8D22471E032DD3004EC569 /* UIView+FindUIViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D8D22411E032DD3004EC569 /* UIView+FindUIViewController.m */; };
+		2DDBF75A1E0674A500C9C1BF /* RCTLeSubVideo.m in Sources */ = {isa = PBXBuildFile; fileRef = 2DDBF7591E0674A500C9C1BF /* RCTLeSubVideo.m */; };
+		2DDBF75D1E06751E00C9C1BF /* RCLLeSubVideoManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 2DDBF75C1E06751E00C9C1BF /* RCLLeSubVideoManager.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -61,6 +63,10 @@
 		2D8D223F1E032DD3004EC569 /* RCTLeVideoPlayerViewControllerDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCTLeVideoPlayerViewControllerDelegate.h; sourceTree = "<group>"; };
 		2D8D22401E032DD3004EC569 /* UIView+FindUIViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+FindUIViewController.h"; sourceTree = "<group>"; };
 		2D8D22411E032DD3004EC569 /* UIView+FindUIViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+FindUIViewController.m"; sourceTree = "<group>"; };
+		2DDBF7581E0674A500C9C1BF /* RCTLeSubVideo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCTLeSubVideo.h; sourceTree = "<group>"; };
+		2DDBF7591E0674A500C9C1BF /* RCTLeSubVideo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCTLeSubVideo.m; sourceTree = "<group>"; };
+		2DDBF75B1E06751E00C9C1BF /* RCLLeSubVideoManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCLLeSubVideoManager.h; sourceTree = "<group>"; };
+		2DDBF75C1E06751E00C9C1BF /* RCLLeSubVideoManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCLLeSubVideoManager.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -105,6 +111,10 @@
 				2D8D223F1E032DD3004EC569 /* RCTLeVideoPlayerViewControllerDelegate.h */,
 				2D8D22401E032DD3004EC569 /* UIView+FindUIViewController.h */,
 				2D8D22411E032DD3004EC569 /* UIView+FindUIViewController.m */,
+				2DDBF7581E0674A500C9C1BF /* RCTLeSubVideo.h */,
+				2DDBF7591E0674A500C9C1BF /* RCTLeSubVideo.m */,
+				2DDBF75B1E06751E00C9C1BF /* RCLLeSubVideoManager.h */,
+				2DDBF75C1E06751E00C9C1BF /* RCLLeSubVideoManager.m */,
 			);
 			name = RCTLeVideo;
 			sourceTree = "<group>";
@@ -199,6 +209,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2D8D22451E032DD3004EC569 /* RCTLeVideoManager.m in Sources */,
+				2DDBF75D1E06751E00C9C1BF /* RCLLeSubVideoManager.m in Sources */,
 				2D8D22311E032DC9004EC569 /* DeviceModule.m in Sources */,
 				2D8D22341E032DC9004EC569 /* VolumeModule.m in Sources */,
 				2D8D22461E032DD3004EC569 /* RCTLeVideoPlayerViewController.m in Sources */,
@@ -206,6 +217,7 @@
 				2D8D22281E032DB1004EC569 /* BVLinearGradientManager.m in Sources */,
 				2D8D22471E032DD3004EC569 /* UIView+FindUIViewController.m in Sources */,
 				2D8D22271E032DB1004EC569 /* BVLinearGradient.m in Sources */,
+				2DDBF75A1E0674A500C9C1BF /* RCTLeSubVideo.m in Sources */,
 				2D8D22441E032DD3004EC569 /* RCTLeVideo.m in Sources */,
 				2D8D22421E032DD3004EC569 /* LCBaseViewController.m in Sources */,
 				2D8D22321E032DC9004EC569 /* KeyChainStore.m in Sources */,
