@@ -518,12 +518,14 @@ class play extends Component {
                     </View>
 
                     <View style={styles.volumeControl}>
+                        <Text style={styles.controlOption}>音量：</Text>
                         {this.renderVolumeControl(20)}
                         {this.renderVolumeControl(50)}
                         {this.renderVolumeControl(100)}
                     </View>
 
                     <View style={styles.volumeControl}>
+                        <Text style={styles.controlOption}>亮度：</Text>
                         {this.renderBrightnessControl(20)}
                         {this.renderBrightnessControl(50)}
                         {this.renderBrightnessControl(100)}

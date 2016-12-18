@@ -991,6 +991,7 @@
 					"$(SRCROOT)/../node_modules/react-native/React/**",
 					"$(SRCROOT)/../node_modules/react-native-code-push/ios/CodePush/**",
 					"$(SRCROOT)/../../../XcodeProjects/lecloud_iOS_vrp_SDK_v4.3.1_20160923/SDK4.3.1/**",
+					"$(SRCROOT)/Masonry/**",
 				);
 				INFOPLIST_FILE = DemoProject/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -1029,6 +1030,7 @@
 					"$(SRCROOT)/../node_modules/react-native/React/**",
 					"$(SRCROOT)/../node_modules/react-native-code-push/ios/CodePush/**",
 					"$(SRCROOT)/../../../XcodeProjects/lecloud_iOS_vrp_SDK_v4.3.1_20160923/SDK4.3.1/**",
+					"$(SRCROOT)/Masonry/**",
 				);
 				INFOPLIST_FILE = DemoProject/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";

@@ -6,9 +6,7 @@
 //  Copyright © 2016年 LeCloud. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
 
-#import <Foundation/Foundation.h>
 #import "RCTBridgeModule.h"
 
 @interface DeviceModule : NSObject <RCTBridgeModule>

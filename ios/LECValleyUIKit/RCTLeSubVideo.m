@@ -180,14 +180,15 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
     _lePlayer.videoView.frame = self.bounds;
     _lePlayer.videoView.contentMode = UIViewContentModeScaleAspectFit;
     _lePlayer.videoView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin| UIViewAutoresizingFlexibleWidth| UIViewAutoresizingFlexibleHeight;
+
     [self addSubview:_lePlayer.videoView];
     [self sendSubviewToBack:_lePlayer.videoView];
     
     
-    NSString *liveId = [source objectForKey:@"liveId"];
-    NSString *streamId = [source objectForKey:@"streamId"];
+    NSString *liveId    = [source objectForKey:@"liveId"];
+    NSString *streamId  = [source objectForKey:@"streamId"];
     NSString *streamUrl = [source objectForKey:@"streamUrl"];
-    bool usehls = [RCTConvert BOOL:[source objectForKey:@"usehls"]];
+    bool usehls         = [RCTConvert BOOL:[source objectForKey:@"usehls"]];
     
     if (liveId.length != 0 && streamId.length != 0 && streamUrl.length != 0 ) {
         [self usePlayerViewController]; // 创建controller

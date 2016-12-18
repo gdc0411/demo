@@ -39,7 +39,7 @@
 //NS_DEPRECATED_IOS(2_0, 6_0){
 //  return (interfaceOrientation == UIInterfaceOrientationLandscapeRight);
 //}
-//
+
 //- (UIInterfaceOrientationMask)supportedInterfaceOrientations {
 //  return UIInterfaceOrientationMaskLandscapeRight;
 //}

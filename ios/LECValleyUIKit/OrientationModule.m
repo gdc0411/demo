@@ -8,6 +8,9 @@
 
 #import "OrientationModule.h"
 
+#import <UIKit/UIKit.h>
+
+
 @interface OrientationModule()
 {
   __block BOOL _isRotating;

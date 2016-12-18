@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2D0C97721E06CD1100FB5279 /* BrightnessView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D0C97711E06CD1100FB5279 /* BrightnessView.m */; };
+		2D0C97991E07056500FB5279 /* BrightnessModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D0C97981E07056500FB5279 /* BrightnessModule.m */; };
 		2D8D22271E032DB1004EC569 /* BVLinearGradient.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D8D22241E032DB1004EC569 /* BVLinearGradient.m */; };
 		2D8D22281E032DB1004EC569 /* BVLinearGradientManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D8D22261E032DB1004EC569 /* BVLinearGradientManager.m */; };
 		2D8D22311E032DC9004EC569 /* DeviceModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D8D222A1E032DC9004EC569 /* DeviceModule.m */; };
@@ -36,6 +38,12 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		2D0C97701E06CD1100FB5279 /* BrightnessView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BrightnessView.h; sourceTree = "<group>"; };
+		2D0C97711E06CD1100FB5279 /* BrightnessView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BrightnessView.m; sourceTree = "<group>"; };
+		2D0C97741E06D04400FB5279 /* Player.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Player.bundle; sourceTree = "<group>"; };
+		2D0C978B1E06DC6200FB5279 /* LECValley.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LECValley.h; sourceTree = "<group>"; };
+		2D0C97971E07056500FB5279 /* BrightnessModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BrightnessModule.h; sourceTree = "<group>"; };
+		2D0C97981E07056500FB5279 /* BrightnessModule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BrightnessModule.m; sourceTree = "<group>"; };
 		2D8D219D1E032386004EC569 /* pchFile.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pchFile.pch; sourceTree = "<group>"; };
 		2D8D21E51E0324FE004EC569 /* libLECValleyUIKit.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libLECValleyUIKit.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		2D8D22231E032DB1004EC569 /* BVLinearGradient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BVLinearGradient.h; sourceTree = "<group>"; };
@@ -87,6 +95,14 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		2D0C97731E06D01800FB5279 /* bundle */ = {
+			isa = PBXGroup;
+			children = (
+				2D0C97741E06D04400FB5279 /* Player.bundle */,
+			);
+			name = bundle;
+			sourceTree = "<group>";
+		};
 		2D8D21991E032331004EC569 /* pch */ = {
 			isa = PBXGroup;
 			children = (
@@ -130,6 +146,10 @@
 				2D8D222E1E032DC9004EC569 /* OrientationModule.m */,
 				2D8D222F1E032DC9004EC569 /* VolumeModule.h */,
 				2D8D22301E032DC9004EC569 /* VolumeModule.m */,
+				2D0C97971E07056500FB5279 /* BrightnessModule.h */,
+				2D0C97981E07056500FB5279 /* BrightnessModule.m */,
+				2D0C97701E06CD1100FB5279 /* BrightnessView.h */,
+				2D0C97711E06CD1100FB5279 /* BrightnessView.m */,
 			);
 			name = Modules;
 			sourceTree = "<group>";
@@ -148,7 +168,9 @@
 		58B511D21A9E6C8500147676 = {
 			isa = PBXGroup;
 			children = (
+				2D0C978B1E06DC6200FB5279 /* LECValley.h */,
 				2D8D21991E032331004EC569 /* pch */,
+				2D0C97731E06D01800FB5279 /* bundle */,
 				2D8D219A1E032338004EC569 /* RCTLeVideo */,
 				2D8D219B1E032341004EC569 /* Modules */,
 				2D8D219C1E03234C004EC569 /* Views */,
@@ -209,6 +231,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2D8D22451E032DD3004EC569 /* RCTLeVideoManager.m in Sources */,
+				2D0C97721E06CD1100FB5279 /* BrightnessView.m in Sources */,
 				2D8D22311E032DC9004EC569 /* DeviceModule.m in Sources */,
 				2D8D22341E032DC9004EC569 /* VolumeModule.m in Sources */,
 				2D8D22461E032DD3004EC569 /* RCTLeVideoPlayerViewController.m in Sources */,
@@ -219,6 +242,7 @@
 				2DDBF75A1E0674A500C9C1BF /* RCTLeSubVideo.m in Sources */,
 				2D8D22441E032DD3004EC569 /* RCTLeVideo.m in Sources */,
 				2D8D22421E032DD3004EC569 /* LCBaseViewController.m in Sources */,
+				2D0C97991E07056500FB5279 /* BrightnessModule.m in Sources */,
 				2D8D22321E032DC9004EC569 /* KeyChainStore.m in Sources */,
 				2D8D22331E032DC9004EC569 /* OrientationModule.m in Sources */,
 				2DDBF7611E068F3400C9C1BF /* RCTLeSubVideoManager.m in Sources */,

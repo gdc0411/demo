@@ -6,11 +6,14 @@
 //  Copyright © 2016 LeCloud. All rights reserved.
 //
 #import "RCTLeVideo.h"
+#import "LECValley.h"
+
 
 #import "RCTConvert.h"
 #import "UIView+React.h"
 
 #import "VolumeModule.h"
+#import "BrightnessModule.h"
 
 #import "LECVODPlayer.h"
 #import "LECActivityPlayer.h"
@@ -21,8 +24,10 @@
 
 #import "RCTLeVideoPlayerViewController.h"
 
+
 #import <MediaPlayer/MediaPlayer.h>
 #import <AVFoundation/AVFoundation.h>
+
 
 #define LCRect_PlayerHalfFrame    CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height);
 
@@ -36,6 +41,7 @@
 }
 @property (nonatomic, strong) LECPlayer *lePlayer;
 @property (nonatomic, strong) LECPlayerOption *option;
+
 
 @property(nonatomic) CGFloat screenBrightness NS_AVAILABLE_IOS(5_0);        // 0 .. 1.0, where 1.0 is maximum brightness. Only supported by main screen.
 
@@ -70,7 +76,6 @@
 @property (nonatomic, copy) RCTDirectEventBlock onActionTimeShift; // 云直播进度
 @property (nonatomic, copy) RCTDirectEventBlock onActionStatusChange; // 云直播状态回调
 @property (nonatomic, copy) RCTDirectEventBlock onActionOnlineNumChange; // 云直播在线人数变化
-//@property (nonatomic, copy) RCTDirectEventBlock onOrientationChange; //屏幕方向切换
 @property (nonatomic, copy) RCTDirectEventBlock onOtherEventInfo;  // 其他事件
 
 
@@ -159,6 +164,7 @@
                                                      name:UIApplicationWillEnterForegroundNotification
                                                    object:nil];
         
+        
     }
     return self;
 }
@@ -178,6 +184,7 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
     playerController.view.frame = self.bounds;
     return playerController;
 }
+
 
 #pragma mark - 设置属性
 - (void)setSrc:(NSDictionary *)source
@@ -337,7 +344,9 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
     }
     _currentBrightness = brightness;
     
-    [[UIScreen mainScreen] setBrightness: (float)brightness / 100];
+    [BrightnessModule setBrightnessValue: (float)brightness/100 ];
+    //    [[UIScreen mainScreen] setBrightness: (float)brightness / 100];
+
     NSLog(@"外部控制——— 调节亮度:%d", brightness );
 }
 
@@ -823,10 +832,10 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
     //  _volume = player.volume;
     // retrieve system volume
     _volume = [VolumeModule getVolumeValue] * 100;
+    _screenBrightness = [BrightnessModule getBrightnessValue] *100 ;
     
+    _currentBrightness = _screenBrightness;
     
-    _screenBrightness = [UIScreen mainScreen].brightness;
-    _currentBrightness = _screenBrightness * 100;
     [event setValue:[NSNumber numberWithInt:_volume] forKey:@"volume"]; //声音百分比
     [event setValue:[NSNumber numberWithInt:_currentBrightness] forKey:@"brightness"]; //屏幕亮度
     
@@ -1097,6 +1106,7 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
         }
         _isFullScreen = YES;
         self.frame = CGRectMake(0, 0, width, height);
+        
     }
 }
 

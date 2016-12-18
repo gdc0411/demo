@@ -11,6 +11,9 @@
 //#import <SSKeychain.h>
 //#import <SSKeychainQuery.h>
 
+#import <UIKit/UIKit.h>
+
+
 @implementation DeviceModule
 
 RCT_EXPORT_MODULE();
