@@ -112,8 +112,7 @@ public class LeReactSubVideoView extends BaseVideoView implements LifecycleEvent
                 player.setVolume(0, 0);
                 break;
             case PlayerEvent.PLAY_PREPARED:
-
-                onStart();
+//                onStart();
                 break;
 
             default:
