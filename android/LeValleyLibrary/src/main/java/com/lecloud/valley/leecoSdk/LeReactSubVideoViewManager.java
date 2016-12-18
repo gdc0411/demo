@@ -53,10 +53,10 @@ public class LeReactSubVideoViewManager extends SimpleViewManager<LeReactSubVide
      */
     @ReactProp(name = PROP_SRC)
     public void setDataSource(final LeReactSubVideoView subVideoView, final ReadableMap src) {
-        if (src == null || !src.hasKey(PROP_URL) || TextUtils.isEmpty(src.getString(PROP_URL)) ) {
+        if (src == null || !src.hasKey(PROP_SRC_STREAM_URL) || TextUtils.isEmpty(src.getString(PROP_SRC_STREAM_URL)) ) {
             return;
         }
-        subVideoView.setDataSource(src.getString(PROP_URL));
+        subVideoView.setDataSource(src.getString(PROP_SRC_STREAM_URL));
     }
 
 

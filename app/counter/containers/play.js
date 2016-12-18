@@ -50,8 +50,8 @@ class play extends Component {
             rate: '',
             /* 云直播机位切换 */
             live: '',
-            /* 云直播当前机位URL */
-            liveUrl: '',
+            /* 云直播当前机位数据源 */
+            liveSource: '',
             /* 播放音量 */
             volume: -1,
             /* 屏幕亮度 */
@@ -131,7 +131,6 @@ class play extends Component {
 
         //获得直播信息
         let livesStr = '';
-        let currentLiveStreamUrl = '';
         let needFullView = '';
         let needTimeShift = '';
         let isNeedAd = '';
@@ -150,8 +149,17 @@ class play extends Component {
             if (liveArr instanceof Array && liveArr.length > 0) {
                 for (var i = 0; i < liveArr.length; i++) {
                     livesStr += `{liveId:${liveArr[i].liveId},machine:${liveArr[i].machine},previewSteamId:${liveArr[i].previewSteamId},liveStatus:${liveArr[i].liveStatus}}`;
-                    if (liveArr[i].liveId == data.actionLive.currentLive) { //获取当前机位流
-                        currentLiveStreamUrl = liveArr[i].previewSteamPlayUrl;
+                    if (liveArr[i].liveId == data.actionLive.currentLive) {
+                        //获取当前机位数据源
+                        this.setState({
+                            liveSource: {
+                                liveId: liveArr[i].liveId,
+                                streamId: liveArr[i].previewSteamId,
+                                streamUrl: liveArr[i].previewSteamPlayUrl,
+                                usehls: false
+                            }
+                        });
+
                     }
                 }
             }
@@ -191,12 +199,6 @@ class play extends Component {
             videoInfo: `片名：${data.title} 长度：${data.duration} 宽高:${data.naturalSize.width}，${data.naturalSize.height} \n`
             + `${ratesStr} ${defaultRate} ${isDownload} ${isPano} ${needFullView} ${needTimeShift} ${isNeedAd} ${ark} ${livesStr}\n${volume} ${brightness}`
         });
-
-        if (currentLiveStreamUrl != '')
-            this.setState({
-                liveUrl: currentLiveStreamUrl
-            });
-
     }
 
     updateOrientation = (orientation) => {
@@ -400,10 +402,10 @@ class play extends Component {
         //rtmp://r.gslb.lecloud.com/live/2016121730000009501    
         //rtmp://r.gslb.lecloud.com/live/2016121730000009601    
         //rtmp://r.gslb.lecloud.com/live/2016121730000009701
-        // let source = { url: "rtmp://r.gslb.lecloud.com/live/2016121730000009501" };
-        let source = { url: this.state.liveUrl };
+        // let source = { liveId: "20161217300000095", streamId: "2016121730000009501", streamUrl: "rtmp://r.gslb.lecloud.com/live/2016121730000009501", usehls: false };
+        let source = this.state.liveSource;
         return (
-            (this.state.liveUrl != '') ?
+            (source != '') ?
                 <View style={{ width: 64, height: 34, backgroundColor: "red", flex: 1, flexDirection: 'row', justifyContent: 'center' }}>
                     <SubVideo style={{ width: 64, height: 34 }} source={source} />
                 </View>

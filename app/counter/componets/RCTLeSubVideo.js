@@ -56,7 +56,10 @@ export default class SubVideo extends Component {
         source: PropTypes.oneOfType([
             //uri
             PropTypes.shape({
-                url: PropTypes.string
+                liveId: PropTypes.string,
+                streamId: PropTypes.string,
+                streamUrl: PropTypes.string,
+                usehls: PropTypes.bool,
             }),
         ]).isRequired,
         
@@ -73,8 +76,11 @@ export default class SubVideo extends Component {
         const nativeProps = Object.assign({}, this.props);
         Object.assign(nativeProps, {
             style: [styles.base, nativeProps.style],
-            src: {                
-                url: source.url,
+            src: {
+                liveId: source.liveId,
+                streamId: source.streamId,
+                streamUrl: source.streamUrl,
+                usehls: source.usehls,
             },
             /*回调函数属性赋值*/
             onSubVideoSourceLoad: (event) => { if (this.props.onSubVideoSourceLoad) this.props.onSubVideoSourceLoad(event.nativeEvent); },

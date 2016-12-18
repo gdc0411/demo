@@ -83,7 +83,7 @@ public class LeReactSubVideoView extends BaseVideoView implements LifecycleEvent
 
     @Override
     public void setDataSource(String playUrl) {
-        Log.d(TAG, LogUtils.getTraceInfo() + "外部控制——— 传入机位URL:" + playUrl);
+        Log.d(TAG, LogUtils.getTraceInfo() + "外部控制——— 传入机位流地址:" + playUrl);
         super.setDataSource(playUrl);
         setVideoViewListener(this);
         setLayoutParams(new ViewGroup.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));

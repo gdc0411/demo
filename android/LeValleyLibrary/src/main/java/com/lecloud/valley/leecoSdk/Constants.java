@@ -13,6 +13,11 @@ public interface Constants {
     String REACT_CLASS_VIDEO_VIEW = "RCTLeVideo";
 
     /**
+     * 乐视机位VideoView名
+     */
+    String REACT_CLASS_SUB_VIDEO_VIEW = "RCTLeSubVideo";
+
+    /**
      * T播放器模式
      */
     String PROP_PLAY_MODE = PlayerParams.KEY_PLAY_MODE;
@@ -25,16 +30,6 @@ public interface Constants {
      * URI地址
      */
     String PROP_URI = "uri";
-
-    /**
-     * 乐视机位VideoView名
-     */
-    String REACT_CLASS_SUB_VIDEO_VIEW = "RCTLeSubVideo";
-
-    /**
-     * 乐视机位URL
-     */
-    String PROP_URL = "url";
 
     //点播模式
     String PROP_SRC_VOD_UUID = "uuid";
@@ -50,6 +45,14 @@ public interface Constants {
     String PROP_SRC_ALIVE_CUID = "cuid";
     String PROP_SRC_ALIVE_UTIOKEN = "utoken";
     String PROP_SRC_ALIVE_IS_USEHLS = "usehls";
+
+
+    /**
+     * 机位播放器参数
+     */
+    String PROP_SRC_LIVE_ID = "liveId";
+    String PROP_SRC_STREAM_ID = "streamId";
+    String PROP_SRC_STREAM_URL = "streamUrl";
 
     /**
      * 是否全景
