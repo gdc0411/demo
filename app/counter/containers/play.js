@@ -23,6 +23,7 @@ import * as playActions from '../actions/playAction';
 
 import Orientation from '../componets/RCTOrientation';
 import Video from '../componets/RCTLeVideo';
+import SubVideo from '../componets/RCTLeSubVideo';
 
 //取得屏幕宽高
 const {height: SCREEN_HEIGHT, width: SCREEN_WIDTH} = Dimensions.get('window');
@@ -49,6 +50,8 @@ class play extends Component {
             rate: '',
             /* 云直播机位切换 */
             live: '',
+            /* 云直播当前机位URL */
+            liveUrl: '',
             /* 播放音量 */
             volume: -1,
             /* 屏幕亮度 */
@@ -128,6 +131,7 @@ class play extends Component {
 
         //获得直播信息
         let livesStr = '';
+        let currentLiveStreamUrl = '';
         let needFullView = '';
         let needTimeShift = '';
         let isNeedAd = '';
@@ -146,6 +150,9 @@ class play extends Component {
             if (liveArr instanceof Array && liveArr.length > 0) {
                 for (var i = 0; i < liveArr.length; i++) {
                     livesStr += `{liveId:${liveArr[i].liveId},machine:${liveArr[i].machine},previewSteamId:${liveArr[i].previewSteamId},liveStatus:${liveArr[i].liveStatus}}`;
+                    if (liveArr[i].liveId == data.actionLive.currentLive) { //获取当前机位流
+                        currentLiveStreamUrl = liveArr[i].previewSteamPlayUrl;
+                    }
                 }
             }
             livesStr += '}';
@@ -184,6 +191,12 @@ class play extends Component {
             videoInfo: `片名：${data.title} 长度：${data.duration} 宽高:${data.naturalSize.width}，${data.naturalSize.height} \n`
             + `${ratesStr} ${defaultRate} ${isDownload} ${isPano} ${needFullView} ${needTimeShift} ${isNeedAd} ${ark} ${livesStr}\n${volume} ${brightness}`
         });
+
+        if (currentLiveStreamUrl != '')
+            this.setState({
+                liveUrl: currentLiveStreamUrl
+            });
+
     }
 
     updateOrientation = (orientation) => {
@@ -334,28 +347,28 @@ class play extends Component {
         let source;
         switch (key) {
             case '1': //点播 乐视云测试数据
-                source = { playMode: 10000, uuid: "847695", vuid: "200323369", businessline: "102", saas: true, pano: false, hasSkin: false };
+                source = { playMode: 10000, uuid: "847695", vuid: "200323369", businessline: "102", saas: true, pano: false };
                 break;
             case '2': //点播 川台数据
-                source = { playMode: 10000, uuid: "841215", vuid: "300184109", businessline: "102", saas: true, pano: false, hasSkin: false };
+                source = { playMode: 10000, uuid: "841215", vuid: "300184109", businessline: "102", saas: true, pano: false };
                 break;
             case '3': //点播  川台数据,艳秋提供带广告
-                source = { playMode: 10000, uuid: "819108", vuid: "200644549", businessline: "102", saas: true, pano: false, hasSkin: false };
+                source = { playMode: 10000, uuid: "819108", vuid: "200644549", businessline: "102", saas: true, pano: false };
                 break;
             case '4': //点播 Demo示例，有广告
-                source = { playMode: 10000, uuid: "838389", vuid: "200271100", businessline: "102", saas: true, pano: false, hasSkin: false };
+                source = { playMode: 10000, uuid: "838389", vuid: "200271100", businessline: "102", saas: true, pano: false };
                 break;
             case '5': //活动直播 官方demo
-                source = { playMode: 10002, actionId: "A2016062700000gx", usehls: false, customerId: "838389", businessline: "102", cuid: "", utoken: "", pano: false, hasSkin: false };
+                source = { playMode: 10002, actionId: "A2016062700000gx", usehls: false, customerId: "838389", businessline: "102", cuid: "", utoken: "", pano: false };
                 break;
             case '6': //活动直播 泸州
-                source = { playMode: 10002, actionId: "A2016111100001zn", usehls: false, customerId: "865024", businessline: "102", cuid: "", utoken: "", pano: false, hasSkin: false };
+                source = { playMode: 10002, actionId: "A2016111100001zn", usehls: false, customerId: "865024", businessline: "102", cuid: "", utoken: "", pano: false };
                 break;
             case '7': //活动直播 自己推流
-                source = { playMode: 10002, actionId: "A2016111200001as", usehls: false, customerId: "", businessline: "", cuid: "", utoken: "", pano: false, hasSkin: false };
+                source = { playMode: 10002, actionId: "A20161217000004u", usehls: false, customerId: "", businessline: "", cuid: "", utoken: "", pano: false };
                 break;
             default: //网络或本地地址
-                source = { playMode: 0, uri: "http://cache.utovr.com/201601131107187320.mp4", pano: false, hasSkin: false };
+                source = { playMode: 0, uri: "http://cache.utovr.com/201601131107187320.mp4", pano: false };
                 break;
         }
         // alert(source);
@@ -383,9 +396,27 @@ class play extends Component {
         return date;
     }
 
+    getLiveVideo = () => {
+        //rtmp://r.gslb.lecloud.com/live/2016121730000009501    
+        //rtmp://r.gslb.lecloud.com/live/2016121730000009601    
+        //rtmp://r.gslb.lecloud.com/live/2016121730000009701
+        // let source = { url: "rtmp://r.gslb.lecloud.com/live/2016121730000009501" };
+        let source = { url: this.state.liveUrl };
+        return (
+            (this.state.liveUrl != '') ?
+                <View style={{ width: 64, height: 34, backgroundColor: "red", flex: 1, flexDirection: 'row', justifyContent: 'center' }}>
+                    <SubVideo style={{ width: 64, height: 34 }} source={source} />
+                </View>
+                : null
+        );
+    }
+
     render() {
         const flexCompleted = this.getCurrentTimePercentage() * 100;
         const flexRemaining = (1 - this.getCurrentTimePercentage()) * 100;
+
+        const { src } = this.props.params;
+
         return (
             <View style={styles.container}>
                 <StatusBar barStyle='light-content' style={{ height: STATUS_BAR_HEIGHT }} />
@@ -427,6 +458,9 @@ class play extends Component {
                 {/*onOrientationChange={(data) => { this.setState({ orientation: data.orientation }); }}*/}
 
                 <View style={styles.displays}>
+
+                    {(src == 7) ? this.getLiveVideo() : null}
+
                     <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'center', paddingBottom: 20 }}>
                         <Text style={styles.controlOption} onPress={this.handleBack} > 返 回 </Text>
                         <Text style={styles.controlOption} onPress={() => { this.setState({ seek: this.state.currentTime + 30 }); } } > + 30s </Text>
@@ -516,6 +550,13 @@ const styles = StyleSheet.create({
     fullScreen: {
         position: 'absolute',
         top: STATUS_BAR_HEIGHT,
+        left: 0,
+        bottom: 0,
+        right: 0,
+    },
+    liveScreen: {
+        position: 'absolute',
+        top: STATUS_BAR_HEIGHT + 100,
         left: 0,
         bottom: 0,
         right: 0,

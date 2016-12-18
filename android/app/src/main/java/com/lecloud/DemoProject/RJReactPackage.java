@@ -1,6 +1,7 @@
 package com.lecloud.DemoProject;
 
 import com.lecloud.valley.leecoSdk.LeReactPlayerManager;
+import com.lecloud.valley.leecoSdk.LeReactSubVideoViewManager;
 import com.lecloud.valley.leecoSdk.LeReactVideoViewManager;
 import com.lecloud.valley.modules.OrientationModule;
 import com.lecloud.DemoProject.sample.CallbackModule;
@@ -59,6 +60,7 @@ public class RJReactPackage implements ReactPackage {
         viewManagers.add(new CheckItemViewManager());
 //        viewManagers.add(new LeReactPlayerManager());
         viewManagers.add(new LeReactVideoViewManager());
+        viewManagers.add(new LeReactSubVideoViewManager());
         viewManagers.add(new LinearGradientManager());
 
         return viewManagers;

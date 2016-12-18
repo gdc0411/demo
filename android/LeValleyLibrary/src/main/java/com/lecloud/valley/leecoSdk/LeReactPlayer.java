@@ -1,3 +1,9 @@
+/*************************************************************************
+ * Description: 乐视视频播放组件
+ * Author: raojia
+ * Mail: raojia@le.com
+ * Created Time: 2016-12-11
+ ************************************************************************/
 package com.lecloud.valley.leecoSdk;
 
 import android.app.Activity;
@@ -864,7 +870,7 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
                 break;
             case StatusCode.PLAY_INFO_VIDEO_RENDERING_START://500006
                 //渲染第一帧完成
-                mEventEmitter.receiveEvent(mViewId, Events.EVENT_VIDEO_RENDING_START.toString(), null);
+                mEventEmitter.receiveEvent(mViewId, Events.EVENT_RENDING_START.toString(), null);
                 break;
             case StatusCode.PLAY_INFO_VIDEO_BUFFERPERCENT://600006
                 //视频缓冲时的进度，开始转圈

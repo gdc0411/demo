@@ -61,8 +61,7 @@ export default class Video extends Component {
                 vuid: PropTypes.string,
                 businessline: PropTypes.string,
                 saas: PropTypes.bool,
-                pano: PropTypes.bool,
-                hasSkin: PropTypes.bool,
+                pano: PropTypes.bool                
             }),
             //直播
             PropTypes.shape({
@@ -73,16 +72,13 @@ export default class Video extends Component {
                 businessline: PropTypes.string,
                 cuid: PropTypes.string,
                 utoken: PropTypes.string,
-                pano: PropTypes.bool,
-                hasSkin: PropTypes.bool,
+                pano: PropTypes.bool
             }),
             //uri
             PropTypes.shape({
                 playMode: PropTypes.number,
                 uri: PropTypes.string,
-                pano: PropTypes.bool,
-                hasSkin: PropTypes.bool,
-            }),
+                pano: PropTypes.bool            }),
         ]).isRequired,
 
         seek: PropTypes.number,
@@ -175,8 +171,7 @@ export default class Video extends Component {
                 customerId: source.customerId,
                 cuid: source.cuid,
                 utoken: source.utoken,
-                pano: source.pano || false,
-                hasSkin: source.hasSkin || false,
+                pano: source.pano || false,                
                 uri: uri,
             },
             /*回调函数属性赋值*/

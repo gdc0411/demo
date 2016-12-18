@@ -33,7 +33,7 @@ public class LeReactPlayerManager extends SimpleViewManager<LeReactPlayer> {
 
     @Override
     public String getName() {
-        return REACT_CLASS;
+        return REACT_CLASS_VIDEO_VIEW;
     }
 
     @Override

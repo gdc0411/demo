@@ -7,7 +7,10 @@ import com.lecloud.sdk.constant.PlayerParams;
  */
 public interface Constants {
 
-    String REACT_CLASS = "RCTLeVideo";
+    /**
+     * 乐视播放器名
+     */
+    String REACT_CLASS_VIDEO_VIEW = "RCTLeVideo";
 
     /**
      * T播放器模式
@@ -22,6 +25,16 @@ public interface Constants {
      * URI地址
      */
     String PROP_URI = "uri";
+
+    /**
+     * 乐视机位VideoView名
+     */
+    String REACT_CLASS_SUB_VIDEO_VIEW = "RCTLeSubVideo";
+
+    /**
+     * 乐视机位URL
+     */
+    String PROP_URL = "url";
 
     //点播模式
     String PROP_SRC_VOD_UUID = "uuid";
