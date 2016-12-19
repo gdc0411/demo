@@ -21,9 +21,9 @@
 // 颜色值RGB
 #define RGBA(r,g,b,a)                     [UIColor colorWithRed:r/255.0f green:g/255.0f blue:b/255.0f alpha:a]
 // 图片路径
-#define PlayerSrcName(file)               [@"Player.bundle" stringByAppendingPathComponent:file]
+#define PlayerSrcName(file)               [@"LECValleyUIResource.bundle" stringByAppendingPathComponent:file]
 
-#define PlayerFrameworkSrcName(file)      [@"Frameworks/Player.framework/Player.bundle" stringByAppendingPathComponent:file]
+#define PlayerFrameworkSrcName(file)      [@"Frameworks/Player.framework/LECValleyUIResource.bundle" stringByAppendingPathComponent:file]
 
 #define PlayerImage(file)                 [UIImage imageNamed:PlayerSrcName(file)] ? :[UIImage imageNamed:PlayerFrameworkSrcName(file)]
 

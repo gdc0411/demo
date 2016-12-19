@@ -42,8 +42,10 @@
 @property (nonatomic, strong) LECPlayer *lePlayer;
 @property (nonatomic, strong) LECPlayerOption *option;
 
+@property (nonatomic, strong) BrightnessModule *brigtnessModule;
 
-@property(nonatomic) CGFloat screenBrightness NS_AVAILABLE_IOS(5_0);        // 0 .. 1.0, where 1.0 is maximum brightness. Only supported by main screen.
+
+//@property(nonatomic) CGFloat screenBrightness NS_AVAILABLE_IOS(5_0);        // 0 .. 1.0, where 1.0 is maximum brightness. Only supported by main screen.
 
 
 @property (nonatomic, copy) RCTDirectEventBlock onVideoSourceLoad;  // 数据源设置
@@ -124,8 +126,8 @@
     
     
     /* Keep track of any modifiers, need to be applied after each play */
-    int _volume; //音量
-    int _currentBrightness;  //屏幕亮度百分比 0-100
+    int _originVolume; //原音量0-100
+    int _originBrightness;  //原屏幕亮度百分比 0-100
     
     BOOL _paused;
     BOOL _playInBackground;
@@ -142,6 +144,8 @@
     if ((self = [super init])) {
         _bridge = bridge;
         
+        _brigtnessModule = [[BrightnessModule alloc]init];
+
         _isFullScreen = NO;
         _isPlaying = NO;
         _isSeeking = NO;
@@ -329,7 +333,7 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
     if (volume < 0 || volume > 100) {
         return;
     }
-    _volume = volume;
+//    _volume = volume;
     //  _lePlayer.volume = volume;
     [VolumeModule setVolumeValue: (float)volume/100 ];
     
@@ -342,7 +346,7 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
     if (brightness < 0 || brightness > 100) {
         return;
     }
-    _currentBrightness = brightness;
+    //_currentBrightness = brightness;
     
     [BrightnessModule setBrightnessValue: (float)brightness/100 ];
     //    [[UIScreen mainScreen] setBrightness: (float)brightness / 100];
@@ -831,13 +835,13 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
     // 设备信息： 音量和亮度
     //  _volume = player.volume;
     // retrieve system volume
-    _volume = [VolumeModule getVolumeValue] * 100;
-    _screenBrightness = [BrightnessModule getBrightnessValue] *100 ;
+    _originVolume = [VolumeModule getVolumeValue] * 100;
+    _originBrightness = [BrightnessModule getBrightnessValue] *100 ;
     
-    _currentBrightness = _screenBrightness;
+//    _currentBrightness = _screenBrightness;
     
-    [event setValue:[NSNumber numberWithInt:_volume] forKey:@"volume"]; //声音百分比
-    [event setValue:[NSNumber numberWithInt:_currentBrightness] forKey:@"brightness"]; //屏幕亮度
+    [event setValue:[NSNumber numberWithInt:_originVolume] forKey:@"volume"]; //声音百分比
+    [event setValue:[NSNumber numberWithInt:_originBrightness] forKey:@"brightness"]; //屏幕亮度
     
     _onVideoLoad?_onVideoLoad(event):nil;
     
@@ -1148,8 +1152,6 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
 {
     NSLog(@"removeFromSuperview消息");
     
-    //  [self setOrientation:1];
-    
     if( _lePlayer ){
         [self stop];
         
@@ -1158,6 +1160,7 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
         _lePlayer = nil;
     }
     
+    _brigtnessModule = nil;
     _option = nil;
     
     [_playerViewController.view removeFromSuperview];

@@ -33,7 +33,11 @@ static UIInterfaceOrientationMask _orientation = UIInterfaceOrientationMaskAllBu
 - (instancetype)init
 {
   if ((self = [super init])) {
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deviceOrientationDidChange:) name:@"UIDeviceOrientationDidChangeNotification" object:nil];
+      
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(deviceOrientationDidChange:)
+                                                 name:@"UIDeviceOrientationDidChangeNotification"
+                                               object:nil];
   }
   return self;
   
@@ -66,10 +70,7 @@ static UIInterfaceOrientationMask _orientation = UIInterfaceOrientationMaskAllBu
                      body:@{@"orientation": [NSNumber numberWithInt:orientationInt],
                             @"orientationStr": orientationStr}];
   
-#if DEBUG
   NSLog(@"设备转屏事件——— orientation：%d 描述: %@", orientationInt, orientationStr);
-#endif
-  
 }
 
 - (NSString *)getOrientationStr: (UIDeviceOrientation)orientation {
@@ -138,9 +139,8 @@ RCT_EXPORT_METHOD(getOrientation:(RCTResponseSenderBlock)callback)
 
 RCT_EXPORT_METHOD(setOrientation:(int)requestedOrientation)
 {
-#if DEBUG
+
   NSLog(@"外部控制——— 设置方向 orientation: %d", requestedOrientation);
-#endif
   
   if(_isRotating) return;
   
@@ -187,8 +187,12 @@ RCT_EXPORT_METHOD(setOrientation:(int)requestedOrientation)
 + (void)changeScreenOrientation:(NSNumber*) orientation
 {
   if ([[UIDevice currentDevice] respondsToSelector:@selector(setOrientation:)]){
-    [[UIDevice currentDevice] performSelector:@selector(setOrientation:) withObject:(id)orientation];
+      
+    [[UIDevice currentDevice] performSelector:@selector(setOrientation:)
+                                   withObject:(id)orientation];
+      
     [UIViewController attemptRotationToDeviceOrientation];
+      
   }
   
   SEL selector=NSSelectorFromString(@"setOrientation:");

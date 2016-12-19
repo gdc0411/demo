@@ -10,7 +10,6 @@
 
 @interface BrightnessModule : NSObject
 
-
 + (float) getBrightnessValue;
 
 + (void) setBrightnessValue:(float)brightness;

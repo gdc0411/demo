@@ -9,6 +9,7 @@
 #import "BrightnessModule.h"
 
 #import "BrightnessView.h"
+#import "LECValley.h"
 
 #import <UIKit/UIKit.h>
 
@@ -20,6 +21,28 @@
 
 @implementation BrightnessModule
 
+- (instancetype)init
+{
+    if ((self = [super init])) {
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(needUpdateBrightnessView:)
+                                                     name:@"UIDeviceOrientationDidChangeNotification"
+                                                   object:nil];
+        
+        [self.brightnessView removeFromSuperview];
+        [[UIApplication sharedApplication].keyWindow addSubview:self.brightnessView];
+        
+    }
+    return self;
+    
+}
+
+- (void)dealloc
+{
+    [self.brightnessView removeFromSuperview];
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
 
 - (BrightnessView *)brightnessView
 {
@@ -30,13 +53,35 @@
 }
 
 
+- (void)needUpdateBrightnessView:(NSNotification *)notification
+{
+    // 获取到当前状态条的方向
+    UIInterfaceOrientation currentOrientation = [UIApplication sharedApplication].statusBarOrientation;
+    if(self.brightnessView.orientation == currentOrientation) return;
+    
+    if (currentOrientation == UIInterfaceOrientationPortrait) {
+        [self.brightnessView removeFromSuperview];
+        self.brightnessView.frame = CGRectMake((ScreenWidth-155)/2, (ScreenHeight-155)/2, 155, 155);
+        [[UIApplication sharedApplication].keyWindow addSubview:self.brightnessView];
+        self.brightnessView.orientation = currentOrientation;
+        
+    } else {
+        [self.brightnessView removeFromSuperview];
+        self.brightnessView.frame = CGRectMake(ScreenWidth/2, ScreenHeight/2, 155, 155);
+        [[UIApplication sharedApplication].keyWindow addSubview:self.brightnessView];
+        self.brightnessView.orientation = currentOrientation;
+    }
+    
+}
+
+
 + (float) getBrightnessValue
 {
     return [UIScreen mainScreen].brightness;
 }
 
-+ (void) setBrightnessValue:(float)brightness{
-
++ (void) setBrightnessValue:(float)brightness
+{
     [[UIScreen mainScreen] setBrightness: brightness];
 }
 

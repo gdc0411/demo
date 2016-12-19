@@ -11,7 +11,6 @@
 #import "RCTConvert.h"
 #import "UIView+React.h"
 
-#import "VolumeModule.h"
 
 #import "LECActivityPlayer.h"
 #import "LECActivityInfoManager.h"
@@ -194,27 +193,7 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
         [self usePlayerViewController]; // 创建controller
     }
     
-    __weak typeof(self) wSelf = self;
-//    [(LECActivityPlayer*)_lePlayer registerWithStreamId:streamId
-//                                            isLetvMedia:YES
-//                                              mediaType:LECPlayerMediaTypeRTMP
-//                                                options:nil
-//                                             completion:^(BOOL result) {
-//                                                 
-//                                                 //数据源回显
-//                                                 wSelf.onSubVideoSourceLoad?
-//                                                 wSelf.onSubVideoSourceLoad(@{@"src": [[wSelf class] returnJSONStringWithDictionary:source useSystem:YES]}):nil;
-//                                                 
-//                                                 if (result){
-//                                                     NSLog(@"播放器注册成功");
-//                                                     [wSelf play];//注册完成后自动播放
-//                                                     
-//                                                 }else{
-//                                                     //[_playerViewController showTips:@"播放器注册失败,请检查UU和VU"];
-//                                                     wSelf.onSubVideoError?wSelf.onSubVideoError(@{@"errorCode":@"-1",@"errorMsg":@"播放器注册失败,请检查StreamId"}):nil;
-//                                                 }
-//                                             }];
-    
+    __weak typeof(self) wSelf = self;    
     [(LECActivityPlayer*)_lePlayer registerWithLiveId: liveId
                                           isLetvMedia:YES
                                               mediaType:LECPlayerMediaTypeRTMP
@@ -228,10 +207,11 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
                                                  if (result){
                                                      NSLog(@"播放器注册成功");
                                                      [wSelf play];//注册完成后自动播放
+                                                     [wSelf.lePlayer setVolume:0];
                                                      
                                                  }else{
                                                      //[_playerViewController showTips:@"播放器注册失败,请检查UU和VU"];
-                                                     wSelf.onSubVideoError?wSelf.onSubVideoError(@{@"errorCode":@"-1",@"errorMsg":@"播放器注册失败,请检查StreamId"}):nil;
+                                                     wSelf.onSubVideoError?wSelf.onSubVideoError(@{@"errorCode":@"-1",@"errorMsg":@"播放器注册失败,请检查LiveId"}):nil;
                                                  }
                                              }];
     

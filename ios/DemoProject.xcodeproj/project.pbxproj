@@ -24,6 +24,7 @@
 		146834051AC3E58100842450 /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 146834041AC3E56700842450 /* libReact.a */; };
 		2D19AC981DF3DCF100D21BDC /* libRCTAnimation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D19AC861DF3DBA600D21BDC /* libRCTAnimation.a */; };
 		2D19AD6B1DF6AE6B00D21BDC /* libCodePush.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D1C9A441DC1EAB60020E496 /* libCodePush.a */; };
+		2D342F471E07E17000341F94 /* LECValleyUIResource.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 2D342F461E07E17000341F94 /* LECValleyUIResource.bundle */; };
 		2D8D209F1E031A80004EC569 /* libLECLivePlayerSDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D8D20971E031A80004EC569 /* libLECLivePlayerSDK.a */; };
 		2D8D20A01E031A80004EC569 /* libLECLivePlayerUISDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D8D20981E031A80004EC569 /* libLECLivePlayerUISDK.a */; };
 		2D8D20A11E031A80004EC569 /* libLECPlayerFoundation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D8D20991E031A80004EC569 /* libLECPlayerFoundation.a */; };
@@ -50,7 +51,6 @@
 		2DA2070E1DE8BA8C0004CE1D /* libstdc++.6.0.9.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 2DA2070D1DE8BA8C0004CE1D /* libstdc++.6.0.9.tbd */; };
 		2DA207101DE8BA990004CE1D /* libxml2.2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 2DA2070F1DE8BA990004CE1D /* libxml2.2.tbd */; };
 		2DA207121DE8BAAC0004CE1D /* libz.1.2.5.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 2DA207111DE8BAAC0004CE1D /* libz.1.2.5.tbd */; };
-		2DFAE4A01E046732008937FD /* index.ios.jsbundle in Resources */ = {isa = PBXBuildFile; fileRef = 2DFAE49F1E046732008937FD /* index.ios.jsbundle */; };
 		2DFAE4B71E046743008937FD /* assets in Resources */ = {isa = PBXBuildFile; fileRef = 2DFAE4B61E046743008937FD /* assets */; };
 		392D188B09B145E0B6613D6D /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 930FF21BCF8F403D8916C7DE /* libz.tbd */; };
 		832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
@@ -236,6 +236,7 @@
 		17750468756A4148AF35D158 /* CodePush.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = CodePush.xcodeproj; path = "../node_modules/react-native-code-push/ios/CodePush.xcodeproj"; sourceTree = "<group>"; };
 		2D19AC801DF3DBA600D21BDC /* RCTAnimation.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTAnimation.xcodeproj; path = "../node_modules/react-native/Libraries/NativeAnimation/RCTAnimation.xcodeproj"; sourceTree = "<group>"; };
 		2D19ACBC1DF570FA00D21BDC /* DemoProject.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = DemoProject.entitlements; path = DemoProject/DemoProject.entitlements; sourceTree = "<group>"; };
+		2D342F461E07E17000341F94 /* LECValleyUIResource.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = LECValleyUIResource.bundle; sourceTree = "<group>"; };
 		2D8D20971E031A80004EC569 /* libLECLivePlayerSDK.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libLECLivePlayerSDK.a; path = ../../../XcodeProjects/lecloud_iOS_vrp_SDK_v4.3.1_20160923/SDK4.3.1/Libs/libLECLivePlayerSDK.a; sourceTree = "<group>"; };
 		2D8D20981E031A80004EC569 /* libLECLivePlayerUISDK.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libLECLivePlayerUISDK.a; path = ../../../XcodeProjects/lecloud_iOS_vrp_SDK_v4.3.1_20160923/SDK4.3.1/Libs/libLECLivePlayerUISDK.a; sourceTree = "<group>"; };
 		2D8D20991E031A80004EC569 /* libLECPlayerFoundation.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libLECPlayerFoundation.a; path = ../../../XcodeProjects/lecloud_iOS_vrp_SDK_v4.3.1_20160923/SDK4.3.1/Libs/libLECPlayerFoundation.a; sourceTree = "<group>"; };
@@ -262,7 +263,6 @@
 		2DA2070D1DE8BA8C0004CE1D /* libstdc++.6.0.9.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libstdc++.6.0.9.tbd"; path = "usr/lib/libstdc++.6.0.9.tbd"; sourceTree = SDKROOT; };
 		2DA2070F1DE8BA990004CE1D /* libxml2.2.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libxml2.2.tbd; path = usr/lib/libxml2.2.tbd; sourceTree = SDKROOT; };
 		2DA207111DE8BAAC0004CE1D /* libz.1.2.5.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.1.2.5.tbd; path = usr/lib/libz.1.2.5.tbd; sourceTree = SDKROOT; };
-		2DFAE49F1E046732008937FD /* index.ios.jsbundle */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = index.ios.jsbundle; path = bundle/index.ios.jsbundle; sourceTree = "<group>"; };
 		2DFAE4B61E046743008937FD /* assets */ = {isa = PBXFileReference; lastKnownFileType = folder; name = assets; path = bundle/assets; sourceTree = "<group>"; };
 		78C398B01ACF4ADC00677621 /* RCTLinking.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTLinking.xcodeproj; path = "../node_modules/react-native/Libraries/LinkingIOS/RCTLinking.xcodeproj"; sourceTree = "<group>"; };
 		832341B01AAA6A8300B99B32 /* RCTText.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTText.xcodeproj; path = "../node_modules/react-native/Libraries/Text/RCTText.xcodeproj"; sourceTree = "<group>"; };
@@ -405,7 +405,6 @@
 			isa = PBXGroup;
 			children = (
 				2DFAE4B61E046743008937FD /* assets */,
-				2DFAE49F1E046732008937FD /* index.ios.jsbundle */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
 				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
@@ -471,6 +470,7 @@
 		2DA206ED1DE8B7B10004CE1D /* Bundles */ = {
 			isa = PBXGroup;
 			children = (
+				2D342F461E07E17000341F94 /* LECValleyUIResource.bundle */,
 				2DA206EE1DE8B7CD0004CE1D /* LECPlayerResource.bundle */,
 				2DA206EF1DE8B7CD0004CE1D /* LECPlayerUIResource.bundle */,
 				2DA206F01DE8B7CD0004CE1D /* LECVodPlayerResource.bundle */,
@@ -861,9 +861,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2DFAE4A01E046732008937FD /* index.ios.jsbundle in Resources */,
 				2DA206F11DE8B7CD0004CE1D /* LECPlayerResource.bundle in Resources */,
 				2DFAE4B71E046743008937FD /* assets in Resources */,
+				2D342F471E07E17000341F94 /* LECValleyUIResource.bundle in Resources */,
 				2DA206F31DE8B7CD0004CE1D /* LECVodPlayerResource.bundle in Resources */,
 				2DA206F21DE8B7CD0004CE1D /* LECPlayerUIResource.bundle in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,

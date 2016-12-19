@@ -16,7 +16,6 @@
 		2D8D22331E032DC9004EC569 /* OrientationModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D8D222E1E032DC9004EC569 /* OrientationModule.m */; };
 		2D8D22341E032DC9004EC569 /* VolumeModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D8D22301E032DC9004EC569 /* VolumeModule.m */; };
 		2D8D22421E032DD3004EC569 /* LCBaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D8D22361E032DD3004EC569 /* LCBaseViewController.m */; };
-		2D8D22431E032DD3004EC569 /* LECValleyUIKit.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D8D22381E032DD3004EC569 /* LECValleyUIKit.m */; };
 		2D8D22441E032DD3004EC569 /* RCTLeVideo.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D8D223A1E032DD3004EC569 /* RCTLeVideo.m */; };
 		2D8D22451E032DD3004EC569 /* RCTLeVideoManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D8D223C1E032DD3004EC569 /* RCTLeVideoManager.m */; };
 		2D8D22461E032DD3004EC569 /* RCTLeVideoPlayerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D8D223E1E032DD3004EC569 /* RCTLeVideoPlayerViewController.m */; };
@@ -40,7 +39,6 @@
 /* Begin PBXFileReference section */
 		2D0C97701E06CD1100FB5279 /* BrightnessView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BrightnessView.h; sourceTree = "<group>"; };
 		2D0C97711E06CD1100FB5279 /* BrightnessView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BrightnessView.m; sourceTree = "<group>"; };
-		2D0C97741E06D04400FB5279 /* Player.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Player.bundle; sourceTree = "<group>"; };
 		2D0C978B1E06DC6200FB5279 /* LECValley.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LECValley.h; sourceTree = "<group>"; };
 		2D0C97971E07056500FB5279 /* BrightnessModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BrightnessModule.h; sourceTree = "<group>"; };
 		2D0C97981E07056500FB5279 /* BrightnessModule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BrightnessModule.m; sourceTree = "<group>"; };
@@ -60,8 +58,6 @@
 		2D8D22301E032DC9004EC569 /* VolumeModule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VolumeModule.m; sourceTree = "<group>"; };
 		2D8D22351E032DD3004EC569 /* LCBaseViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LCBaseViewController.h; sourceTree = "<group>"; };
 		2D8D22361E032DD3004EC569 /* LCBaseViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LCBaseViewController.m; sourceTree = "<group>"; };
-		2D8D22371E032DD3004EC569 /* LECValleyUIKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LECValleyUIKit.h; sourceTree = "<group>"; };
-		2D8D22381E032DD3004EC569 /* LECValleyUIKit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LECValleyUIKit.m; sourceTree = "<group>"; };
 		2D8D22391E032DD3004EC569 /* RCTLeVideo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCTLeVideo.h; sourceTree = "<group>"; };
 		2D8D223A1E032DD3004EC569 /* RCTLeVideo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCTLeVideo.m; sourceTree = "<group>"; };
 		2D8D223B1E032DD3004EC569 /* RCTLeVideoManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCTLeVideoManager.h; sourceTree = "<group>"; };
@@ -95,14 +91,6 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		2D0C97731E06D01800FB5279 /* bundle */ = {
-			isa = PBXGroup;
-			children = (
-				2D0C97741E06D04400FB5279 /* Player.bundle */,
-			);
-			name = bundle;
-			sourceTree = "<group>";
-		};
 		2D8D21991E032331004EC569 /* pch */ = {
 			isa = PBXGroup;
 			children = (
@@ -116,8 +104,6 @@
 			children = (
 				2D8D22351E032DD3004EC569 /* LCBaseViewController.h */,
 				2D8D22361E032DD3004EC569 /* LCBaseViewController.m */,
-				2D8D22371E032DD3004EC569 /* LECValleyUIKit.h */,
-				2D8D22381E032DD3004EC569 /* LECValleyUIKit.m */,
 				2D8D22391E032DD3004EC569 /* RCTLeVideo.h */,
 				2D8D223A1E032DD3004EC569 /* RCTLeVideo.m */,
 				2D8D223B1E032DD3004EC569 /* RCTLeVideoManager.h */,
@@ -170,7 +156,6 @@
 			children = (
 				2D0C978B1E06DC6200FB5279 /* LECValley.h */,
 				2D8D21991E032331004EC569 /* pch */,
-				2D0C97731E06D01800FB5279 /* bundle */,
 				2D8D219A1E032338004EC569 /* RCTLeVideo */,
 				2D8D219B1E032341004EC569 /* Modules */,
 				2D8D219C1E03234C004EC569 /* Views */,
@@ -235,7 +220,6 @@
 				2D8D22311E032DC9004EC569 /* DeviceModule.m in Sources */,
 				2D8D22341E032DC9004EC569 /* VolumeModule.m in Sources */,
 				2D8D22461E032DD3004EC569 /* RCTLeVideoPlayerViewController.m in Sources */,
-				2D8D22431E032DD3004EC569 /* LECValleyUIKit.m in Sources */,
 				2D8D22281E032DB1004EC569 /* BVLinearGradientManager.m in Sources */,
 				2D8D22471E032DD3004EC569 /* UIView+FindUIViewController.m in Sources */,
 				2D8D22271E032DB1004EC569 /* BVLinearGradient.m in Sources */,

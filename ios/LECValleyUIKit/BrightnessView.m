@@ -16,7 +16,7 @@
 @property (nonatomic, strong) UILabel			*title;
 @property (nonatomic, strong) UIView			*longView;
 @property (nonatomic, strong) NSMutableArray	*tipArray;
-@property (nonatomic, assign) BOOL				orientationDidChange;
+@property (nonatomic, assign) BOOL   orientationDidChange;
 
 @end
 
@@ -38,6 +38,8 @@
         
         self.layer.cornerRadius  = 10;
         self.layer.masksToBounds = YES;
+//        self.layer.zPosition = INT8_MAX;
+
         
         // 使用UIToolbar实现毛玻璃效果，简单粗暴，支持iOS7+
         UIToolbar *toolbar = [[UIToolbar alloc] initWithFrame:self.bounds];
@@ -73,6 +75,8 @@
         [self addObserver];
         
         self.alpha = 0.0;
+//        self.alpha = 1.0;
+
     }
     return self;
 }
@@ -111,7 +115,8 @@
     
     [[UIScreen mainScreen] addObserver:self
                             forKeyPath:@"brightness"
-                               options:NSKeyValueObservingOptionNew context:NULL];
+                               options:NSKeyValueObservingOptionNew
+                               context:NULL];
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath
@@ -120,7 +125,7 @@
                        context:(void *)context {
     
     CGFloat sound = [change[@"new"] floatValue];
-    [self appearSoundView];
+    [self appearBrightnessView];
     [self updateLongView:sound];
 }
 
@@ -132,17 +137,17 @@
 
 #pragma mark - Methond
 
-- (void)appearSoundView {
+- (void)appearBrightnessView {
     if (self.alpha == 0.0) {
         self.orientationDidChange = NO;
         self.alpha = 1.0;
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            [self disAppearSoundView];
+            [self disAppearBrightnessView];
         });
     }
 }
 
-- (void)disAppearSoundView {
+- (void)disAppearBrightnessView {
     
     if (self.alpha == 1.0) {
         [UIView animateWithDuration:0.8 animations:^{
