@@ -45,6 +45,13 @@ class home extends Component {
     }
 
     //跳转到播放页
+    skipToPage = (page, source) => {
+        const {navigator} = this.props;
+        // this.props.actions.play(source);
+        navigator.push({ location: page + source ? `/${source}` : '' });
+    }
+
+    //跳转到播放页
     skipToPlayer = (source) => {
         const {navigator} = this.props;
         // this.props.actions.play(source);
@@ -101,8 +108,9 @@ class home extends Component {
                 <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }} >
                     <View style={{ flexDirection: 'column', width: SCREEN_WIDTH }} >
                         <View style={{ flexDirection: 'row', justifyContent: 'space-around' }} >
-                            <InfoItem imgUrl={img1} desc={'设备信息'} color={'green'} onViewInfo={this.skipToViewDevice} />
-                            <Text onPress={this.skipToTestOrientation} >转屏测试</Text>
+                            <InfoItem imgUrl={img1} desc={'设备信息'} color={'green'} onViewInfo={() => this.skipToViewDevice()} />
+                            <Text style={{ fontSize: 18, fontWeight: 'bold', color: `orange` }} onPress={() => this.skipToTestOrientation()} >转屏</Text>
+                            <Text style={{ fontSize: 18, fontWeight: 'bold', color: `orange` }} onPress={(page, source) => this.skipToPage('/share', null)} >分享</Text>
                         </View>
                         <View style={{ flexDirection: 'row', justifyContent: 'space-around' }} >
                             <PlayItem source={0} imgUrl={img1} desc={'第三方URL'} color={'black'} onPlay={this.skipToPlayer} />
