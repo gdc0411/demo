@@ -70,6 +70,12 @@ class home extends Component {
         navigator.push({ location: '/orient' });
     }
 
+    //跳转到分享
+    skipToShare = () => {
+        const {navigator} = this.props;
+        navigator.push({ location: '/share' });
+    }
+
     //加
     operatePlus = (data) => {
         this.props.actions.plus(data);
@@ -110,7 +116,7 @@ class home extends Component {
                         <View style={{ flexDirection: 'row', justifyContent: 'space-around' }} >
                             <InfoItem imgUrl={img1} desc={'设备信息'} color={'green'} onViewInfo={() => this.skipToViewDevice()} />
                             <Text style={{ fontSize: 18, fontWeight: 'bold', color: `orange` }} onPress={() => this.skipToTestOrientation()} >转屏</Text>
-                            <Text style={{ fontSize: 18, fontWeight: 'bold', color: `orange` }} onPress={(page, source) => this.skipToPage('/share', null)} >分享</Text>
+                            <Text style={{ fontSize: 18, fontWeight: 'bold', color: `orange` }} onPress={() => this.skipToShare()} >分享</Text>
                         </View>
                         <View style={{ flexDirection: 'row', justifyContent: 'space-around' }} >
                             <PlayItem source={0} imgUrl={img1} desc={'第三方URL'} color={'black'} onPlay={this.skipToPlayer} />

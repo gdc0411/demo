@@ -33,7 +33,7 @@
             android:process=":cmf" />
 
         <!-- 微信开放平台配置 -->
-        <meta-data android:name="WX_APPID" android:value="wx4e975ac15269d8a7"/>
+        <meta-data android:name="WX_APPID" android:value="wxa9cc420610dce2cb"/>
 
     </application>
 
