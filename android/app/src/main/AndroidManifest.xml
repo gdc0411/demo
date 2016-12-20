@@ -9,7 +9,7 @@
         android:name=".MainApplication"
         android:allowBackup="true"
         android:largeHeap="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/lecloud"
         android:label="@string/app_name"
         android:theme="@style/AppTheme">
         <activity
