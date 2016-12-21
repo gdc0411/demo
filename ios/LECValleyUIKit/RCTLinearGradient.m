@@ -6,12 +6,12 @@
 //  Copyright © 2016年 Facebook. All rights reserved.
 //
 
-#import "BVLinearGradient.h"
+#import "RCTLinearGradient.h"
 #import "RCTConvert.h"
 #import <UIKit/UIKit.h>
 #import <QuartzCore/QuartzCore.h>
 
-@implementation BVLinearGradient
+@implementation RCTLinearGradient
 
 + (Class)layerClass
 {

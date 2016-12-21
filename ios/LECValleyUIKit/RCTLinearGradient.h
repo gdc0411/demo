@@ -1,13 +1,14 @@
 //
-//  BVLinearGradientManager.h
+//  BVLinearGradient.h
 //  DemoProject
 //
 //  Created by RaoJia on 2016/12/7.
 //  Copyright © 2016年 LeCloud. All rights reserved.
 //
 
-#import "RCTViewManager.h"
+#import <UIKit/UIKit.h>
+#import "RCTView.h"
 
-@interface BVLinearGradientManager : RCTViewManager
+@interface RCTLinearGradient : RCTView
 
 @end

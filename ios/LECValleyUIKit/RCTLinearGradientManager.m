@@ -6,11 +6,11 @@
 //  Copyright © 2016年 LeCloud. All rights reserved.
 //
 
-#import "BVLinearGradientManager.h"
+#import "RCTLinearGradientManager.h"
 #import "BVLinearGradient.h"
 #import "RCTBridge.h"
 
-@implementation BVLinearGradientManager
+@implementation RCTLinearGradientManager
 
 RCT_EXPORT_MODULE();
 
