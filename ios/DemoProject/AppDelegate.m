@@ -16,12 +16,17 @@
 #import "LECPlayerFoundation.h"
 #import "OrientationModule.h"
 
+#import "../Libraries/LinkingIOS/RCTLinkingManager.h"
 
 #define kLCTestBundleID   @"com.lecloud.sdkTest"
 
 
 @implementation AppDelegate
 
+
+- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation {
+  return [RCTLinkingManager application:application openURL:url sourceApplication:sourceApplication annotation:annotation];
+}
 
 - (UIInterfaceOrientationMask)application:(UIApplication *)application supportedInterfaceOrientationsForWindow:(UIWindow *)window {
   return [OrientationModule getOrientation];

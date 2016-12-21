@@ -7,7 +7,7 @@
 //
 
 #import "RCTLinearGradientManager.h"
-#import "BVLinearGradient.h"
+#import "RCTLinearGradient.h"
 #import "RCTBridge.h"
 
 @implementation RCTLinearGradientManager
@@ -18,7 +18,7 @@ RCT_EXPORT_MODULE();
 
 - (UIView *)view
 {
-  return [[BVLinearGradient alloc] init];
+  return [[RCTLinearGradient alloc] init];
 }
 
 - (dispatch_queue_t)methodQueue

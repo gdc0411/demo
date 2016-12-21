@@ -22,6 +22,9 @@
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		140ED2AC1D01E1AD002B40FF /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 146834041AC3E56700842450 /* libReact.a */; };
 		146834051AC3E58100842450 /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 146834041AC3E56700842450 /* libReact.a */; };
+		2D0E62AC1E0B0101005A68AA /* libc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D0E62AB1E0B0101005A68AA /* libc++.tbd */; };
+		2D0E62AE1E0B0112005A68AA /* libsqlite3.0.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D0E62AD1E0B0112005A68AA /* libsqlite3.0.tbd */; };
+		2D0E62B01E0B0183005A68AA /* libWeChatSDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D0E62AF1E0B0183005A68AA /* libWeChatSDK.a */; };
 		2D19AC981DF3DCF100D21BDC /* libRCTAnimation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D19AC861DF3DBA600D21BDC /* libRCTAnimation.a */; };
 		2D19AD6B1DF6AE6B00D21BDC /* libCodePush.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D1C9A441DC1EAB60020E496 /* libCodePush.a */; };
 		2D342F471E07E17000341F94 /* LECValleyUIResource.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 2D342F461E07E17000341F94 /* LECValleyUIResource.bundle */; };
@@ -234,6 +237,9 @@
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = DemoProject/main.m; sourceTree = "<group>"; };
 		146833FF1AC3E56700842450 /* React.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = React.xcodeproj; path = "../node_modules/react-native/React/React.xcodeproj"; sourceTree = "<group>"; };
 		17750468756A4148AF35D158 /* CodePush.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = CodePush.xcodeproj; path = "../node_modules/react-native-code-push/ios/CodePush.xcodeproj"; sourceTree = "<group>"; };
+		2D0E62AB1E0B0101005A68AA /* libc++.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libc++.tbd"; path = "usr/lib/libc++.tbd"; sourceTree = SDKROOT; };
+		2D0E62AD1E0B0112005A68AA /* libsqlite3.0.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.0.tbd; path = usr/lib/libsqlite3.0.tbd; sourceTree = SDKROOT; };
+		2D0E62AF1E0B0183005A68AA /* libWeChatSDK.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libWeChatSDK.a; path = ../../openappdev/ios/Libs/libWeChatSDK.a; sourceTree = "<group>"; };
 		2D19AC801DF3DBA600D21BDC /* RCTAnimation.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTAnimation.xcodeproj; path = "../node_modules/react-native/Libraries/NativeAnimation/RCTAnimation.xcodeproj"; sourceTree = "<group>"; };
 		2D19ACBC1DF570FA00D21BDC /* DemoProject.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = DemoProject.entitlements; path = DemoProject/DemoProject.entitlements; sourceTree = "<group>"; };
 		2D342F461E07E17000341F94 /* LECValleyUIResource.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = LECValleyUIResource.bundle; sourceTree = "<group>"; };
@@ -282,6 +288,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2D0E62AE1E0B0112005A68AA /* libsqlite3.0.tbd in Frameworks */,
+				2D0E62AC1E0B0101005A68AA /* libc++.tbd in Frameworks */,
 				2DA207121DE8BAAC0004CE1D /* libz.1.2.5.tbd in Frameworks */,
 				2DA207101DE8BA990004CE1D /* libxml2.2.tbd in Frameworks */,
 				2DA2070E1DE8BA8C0004CE1D /* libstdc++.6.0.9.tbd in Frameworks */,
@@ -294,13 +302,14 @@
 				2D8D20A41E031A80004EC569 /* libLECVodPlayerUISDK.a in Frameworks */,
 				2D8D20A11E031A80004EC569 /* libLECPlayerFoundation.a in Frameworks */,
 				2D8D20A51E031A80004EC569 /* libReachbility.a in Frameworks */,
+				2D0E62B01E0B0183005A68AA /* libWeChatSDK.a in Frameworks */,
 				2D8D209F1E031A80004EC569 /* libLECLivePlayerSDK.a in Frameworks */,
 				2DA207011DE8B9950004CE1D /* AudioToolbox.framework in Frameworks */,
 				2DA206F71DE8B89B0004CE1D /* AdSupport.framework in Frameworks */,
 				2DA207021DE8B9950004CE1D /* CoreData.framework in Frameworks */,
+				2DA207051DE8B9950004CE1D /* CoreTelephony.framework in Frameworks */,
 				2DA207031DE8B9950004CE1D /* CoreLocation.framework in Frameworks */,
 				2DA207041DE8B9950004CE1D /* CoreMedia.framework in Frameworks */,
-				2DA207051DE8B9950004CE1D /* CoreTelephony.framework in Frameworks */,
 				2DA207061DE8B9950004CE1D /* JavaScriptCore.framework in Frameworks */,
 				2DA206F81DE8B89B0004CE1D /* MediaPlayer.framework in Frameworks */,
 				2DA207071DE8B9950004CE1D /* SystemConfiguration.framework in Frameworks */,
@@ -447,6 +456,7 @@
 		2D8D20941E031A00004EC569 /* Libs */ = {
 			isa = PBXGroup;
 			children = (
+				2D0E62AF1E0B0183005A68AA /* libWeChatSDK.a */,
 				2D8D20971E031A80004EC569 /* libLECLivePlayerSDK.a */,
 				2D8D20981E031A80004EC569 /* libLECLivePlayerUISDK.a */,
 				2D8D20991E031A80004EC569 /* libLECPlayerFoundation.a */,
@@ -481,6 +491,8 @@
 		2DA206F41DE8B89A0004CE1D /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				2D0E62AD1E0B0112005A68AA /* libsqlite3.0.tbd */,
+				2D0E62AB1E0B0101005A68AA /* libc++.tbd */,
 				2DA207111DE8BAAC0004CE1D /* libz.1.2.5.tbd */,
 				2DA2070F1DE8BA990004CE1D /* libxml2.2.tbd */,
 				2DA2070D1DE8BA8C0004CE1D /* libstdc++.6.0.9.tbd */,
@@ -990,15 +1002,14 @@
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 					"$(SRCROOT)/../node_modules/react-native/React/**",
 					"$(SRCROOT)/../node_modules/react-native-code-push/ios/CodePush/**",
-					"$(SRCROOT)/../../../XcodeProjects/lecloud_iOS_vrp_SDK_v4.3.1_20160923/SDK4.3.1/**",
-					"$(SRCROOT)/Masonry/**",
+					"$(SRCROOT)/../../openappdev/ios/inc/**",
 				);
 				INFOPLIST_FILE = DemoProject/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
-					"$(PROJECT_DIR)/../../../XcodeProjects/lecloud_iOS_vrp_SDK_v4.3.1_20160923/SDK4.3.1/**",
+					"$(PROJECT_DIR)/../../openappdev/ios/Libs",
 				);
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = (
@@ -1029,15 +1040,14 @@
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 					"$(SRCROOT)/../node_modules/react-native/React/**",
 					"$(SRCROOT)/../node_modules/react-native-code-push/ios/CodePush/**",
-					"$(SRCROOT)/../../../XcodeProjects/lecloud_iOS_vrp_SDK_v4.3.1_20160923/SDK4.3.1/**",
-					"$(SRCROOT)/Masonry/**",
+					"$(SRCROOT)/../../openappdev/ios/inc/**",
 				);
 				INFOPLIST_FILE = DemoProject/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
-					"$(PROJECT_DIR)/../../../XcodeProjects/lecloud_iOS_vrp_SDK_v4.3.1_20160923/SDK4.3.1/**",
+					"$(PROJECT_DIR)/../../openappdev/ios/Libs",
 				);
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = (

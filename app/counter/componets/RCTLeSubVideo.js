@@ -65,6 +65,14 @@ export default class SubVideo extends Component {
 
         /* 数据源相关 */
         onSubVideoSourceLoad: PropTypes.func,
+        onSubVideoSizeChange: PropTypes.func,
+        onSubVideoLoad: PropTypes.func,
+        onSubVideoError: PropTypes.func,
+        onSubVideoPause: PropTypes.func,
+        onSubVideoResume: PropTypes.func,
+        onSubBufferStart: PropTypes.func,
+        onSubBufferEnd: PropTypes.func,
+        onSubVideoRendingStart: PropTypes.func,
 
         /* Required by react-native */
         ...View.propTypes,

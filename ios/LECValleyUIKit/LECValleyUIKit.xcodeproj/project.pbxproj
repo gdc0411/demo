@@ -9,8 +9,9 @@
 /* Begin PBXBuildFile section */
 		2D0C97721E06CD1100FB5279 /* BrightnessView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D0C97711E06CD1100FB5279 /* BrightnessView.m */; };
 		2D0C97991E07056500FB5279 /* BrightnessModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D0C97981E07056500FB5279 /* BrightnessModule.m */; };
-		2D8D22271E032DB1004EC569 /* BVLinearGradient.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D8D22241E032DB1004EC569 /* BVLinearGradient.m */; };
-		2D8D22281E032DB1004EC569 /* BVLinearGradientManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D8D22261E032DB1004EC569 /* BVLinearGradientManager.m */; };
+		2D0E62AA1E0AFF75005A68AA /* RCTWeChatModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D0E62A91E0AFF75005A68AA /* RCTWeChatModule.m */; };
+		2D8D22271E032DB1004EC569 /* RCTLinearGradient.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D8D22241E032DB1004EC569 /* RCTLinearGradient.m */; };
+		2D8D22281E032DB1004EC569 /* RCTLinearGradientManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D8D22261E032DB1004EC569 /* RCTLinearGradientManager.m */; };
 		2D8D22311E032DC9004EC569 /* DeviceModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D8D222A1E032DC9004EC569 /* DeviceModule.m */; };
 		2D8D22321E032DC9004EC569 /* KeyChainStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D8D222C1E032DC9004EC569 /* KeyChainStore.m */; };
 		2D8D22331E032DC9004EC569 /* OrientationModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D8D222E1E032DC9004EC569 /* OrientationModule.m */; };
@@ -42,12 +43,14 @@
 		2D0C978B1E06DC6200FB5279 /* LECValley.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LECValley.h; sourceTree = "<group>"; };
 		2D0C97971E07056500FB5279 /* BrightnessModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BrightnessModule.h; sourceTree = "<group>"; };
 		2D0C97981E07056500FB5279 /* BrightnessModule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BrightnessModule.m; sourceTree = "<group>"; };
+		2D0E62A81E0AFF75005A68AA /* RCTWeChatModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCTWeChatModule.h; sourceTree = "<group>"; };
+		2D0E62A91E0AFF75005A68AA /* RCTWeChatModule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCTWeChatModule.m; sourceTree = "<group>"; };
 		2D8D219D1E032386004EC569 /* pchFile.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pchFile.pch; sourceTree = "<group>"; };
 		2D8D21E51E0324FE004EC569 /* libLECValleyUIKit.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libLECValleyUIKit.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		2D8D22231E032DB1004EC569 /* BVLinearGradient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BVLinearGradient.h; sourceTree = "<group>"; };
-		2D8D22241E032DB1004EC569 /* BVLinearGradient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BVLinearGradient.m; sourceTree = "<group>"; };
-		2D8D22251E032DB1004EC569 /* BVLinearGradientManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BVLinearGradientManager.h; sourceTree = "<group>"; };
-		2D8D22261E032DB1004EC569 /* BVLinearGradientManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BVLinearGradientManager.m; sourceTree = "<group>"; };
+		2D8D22231E032DB1004EC569 /* RCTLinearGradient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCTLinearGradient.h; sourceTree = "<group>"; };
+		2D8D22241E032DB1004EC569 /* RCTLinearGradient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCTLinearGradient.m; sourceTree = "<group>"; };
+		2D8D22251E032DB1004EC569 /* RCTLinearGradientManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCTLinearGradientManager.h; sourceTree = "<group>"; };
+		2D8D22261E032DB1004EC569 /* RCTLinearGradientManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCTLinearGradientManager.m; sourceTree = "<group>"; };
 		2D8D22291E032DC9004EC569 /* DeviceModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DeviceModule.h; sourceTree = "<group>"; };
 		2D8D222A1E032DC9004EC569 /* DeviceModule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DeviceModule.m; sourceTree = "<group>"; };
 		2D8D222B1E032DC9004EC569 /* KeyChainStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeyChainStore.h; sourceTree = "<group>"; };
@@ -136,6 +139,8 @@
 				2D0C97981E07056500FB5279 /* BrightnessModule.m */,
 				2D0C97701E06CD1100FB5279 /* BrightnessView.h */,
 				2D0C97711E06CD1100FB5279 /* BrightnessView.m */,
+				2D0E62A81E0AFF75005A68AA /* RCTWeChatModule.h */,
+				2D0E62A91E0AFF75005A68AA /* RCTWeChatModule.m */,
 			);
 			name = Modules;
 			sourceTree = "<group>";
@@ -143,10 +148,10 @@
 		2D8D219C1E03234C004EC569 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				2D8D22231E032DB1004EC569 /* BVLinearGradient.h */,
-				2D8D22241E032DB1004EC569 /* BVLinearGradient.m */,
-				2D8D22251E032DB1004EC569 /* BVLinearGradientManager.h */,
-				2D8D22261E032DB1004EC569 /* BVLinearGradientManager.m */,
+				2D8D22231E032DB1004EC569 /* RCTLinearGradient.h */,
+				2D8D22241E032DB1004EC569 /* RCTLinearGradient.m */,
+				2D8D22251E032DB1004EC569 /* RCTLinearGradientManager.h */,
+				2D8D22261E032DB1004EC569 /* RCTLinearGradientManager.m */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -220,9 +225,10 @@
 				2D8D22311E032DC9004EC569 /* DeviceModule.m in Sources */,
 				2D8D22341E032DC9004EC569 /* VolumeModule.m in Sources */,
 				2D8D22461E032DD3004EC569 /* RCTLeVideoPlayerViewController.m in Sources */,
-				2D8D22281E032DB1004EC569 /* BVLinearGradientManager.m in Sources */,
+				2D8D22281E032DB1004EC569 /* RCTLinearGradientManager.m in Sources */,
 				2D8D22471E032DD3004EC569 /* UIView+FindUIViewController.m in Sources */,
-				2D8D22271E032DB1004EC569 /* BVLinearGradient.m in Sources */,
+				2D0E62AA1E0AFF75005A68AA /* RCTWeChatModule.m in Sources */,
+				2D8D22271E032DB1004EC569 /* RCTLinearGradient.m in Sources */,
 				2DDBF75A1E0674A500C9C1BF /* RCTLeSubVideo.m in Sources */,
 				2D8D22441E032DD3004EC569 /* RCTLeVideo.m in Sources */,
 				2D8D22421E032DD3004EC569 /* LCBaseViewController.m in Sources */,
@@ -246,7 +252,7 @@
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 					"$(SRCROOT)/../../react-native/React/**",
 					"$(SRCROOT)/../../node_modules/react-native/React/**",
-					"$(SRCROOT)/../../../../XcodeProjects/lecloud_iOS_vrp_SDK_v4.3.1_20160923/SDK4.3.1/**",
+					"$(SRCROOT)/../../../openappdev/ios/inc/**",
 				);
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_LDFLAGS = "-ObjC";
@@ -265,7 +271,7 @@
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 					"$(SRCROOT)/../../react-native/React/**",
 					"$(SRCROOT)/../../node_modules/react-native/React/**",
-					"$(SRCROOT)/../../../../XcodeProjects/lecloud_iOS_vrp_SDK_v4.3.1_20160923/SDK4.3.1/**",
+					"$(SRCROOT)/../../../openappdev/ios/inc/**",
 				);
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_LDFLAGS = "-ObjC";
