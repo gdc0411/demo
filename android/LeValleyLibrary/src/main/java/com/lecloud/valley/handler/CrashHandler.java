@@ -12,8 +12,8 @@ import java.lang.Thread.UncaughtExceptionHandler;
 
 /**
  * 崩溃时写入日志工具类
- * @author pys
  *
+ * @author pys
  */
 public class CrashHandler implements UncaughtExceptionHandler {
     public static final String TAG = CrashHandler.class.getSimpleName();
@@ -42,7 +42,7 @@ public class CrashHandler implements UncaughtExceptionHandler {
         if (ex == null) {
             return;
         }
-        StringBuffer sb = new StringBuffer("Oh Madan player is crash !!!!!!!!!!!!! \n");
+        StringBuffer sb = new StringBuffer("程序异常退出 !!!!!!!!!!!!! \n");
         Writer writer = new StringWriter();
         PrintWriter printWriter = new PrintWriter(writer);
         ex.printStackTrace(printWriter);
@@ -56,13 +56,13 @@ public class CrashHandler implements UncaughtExceptionHandler {
 //        LeLog.ePringShenShou(TAG, sb.toString());
         Log.e(TAG, sb.toString());
         new Thread(new Runnable() {
-            
+
             @Override
             public void run() {
                 Looper.prepare();
-                Toast.makeText(context, " oh player is crash", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "程序异常退出，请联系raojia解决", Toast.LENGTH_SHORT).show();
                 Looper.loop();
-                
+
             }
         }).start();
         try {

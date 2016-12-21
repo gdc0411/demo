@@ -5,6 +5,7 @@ package com.lecloud.valley.common;
  */
 public enum Events {
 
+    //乐视播放器事件
     EVENT_LOAD_SOURCE("onVideoSourceLoad"), // 传入数据源
     EVENT_CHANGESIZE("onVideoSizeChange"), // 视频真实宽高
     EVENT_LOAD_RATE("onVideoRateLoad"), // 视频码率列表
@@ -35,9 +36,8 @@ public enum Events {
     EVENT_ACTION_TIME_SHIFT("onActionTimeShift"), // 云直播进度
     EVENT_ACTION_STATUS_CHANGE("onActionStatusChange"), // 云直播状态回调
     EVENT_ONLINE_NUM_CHANGE("onActionOnlineNumChange"), // 云直播在线人数变化
-    EVENT_ORIENTATION_CHANG("onOrientationDidChange"), //屏幕方向切换
-    EVENT_OTHER_EVENT("onOtherEventInfo"),  // 其他事件
 
+    //乐视机位播放器事件
     EVENT_SUB_LOAD_SOURCE("onSubVideoSourceLoad"), // 传入机位数据源
     EVENT_SUB_CHANGESIZE("onSubVideoSizeChange"), // 机位视频真实宽高
     EVENT_SUB_LOAD("onSubVideoLoad"), // 机位播放器准备完毕
@@ -47,7 +47,13 @@ public enum Events {
     EVENT_SUB_RENDING_START("onVideoRendingStart"), // 加载第一帧
     EVENT_SUB_PROGRESS("onSubVideoProgress"), // 正在播放机位视频
     EVENT_SUB_PAUSE("onSubVideoPause"), // 机位播放暂停
-    EVENT_SUB_RESUME("onSubVideoResume"); // 机位播放继续
+    EVENT_SUB_RESUME("onSubVideoResume"), // 机位播放继续
+
+    //翻转模块事件
+    EVENT_ORIENTATION_CHANG("onOrientationDidChange"), //屏幕方向切换
+
+    // 未命名的事件
+    EVENT_OTHER_EVENT("onOtherEventInfo");  // 未知事件
 
 
     private final String mName;

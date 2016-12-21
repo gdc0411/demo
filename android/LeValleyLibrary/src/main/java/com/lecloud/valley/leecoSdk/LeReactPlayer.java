@@ -23,6 +23,7 @@ import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.uimanager.ThemedReactContext;
 import com.facebook.react.uimanager.events.RCTEventEmitter;
+import com.lecloud.valley.common.Events;
 import com.lecloud.valley.utils.LogUtils;
 import com.lecloud.valley.utils.ScreenBrightnessManager;
 import com.lecloud.valley.utils.TimeUtils;
@@ -50,7 +51,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.lecloud.valley.leecoSdk.Constants.*;
+import static com.lecloud.valley.common.Constants.*;
 import static com.lecloud.valley.utils.LogUtils.TAG;
 
 
@@ -308,7 +309,7 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
         if (bundle == null) return;
 
         // 播放模式切换，重新创建Player
-        int newPlayMode = bundle.containsKey(PROP_PLAY_MODE) ? bundle.getInt(PROP_PLAY_MODE) : -1;
+        int newPlayMode = bundle.containsKey(PROP_SRC_PLAY_MODE) ? bundle.getInt(PROP_SRC_PLAY_MODE) : -1;
         if (mPlayMode != -1 && newPlayMode != mPlayMode) {
             cleanupMediaPlayerResources();
         }

@@ -24,26 +24,99 @@ import * as WeChat from '../componets/RCTWechatAPI';
 const {width, height} = Dimensions.get('window');
 
 class share extends Component {
-    //跳转到播放页
+    constructor(props) {
+        super(props);
+        this.state = {
+            apiVersion: 'waiting...',
+            isWXAppSupportApi: 'waiting...',
+            isWXAppInstalled: 'waiting...',
+            callbackStr: '',
+        };
+    }
+    //跳转到上一页
     handleBack = () => {
         const {navigator} = this.props;
         navigator.pop();
     }
 
-    login4WX = () => {
+    async componentDidMount() {
+        try {
+            this.setState({
+                apiVersion: await WeChat.getApiVersion(),
+                isWXAppSupportApi: await WeChat.isWXAppSupportApi(),
+                isWXAppInstalled: await WeChat.isWXAppInstalled()
+            });
+            console.log(this.state);
+        } catch (e) {
+            console.error(e);
+        }
+        console.log(WeChat);
+        // console.log('getApiVersion', typeof WeChat.getApiVersion);
+        // console.log('getWXAppInstallUrl', typeof WeChat.getWXAppInstallUrl);
+        // console.log('sendRequest', typeof WeChat.sendRequest);
+        // console.log('registerApp', typeof WeChat.registerApp);
+        // console.log('sendErrorCommonResponse', typeof WeChat.sendErrorCommonResponse);
+        // console.log('sendErrorUserCancelResponse', typeof WeChat.sendErrorUserCancelResponse);
+        // console.log('sendAuthRequest', typeof WeChat.sendAuthRequest);
+        // console.log('getWXAppInstallUrl', typeof WeChat.getWXAppInstallUrl);
+        // console.log('openWXApp', typeof WeChat.openWXApp);
+        // console.log('registerAppWithDescription', typeof WeChat.registerAppWithDescription);
+        // console.log('isWXAppSupportApi', typeof WeChat.isWXAppSupportApi);
+        // console.log('isWXAppInstalled', typeof WeChat.isWXAppInstalled);
+    }
+
+    //微信登陆
+    loginToWeixin = () => {
         WeChat.isWXAppInstalled()
             .then((isInstalled) => {
                 if (isInstalled) {
-                    WeChat.login({
-                        // 登录参数
-                        config: {
-                            scope: 'snsapi_userinfo',
-                        }
-                    })
-                    .catch((error) => {
+                    WeChat.sendAuth({
+                        config: { scope: 'snsapi_userinfo', }
+                    }).catch(error => {
                         console.log(error.message);
-                    })
-                    .then(json => {console.log(json); } );
+                    }).then(resp => {
+                        console.log(resp);
+                        if (resp && resp.errCode == 0) {
+                            WeChat.getToken(resp)
+                                .then(json => {
+                                    console.log(json);
+                                    this.setState({
+                                        callbackStr: JSON.stringify(json)
+                                    });
+                                });
+                        } else {
+                            this.setState({
+                                callbackStr: JSON.stringify(resp)
+                            });
+                        }
+                    });
+
+                } else {
+                    console.log('没有安装微信，请您安装微信之后再试');
+                }
+            });
+    }
+
+    //分享给朋友
+    shareToFrends = () => {
+        WeChat.isWXAppInstalled()
+            .then((isInstalled) => {
+                if (isInstalled) {
+                    WeChat.shareToSession({
+                        thumbImage: 'http://cdn.huodongxing.com/file/20160426/11E69610D2AC0F75D7EB61C48EDEA840FB/30132422640007503.jpg',
+                        type: 'news',
+                        title: '应用工厂演示', // WeChat app treat title as file name
+                        description: '应用工厂演示微信分享范例',
+                        webpageUrl: 'http://www.lecloud.com/zh-cn/',
+                    }).catch((error) => {
+                        console.log(error.message);
+                    }).then(resp => {
+                        console.log(resp);
+                        this.setState({
+                            callbackStr: JSON.stringify(resp)
+                        });
+                    });
+
                 } else {
                     console.log('没有安装微信，请您安装微信之后再试');
                 }
@@ -51,41 +124,27 @@ class share extends Component {
 
     }
 
-    sharetoFrends = () => {
-        WeChat.isWXAppInstalled()
-            .then((isInstalled) => {
-                if (isInstalled) {
-                    WeChat.shareToSession({
-                        // thumbImage: 'http://mta.zttit.com:8080/images/ZTT_1404756641470_image.jpg',
-                        type: 'news',
-                        title: '应用工厂演示', // WeChat app treat title as file name
-                        description: '应用工厂演示微信分享范例',
-                        webpageUrl: 'http://blog.csdn.net/liu__520/article/details/52801139',
-                    }).catch((error) => {
-                        console.log(error.message);
-                    });
-                } else {
-                    console.log('没有安装微信软件，请您安装微信之后再试');
-                }
-            });
-
-    }
-
-    sharetoPyq = () => {
+    //分享到朋友圈
+    shareToPyq = () => {
         WeChat.isWXAppInstalled()
             .then((isInstalled) => {
                 if (isInstalled) {
                     WeChat.shareToTimeline({
                         title: '应用工厂演示',
                         description: '应用工厂演示微信分享范例',
-                        // thumbImage: 'http://mta.zttit.com:8080/images/ZTT_1404756641470_image.jpg',
+                        thumbImage: 'http://cdn.huodongxing.com/file/20160426/11E69610D2AC0F75D7EB61C48EDEA840FB/30132422640007503.jpg',
                         type: 'news',
-                        webpageUrl: 'http://blog.csdn.net/liu__520/article/details/52801139'
+                        webpageUrl: 'http://www.lecloud.com/zh-cn/'
                     }).catch((error) => {
                         console.log(error.message);
+                    }).then(resp => {
+                        console.log(resp);
+                        this.setState({
+                            callbackStr: JSON.stringify(resp)
+                        });
                     });
                 } else {
-                    console.log('没有安装微信软件，请您安装微信之后再试');
+                    console.log('没有安装微信，请您安装微信之后再试');
                 }
             });
     }
@@ -98,33 +157,32 @@ class share extends Component {
         let {deviceInfo} = this.props;
         return (
             <View style={[styles.container]}>
+
+                <Text>微信api版本：{this.state.apiVersion}</Text>
+                <Text>支持微信api：{String(this.state.isWXAppSupportApi)}</Text>
+                <Text>已安装微信：{String(this.state.isWXAppInstalled)}</Text>
+                {this.state.callbackStr ? <Text>回调结果：{String(this.state.callbackStr)}</Text> : null}
+
                 <View style={[styles.innerContainer]}>
-                    <TouchableOpacity onPress={this.login4WX}>
+                    <TouchableOpacity onPress={this.loginToWeixin}>
                         <View style={{ alignItems: 'center' }}>
-                            <Image source={require('../../img/weixinhaoyou.png')} style={styles.bigcodeimage} />
+                            <Image source={require('../../img/weixindenglu.png')} style={styles.bigcodeimage} />
                             <Text>微信登录</Text>
                         </View>
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={this.sharetoFrends}>
+                    <TouchableOpacity onPress={this.shareToFrends}>
                         <View style={{ alignItems: 'center' }}>
                             <Image source={require('../../img/weixinhaoyou.png')} style={styles.bigcodeimage} />
                             <Text>分享到好友</Text>
                         </View>
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={this.sharetoPyq}>
+                    <TouchableOpacity onPress={this.shareToPyq}>
                         <View style={{ alignItems: 'center' }}>
                             <Image source={require('../../img/weixinpengyouquan.png')} style={styles.bigcodeimage} />
                             <Text>分享到朋友圈</Text>
                         </View>
                     </TouchableOpacity>
                 </View>
-                <TouchableHighlight
-                    onPress={() => { this.setModalVisible(!this.state.modalVisible); } }
-                    style={{ position: 'absolute', bottom: height / 10, left: width / 6 }}>
-                    <View style={styles.innerContainerCancel}>
-                        <Text style={{ color: 'blue' }}>取消</Text>
-                    </View>
-                </TouchableHighlight>
             </View>
         );
     }

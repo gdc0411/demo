@@ -6,15 +6,12 @@
  ************************************************************************/
 package com.lecloud.valley.leecoSdk;
 
-import android.app.Activity;
-import android.content.Context;
 import android.graphics.PixelFormat;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.LifecycleEventListener;
@@ -28,11 +25,12 @@ import com.lecloud.sdk.player.live.ActionLiveSubPlayer;
 import com.lecloud.sdk.surfaceview.impl.BaseSurfaceView;
 import com.lecloud.sdk.videoview.VideoViewListener;
 import com.lecloud.sdk.videoview.base.BaseVideoView;
+import com.lecloud.valley.common.Events;
 import com.lecloud.valley.utils.LogUtils;
 
 import java.util.LinkedHashMap;
 
-import static com.lecloud.valley.leecoSdk.Constants.*;
+import static com.lecloud.valley.common.Constants.*;
 import static com.lecloud.valley.utils.LogUtils.TAG;
 
 /**

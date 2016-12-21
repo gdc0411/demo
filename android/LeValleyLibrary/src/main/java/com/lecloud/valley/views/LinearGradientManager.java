@@ -6,12 +6,14 @@ import com.facebook.react.uimanager.SimpleViewManager;
 import com.facebook.react.uimanager.ThemedReactContext;
 import com.facebook.react.uimanager.annotations.ReactProp;
 
+import static com.lecloud.valley.common.Constants.REACT_CLASS_LINEAR_GRADIENT_VIEW;
+
 /**
  * Created by raojia on 2016/12/7.
  */
 public class LinearGradientManager extends SimpleViewManager<LinearGradientView> {
 
-    public static final String REACT_CLASS = "BVLinearGradient";
+    public static final String REACT_CLASS = REACT_CLASS_LINEAR_GRADIENT_VIEW; //"BVLinearGradient";
     public static final String PROP_COLORS = "colors";
     public static final String PROP_LOCATIONS = "locations";
     public static final String PROP_START_POS = "start";

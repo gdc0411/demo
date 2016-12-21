@@ -7,58 +7,43 @@ import com.lecloud.sdk.constant.PlayerParams;
  */
 public interface Constants {
 
-    /**
-     * 乐视播放器名
-     */
+//============== REACT_CLASS ======================
+
     String REACT_CLASS_VIDEO_VIEW = "RCTLeVideo";
 
-    /**
-     * 乐视机位VideoView名
-     */
     String REACT_CLASS_SUB_VIDEO_VIEW = "RCTLeSubVideo";
 
-    /**
-     * T播放器模式
-     */
-    String PROP_PLAY_MODE = PlayerParams.KEY_PLAY_MODE;
+    String REACT_CLASS_LINEAR_GRADIENT_VIEW = "RCTLinearGradient";
 
-    /**
-     * URI数据源：本地或者在线  复杂数据源
-     */
-    String PROP_SRC = "src";
-    /**
-     * URI地址
-     */
-    String PROP_URI = "uri";
+    String REACT_CLASS_DEVICE_MODULE = "RCTDeviceModule";
 
-    //点播模式
+    String REACT_CLASS_ORIENTATION_MODULE = "RCTOrientationModule";
+
+    String REACT_CLASS_WECHAT_MODULE = "RCTWeChatModule";
+
+//============== REACT_METHOD ======================
+
+    //方法
+    String PROP_SRC = "src";  //URI数据源：本地或者在线  复杂数据源
+    String PROP_SRC_PLAY_MODE = PlayerParams.KEY_PLAY_MODE;  //播放器模式
+    String PROP_SRC_URI = "uri"; //URI地址
+    //点播模式参数
     String PROP_SRC_VOD_UUID = "uuid";
     String PROP_SRC_VOD_VUID = "vuid";
     String PROP_SRC_VOD_BUSINESSLINE = "businessline";
     String PROP_SRC_VOD_SAAS = "saas";
-
-
-    //活动直播模式
+    //活动直播模式参数
     String PROP_SRC_ALIVE_ACTIONID = "actionId";
     String PROP_SRC_ALIVE_CUSTOMERID = "customerId";
     String PROP_SRC_ALIVE_BUSINESSLINE = "businessline";
     String PROP_SRC_ALIVE_CUID = "cuid";
     String PROP_SRC_ALIVE_UTIOKEN = "utoken";
     String PROP_SRC_ALIVE_IS_USEHLS = "usehls";
-
-
-    /**
-     * 机位播放器参数
-     */
+    //机位播放器参数
     String PROP_SRC_LIVE_ID = "liveId";
     String PROP_SRC_STREAM_ID = "streamId";
     String PROP_SRC_STREAM_URL = "streamUrl";
-
-    /**
-     * 是否全景
-     */
     String PROP_SRC_IS_PANO = "pano";
-    String PROP_SRC_HAS_SKIN = "hasSkin";
 
     // 暂停方法
     String PROP_PAUSED = "paused";
@@ -81,6 +66,8 @@ public interface Constants {
     // 是否后台播放
     String PROP_PLAY_IN_BACKGROUND = "playInBackground";
 
+
+//============== REACT_EVENT_PROP ======================
 
     String EVENT_PROP_PLAY_MODE = "playMode"; //播放模式（VOD，LIVE）
 

@@ -6,7 +6,6 @@
  ************************************************************************/
 package com.lecloud.valley.leecoSdk;
 
-import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -14,10 +13,9 @@ import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.uimanager.SimpleViewManager;
 import com.facebook.react.uimanager.ThemedReactContext;
 import com.facebook.react.uimanager.annotations.ReactProp;
-import com.lecloud.sdk.constant.PlayerParams;
 import com.lecloud.valley.utils.LogUtils;
 
-import static com.lecloud.valley.leecoSdk.Constants.*;
+import static com.lecloud.valley.common.Constants.*;
 import static com.lecloud.valley.utils.LogUtils.TAG;
 
 /**

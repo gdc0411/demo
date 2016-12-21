@@ -40,7 +40,7 @@ public class OrientationSensorListener implements SensorEventListener {
     // 上次检测时间
     private long lastUpdateTime;
     // 两次检测的时间间隔
-    private static final int UPTATE_INTERVAL_TIME = 100;
+    private static final int UPTATE_INTERVAL_TIME = 500;
 
 
     public OrientationSensorListener(Handler handler, Activity activity) {

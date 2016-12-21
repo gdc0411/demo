@@ -14,6 +14,7 @@ import com.facebook.react.common.MapBuilder;
 import com.facebook.react.uimanager.SimpleViewManager;
 import com.facebook.react.uimanager.ThemedReactContext;
 import com.facebook.react.uimanager.annotations.ReactProp;
+import com.lecloud.valley.common.Events;
 import com.lecloud.valley.utils.LogUtils;
 import com.lecloud.sdk.constant.PlayerParams;
 
@@ -21,7 +22,7 @@ import java.util.Map;
 
 import javax.annotation.Nullable;
 
-import static com.lecloud.valley.leecoSdk.Constants.*;
+import static com.lecloud.valley.common.Constants.*;
 import static com.lecloud.valley.utils.LogUtils.TAG;
 
 /**
@@ -80,10 +81,10 @@ public class LeReactPlayerManager extends SimpleViewManager<LeReactPlayer> {
      */
     @ReactProp(name = PROP_SRC)
     public void setDataSource(final LeReactPlayer videoView, final ReadableMap src) {
-        if (src == null || !src.hasKey(PROP_PLAY_MODE) || src.getInt(PROP_PLAY_MODE) == -1 ) {
+        if (src == null || !src.hasKey(PROP_SRC_PLAY_MODE) || src.getInt(PROP_SRC_PLAY_MODE) == -1 ) {
             return;
         }
-        int playMode = src.getInt(PROP_PLAY_MODE);
+        int playMode = src.getInt(PROP_SRC_PLAY_MODE);
         Bundle bundle;
         switch (playMode) {
             case PlayerParams.VALUE_PLAYER_VOD:
@@ -94,7 +95,6 @@ public class LeReactPlayerManager extends SimpleViewManager<LeReactPlayer> {
                 bundle.putString(PlayerParams.KEY_PLAY_BUSINESSLINE, src.hasKey(PROP_SRC_VOD_UUID) ? src.getString(PROP_SRC_VOD_BUSINESSLINE) : "");
                 bundle.putBoolean("saas", !src.hasKey(PROP_SRC_VOD_SAAS) || src.getBoolean(PROP_SRC_VOD_SAAS));
                 bundle.putBoolean("pano", src.hasKey(PROP_SRC_IS_PANO) && src.getBoolean(PROP_SRC_IS_PANO));
-                bundle.putBoolean("hasSkin", src.hasKey(PROP_SRC_HAS_SKIN) && src.getBoolean(PROP_SRC_HAS_SKIN));
                 videoView.setSrc(bundle);
                 break;
 
@@ -111,7 +111,6 @@ public class LeReactPlayerManager extends SimpleViewManager<LeReactPlayer> {
                 bundle.putString(PlayerParams.KEY_ACTION_CUID, src.hasKey(PROP_SRC_ALIVE_CUID) ? src.getString(PROP_SRC_ALIVE_CUID) : "");
                 bundle.putString(PlayerParams.KEY_ACTION_UTOKEN, src.hasKey(PROP_SRC_ALIVE_UTIOKEN) ? src.getString(PROP_SRC_ALIVE_UTIOKEN) : "");
                 bundle.putBoolean("pano", src.hasKey(PROP_SRC_IS_PANO) && src.getBoolean(PROP_SRC_IS_PANO));
-                bundle.putBoolean("hasSkin", src.hasKey(PROP_SRC_HAS_SKIN) && src.getBoolean(PROP_SRC_HAS_SKIN));
                 videoView.setSrc(bundle);
                 break;
 
@@ -122,9 +121,8 @@ public class LeReactPlayerManager extends SimpleViewManager<LeReactPlayer> {
                 //未知播放类型则为URI
                 bundle = new Bundle();
                 bundle.putInt(PlayerParams.KEY_PLAY_MODE, PlayerParams.VALUE_PLAYER_VOD);
-                bundle.putString("path", src.hasKey(PROP_URI) ? src.getString(PROP_URI) :"");
+                bundle.putString("path", src.hasKey(PROP_SRC_URI) ? src.getString(PROP_SRC_URI) :"");
                 bundle.putBoolean("pano", src.hasKey(PROP_SRC_IS_PANO) && src.getBoolean(PROP_SRC_IS_PANO));
-                bundle.putBoolean("hasSkin", src.hasKey(PROP_SRC_HAS_SKIN) && src.getBoolean(PROP_SRC_HAS_SKIN));
                 videoView.setSrc(bundle);
                 break;
         }

@@ -15,7 +15,7 @@ import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
-import com.lecloud.valley.leecoSdk.Events;
+import com.lecloud.valley.common.Events;
 import com.lecloud.valley.utils.LogUtils;
 import com.lecloud.valley.utils.OrientationSensorUtils;
 import com.lecloud.valley.utils.ScreenUtils;
@@ -25,7 +25,8 @@ import java.util.Map;
 
 import javax.annotation.Nullable;
 
-import static com.lecloud.valley.leecoSdk.Constants.EVENT_PROP_ORIENTATION;
+import static com.lecloud.valley.common.Constants.EVENT_PROP_ORIENTATION;
+import static com.lecloud.valley.common.Constants.REACT_CLASS_ORIENTATION_MODULE;
 import static com.lecloud.valley.utils.LogUtils.TAG;
 
 /**
@@ -41,12 +42,12 @@ public class OrientationModule extends ReactContextBaseJavaModule implements Lif
 
     @Override
     public String getName() {
-        return "OrientationModule";
+        return REACT_CLASS_ORIENTATION_MODULE;
     }
 
     public OrientationModule(ReactApplicationContext reactContext) {
         super(reactContext);
-        final ReactApplicationContext ctx = reactContext;
+        final ReactApplicationContext context = reactContext;
 
         mOrientationChangeHandler = new Handler(Looper.getMainLooper()) {
             @Override
@@ -73,16 +74,16 @@ public class OrientationModule extends ReactContextBaseJavaModule implements Lif
 
                 WritableMap event = Arguments.createMap();
                 event.putInt(EVENT_PROP_ORIENTATION, orient);
-                if(ctx.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)!=null)
-                    ctx.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class).emit(Events.EVENT_ORIENTATION_CHANG.toString(), event);
+                if(context.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)!=null)
+                    context.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class).emit(Events.EVENT_ORIENTATION_CHANG.toString(), event);
 
-                Log.d(TAG, LogUtils.getTraceInfo() + "设备转屏事件——— orientation：" + orient);
+                Log.d(TAG, LogUtils.getTraceInfo() + "设备转屏事件——— orientation：" + orient + " 设定方向：" + mCurrentOritentation );
 
                 super.handleMessage(msg);
             }
 
         };
-        ctx.addLifecycleEventListener(this);
+        context.addLifecycleEventListener(this);
     }
 
     @ReactMethod

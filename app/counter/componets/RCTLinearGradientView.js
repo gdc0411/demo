@@ -103,4 +103,4 @@ export default class LinearGradient extends Component {
     }
 }
 
-const NativeLinearGradient = requireNativeComponent('BVLinearGradient', null);
+const NativeLinearGradient = requireNativeComponent('RCTLinearGradient', null);

@@ -14,8 +14,6 @@ const myNativeEvt = new NativeEventEmitter(Orientation);  //创建自定义事�
 
 var listeners = {};
 const onOrientationDidChangeEvent = "onOrientationDidChange";
-// const orientationDidChangeEvent = "orientationDidChange";
-// const specificOrientationDidChangeEvent = "specificOrientationDidChange";
 
 var id = 0;
 var META = '__listener_id';
