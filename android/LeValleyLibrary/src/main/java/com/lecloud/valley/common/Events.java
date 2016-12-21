@@ -1,4 +1,4 @@
-package com.lecloud.valley.leecoSdk;
+package com.lecloud.valley.common;
 
 /**
  * Created by LizaRao on 2016/11/6.

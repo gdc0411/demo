@@ -1,4 +1,4 @@
-package com.lecloud.valley.leecoSdk;
+package com.lecloud.valley.common;
 
 import com.lecloud.sdk.constant.PlayerParams;
 

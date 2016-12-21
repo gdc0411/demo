@@ -1,4 +1,4 @@
-package com.lecloud.valley.modules;
+package com.lecloud.DemoProject.wxapi;
 
 import android.app.Activity;
 import android.os.Bundle;
