@@ -382,6 +382,7 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
     }
 }
 
+
 /*判断空字串*/
 + (BOOL)isBlankString:(NSString *)string{
     if (string == nil || string == NULL) {
@@ -395,7 +396,6 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
     }
     return NO;
 }
-
 
 /* 根据数据源包创建播放 */
 - (void)playerItemForSource:(NSDictionary *)source

@@ -47,6 +47,7 @@
 @end
 
 static NSString *gAppID = @"";
+static NSString *gSecret = @"";
 static BOOL gIsAppRegistered = false;
 
 
@@ -117,20 +118,17 @@ RCT_EXPORT_METHOD(sendAuth:(NSDictionary *)config:(RCTResponseSenderBlock)callba
     callback(@[success ? [NSNull null] : INVOKE_FAILED]);
 }
 
-RCT_EXPORT_METHOD(shareToTimeline:(NSDictionary *)data
-                  :(RCTResponseSenderBlock)callback)
+RCT_EXPORT_METHOD(shareToTimeline:(NSDictionary *)data:(RCTResponseSenderBlock)callback)
 {
     [self shareToWeixinWithData:data scene:WXSceneTimeline callback:callback];
 }
 
-RCT_EXPORT_METHOD(shareToSession:(NSDictionary *)data
-                  :(RCTResponseSenderBlock)callback)
+RCT_EXPORT_METHOD(shareToSession:(NSDictionary *)data:(RCTResponseSenderBlock)callback)
 {
     [self shareToWeixinWithData:data scene:WXSceneSession callback:callback];
 }
 
-RCT_EXPORT_METHOD(pay:(NSDictionary *)data
-                  :(RCTResponseSenderBlock)callback)
+RCT_EXPORT_METHOD(pay:(NSDictionary *)data:(RCTResponseSenderBlock)callback)
 {
     PayReq* req             = [PayReq new];
     req.partnerId           = data[@"partnerId"];
@@ -333,43 +331,44 @@ RCT_EXPORT_METHOD(pay:(NSDictionary *)data
 
 -(void) onResp:(BaseResp*)resp
 {
+    NSMutableDictionary *body = @{@"errCode":@(resp.errCode)}.mutableCopy;
+    body[@"errCode"] = @(resp.errCode);
+    
+    if (resp.errStr == nil || resp.errStr.length<=0) {
+        body[@"errMsg"] = [self _getErrorMsg:resp.errCode];
+    }else{
+        body[@"errMsg"] = resp.errStr;
+    }
+    
     if([resp isKindOfClass:[SendMessageToWXResp class]])
     {
         SendMessageToWXResp *r = (SendMessageToWXResp *)resp;
-        
-        NSMutableDictionary *body = @{@"errCode":@(r.errCode)}.mutableCopy;
-        body[@"errStr"] = r.errStr;
         body[@"lang"] = r.lang;
         body[@"country"] =r.country;
         body[@"type"] = @"SendMessageToWX.Resp";
-        [self.bridge.eventDispatcher sendDeviceEventWithName:RCTWXEventName body:body];
-    } else if ([resp isKindOfClass:[SendAuthResp class]]) {
+    }
+    else if ([resp isKindOfClass:[SendAuthResp class]]) {
         SendAuthResp *r = (SendAuthResp *)resp;
-        NSMutableDictionary *body = @{@"errCode":@(r.errCode)}.mutableCopy;
-        body[@"errStr"] = r.errStr;
         body[@"state"] = r.state;
         body[@"lang"] = r.lang;
         body[@"country"] =r.country;
         body[@"type"] = @"SendAuth.Resp";
-        
-        if (resp.errCode == WXSuccess)
-        {
-            //            [body addEntriesFromDictionary:@{@"appid":self.appId, @"code" :r.code}];
-            [self.bridge.eventDispatcher sendDeviceEventWithName:RCTWXEventName body:body];
-        }
-        else {
-            [self.bridge.eventDispatcher sendDeviceEventWithName:RCTWXEventName body:body];
-        }
-    } else if ([resp isKindOfClass:[PayResp class]]) {
-        PayResp *r = (PayResp *)resp;
-        NSMutableDictionary *body = @{@"errCode":@(r.errCode)}.mutableCopy;
-        body[@"errStr"] = r.errStr;
-        body[@"type"] = @(r.type);
-        body[@"returnKey"] =r.returnKey;
-        body[@"type"] = @"PayReq.Resp";
-        [self.bridge.eventDispatcher sendDeviceEventWithName:RCTWXEventName body:body];
+        body[@"appid"] = gAppID;
+        body[@"code"]= r.code;
+        body[@"secret"] = gSecret;
     }
+    else if([resp isKindOfClass:[PayResp class]]) {
+        PayResp *r = (PayResp *)resp;
+        body[@"appid"] = gAppID;
+        body[@"secret"] = gSecret;
+        body[@"returnKey"] = r.returnKey;
+        body[@"type"]= @"Pay.Resp";
+    }
+    
+    [self.bridge.eventDispatcher sendAppEventWithName:@"WeChat_Resp" body:body];
+
 }
+
 
 - (void)_autoRegisterAPI
 {
@@ -380,12 +379,17 @@ RCT_EXPORT_METHOD(pay:(NSDictionary *)data
     NSArray *list = [[[NSBundle mainBundle] infoDictionary] valueForKey:@"CFBundleURLTypes"];
     for (NSDictionary *item in list) {
         NSString *name = item[@"CFBundleURLName"];
-        if ([name isEqualToString:@"weixin"]) {
+        if ([name isEqualToString:@"wx_appid"]) {
             NSArray *schemes = item[@"CFBundleURLSchemes"];
-            if (schemes.count > 0)
-            {
+            if (schemes.count > 0){
                 gAppID = schemes[0];
-                break;
+                if(![gAppID isEqualToString:@""] && ![gSecret isEqualToString:@""]) break;
+            }
+        }else if ([name isEqualToString:@"wx_secret"]) {
+            NSArray *schemes = item[@"CFBundleURLSchemes"];
+            if (schemes.count > 0){
+                gSecret = schemes[0];
+                if(![gAppID isEqualToString:@""] && ![gSecret isEqualToString:@""]) break;
             }
         }
     }
@@ -400,11 +404,11 @@ RCT_EXPORT_METHOD(pay:(NSDictionary *)data
         case WXErrCodeCommon:
             return @"普通错误类型";
         case WXErrCodeUserCancel:
-            return @"用户点击取消并返回";
+            return @"授权失败，用户取消";
         case WXErrCodeSentFail:
             return @"发送失败";
         case WXErrCodeAuthDeny:
-            return @"授权失败";
+            return @"授权失败，用户拒绝";
         case WXErrCodeUnsupport:
             return @"微信不支持";
         default:

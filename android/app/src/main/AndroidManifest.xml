@@ -34,7 +34,7 @@
 
         <!-- 微信开放平台配置 -->
         <meta-data android:name="WX_APPID" android:value="wxa9cc420610dce2cb"/>
-        <meta-data android:name="WX_SECRET" android:value="2ecef041349ff5bc6f0e4ab161bde50d"/>
+        <meta-data android:name="WX_SECRET" android:value="a2239a7e15f0b19fad9f9d711f66ad70"/>
 
         <!-- 微信回调 -->
         <activity

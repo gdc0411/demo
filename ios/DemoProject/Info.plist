@@ -26,10 +26,20 @@
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 			<key>CFBundleURLName</key>
-			<string>weixin</string>
+			<string>wx_appid</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>wx4e975ac15269d8a7</string>
+				<string>wxa9cc420610dce2cb</string>
+			</array>
+		</dict>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>wx_secret</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>a2239a7e15f0b19fad9f9d711f66ad70</string>
 			</array>
 		</dict>
 	</array>
@@ -37,6 +47,11 @@
 	<string>1</string>
 	<key>CodePushDeploymentKey</key>
 	<string>deployment-key-here</string>
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>weixin</string>
+		<string>wechat</string>
+	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>
@@ -68,10 +83,5 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
-  <key>LSApplicationQueriesSchemes</key>
-  <array>
-    <string>weixin</string>
-    <string>wechat</string>
-  </array>
 </dict>
 </plist>
