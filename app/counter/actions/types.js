@@ -13,7 +13,7 @@ export const DIVIDE_TODO = 'DIVIDE_TODO';
 
 
 /** 查看设备 */
-export const SELECT_DEVICE = 'REQUEST_POSTS';
+export const SELECT_DEVICE = 'SELECT_DEVICE';
 /** 设置信息过期 */
 export const INVALIDATE_DEVICE = 'INVALIDATE_DEVICE';
 /** 请求设备信息 */
