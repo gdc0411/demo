@@ -351,6 +351,8 @@ public class WeChatModule extends ReactContextBaseJavaModule implements IWXAPIEv
                 return "授权失败，用户拒绝";
             case BaseResp.ErrCode.ERR_UNSUPPORT:
                 return "微信不支持";
+            case BaseResp.ErrCode.ERR_BAN:
+                return "签名错误";
             default:
                 return "失败";
         }
