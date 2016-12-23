@@ -21,6 +21,10 @@ public interface Constants {
 
     String REACT_CLASS_WECHAT_MODULE = "RCTWeChatModule";
 
+    String REACT_CLASS_QQ_MODULE = "RCTQQModule";
+
+    String REACT_CLASS_WEIBO_MODULE = "RCTWeiboModule";
+
 //============== REACT_METHOD ======================
 
     //方法

@@ -26,16 +26,15 @@ import org.json.JSONObject;
 
 import java.util.Date;
 
+import static com.lecloud.valley.common.Constants.REACT_CLASS_QQ_MODULE;
+
 /**
  * Created by RaoJia on 2016/12/24.
  */
 
 public class QQModule extends ReactContextBaseJavaModule implements IUiListener, ActivityEventListener {
 
-    private String appId;
-    private Tencent api;
     private final static String INVOKE_FAILED = "QQ API invoke returns false.";
-    private boolean isLogin;
 
     private static final String RCTQQShareTypeNews = "news";
     private static final String RCTQQShareTypeImage = "image";
@@ -54,8 +53,14 @@ public class QQModule extends ReactContextBaseJavaModule implements IUiListener,
     private static final int SHARE_RESULT_CODE_FAILED = 1;
     private static final int SHARE_RESULT_CODE_CANCEL = 2;
 
+    private String appId;
+    private Tencent api;
+
+    private boolean isLogin;
+
     public QQModule(ReactApplicationContext context) {
         super(context);
+
         ApplicationInfo appInfo = null;
         try {
             appInfo = context.getPackageManager().getApplicationInfo(context.getPackageName(), PackageManager.GET_META_DATA);
@@ -66,6 +71,11 @@ public class QQModule extends ReactContextBaseJavaModule implements IUiListener,
             throw new Error("meta-data QQ_APPID not found in AndroidManifest.xml");
         }
         this.appId = appInfo.metaData.get("QQ_APPID").toString();
+    }
+
+    @Override
+    public String getName() {
+        return REACT_CLASS_QQ_MODULE;
     }
 
     @Override
@@ -89,10 +99,6 @@ public class QQModule extends ReactContextBaseJavaModule implements IUiListener,
         super.onCatalystInstanceDestroy();
     }
 
-    @Override
-    public String getName() {
-        return "RCTQQAPI";
-    }
 
     @ReactMethod
     public void isQQInstalled(Promise promise) {
