@@ -17,6 +17,7 @@ import com.facebook.react.bridge.NativeModule;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.uimanager.ViewManager;
 import com.lecloud.valley.modules.DeviceModule;
+import com.lecloud.valley.modules.QQModule;
 import com.lecloud.valley.modules.WeChatModule;
 import com.lecloud.valley.views.LinearGradientManager;
 
@@ -47,6 +48,7 @@ public class RJReactPackage implements ReactPackage {
         modules.add(new DeviceModule(reactContext));
         modules.add(new OrientationModule(reactContext));
         modules.add(new WeChatModule(reactContext));
+        modules.add(new QQModule(reactContext));
         return modules;
     }
 
