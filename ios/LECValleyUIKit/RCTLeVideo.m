@@ -145,7 +145,7 @@
         _bridge = bridge;
         
         _brigtnessModule = [[BrightnessModule alloc]init];
-
+        
         _isFullScreen = NO;
         _isPlaying = NO;
         _isSeeking = NO;
@@ -333,7 +333,7 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
     if (volume < 0 || volume > 100) {
         return;
     }
-//    _volume = volume;
+    //    _volume = volume;
     //  _lePlayer.volume = volume;
     [VolumeModule setVolumeValue: (float)volume/100 ];
     
@@ -350,7 +350,7 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
     
     [BrightnessModule setBrightnessValue: (float)brightness/100 ];
     //    [[UIScreen mainScreen] setBrightness: (float)brightness / 100];
-
+    
     NSLog(@"外部控制——— 调节亮度:%d", brightness );
 }
 
@@ -791,13 +791,13 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
         
         NSMutableDictionary* actionLive = [NSMutableDictionary dictionaryWithCapacity:13];
         if(_activityItem){ //直播数据
-            [actionLive setValue:_activityItem.activityName forKey:@"title"];
-            [actionLive setValue:_activityItem.activityCoverImage forKey:@"coverImgUrl"];
-            [actionLive setValue:_activityItem.activityWebUrl forKey:@"playerPageUrl"];
+            [actionLive setValue:_activityItem.activityName?_activityItem.activityName:[NSNull null] forKey:@"title"];
+            [actionLive setValue:_activityItem.activityCoverImage?_activityItem.activityCoverImage:[NSNull null] forKey:@"coverImgUrl"];
+            [actionLive setValue:_activityItem.activityWebUrl?_activityItem.activityWebUrl:[NSNull null] forKey:@"playerPageUrl"];
             [actionLive setValue:[NSNumber numberWithInt:_activityItem.status] forKey:@"actionState"];
-            [actionLive setValue:[NSNumber numberWithInt:(int)_activityItem.beginTime] forKey:@"beginTime"];
-            [actionLive setValue:[NSNumber numberWithInt:(int)_activityItem.endTime] forKey:@"endTime"];
-            [actionLive setValue:_activityItem.activityDesc forKey:@"actionDesc"];
+            [actionLive setValue:[NSNumber numberWithInt:(int)_activityItem.beginTime?_activityItem.beginTime:0] forKey:@"beginTime"];
+            [actionLive setValue:[NSNumber numberWithInt:(int)_activityItem.endTime?_activityItem.endTime:0] forKey:@"endTime"];
+            [actionLive setValue:_activityItem.activityDesc?_activityItem.activityDesc:[NSNull null] forKey:@"actionDesc"];
             [actionLive setValue:[NSNumber numberWithBool:((LECActivityPlayer*)player).isPanorama] forKey:@"isPano"]; //是否全景（LIVE）
             [actionLive setValue:[NSNumber numberWithBool:((LECActivityPlayer*)player).supportSeekOperation] forKey:@"needTimeShift"]; //是否支持timeshift（LIVE）
             [actionLive setValue:[NSNumber numberWithBool:((LECActivityPlayer*)player).contentType == LECPlayerContentTypeAdv] forKey:@"isNeedAd"]; //是否广告（LIVE）
@@ -825,10 +825,11 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
         }
         
         if(_activityConfigItem){ //封面.logo.loading.水印
-            [event setValue:@{@"pic":_activityConfigItem.logoUrl} forKey:@"logo"];
-            [event setValue:@{@"pic":_activityConfigItem.loadingIconUrl} forKey:@"loading"];
-            [event setValue:@{@"pic":_activityConfigItem.waterMarkUrl,
-                              @"pos": [NSNumber numberWithInt:(int)_activityConfigItem.waterMarkPosition]} forKey:@"waterMarks"];
+            [event setValue:@{@"pic":_activityConfigItem.logoUrl?_activityConfigItem.logoUrl:[NSNull null]} forKey:@"logo"];
+            [event setValue:@{@"pic":_activityConfigItem.loadingIconUrl?_activityConfigItem.loadingIconUrl:[NSNull null]} forKey:@"loading"];
+            [event setValue:@{@"pic":_activityConfigItem.waterMarkUrl?_activityConfigItem.waterMarkUrl:[NSNull null],
+                              @"pos": [NSNumber numberWithInt:(int)_activityConfigItem.waterMarkPosition?
+                                       _activityConfigItem.waterMarkPosition:0]} forKey:@"waterMarks"];
         }
     }
     
@@ -838,7 +839,7 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
     _originVolume = [VolumeModule getVolumeValue] * 100;
     _originBrightness = [BrightnessModule getBrightnessValue] *100 ;
     
-//    _currentBrightness = _screenBrightness;
+    //    _currentBrightness = _screenBrightness;
     
     [event setValue:[NSNumber numberWithInt:_originVolume] forKey:@"volume"]; //声音百分比
     [event setValue:[NSNumber numberWithInt:_originBrightness] forKey:@"brightness"]; //屏幕亮度

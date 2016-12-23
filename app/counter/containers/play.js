@@ -367,7 +367,7 @@ class play extends Component {
                 source = { playMode: 10002, actionId: "A2016111100001zn", usehls: false, customerId: "865024", businessline: "102", cuid: "", utoken: "", pano: false };
                 break;
             case '7': //活动直播 自己推流
-                source = { playMode: 10002, actionId: "A20161217000004u", usehls: false, customerId: "", businessline: "", cuid: "", utoken: "", pano: false };
+                source = { playMode: 10002, actionId: "A2016122300000md", usehls: false, customerId: "", businessline: "", cuid: "", utoken: "", pano: false };
                 break;
             default: //网络或本地地址
                 source = { playMode: 0, uri: "http://cache.utovr.com/201601131107187320.mp4", pano: false };
@@ -399,8 +399,8 @@ class play extends Component {
     }
 
     getLiveVideo = () => {
-        //rtmp://r.gslb.lecloud.com/live/2016121730000009501    
-        //rtmp://r.gslb.lecloud.com/live/2016121730000009601    
+        //rtmp://r.gslb.lecloud.com/live/2016121730000009501
+        //rtmp://r.gslb.lecloud.com/live/2016121730000009601
         //rtmp://r.gslb.lecloud.com/live/2016121730000009701
         // let source = { liveId: "20161217300000095", streamId: "2016121730000009501", streamUrl: "rtmp://r.gslb.lecloud.com/live/2016121730000009501", usehls: false };
         let source = this.state.liveSource;
