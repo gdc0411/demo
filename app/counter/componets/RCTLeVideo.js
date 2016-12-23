@@ -3,7 +3,7 @@
  * Author: raojia
  * Mail: raojia@le.com
  * Created Time: 2016-10-30
- * Modified Time: 2016-12-07
+ * Modified Time: 2016-12-23
  ************************************************************************/
 'use strict';
 
@@ -61,7 +61,7 @@ export default class Video extends Component {
                 vuid: PropTypes.string,
                 businessline: PropTypes.string,
                 saas: PropTypes.bool,
-                pano: PropTypes.bool                
+                pano: PropTypes.bool
             }),
             //直播
             PropTypes.shape({
@@ -78,7 +78,8 @@ export default class Video extends Component {
             PropTypes.shape({
                 playMode: PropTypes.number,
                 uri: PropTypes.string,
-                pano: PropTypes.bool            }),
+                pano: PropTypes.bool
+            }),
         ]).isRequired,
 
         seek: PropTypes.number,
@@ -171,49 +172,49 @@ export default class Video extends Component {
                 customerId: source.customerId,
                 cuid: source.cuid,
                 utoken: source.utoken,
-                pano: source.pano || false,                
+                pano: source.pano || false,
                 uri: uri,
             },
             /*回调函数属性赋值*/
-            onVideoSourceLoad: (event) => { if (this.props.onVideoSourceLoad) this.props.onVideoSourceLoad(event.nativeEvent); },
+            onVideoSourceLoad: (event) => { this.props.onVideoSourceLoad && this.props.onVideoSourceLoad(event.nativeEvent); },
             /*设备相关*/
-            onOrientationChange: (event) => { if (this.props.onOrientationChange) this.props.onOrientationChange(event.nativeEvent); },
+            onOrientationChange: (event) => { this.props.onOrientationChange && this.props.onOrientationChange(event.nativeEvent); },
             /*播放相关*/
-            onVideoLoad: (event) => { if (this.props.onVideoLoad) this.props.onVideoLoad(event.nativeEvent); },
-            onVideoSizeChange: (event) => { if (this.props.onVideoSizeChange) this.props.onVideoSizeChange(event.nativeEvent); },
-            onVideoRateLoad: (event) => { if (this.props.onVideoRateLoad) this.props.onVideoRateLoad(event.nativeEvent); },
-            onVideoError: (event) => { if (this.props.onVideoError) this.props.onVideoError(event.nativeEvent); },
-            onVideoProgress: (event) => { if (this.props.onVideoProgress) this.props.onVideoProgress(event.nativeEvent); },
-            onVideoSeek: (event) => { if (this.props.onVideoSeek) this.props.onVideoSeek(event.nativeEvent); },
-            onVideoSeekComplete: (event) => { if (this.props.onVideoSeekComplete) this.props.onVideoSeekComplete(event.nativeEvent); },
-            onVideoEnd: (event) => { if (this.props.onVideoEnd) this.props.onVideoEnd(event.nativeEvent); },
-            onVideoPause: (event) => { if (this.props.onVideoPause) this.props.onVideoPause(event.nativeEvent); },
-            onVideoResume: (event) => { if (this.props.onVideoResume) this.props.onVideoResume(event.nativeEvent); },
-            onVideoRendingStart: (event) => { if (this.props.onVideoRendingStart) this.props.onVideoRendingStart(event.nativeEvent); },
-            onVideoBufferPercent: (event) => { if (this.props.onVideoBufferPercent) this.props.onVideoBufferPercent(event.nativeEvent); },
-            onVideoRateChange: (event) => { if (this.props.onVideoRateChange) this.props.onVideoRateChange(event.nativeEvent); },
+            onVideoLoad: (event) => { this.props.onVideoLoad && this.props.onVideoLoad(event.nativeEvent); },
+            onVideoSizeChange: (event) => { this.props.onVideoSizeChange && this.props.onVideoSizeChange(event.nativeEvent); },
+            onVideoRateLoad: (event) => { this.props.onVideoRateLoad && this.props.onVideoRateLoad(event.nativeEvent); },
+            onVideoError: (event) => { this.props.onVideoError && this.props.onVideoError(event.nativeEvent); },
+            onVideoProgress: (event) => { this.props.onVideoProgress && this.props.onVideoProgress(event.nativeEvent); },
+            onVideoSeek: (event) => { this.props.onVideoSeek && this.props.onVideoSeek(event.nativeEvent); },
+            onVideoSeekComplete: (event) => { this.props.onVideoSeekComplete && this.props.onVideoSeekComplete(event.nativeEvent); },
+            onVideoEnd: (event) => { this.props.onVideoEnd && this.props.onVideoEnd(event.nativeEvent); },
+            onVideoPause: (event) => { this.props.onVideoPause && this.props.onVideoPause(event.nativeEvent); },
+            onVideoResume: (event) => { this.props.onVideoResume && this.props.onVideoResume(event.nativeEvent); },
+            onVideoRendingStart: (event) => { this.props.onVideoRendingStart && this.props.onVideoRendingStart(event.nativeEvent); },
+            onVideoBufferPercent: (event) => { this.props.onVideoBufferPercent && this.props.onVideoBufferPercent(event.nativeEvent); },
+            onVideoRateChange: (event) => { this.props.onVideoRateChange && this.props.onVideoRateChange(event.nativeEvent); },
             /*直播相关*/
-            onActionLiveChange: (event) => { if (this.props.onActionLiveChange) this.props.onActionLiveChange(event.nativeEvent); },
-            onActionTimeShift: (event) => { if (this.props.onActionTimeShift) this.props.onActionTimeShift(event.nativeEvent); },
-            onActionStatusChange: (event) => { if (this.props.onActionStatusChange) this.props.onActionStatusChange(event.nativeEvent); },
-            onActionOnlineNumChange: (event) => { if (this.props.onActionOnlineNumChange) this.props.onActionOnlineNumChange(event.nativeEvent); },
+            onActionLiveChange: (event) => { this.props.onActionLiveChange && this.props.onActionLiveChange(event.nativeEvent); },
+            onActionTimeShift: (event) => { this.props.onActionTimeShift && this.props.onActionTimeShift(event.nativeEvent); },
+            onActionStatusChange: (event) => { this.props.onActionStatusChange && this.props.onActionStatusChange(event.nativeEvent); },
+            onActionOnlineNumChange: (event) => { this.props.onActionOnlineNumChange && this.props.onActionOnlineNumChange(event.nativeEvent); },
             /*媒资相关*/
-            onMediaVodLoad: (event) => { if (this.props.onMediaVodLoad) this.props.onMediaVodLoad(event.nativeEvent); },
-            onMediaLiveLoad: (event) => { if (this.props.onMediaLiveLoad) this.props.onMediaLiveLoad(event.nativeEvent); },
-            onMediaActionLoad: (event) => { if (this.props.onMediaActionLoad) this.props.onMediaActionLoad(event.nativeEvent); },
-            onMediaPlayURLLoad: (event) => { if (this.props.onMediaPlayURLLoad) this.props.onMediaPlayURLLoad(event.nativeEvent); },
+            onMediaVodLoad: (event) => { this.props.onMediaVodLoad && this.props.onMediaVodLoad(event.nativeEvent); },
+            onMediaLiveLoad: (event) => { this.props.onMediaLiveLoad && this.props.onMediaLiveLoad(event.nativeEvent); },
+            onMediaActionLoad: (event) => { this.props.onMediaActionLoad && this.props.onMediaActionLoad(event.nativeEvent); },
+            onMediaPlayURLLoad: (event) => { this.props.onMediaPlayURLLoad && this.props.onMediaPlayURLLoad(event.nativeEvent); },
             /*广告相关*/
-            onAdvertStart: (event) => { if (this.props.onAdvertStart) this.props.onAdvertStart(event.nativeEvent); },
-            onAdvertProgress: (event) => { if (this.props.onAdvertProgress) this.props.onAdvertProgress(event.nativeEvent); },
-            onAdvertComplete: (event) => { if (this.props.onAdvertComplete) this.props.onAdvertComplete(event.nativeEvent); },
-            onAdvertClick: (event) => { if (this.props.onAdvertClick) this.props.onAdvertClick(event.nativeEvent); },
-            onAdvertError: (event) => { if (this.props.onAdvertError) this.props.onAdvertError(event.nativeEvent); },
+            onAdvertStart: (event) => { this.props.onAdvertStart && this.props.onAdvertStart(event.nativeEvent); },
+            onAdvertProgress: (event) => { this.props.onAdvertProgress && this.props.onAdvertProgress(event.nativeEvent); },
+            onAdvertComplete: (event) => { this.props.onAdvertComplete && this.props.onAdvertComplete(event.nativeEvent); },
+            onAdvertClick: (event) => { this.props.onAdvertClick && this.props.onAdvertClick(event.nativeEvent); },
+            onAdvertError: (event) => { this.props.onAdvertError && this.props.onAdvertError(event.nativeEvent); },
             /*缓冲相关*/
-            onBufferStart: (event) => { if (this.props.onBufferStart) this.props.onBufferStart(event.nativeEvent); },
-            onBufferEnd: (event) => { if (this.props.onBufferEnd) this.props.onBufferEnd(event.nativeEvent); },
-            onBufferPercent: (event) => { if (this.props.onBufferPercent) this.props.onBufferPercent(event.nativeEvent); },
+            onBufferStart: (event) => { this.props.onBufferStart && this.props.onBufferStart(event.nativeEvent); },
+            onBufferEnd: (event) => { this.props.onBufferEnd && this.props.onBufferEnd(event.nativeEvent); },
+            onBufferPercent: (event) => { this.props.onBufferPercent && this.props.onBufferPercent(event.nativeEvent); },
             /*其他事件相关*/
-            onOtherEventInfo: (event) => { if (this.props.onOtherEventInfo) this.props.onOtherEventInfo(event.nativeEvent); },
+            onOtherEventInfo: (event) => { this.props.onOtherEventInfo && this.props.onOtherEventInfo(event.nativeEvent); },
         });
 
         // console.log(nativeProps);

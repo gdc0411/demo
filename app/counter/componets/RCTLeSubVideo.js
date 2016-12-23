@@ -3,7 +3,7 @@
  * Author: raojia
  * Mail: raojia@le.com
  * Created Time: 2016-12-18
- * Modified Time: 2016-12-18
+ * Modified Time: 2016-12-23
  ************************************************************************/
 'use strict';
 
@@ -91,15 +91,15 @@ export default class SubVideo extends Component {
                 usehls: source.usehls,
             },
             /*回调函数属性赋值*/
-            onSubVideoSourceLoad: (event) => { if (this.props.onSubVideoSourceLoad) this.props.onSubVideoSourceLoad(event.nativeEvent); },
-            onSubVideoSizeChange: (event) => { if (this.props.onSubVideoSizeChange) this.props.onSubVideoSizeChange(event.nativeEvent); },
-            onSubVideoLoad: (event) => { if (this.props.onSubVideoLoad) this.props.onSubVideoLoad(event.nativeEvent); },
-            onSubVideoError: (event) => { if (this.props.onSubVideoError) this.props.onSubVideoError(event.nativeEvent); },
-            onSubVideoPause: (event) => { if (this.props.onSubVideoPause) this.props.onSubVideoPause(event.nativeEvent); },
-            onSubVideoResume: (event) => { if (this.props.onSubVideoResume) this.props.onSubVideoResume(event.nativeEvent); },
-            onSubBufferStart: (event) => { if (this.props.onSubBufferStart) this.props.onSubBufferStart(event.nativeEvent); },
-            onSubBufferEnd: (event) => { if (this.props.onSubBufferEnd) this.props.onSubBufferEnd(event.nativeEvent); },
-            onSubVideoRendingStart: (event) => { if (this.props.onSubVideoRendingStart) this.props.onSubVideoRendingStart(event.nativeEvent); },
+            onSubVideoSourceLoad: (event) => { this.props.onSubVideoSourceLoad && this.props.onSubVideoSourceLoad(event.nativeEvent); },
+            onSubVideoSizeChange: (event) => { this.props.onSubVideoSizeChange && this.props.onSubVideoSizeChange(event.nativeEvent); },
+            onSubVideoLoad: (event) => { this.props.onSubVideoLoad && this.props.onSubVideoLoad(event.nativeEvent); },
+            onSubVideoError: (event) => { his.props.onSubVideoError && this.props.onSubVideoError(event.nativeEvent); },
+            onSubVideoPause: (event) => { this.props.onSubVideoPause && this.props.onSubVideoPause(event.nativeEvent); },
+            onSubVideoResume: (event) => { this.props.onSubVideoResume && this.props.onSubVideoResume(event.nativeEvent); },
+            onSubBufferStart: (event) => { this.props.onSubBufferStart && this.props.onSubBufferStart(event.nativeEvent); },
+            onSubBufferEnd: (event) => { this.props.onSubBufferEnd && this.props.onSubBufferEnd(event.nativeEvent); },
+            onSubVideoRendingStart: (event) => { this.props.onSubVideoRendingStart && this.props.onSubVideoRendingStart(event.nativeEvent); },
         });
 
         // console.log(nativeProps);
