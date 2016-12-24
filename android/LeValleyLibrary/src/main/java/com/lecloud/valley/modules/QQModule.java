@@ -29,6 +29,7 @@ import com.tencent.tauth.UiError;
 
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 import static com.lecloud.valley.common.Constants.MSG_INVALID_ARGUMENT;
@@ -327,8 +328,11 @@ public class QQModule extends ReactContextBaseJavaModule implements IUiListener,
                 bundle.putString(QzoneShare.SHARE_TO_QQ_TARGET_URL, data.hasKey(QzoneShare.SHARE_TO_QQ_TARGET_URL) ?
                         data.getString(QzoneShare.SHARE_TO_QQ_TARGET_URL) : "http://www.lecloud.com");
                 //分享图片的 URL或本地路径
-                if (data.hasKey(QzoneShare.SHARE_TO_QQ_IMAGE_URL))
-                    bundle.putString(QzoneShare.SHARE_TO_QQ_IMAGE_URL, data.getString(QzoneShare.SHARE_TO_QQ_IMAGE_URL));
+                if (data.hasKey(QzoneShare.SHARE_TO_QQ_IMAGE_URL)) {
+                    ArrayList<String> al = new ArrayList();
+                    al.add(data.getString(QzoneShare.SHARE_TO_QQ_IMAGE_URL));
+                    bundle.putStringArrayList(QzoneShare.SHARE_TO_QQ_IMAGE_URL, al);
+                }
                 break;
 
             case QzonePublish.PUBLISH_TO_QZONE_TYPE_PUBLISHMOOD: //发表说说、或上传图片
@@ -340,8 +344,11 @@ public class QQModule extends ReactContextBaseJavaModule implements IUiListener,
                 if (data.hasKey(QzoneShare.SHARE_TO_QQ_SUMMARY))
                     bundle.putString(QzoneShare.SHARE_TO_QQ_SUMMARY, data.getString(QzoneShare.SHARE_TO_QQ_SUMMARY));
                 // 本地图片 todo 变成arrayList
-                if (data.hasKey(QzoneShare.SHARE_TO_QQ_IMAGE_URL))
-                    bundle.putString(QzoneShare.SHARE_TO_QQ_IMAGE_URL, data.getString(QzoneShare.SHARE_TO_QQ_IMAGE_URL));
+                if (data.hasKey(QzoneShare.SHARE_TO_QQ_IMAGE_URL)) {
+                    ArrayList<String> al = new ArrayList();
+                    al.add(data.getString(QzoneShare.SHARE_TO_QQ_IMAGE_URL));
+                    bundle.putStringArrayList(QzoneShare.SHARE_TO_QQ_IMAGE_URL, al);
+                }
                 //发表的视频，只支持本地地址，发表视频时必填
                 if (data.hasKey(QzonePublish.PUBLISH_TO_QZONE_VIDEO_PATH))
                     bundle.putString(QzonePublish.PUBLISH_TO_QZONE_VIDEO_PATH, data.getString(QzonePublish.PUBLISH_TO_QZONE_VIDEO_PATH));
