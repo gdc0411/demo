@@ -7,7 +7,7 @@
  ************************************************************************/
 'use strict';
 
-import { NativeModules, NativeEventEmitter, NativeAppEventEmitter } from 'react-native';
+import { NativeModules, NativeAppEventEmitter } from 'react-native';
 import promisify from 'es6-promisify';
 
 const WeChatAPI = NativeModules.WeChatModule;

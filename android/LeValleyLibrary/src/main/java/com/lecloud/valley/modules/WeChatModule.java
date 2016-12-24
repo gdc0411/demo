@@ -40,6 +40,8 @@ import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
 import com.facebook.react.modules.core.RCTNativeAppEventEmitter;
+import com.facebook.react.uimanager.events.RCTEventEmitter;
+import com.lecloud.valley.common.Events;
 import com.lecloud.valley.utils.LogUtils;
 import com.tencent.mm.sdk.constants.ConstantsAPI;
 import com.tencent.mm.sdk.modelbase.BaseReq;
@@ -65,6 +67,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import static com.lecloud.valley.common.Constants.MSG_NOT_REGISTERED;
+import static com.lecloud.valley.common.Constants.MSG_INVOKE_FAILED;
+import static com.lecloud.valley.common.Constants.MSG_INVALID_ARGUMENT;
 import static com.lecloud.valley.common.Constants.REACT_CLASS_WECHAT_MODULE;
 import static com.lecloud.valley.utils.LogUtils.TAG;
 
@@ -73,7 +78,8 @@ import static com.lecloud.valley.utils.LogUtils.TAG;
  */
 public class WeChatModule extends ReactContextBaseJavaModule implements IWXAPIEventHandler {
 
-    final ReactApplicationContext context;
+    private final ReactApplicationContext context;
+    private RCTNativeAppEventEmitter mEventEmitter;
 
     private static String appId = null;
     private static String secret = null;
@@ -83,9 +89,6 @@ public class WeChatModule extends ReactContextBaseJavaModule implements IWXAPIEv
 
     private static final int TIMELINE_SUPPORTED_VERSION = 0x21020001;
 
-    private final static String NOT_REGISTERED = "registerApp required.";
-    private final static String INVOKE_FAILED = "WeChat API invoke returns false.";
-    private final static String INVALID_ARGUMENT = "invalid argument.";
 
     @Override
     public String getName() {
@@ -100,7 +103,7 @@ public class WeChatModule extends ReactContextBaseJavaModule implements IWXAPIEv
         if (appId == null) {
             ApplicationInfo appInfo = null;
             try {
-                appInfo = reactContext.getPackageManager().getApplicationInfo(reactContext.getPackageName(), PackageManager.GET_META_DATA);
+                appInfo = context.getPackageManager().getApplicationInfo(context.getPackageName(), PackageManager.GET_META_DATA);
             } catch (PackageManager.NameNotFoundException e) {
                 throw new Error(e);
             }
@@ -115,7 +118,7 @@ public class WeChatModule extends ReactContextBaseJavaModule implements IWXAPIEv
             secret = appInfo.metaData.get("WX_SECRET").toString();
 
         }
-        _autoRegisterAppId();
+
     }
 
     @Override
@@ -129,13 +132,27 @@ public class WeChatModule extends ReactContextBaseJavaModule implements IWXAPIEv
     @Override
     public void initialize() {
         super.initialize();
+
+        if (!gIsAppRegistered) {
+            // 通过WXAPIFactory工厂，获取IWXAPI的实例
+            api = WXAPIFactory.createWXAPI(getReactApplicationContext(), appId, false);
+            // 将该app注册到微信
+            gIsAppRegistered = api.registerApp(appId);
+        }
+
         gModule = this;
+
+        mEventEmitter = context.getJSModule(RCTNativeAppEventEmitter.class);
     }
 
     @Override
     public void onCatalystInstanceDestroy() {
-        super.onCatalystInstanceDestroy();
+//        if (api != null) {
+//            api = null;  //加了重新加载会崩溃
+//        }
+        mEventEmitter = null;
         gModule = null;
+        super.onCatalystInstanceDestroy();
     }
 
     /**
@@ -144,7 +161,7 @@ public class WeChatModule extends ReactContextBaseJavaModule implements IWXAPIEv
     @ReactMethod
     public void isWXAppInstalled(Callback callback) {
         if (api == null) {
-            callback.invoke(NOT_REGISTERED);
+            callback.invoke(MSG_NOT_REGISTERED);
             return;
         }
         callback.invoke(null, api.isWXAppInstalled());
@@ -156,7 +173,7 @@ public class WeChatModule extends ReactContextBaseJavaModule implements IWXAPIEv
     @ReactMethod
     public void isWXAppSupportApi(Callback callback) {
         if (api == null) {
-            callback.invoke(NOT_REGISTERED);
+            callback.invoke(MSG_NOT_REGISTERED);
             return;
         }
         callback.invoke(null, api.isWXAppSupportAPI());
@@ -168,7 +185,7 @@ public class WeChatModule extends ReactContextBaseJavaModule implements IWXAPIEv
     @ReactMethod
     public void getApiVersion(Callback callback) {
         if (api == null) {
-            callback.invoke(NOT_REGISTERED);
+            callback.invoke(MSG_NOT_REGISTERED);
             return;
         }
         int wxSdkVersion = api.getWXAppSupportAPI();
@@ -186,7 +203,7 @@ public class WeChatModule extends ReactContextBaseJavaModule implements IWXAPIEv
     @ReactMethod
     public void openWXApp(Callback callback) {
         if (api == null) {
-            callback.invoke(NOT_REGISTERED);
+            callback.invoke(MSG_NOT_REGISTERED);
             return;
         }
         callback.invoke(null, api.openWXApp());
@@ -199,7 +216,7 @@ public class WeChatModule extends ReactContextBaseJavaModule implements IWXAPIEv
     public void sendAuth(ReadableMap config, Callback callback) {
         Log.d(TAG, LogUtils.getTraceInfo() + "微信登陆——— config：" + config.toString());
         if (api == null) {
-            callback.invoke(NOT_REGISTERED);
+            callback.invoke(MSG_NOT_REGISTERED);
             return;
         }
 
@@ -212,7 +229,7 @@ public class WeChatModule extends ReactContextBaseJavaModule implements IWXAPIEv
         } else {
             req.state = new Date().toString();
         }
-        callback.invoke(api.sendReq(req) ? null : INVOKE_FAILED);
+        callback.invoke(api.sendReq(req) ? null : MSG_INVOKE_FAILED);
     }
 
     /**
@@ -222,7 +239,7 @@ public class WeChatModule extends ReactContextBaseJavaModule implements IWXAPIEv
     public void shareToTimeline(ReadableMap data, Callback callback) {
         Log.d(TAG, LogUtils.getTraceInfo() + "微信分享朋友圈——— data：" + data.toString());
         if (api == null) {
-            callback.invoke(NOT_REGISTERED);
+            callback.invoke(MSG_NOT_REGISTERED);
             return;
         }
         _share(SendMessageToWX.Req.WXSceneTimeline, data, callback);
@@ -235,7 +252,7 @@ public class WeChatModule extends ReactContextBaseJavaModule implements IWXAPIEv
     public void shareToSession(ReadableMap data, Callback callback) {
         Log.d(TAG, LogUtils.getTraceInfo() + "微信分享好友——— data：" + data.toString());
         if (api == null) {
-            callback.invoke(NOT_REGISTERED);
+            callback.invoke(MSG_NOT_REGISTERED);
             return;
         }
         _share(SendMessageToWX.Req.WXSceneSession, data, callback);
@@ -249,7 +266,7 @@ public class WeChatModule extends ReactContextBaseJavaModule implements IWXAPIEv
         Log.d(TAG, LogUtils.getTraceInfo() + "微信支付——— data：" + data.toString());
 
         if (api == null) {
-            callback.invoke(NOT_REGISTERED);
+            callback.invoke(MSG_NOT_REGISTERED);
             return;
         }
         PayReq payReq = new PayReq();
@@ -275,7 +292,7 @@ public class WeChatModule extends ReactContextBaseJavaModule implements IWXAPIEv
             payReq.extData = data.getString("extData");
         }
         payReq.appId = appId;
-        callback.invoke(api.sendReq(payReq) ? null : INVOKE_FAILED);
+        callback.invoke(api.sendReq(payReq) ? null : MSG_INVOKE_FAILED);
     }
 
     @Override
@@ -325,8 +342,8 @@ public class WeChatModule extends ReactContextBaseJavaModule implements IWXAPIEv
             map.putString("returnKey", resp.returnKey);
         }
 
-        if (context.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class) != null)
-            context.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class).emit("WeChat_Resp", map);
+        if (mEventEmitter != null)
+            mEventEmitter.emit(Events.EVENT_WECHAT_RESP.toString(), map);
 
         Log.d(TAG, LogUtils.getTraceInfo() + "WeChat_Resp callback——— map：" + map.toString());
     }
@@ -358,14 +375,6 @@ public class WeChatModule extends ReactContextBaseJavaModule implements IWXAPIEv
         }
     }
 
-    private void _autoRegisterAppId() {
-        if (!gIsAppRegistered) {
-            // 通过WXAPIFactory工厂，获取IWXAPI的实例
-            api = WXAPIFactory.createWXAPI(getReactApplicationContext(), appId, false);
-            // 将该app注册到微信
-            gIsAppRegistered = api.registerApp(appId);
-        }
-    }
 
     private void _share(final int scene, final ReadableMap data, final Callback callback) {
         Uri uri = null;
@@ -442,7 +451,7 @@ public class WeChatModule extends ReactContextBaseJavaModule implements IWXAPIEv
 
     private void _share(final int scene, final ReadableMap data, final Bitmap thumbImage, final Callback callback) {
         if (!data.hasKey("type")) {
-            callback.invoke(INVALID_ARGUMENT);
+            callback.invoke(MSG_INVALID_ARGUMENT);
             return;
         }
         String type = data.getString("type");
@@ -457,7 +466,7 @@ public class WeChatModule extends ReactContextBaseJavaModule implements IWXAPIEv
                 @Override
                 public void invoke(@Nullable WXMediaMessage.IMediaObject mediaObject) {
                     if (mediaObject == null) {
-                        callback.invoke(INVALID_ARGUMENT);
+                        callback.invoke(MSG_INVALID_ARGUMENT);
                     } else {
                         WeChatModule.this._share(scene, data, thumbImage, mediaObject, callback);
                     }
@@ -469,7 +478,7 @@ public class WeChatModule extends ReactContextBaseJavaModule implements IWXAPIEv
                 @Override
                 public void invoke(@Nullable WXMediaMessage.IMediaObject mediaObject) {
                     if (mediaObject == null) {
-                        callback.invoke(INVALID_ARGUMENT);
+                        callback.invoke(MSG_INVALID_ARGUMENT);
                     } else {
                         WeChatModule.this._share(scene, data, thumbImage, mediaObject, callback);
                     }
@@ -485,7 +494,7 @@ public class WeChatModule extends ReactContextBaseJavaModule implements IWXAPIEv
         }
 
         if (mediaObject == null) {
-            callback.invoke(INVALID_ARGUMENT);
+            callback.invoke(MSG_INVALID_ARGUMENT);
         } else {
             _share(scene, data, thumbImage, mediaObject, callback);
         }

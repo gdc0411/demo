@@ -52,6 +52,11 @@ public enum Events {
     //翻转模块事件
     EVENT_ORIENTATION_CHANG("onOrientationDidChange"), //屏幕方向切换
 
+    //第三方登录和分享事件
+    EVENT_WECHAT_RESP("WeChat_Resp"), //微信响应事件
+    EVENT_QQ_RESP("QQ_Resp"), //QQ响应事件
+
+
     // 未命名的事件
     EVENT_OTHER_EVENT("onOtherEventInfo");  // 未知事件
 

@@ -152,5 +152,11 @@ public interface Constants {
     String EVENT_PROP_EXTRA = "extra";
     String EVENT_PROP_EVENT = "event";
 
+//================= REACT_MESSAGE ====================
+
+    String MSG_NOT_REGISTERED = "NOT_REGISTERED";
+    String MSG_NULL_ACTIVITY = "NULL_ACTIVITY";
+    String MSG_INVOKE_FAILED = "INVOKE_FAILED";
+    String MSG_INVALID_ARGUMENT = "INVALID_ARGUMENT";
 
 }
