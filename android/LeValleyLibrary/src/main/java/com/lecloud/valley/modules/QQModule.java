@@ -406,6 +406,8 @@ public class QQModule extends ReactContextBaseJavaModule implements IUiListener,
                 resultMap.putString("appid", appId);
                 resultMap.putString("secret", secret);
 
+                resultMap.putString("errStr", "QQ登录成功");
+
             } catch (Exception e) {
                 WritableMap map = Arguments.createMap();
                 map.putInt("errCode", Constants.ERROR_UNKNOWN);
@@ -417,7 +419,7 @@ public class QQModule extends ReactContextBaseJavaModule implements IUiListener,
         } else {
             resultMap.putString("type", "QQShareResponse");
             resultMap.putInt("errCode", SHARE_RESULT_CODE_SUCCESSFUL);
-            resultMap.putString("errStr", "Share successfully.");
+            resultMap.putString("errStr", "QQ分享成功");
         }
 
         if (mEventEmitter != null)
@@ -431,11 +433,11 @@ public class QQModule extends ReactContextBaseJavaModule implements IUiListener,
         if (isLoginOperation) {
             resultMap.putString("type", "QQAuthorizeResponse");
             resultMap.putInt("errCode", SHARE_RESULT_CODE_FAILED);
-            resultMap.putString("errStr", "login failed." + uiError.errorDetail);
+            resultMap.putString("errStr", "QQ授权失败，请稍后重试 " + uiError.errorDetail);
         } else {
             resultMap.putString("type", "QQShareResponse");
             resultMap.putInt("errCode", SHARE_RESULT_CODE_FAILED);
-            resultMap.putString("errStr", "Share failed." + uiError.errorDetail);
+            resultMap.putString("errStr", "QQ分享失败，请稍后重试 " + uiError.errorDetail);
         }
 
         if (mEventEmitter != null)
@@ -449,11 +451,11 @@ public class QQModule extends ReactContextBaseJavaModule implements IUiListener,
         if (isLoginOperation) {
             resultMap.putString("type", "QQAuthorizeResponse");
             resultMap.putInt("errCode", SHARE_RESULT_CODE_CANCEL);
-            resultMap.putString("errStr", "login canceled.");
+            resultMap.putString("errStr", "QQ授权失败，用户取消");
         } else {
             resultMap.putString("type", "QQShareResponse");
             resultMap.putInt("errCode", SHARE_RESULT_CODE_CANCEL);
-            resultMap.putString("errStr", "Share canceled.");
+            resultMap.putString("errStr", "QQ分享失败，用户取消");
         }
 
         if (mEventEmitter != null)
