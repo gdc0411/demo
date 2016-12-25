@@ -38,8 +38,8 @@ function wrapCheckApi(nativeFunc) {
 }
 
 export const getApiVersion = QQAPI.getApiVersion;
-
 export const isQQInstalled = QQAPI.isQQInstalled;
+export const isQQAppSupportApi = QQAPI.isQQAppSupportApi;
 
 // export const isQQSupportApi = QQAPI.isQQSupportApi;
 

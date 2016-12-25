@@ -23,6 +23,7 @@ import com.tencent.connect.common.Constants;
 import com.tencent.connect.share.QQShare;
 import com.tencent.connect.share.QzonePublish;
 import com.tencent.connect.share.QzoneShare;
+import com.tencent.open.utils.SystemUtils;
 import com.tencent.tauth.IUiListener;
 import com.tencent.tauth.Tencent;
 import com.tencent.tauth.UiError;
@@ -129,6 +130,18 @@ public class QQModule extends ReactContextBaseJavaModule implements IUiListener,
 
     @ReactMethod
     public void isQQInstalled(Promise promise) {
+        if (api == null) {
+            promise.reject("-1", MSG_NOT_REGISTERED);
+            return;
+        } else if (context.getCurrentActivity() == null) {
+            promise.reject("-2", MSG_NULL_ACTIVITY);
+            return;
+        }
+        promise.resolve( SystemUtils.getAppVersionName(context.getCurrentActivity(), "com.tencent.mobileqq") != null);
+    }
+
+    @ReactMethod
+    public void isQQAppSupportApi(Promise promise) {
         if (api == null) {
             promise.reject("-1", MSG_NOT_REGISTERED);
             return;
