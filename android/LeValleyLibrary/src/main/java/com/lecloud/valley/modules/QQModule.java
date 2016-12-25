@@ -19,6 +19,8 @@ import com.facebook.react.modules.core.DeviceEventManagerModule;
 import com.facebook.react.modules.core.RCTNativeAppEventEmitter;
 import com.lecloud.valley.common.Events;
 import com.lecloud.valley.utils.LogUtils;
+import com.tencent.connect.auth.QQAuth;
+import com.tencent.connect.auth.QQToken;
 import com.tencent.connect.common.Constants;
 import com.tencent.connect.share.QQShare;
 import com.tencent.connect.share.QzonePublish;
@@ -137,7 +139,9 @@ public class QQModule extends ReactContextBaseJavaModule implements IUiListener,
             promise.reject("-2", MSG_NULL_ACTIVITY);
             return;
         }
-        promise.resolve( SystemUtils.getAppVersionName(context.getCurrentActivity(), "com.tencent.mobileqq") != null);
+        promise.resolve(SystemUtils.getAppVersionName(context.getCurrentActivity(), Constants.PACKAGE_QQ) != null ||
+                SystemUtils.getAppVersionName(context.getCurrentActivity(), Constants.PACKAGE_QQ_PAD) != null ||
+                SystemUtils.getAppVersionName(context.getCurrentActivity(), Constants.PACKAGE_QZONE) != null);
     }
 
     @ReactMethod
@@ -225,99 +229,92 @@ public class QQModule extends ReactContextBaseJavaModule implements IUiListener,
 
     private Bundle _makeQQShare(ReadableMap data) {
         Bundle bundle = null;
-        int type = data.hasKey(QQShare.SHARE_TO_QQ_KEY_TYPE) ? data.getInt(QQShare.SHARE_TO_QQ_KEY_TYPE) : QQShare.SHARE_TO_QQ_TYPE_DEFAULT;
+        int type = data.hasKey("req_type") ? data.getInt("req_type") : QQShare.SHARE_TO_QQ_TYPE_DEFAULT;
         switch (type) {
-            case QQShare.SHARE_TO_QQ_TYPE_DEFAULT: //图文分享
+            case 1: //图文分享
 
                 bundle = new Bundle();
                 bundle.putInt(QQShare.SHARE_TO_QQ_KEY_TYPE, QQShare.SHARE_TO_QQ_TYPE_DEFAULT);
                 //这条分享消息被好友点击后的跳转的URL
-                bundle.putString(QQShare.SHARE_TO_QQ_TARGET_URL, data.hasKey(QQShare.SHARE_TO_QQ_TARGET_URL) ?
-                        data.getString(QQShare.SHARE_TO_QQ_TARGET_URL) : "http://www.lecloud.com");
-                bundle.putString(QQShare.SHARE_TO_QQ_TITLE, data.hasKey(QQShare.SHARE_TO_QQ_TITLE) ?
-                        data.getString(QQShare.SHARE_TO_QQ_TITLE) : ""); //分享的标题，最长30个字符
+                bundle.putString(QQShare.SHARE_TO_QQ_TARGET_URL, data.hasKey("targetUrl") ? data.getString("targetUrl") : "http://www.lecloud.com");
+                bundle.putString(QQShare.SHARE_TO_QQ_TITLE, data.hasKey("title") ? data.getString("title") : ""); //分享的标题，最长30个字符
                 //分享的消息摘要，最长 40 个字符
-                if (data.hasKey(QQShare.SHARE_TO_QQ_SUMMARY))
-                    bundle.putString(QQShare.SHARE_TO_QQ_SUMMARY, data.getString(QQShare.SHARE_TO_QQ_SUMMARY));
+                if (data.hasKey("summary"))
+                    bundle.putString(QQShare.SHARE_TO_QQ_SUMMARY, data.getString("summary"));
                 //分享图片的 URL或本地路径
-                if (data.hasKey(QQShare.SHARE_TO_QQ_IMAGE_URL))
-                    bundle.putString(QQShare.SHARE_TO_QQ_IMAGE_URL, data.getString(QQShare.SHARE_TO_QQ_IMAGE_URL));
+                if (data.hasKey("imageUrl"))
+                    bundle.putString(QQShare.SHARE_TO_QQ_IMAGE_URL, data.getString("imageUrl"));
                 //手Q客户端顶部 ，替换“返回 ”按钮文字，如果为空用返回代替
-                if (data.hasKey(QQShare.SHARE_TO_QQ_APP_NAME))
-                    bundle.putString(QQShare.SHARE_TO_QQ_APP_NAME, data.getString(QQShare.SHARE_TO_QQ_APP_NAME));
+                if (data.hasKey("appName"))
+                    bundle.putString(QQShare.SHARE_TO_QQ_APP_NAME, data.getString("appName"));
                 //分享时是否自动打开分享到QZone的对话框
                 // QQShare.SHARE_TO_QQ_FLAG_QZONE_AUTO_OPEN = 1
                 // QQShare.SHARE_TO_QQ_FLAG_QZONE_ITEM_HIDE = 2
-                if (data.hasKey(QQShare.SHARE_TO_QQ_EXT_INT))
-                    bundle.putInt(QQShare.SHARE_TO_QQ_EXT_INT, data.getInt(QQShare.SHARE_TO_QQ_EXT_INT));
+                if (data.hasKey("cflag"))
+                    bundle.putInt(QQShare.SHARE_TO_QQ_EXT_INT, data.getInt("cflag"));
                 break;
 
-            case QQShare.SHARE_TO_QQ_TYPE_IMAGE: //纯图片分享
+            case 5: //纯图片分享
 
                 bundle = new Bundle();
                 bundle.putInt(QQShare.SHARE_TO_QQ_KEY_TYPE, QQShare.SHARE_TO_QQ_TYPE_IMAGE);
                 //这条分享消息被好友点击后的跳转的URL
-                bundle.putString(QQShare.SHARE_TO_QQ_IMAGE_LOCAL_URL, data.hasKey(QQShare.SHARE_TO_QQ_IMAGE_LOCAL_URL) ?
-                        data.getString(QQShare.SHARE_TO_QQ_IMAGE_LOCAL_URL) : "http://www.lecloud.com");
+                bundle.putString(QQShare.SHARE_TO_QQ_IMAGE_LOCAL_URL, data.hasKey("imageLocalUrl") ? data.getString("imageLocalUrl") : "http://www.lecloud.com");
                 //手Q客户端顶部 ，替换“返回 ”按钮文字，如果为空用返回代替
-                if (data.hasKey(QQShare.SHARE_TO_QQ_APP_NAME))
-                    bundle.putString(QQShare.SHARE_TO_QQ_APP_NAME, data.getString(QQShare.SHARE_TO_QQ_APP_NAME));
+                if (data.hasKey("appName"))
+                    bundle.putString(QQShare.SHARE_TO_QQ_APP_NAME, data.getString("appName"));
                 //分享时是否自动打开分享到QZone的对话框
                 // QQShare.SHARE_TO_QQ_FLAG_QZONE_AUTO_OPEN = 1
                 // QQShare.SHARE_TO_QQ_FLAG_QZONE_ITEM_HIDE = 2
-                if (data.hasKey(QQShare.SHARE_TO_QQ_EXT_INT))
-                    bundle.putInt(QQShare.SHARE_TO_QQ_EXT_INT, data.getInt(QQShare.SHARE_TO_QQ_EXT_INT));
+                if (data.hasKey("cflag"))
+                    bundle.putInt(QQShare.SHARE_TO_QQ_EXT_INT, data.getInt("cflag"));
                 break;
 
-            case QQShare.SHARE_TO_QQ_TYPE_AUDIO: //音乐分享
+            case 2: //音乐分享
 
                 bundle = new Bundle();
                 bundle.putInt(QQShare.SHARE_TO_QQ_KEY_TYPE, QQShare.SHARE_TO_QQ_TYPE_AUDIO);
                 //这条分享消息被好友点击后的跳转的URL
-                bundle.putString(QQShare.SHARE_TO_QQ_TARGET_URL, data.hasKey(QQShare.SHARE_TO_QQ_TARGET_URL) ?
-                        data.getString(QQShare.SHARE_TO_QQ_TARGET_URL) : "http://www.lecloud.com");
-                bundle.putString(QQShare.SHARE_TO_QQ_AUDIO_URL, data.hasKey(QQShare.SHARE_TO_QQ_AUDIO_URL) ?
-                        data.getString(QQShare.SHARE_TO_QQ_AUDIO_URL) : "");
+                bundle.putString(QQShare.SHARE_TO_QQ_TARGET_URL, data.hasKey("targetUrl") ? data.getString("targetUrl") : "http://www.lecloud.com");
+                bundle.putString(QQShare.SHARE_TO_QQ_AUDIO_URL, data.hasKey("audio_url") ? data.getString("audio_url") : "");
                 //分享的标题摘要，最长 30 个字符
-                bundle.putString(QQShare.SHARE_TO_QQ_TITLE, data.hasKey(QQShare.SHARE_TO_QQ_TITLE) ?
-                        data.getString(QQShare.SHARE_TO_QQ_TITLE) : ""); //分享的标题，最长30个字符
+                bundle.putString(QQShare.SHARE_TO_QQ_TITLE, data.hasKey("title") ? data.getString("title") : ""); //分享的标题，最长30个字符
                 //分享的消息摘要，最长 40 个字符
-                if (data.hasKey(QQShare.SHARE_TO_QQ_SUMMARY))
-                    bundle.putString(QQShare.SHARE_TO_QQ_SUMMARY, data.getString(QQShare.SHARE_TO_QQ_SUMMARY));
+                if (data.hasKey("summary"))
+                    bundle.putString(QQShare.SHARE_TO_QQ_SUMMARY, data.getString("summary"));
                 //分享图片的 URL或本地路径
-                if (data.hasKey(QQShare.SHARE_TO_QQ_IMAGE_URL))
-                    bundle.putString(QQShare.SHARE_TO_QQ_IMAGE_URL, data.getString(QQShare.SHARE_TO_QQ_IMAGE_URL));
+                if (data.hasKey("imageUrl"))
+                    bundle.putString(QQShare.SHARE_TO_QQ_IMAGE_URL, data.getString("imageUrl"));
                 //手Q客户端顶部 ，替换“返回 ”按钮文字，如果为空用返回代替
-                if (data.hasKey(QQShare.SHARE_TO_QQ_APP_NAME))
-                    bundle.putString(QQShare.SHARE_TO_QQ_APP_NAME, data.getString(QQShare.SHARE_TO_QQ_APP_NAME));
+                if (data.hasKey("appName"))
+                    bundle.putString(QQShare.SHARE_TO_QQ_APP_NAME, data.getString("appName"));
                 //分享时是否自动打开分享到QZone的对话框
                 // QQShare.SHARE_TO_QQ_FLAG_QZONE_AUTO_OPEN = 1
                 // QQShare.SHARE_TO_QQ_FLAG_QZONE_ITEM_HIDE = 2
-                if (data.hasKey(QQShare.SHARE_TO_QQ_EXT_INT))
-                    bundle.putInt(QQShare.SHARE_TO_QQ_EXT_INT, data.getInt(QQShare.SHARE_TO_QQ_EXT_INT));
+                if (data.hasKey("cflag"))
+                    bundle.putInt(QQShare.SHARE_TO_QQ_EXT_INT, data.getInt("cflag"));
                 break;
 
-            case QQShare.SHARE_TO_QQ_TYPE_APP: //应用分享
+            case 6: //应用分享
 
                 bundle = new Bundle();
                 bundle.putInt(QQShare.SHARE_TO_QQ_KEY_TYPE, QQShare.SHARE_TO_QQ_TYPE_APP);
                 //分享的标题摘要，最长 30 个字符
-                bundle.putString(QQShare.SHARE_TO_QQ_TITLE, data.hasKey(QQShare.SHARE_TO_QQ_TITLE) ?
-                        data.getString(QQShare.SHARE_TO_QQ_TITLE) : ""); //分享的标题，最长30个字符
+                bundle.putString(QQShare.SHARE_TO_QQ_TITLE, data.hasKey("title") ? data.getString("title") : ""); //分享的标题，最长30个字符
                 //分享的消息摘要，最长 40 个字符
-                if (data.hasKey(QQShare.SHARE_TO_QQ_SUMMARY))
-                    bundle.putString(QQShare.SHARE_TO_QQ_SUMMARY, data.getString(QQShare.SHARE_TO_QQ_SUMMARY));
+                if (data.hasKey("summary"))
+                    bundle.putString(QQShare.SHARE_TO_QQ_SUMMARY, data.getString("summary"));
                 //分享图片的 URL或本地路径
-                if (data.hasKey(QQShare.SHARE_TO_QQ_IMAGE_URL))
-                    bundle.putString(QQShare.SHARE_TO_QQ_IMAGE_URL, data.getString(QQShare.SHARE_TO_QQ_IMAGE_URL));
+                if (data.hasKey("imageUrl"))
+                    bundle.putString(QQShare.SHARE_TO_QQ_IMAGE_URL, data.getString("imageUrl"));
                 //手Q客户端顶部 ，替换“返回 ”按钮文字，如果为空用返回代替
-                if (data.hasKey(QQShare.SHARE_TO_QQ_APP_NAME))
-                    bundle.putString(QQShare.SHARE_TO_QQ_APP_NAME, data.getString(QQShare.SHARE_TO_QQ_APP_NAME));
+                if (data.hasKey("appName"))
+                    bundle.putString(QQShare.SHARE_TO_QQ_APP_NAME, data.getString("appName"));
                 //分享时是否自动打开分享到QZone的对话框
                 // QQShare.SHARE_TO_QQ_FLAG_QZONE_AUTO_OPEN = 1
                 // QQShare.SHARE_TO_QQ_FLAG_QZONE_ITEM_HIDE = 2
-                if (data.hasKey(QQShare.SHARE_TO_QQ_EXT_INT))
-                    bundle.putInt(QQShare.SHARE_TO_QQ_EXT_INT, data.getInt(QQShare.SHARE_TO_QQ_EXT_INT));
+                if (data.hasKey("cflag"))
+                    bundle.putInt(QQShare.SHARE_TO_QQ_EXT_INT, data.getInt("cflag"));
                 break;
         }
 
@@ -327,44 +324,42 @@ public class QQModule extends ReactContextBaseJavaModule implements IUiListener,
 
     private Bundle _makeQzoneShare(ReadableMap data) {
         Bundle bundle = null;
-        int type = data.hasKey(QzoneShare.SHARE_TO_QZONE_KEY_TYPE) ? data.getInt(QzoneShare.SHARE_TO_QZONE_KEY_TYPE) : QzoneShare.SHARE_TO_QZONE_TYPE_NO_TYPE;
+        int type = data.hasKey("req_type") ? data.getInt("req_type") : QzoneShare.SHARE_TO_QZONE_TYPE_NO_TYPE;
         switch (type) {
-            case QzoneShare.SHARE_TO_QZONE_TYPE_IMAGE_TEXT: //图文分享
+            case 1: //图文分享
                 bundle = new Bundle();
                 bundle.putInt(QzoneShare.SHARE_TO_QZONE_KEY_TYPE, QzoneShare.SHARE_TO_QZONE_TYPE_IMAGE_TEXT);
-                bundle.putString(QzoneShare.SHARE_TO_QQ_TITLE, data.hasKey(QzoneShare.SHARE_TO_QQ_TITLE) ?
-                        data.getString(QzoneShare.SHARE_TO_QQ_TITLE) : ""); //分享的标题，最长30个字符
+                bundle.putString(QzoneShare.SHARE_TO_QQ_TITLE, data.hasKey("title") ? data.getString("title") : ""); //分享的标题，最长30个字符
                 //分享的消息摘要，最长 40 个字符
-                if (data.hasKey(QzoneShare.SHARE_TO_QQ_SUMMARY))
-                    bundle.putString(QzoneShare.SHARE_TO_QQ_SUMMARY, data.getString(QzoneShare.SHARE_TO_QQ_SUMMARY));
+                if (data.hasKey("summary"))
+                    bundle.putString(QzoneShare.SHARE_TO_QQ_SUMMARY, data.getString("summary"));
                 //这条分享消息被好友点击后的跳转的URL
-                bundle.putString(QzoneShare.SHARE_TO_QQ_TARGET_URL, data.hasKey(QzoneShare.SHARE_TO_QQ_TARGET_URL) ?
-                        data.getString(QzoneShare.SHARE_TO_QQ_TARGET_URL) : "http://www.lecloud.com");
+                bundle.putString(QzoneShare.SHARE_TO_QQ_TARGET_URL, data.hasKey("targetUrl") ? data.getString("targetUrl") : "http://www.lecloud.com");
                 //分享图片的 URL或本地路径
-                if (data.hasKey(QzoneShare.SHARE_TO_QQ_IMAGE_URL)) {
-                    ArrayList<String> al = new ArrayList();
-                    al.add(data.getString(QzoneShare.SHARE_TO_QQ_IMAGE_URL));
+                if (data.hasKey("imageUrl")) {
+                    ArrayList<String> al = new ArrayList<>();
+                    al.add(data.getString("imageUrl"));
                     bundle.putStringArrayList(QzoneShare.SHARE_TO_QQ_IMAGE_URL, al);
                 }
                 break;
 
-            case QzonePublish.PUBLISH_TO_QZONE_TYPE_PUBLISHMOOD: //发表说说、或上传图片
-            case QzonePublish.PUBLISH_TO_QZONE_TYPE_PUBLISHVIDEO: //上传视频
+            case 3: //发表说说、或上传图片
+            case 4: //上传视频
 
                 bundle = new Bundle();
                 bundle.putInt(QzoneShare.SHARE_TO_QZONE_KEY_TYPE, QzonePublish.PUBLISH_TO_QZONE_TYPE_PUBLISHMOOD);
                 //分享的消息摘要，最长 40 个字符
-                if (data.hasKey(QzoneShare.SHARE_TO_QQ_SUMMARY))
-                    bundle.putString(QzoneShare.SHARE_TO_QQ_SUMMARY, data.getString(QzoneShare.SHARE_TO_QQ_SUMMARY));
+                if (data.hasKey("summary"))
+                    bundle.putString(QzoneShare.SHARE_TO_QQ_SUMMARY, data.getString("summary"));
                 // 本地图片 todo 变成arrayList
-                if (data.hasKey(QzoneShare.SHARE_TO_QQ_IMAGE_URL)) {
-                    ArrayList<String> al = new ArrayList();
-                    al.add(data.getString(QzoneShare.SHARE_TO_QQ_IMAGE_URL));
+                if (data.hasKey("imageUrl")) {
+                    ArrayList<String> al = new ArrayList<>();
+                    al.add(data.getString("imageUrl"));
                     bundle.putStringArrayList(QzoneShare.SHARE_TO_QQ_IMAGE_URL, al);
                 }
                 //发表的视频，只支持本地地址，发表视频时必填
-                if (data.hasKey(QzonePublish.PUBLISH_TO_QZONE_VIDEO_PATH))
-                    bundle.putString(QzonePublish.PUBLISH_TO_QZONE_VIDEO_PATH, data.getString(QzonePublish.PUBLISH_TO_QZONE_VIDEO_PATH));
+                if (data.hasKey("videoPath"))
+                    bundle.putString(QzonePublish.PUBLISH_TO_QZONE_VIDEO_PATH, data.getString("videoPath"));
 
                 break;
         }
@@ -390,6 +385,7 @@ public class QQModule extends ReactContextBaseJavaModule implements IUiListener,
             resultMap.putString("type", "QQAuthorizeResponse");
             try {
                 JSONObject obj = (JSONObject) (o);
+
                 if (obj.has("ret")) resultMap.putInt("errCode", obj.getInt("ret"));
                 if (obj.has("openid"))
                     resultMap.putString("openid", obj.getString(Constants.PARAM_OPEN_ID));
