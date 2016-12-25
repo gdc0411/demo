@@ -163,7 +163,7 @@ RCT_EXPORT_METHOD(logout)
     NSString *imageUrl = aData[RCTQQShareImageUrl];
     if (imageUrl.length && _bridge.imageLoader) {
         CGSize size = CGSizeZero;
-        if (![aData[RCTQQShareType] isEqualToString:RCTQQShareTypeImage]) {
+        if ([aData[@"req_type"] intValue] != 5 ) {
             CGFloat thumbImageSize = 80;
             size = CGSizeMake(thumbImageSize,thumbImageSize);
         }
@@ -185,33 +185,33 @@ RCT_EXPORT_METHOD(logout)
                    resolve:(RCTPromiseResolveBlock)resolve
                     reject:(RCTPromiseRejectBlock)reject {
     
-    NSString *type = aData[RCTQQShareType];
+    int type = [aData[@"req_type"] intValue];
     
-    NSString *title = aData[RCTQQShareTitle];
+    NSString *title = aData[@"title"];
     
-    NSString *description= aData[RCTQQShareDescription];
-    NSString *imgPath = aData[RCTQQShareImageUrl];
-    NSString *webpageUrl = aData[RCTQQShareWebpageUrl]? :@"";
+    NSString *description= aData[@"summary"];
+    NSString *imgPath = aData[@"imageUrl"];
+    NSString *webpageUrl = aData[@"targetUrl"]? :@"";
     NSString *flashUrl = aData[@"flashUrl"];
     
     QQApiObject *message = nil;
     
-    if (type.length <=0 || [type isEqualToString: RCTQQShareTypeNews]) {
+    if (type == 1) {
         message = [QQApiNewsObject
                    objectWithURL:[NSURL URLWithString:webpageUrl]
                    title:title
                    description:description
                    previewImageURL:[NSURL URLWithString:imgPath]];
-    }else if ([type isEqualToString: RCTQQShareTypeText]) {
-        message = [QQApiTextObject objectWithText:description];
-    }else if ([type isEqualToString: RCTQQShareTypeImage]) {
+//    }else if (type isEqualToString: RCTQQShareTypeText]) {
+//        message = [QQApiTextObject objectWithText:description];
+    }else if ( type == 5) {
         NSData *imgData = UIImageJPEGRepresentation(image, 1);
         message = [QQApiImageObject objectWithData:imgData
                                   previewImageData:imgData
                                              title:title
                                        description:description];
         
-    }else if ([type isEqualToString: RCTQQShareTypeAudio]) {
+    }else if (type == 2) {
         QQApiAudioObject *audioObj = [QQApiAudioObject objectWithURL:[NSURL URLWithString:webpageUrl]
                                                                title:title
                                                          description:description
@@ -221,7 +221,7 @@ RCT_EXPORT_METHOD(logout)
         }
         message = audioObj;
     }
-    else if ([type isEqualToString: RCTQQShareTypeVideo]) {
+    else if (type ==4 ) {
         QQApiVideoObject *videoObj = [QQApiVideoObject objectWithURL:[NSURL URLWithString:webpageUrl]
                                                                title:title
                                                          description:description
@@ -259,7 +259,7 @@ RCT_EXPORT_METHOD(logout)
     NSArray *list = [[[NSBundle mainBundle] infoDictionary] valueForKey:@"CFBundleURLTypes"];
     for (NSDictionary *item in list) {
         NSString *name = item[@"CFBundleURLName"];
-        if ([name isEqualToString:@"qq"]) {
+        if ([name isEqualToString:@"qq_appid"]) {
             NSArray *schemes = item[@"CFBundleURLSchemes"];
             if (schemes.count > 0){
                 appId = [schemes[0] substringFromIndex:@"tencent".length];
