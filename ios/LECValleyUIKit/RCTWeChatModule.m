@@ -6,14 +6,16 @@
 //  Copyright © 2016年 leCloud. All rights reserved.
 //
 
-#import "RCTLog.h"
 #import "RCTWeChatModule.h"
+#import "LECValley.h"
 
 #import "WXApi.h"
 #import "WXApiObject.h"
-#import "RCTEventDispatcher.h"
-#import "RCTBridge.h"
+
 #import "../Libraries/Image/RCTImageLoader.h"
+#import "RCTLog.h"
+#import "RCTBridge.h"
+#import "RCTEventDispatcher.h"
 
 
 // define share type constants
@@ -36,11 +38,6 @@
 #define RCTWXShareImageUrl @"imageUrl"
 #define RCTWXShareThumbImageSize @"thumbImageSize"
 
-#define RCTWXEventName @"WeChat_Resp"
-
-
-#define NOT_REGISTERED (@"registerApp required.")
-#define INVOKE_FAILED (@"WeChat API invoke returns false.")
 
 @interface RCTWeChatModule()<WXApiDelegate>
 
@@ -48,7 +45,7 @@
 
 static NSString *gAppID = @"";
 static NSString *gSecret = @"";
-static BOOL gIsAppRegistered = false;
+static BOOL gIsApiRegistered = false;
 
 
 @implementation RCTWeChatModule
@@ -59,7 +56,7 @@ RCT_EXPORT_MODULE()
 
 - (NSDictionary *)constantsToExport
 {
-    return @{ @"isAppRegistered":@(gIsAppRegistered)};
+    return @{ @"isAppRegistered":@(gIsApiRegistered)};
 }
 
 - (dispatch_queue_t)methodQueue
@@ -260,7 +257,7 @@ RCT_EXPORT_METHOD(pay:(NSDictionary *)data:(RCTResponseSenderBlock)callback)
                                        callBack:callback];
             
         } else {
-            callback(@[@"message type unsupported"]);
+            callback(@[INVALID_ARGUMENT]);
         }
     }
 }
@@ -365,14 +362,15 @@ RCT_EXPORT_METHOD(pay:(NSDictionary *)data:(RCTResponseSenderBlock)callback)
         body[@"type"]= @"Pay.Resp";
     }
     
-    [self.bridge.eventDispatcher sendAppEventWithName:@"WeChat_Resp" body:body];
+    [self.bridge.eventDispatcher sendAppEventWithName:EVENT_WECHAT_RESP
+                                                 body:body];
 
 }
 
 
 - (void)_autoRegisterAPI
 {
-    if (gAppID.length > 0 && gIsAppRegistered) {
+    if (gAppID.length > 0 && gIsApiRegistered) {
         return;
     }
     
@@ -393,7 +391,7 @@ RCT_EXPORT_METHOD(pay:(NSDictionary *)data:(RCTResponseSenderBlock)callback)
             }
         }
     }
-    gIsAppRegistered = [WXApi registerApp:gAppID];
+    gIsApiRegistered = [WXApi registerApp:gAppID];
 }
 
 

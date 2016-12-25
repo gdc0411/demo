@@ -27,5 +27,14 @@
 
 #define PlayerImage(file)                 [UIImage imageNamed:PlayerSrcName(file)] ? :[UIImage imageNamed:PlayerFrameworkSrcName(file)]
 
+//第三方登录的共享参数
+
+#define EVENT_WECHAT_RESP @"WeChat_Resp"
+#define EVENT_QQ_RESP @"QQ_Resp"
+
+
+#define NOT_REGISTERED @"NOT_REGISTERED"
+#define INVOKE_FAILED @"INVOKE_FAILED"
+#define INVALID_ARGUMENT @"INVALID_ARGUMENT"
 
 #endif /* LECValley_h */
