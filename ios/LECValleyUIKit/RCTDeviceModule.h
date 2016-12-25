@@ -9,6 +9,6 @@
 
 #import "RCTBridgeModule.h"
 
-@interface DeviceModule : NSObject <RCTBridgeModule>
+@interface RCTDeviceModule : NSObject <RCTBridgeModule>
 
 @end

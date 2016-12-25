@@ -6,7 +6,7 @@
 //  Copyright © 2016年 LeCloud. All rights reserved.
 //
 
-#import "DeviceModule.h"
+#import "RCTDeviceModule.h"
 #import "KeyChainStore.h"
 //#import <SSKeychain.h>
 //#import <SSKeychainQuery.h>
@@ -14,7 +14,7 @@
 #import <UIKit/UIKit.h>
 
 
-@implementation DeviceModule
+@implementation RCTDeviceModule
 
 RCT_EXPORT_MODULE();
 

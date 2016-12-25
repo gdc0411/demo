@@ -6,19 +6,19 @@
 //  Copyright © 2016年 LeCloud. All rights reserved.
 //
 
-#import "OrientationModule.h"
+#import "RCTOrientationModule.h"
 
 #import <UIKit/UIKit.h>
 
 
-@interface OrientationModule()
+@interface RCTOrientationModule()
 {
   __block BOOL _isRotating;
   BOOL _isFullScreen;
 }
 @end
 
-@implementation OrientationModule
+@implementation RCTOrientationModule
 @synthesize bridge = _bridge;
 
 static UIInterfaceOrientationMask _orientation = UIInterfaceOrientationMaskAllButUpsideDown;
@@ -147,27 +147,27 @@ RCT_EXPORT_METHOD(setOrientation:(int)requestedOrientation)
   if (requestedOrientation == 1) {
     _isRotating = YES;
     
-    [OrientationModule setOrientation:UIInterfaceOrientationMaskPortrait];
+    [RCTOrientationModule setOrientation:UIInterfaceOrientationMaskPortrait];
     [[NSOperationQueue mainQueue] addOperationWithBlock:^ {
-      [OrientationModule changeScreenOrientation:[NSNumber numberWithInt:UIInterfaceOrientationPortrait]];
+      [RCTOrientationModule changeScreenOrientation:[NSNumber numberWithInt:UIInterfaceOrientationPortrait]];
       _isRotating = NO;
     }];
     
   }else if(requestedOrientation == 8){
     _isRotating = YES;
     
-    [OrientationModule setOrientation:UIInterfaceOrientationMaskLandscapeLeft];
+    [RCTOrientationModule setOrientation:UIInterfaceOrientationMaskLandscapeLeft];
     [[NSOperationQueue mainQueue] addOperationWithBlock:^ {
-      [OrientationModule changeScreenOrientation:[NSNumber numberWithInt:UIInterfaceOrientationLandscapeLeft]];
+      [RCTOrientationModule changeScreenOrientation:[NSNumber numberWithInt:UIInterfaceOrientationLandscapeLeft]];
       _isRotating = NO;
     }];
     
   }else if(requestedOrientation == 0){
     _isRotating = YES;
     
-    [OrientationModule setOrientation:UIInterfaceOrientationMaskLandscapeRight];
+    [RCTOrientationModule setOrientation:UIInterfaceOrientationMaskLandscapeRight];
     [[NSOperationQueue mainQueue] addOperationWithBlock:^ {
-      [OrientationModule changeScreenOrientation:[NSNumber numberWithInt:UIInterfaceOrientationLandscapeRight]];
+      [RCTOrientationModule changeScreenOrientation:[NSNumber numberWithInt:UIInterfaceOrientationLandscapeRight]];
       _isRotating = NO;
     }];
     
@@ -176,7 +176,7 @@ RCT_EXPORT_METHOD(setOrientation:(int)requestedOrientation)
     _isRotating = NO;
     
   }else if(requestedOrientation == -1){
-    [OrientationModule setOrientation:UIInterfaceOrientationMaskAllButUpsideDown];
+    [RCTOrientationModule setOrientation:UIInterfaceOrientationMaskAllButUpsideDown];
     //  AppDelegate *delegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     //  delegate.orientation = 3;
     _isRotating = NO;

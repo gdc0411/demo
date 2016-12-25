@@ -12,7 +12,7 @@
 #import "RCTEventEmitter.h"
 
 
-@interface OrientationModule : RCTEventEmitter <RCTBridgeModule>
+@interface RCTOrientationModule : RCTEventEmitter <RCTBridgeModule>
 
 + (void)setOrientation: (UIInterfaceOrientationMask)orientation;
 + (UIInterfaceOrientationMask)getOrientation;
