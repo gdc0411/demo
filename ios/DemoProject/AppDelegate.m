@@ -14,7 +14,7 @@
 #import "RCTRootView.h"
 
 #import "LECPlayerFoundation.h"
-#import "OrientationModule.h"
+#import "RCTOrientationModule.h"
 
 #import "../Libraries/LinkingIOS/RCTLinkingManager.h"
 
@@ -24,12 +24,13 @@
 @implementation AppDelegate
 
 
+
 - (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation {
   return [RCTLinkingManager application:application openURL:url sourceApplication:sourceApplication annotation:annotation];
 }
 
 - (UIInterfaceOrientationMask)application:(UIApplication *)application supportedInterfaceOrientationsForWindow:(UIWindow *)window {
-  return [OrientationModule getOrientation];
+  return [RCTOrientationModule getOrientation];
 }
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions

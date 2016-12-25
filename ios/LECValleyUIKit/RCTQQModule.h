@@ -2,12 +2,12 @@
 //  RCTQQModule.h
 //  LECValleyUIKit
 //
-//  Created by LizaRao on 2016/12/25.
-//  Copyright © 2016年 Facebook. All rights reserved.
+//  Created by RaoJia on 2016/12/25.
+//  Copyright © 2016年 leCloud. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
+#import "RCTBridgeModule.h"
 
-@interface RCTQQModule : NSObject
+@interface RCTQQModule : NSObject<RCTBridgeModule>
 
 @end

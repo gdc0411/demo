@@ -27,7 +27,6 @@
 		2D0E62B01E0B0183005A68AA /* libWeChatSDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D0E62AF1E0B0183005A68AA /* libWeChatSDK.a */; };
 		2D19AC981DF3DCF100D21BDC /* libRCTAnimation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D19AC861DF3DBA600D21BDC /* libRCTAnimation.a */; };
 		2D19AD6B1DF6AE6B00D21BDC /* libCodePush.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D1C9A441DC1EAB60020E496 /* libCodePush.a */; };
-		2D342F471E07E17000341F94 /* LECValleyUIResource.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 2D342F461E07E17000341F94 /* LECValleyUIResource.bundle */; };
 		2D8D209F1E031A80004EC569 /* libLECLivePlayerSDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D8D20971E031A80004EC569 /* libLECLivePlayerSDK.a */; };
 		2D8D20A01E031A80004EC569 /* libLECLivePlayerUISDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D8D20981E031A80004EC569 /* libLECLivePlayerUISDK.a */; };
 		2D8D20A11E031A80004EC569 /* libLECPlayerFoundation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D8D20991E031A80004EC569 /* libLECPlayerFoundation.a */; };
@@ -37,9 +36,6 @@
 		2D8D20A51E031A80004EC569 /* libReachbility.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D8D209D1E031A80004EC569 /* libReachbility.a */; };
 		2D8D20A61E031A80004EC569 /* libZipArchive.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D8D209E1E031A80004EC569 /* libZipArchive.a */; };
 		2D8D220A1E0328F2004EC569 /* libLECValleyUIKit.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D8D21F61E0328B6004EC569 /* libLECValleyUIKit.a */; };
-		2DA206F11DE8B7CD0004CE1D /* LECPlayerResource.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 2DA206EE1DE8B7CD0004CE1D /* LECPlayerResource.bundle */; };
-		2DA206F21DE8B7CD0004CE1D /* LECPlayerUIResource.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 2DA206EF1DE8B7CD0004CE1D /* LECPlayerUIResource.bundle */; };
-		2DA206F31DE8B7CD0004CE1D /* LECVodPlayerResource.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 2DA206F01DE8B7CD0004CE1D /* LECVodPlayerResource.bundle */; };
 		2DA206F71DE8B89B0004CE1D /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2DA206F51DE8B89B0004CE1D /* AdSupport.framework */; };
 		2DA206F81DE8B89B0004CE1D /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2DA206F61DE8B89B0004CE1D /* MediaPlayer.framework */; };
 		2DA207011DE8B9950004CE1D /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2DA206F91DE8B9950004CE1D /* AudioToolbox.framework */; };
@@ -55,6 +51,15 @@
 		2DA207101DE8BA990004CE1D /* libxml2.2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 2DA2070F1DE8BA990004CE1D /* libxml2.2.tbd */; };
 		2DA207121DE8BAAC0004CE1D /* libz.1.2.5.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 2DA207111DE8BAAC0004CE1D /* libz.1.2.5.tbd */; };
 		2DFAE4B71E046743008937FD /* assets in Resources */ = {isa = PBXBuildFile; fileRef = 2DFAE4B61E046743008937FD /* assets */; };
+		2DFDF5AF1E0FEF7800B58523 /* LECPlayerResource.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 2DFDF5AA1E0FEF7800B58523 /* LECPlayerResource.bundle */; };
+		2DFDF5B01E0FEF7800B58523 /* LECPlayerUIResource.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 2DFDF5AB1E0FEF7800B58523 /* LECPlayerUIResource.bundle */; };
+		2DFDF5B11E0FEF7800B58523 /* LECValleyUIResource.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 2DFDF5AC1E0FEF7800B58523 /* LECValleyUIResource.bundle */; };
+		2DFDF5B21E0FEF7800B58523 /* LECVodPlayerResource.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 2DFDF5AD1E0FEF7800B58523 /* LECVodPlayerResource.bundle */; };
+		2DFDF5B31E0FEF7800B58523 /* TencentOpenApi_IOS_Bundle.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 2DFDF5AE1E0FEF7800B58523 /* TencentOpenApi_IOS_Bundle.bundle */; };
+		2DFDF5B71E0FF13100B58523 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2DFDF5B61E0FF13100B58523 /* Security.framework */; };
+		2DFDF5B91E0FF1BB00B58523 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2DFDF5B81E0FF1BB00B58523 /* CoreGraphics.framework */; };
+		2DFDF5BB1E0FF1F700B58523 /* libstdc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 2DFDF5BA1E0FF1F700B58523 /* libstdc++.tbd */; };
+		2DFDF5C21E0FF96E00B58523 /* TencentOpenAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2DFDF5C11E0FF96E00B58523 /* TencentOpenAPI.framework */; };
 		392D188B09B145E0B6613D6D /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 930FF21BCF8F403D8916C7DE /* libz.tbd */; };
 		832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
 /* End PBXBuildFile section */
@@ -242,7 +247,6 @@
 		2D0E62AF1E0B0183005A68AA /* libWeChatSDK.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libWeChatSDK.a; path = ../../openappdev/ios/Libs/libWeChatSDK.a; sourceTree = "<group>"; };
 		2D19AC801DF3DBA600D21BDC /* RCTAnimation.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTAnimation.xcodeproj; path = "../node_modules/react-native/Libraries/NativeAnimation/RCTAnimation.xcodeproj"; sourceTree = "<group>"; };
 		2D19ACBC1DF570FA00D21BDC /* DemoProject.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = DemoProject.entitlements; path = DemoProject/DemoProject.entitlements; sourceTree = "<group>"; };
-		2D342F461E07E17000341F94 /* LECValleyUIResource.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = LECValleyUIResource.bundle; sourceTree = "<group>"; };
 		2D8D20971E031A80004EC569 /* libLECLivePlayerSDK.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libLECLivePlayerSDK.a; path = ../../../XcodeProjects/lecloud_iOS_vrp_SDK_v4.3.1_20160923/SDK4.3.1/Libs/libLECLivePlayerSDK.a; sourceTree = "<group>"; };
 		2D8D20981E031A80004EC569 /* libLECLivePlayerUISDK.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libLECLivePlayerUISDK.a; path = ../../../XcodeProjects/lecloud_iOS_vrp_SDK_v4.3.1_20160923/SDK4.3.1/Libs/libLECLivePlayerUISDK.a; sourceTree = "<group>"; };
 		2D8D20991E031A80004EC569 /* libLECPlayerFoundation.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libLECPlayerFoundation.a; path = ../../../XcodeProjects/lecloud_iOS_vrp_SDK_v4.3.1_20160923/SDK4.3.1/Libs/libLECPlayerFoundation.a; sourceTree = "<group>"; };
@@ -252,9 +256,6 @@
 		2D8D209D1E031A80004EC569 /* libReachbility.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libReachbility.a; path = ../../../XcodeProjects/lecloud_iOS_vrp_SDK_v4.3.1_20160923/SDK4.3.1/Libs/libReachbility.a; sourceTree = "<group>"; };
 		2D8D209E1E031A80004EC569 /* libZipArchive.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libZipArchive.a; path = ../../../XcodeProjects/lecloud_iOS_vrp_SDK_v4.3.1_20160923/SDK4.3.1/Libs/libZipArchive.a; sourceTree = "<group>"; };
 		2D8D21CB1E03240E004EC569 /* LECValleyUIKit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = LECValleyUIKit.xcodeproj; path = LECValleyUIKit/LECValleyUIKit.xcodeproj; sourceTree = "<group>"; };
-		2DA206EE1DE8B7CD0004CE1D /* LECPlayerResource.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = LECPlayerResource.bundle; path = ../../../XcodeProjects/lecloud_iOS_vrp_SDK_v4.3.1_20160923/SDK4.3.1/LECPlayerResource.bundle; sourceTree = "<group>"; };
-		2DA206EF1DE8B7CD0004CE1D /* LECPlayerUIResource.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = LECPlayerUIResource.bundle; path = ../../../XcodeProjects/lecloud_iOS_vrp_SDK_v4.3.1_20160923/SDK4.3.1/LECPlayerUIResource.bundle; sourceTree = "<group>"; };
-		2DA206F01DE8B7CD0004CE1D /* LECVodPlayerResource.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = LECVodPlayerResource.bundle; path = ../../../XcodeProjects/lecloud_iOS_vrp_SDK_v4.3.1_20160923/SDK4.3.1/LECVodPlayerResource.bundle; sourceTree = "<group>"; };
 		2DA206F51DE8B89B0004CE1D /* AdSupport.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AdSupport.framework; path = System/Library/Frameworks/AdSupport.framework; sourceTree = SDKROOT; };
 		2DA206F61DE8B89B0004CE1D /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
 		2DA206F91DE8B9950004CE1D /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
@@ -270,6 +271,15 @@
 		2DA2070F1DE8BA990004CE1D /* libxml2.2.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libxml2.2.tbd; path = usr/lib/libxml2.2.tbd; sourceTree = SDKROOT; };
 		2DA207111DE8BAAC0004CE1D /* libz.1.2.5.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.1.2.5.tbd; path = usr/lib/libz.1.2.5.tbd; sourceTree = SDKROOT; };
 		2DFAE4B61E046743008937FD /* assets */ = {isa = PBXFileReference; lastKnownFileType = folder; name = assets; path = bundle/assets; sourceTree = "<group>"; };
+		2DFDF5AA1E0FEF7800B58523 /* LECPlayerResource.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = LECPlayerResource.bundle; sourceTree = "<group>"; };
+		2DFDF5AB1E0FEF7800B58523 /* LECPlayerUIResource.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = LECPlayerUIResource.bundle; sourceTree = "<group>"; };
+		2DFDF5AC1E0FEF7800B58523 /* LECValleyUIResource.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = LECValleyUIResource.bundle; sourceTree = "<group>"; };
+		2DFDF5AD1E0FEF7800B58523 /* LECVodPlayerResource.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = LECVodPlayerResource.bundle; sourceTree = "<group>"; };
+		2DFDF5AE1E0FEF7800B58523 /* TencentOpenApi_IOS_Bundle.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = TencentOpenApi_IOS_Bundle.bundle; sourceTree = "<group>"; };
+		2DFDF5B61E0FF13100B58523 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
+		2DFDF5B81E0FF1BB00B58523 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		2DFDF5BA1E0FF1F700B58523 /* libstdc++.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libstdc++.tbd"; path = "usr/lib/libstdc++.tbd"; sourceTree = SDKROOT; };
+		2DFDF5C11E0FF96E00B58523 /* TencentOpenAPI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = TencentOpenAPI.framework; path = framework/TencentOpenAPI.framework; sourceTree = "<group>"; };
 		78C398B01ACF4ADC00677621 /* RCTLinking.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTLinking.xcodeproj; path = "../node_modules/react-native/Libraries/LinkingIOS/RCTLinking.xcodeproj"; sourceTree = "<group>"; };
 		832341B01AAA6A8300B99B32 /* RCTText.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTText.xcodeproj; path = "../node_modules/react-native/Libraries/Text/RCTText.xcodeproj"; sourceTree = "<group>"; };
 		930FF21BCF8F403D8916C7DE /* libz.tbd */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
@@ -292,6 +302,7 @@
 				2D0E62AC1E0B0101005A68AA /* libc++.tbd in Frameworks */,
 				2DA207121DE8BAAC0004CE1D /* libz.1.2.5.tbd in Frameworks */,
 				2DA207101DE8BA990004CE1D /* libxml2.2.tbd in Frameworks */,
+				2DFDF5BB1E0FF1F700B58523 /* libstdc++.tbd in Frameworks */,
 				2DA2070E1DE8BA8C0004CE1D /* libstdc++.6.0.9.tbd in Frameworks */,
 				392D188B09B145E0B6613D6D /* libz.tbd in Frameworks */,
 				2DA2070A1DE8BA510004CE1D /* libiconv.tbd in Frameworks */,
@@ -307,12 +318,15 @@
 				2DA207011DE8B9950004CE1D /* AudioToolbox.framework in Frameworks */,
 				2DA206F71DE8B89B0004CE1D /* AdSupport.framework in Frameworks */,
 				2DA207021DE8B9950004CE1D /* CoreData.framework in Frameworks */,
+				2DFDF5B91E0FF1BB00B58523 /* CoreGraphics.framework in Frameworks */,
 				2DA207051DE8B9950004CE1D /* CoreTelephony.framework in Frameworks */,
 				2DA207031DE8B9950004CE1D /* CoreLocation.framework in Frameworks */,
 				2DA207041DE8B9950004CE1D /* CoreMedia.framework in Frameworks */,
 				2DA207061DE8B9950004CE1D /* JavaScriptCore.framework in Frameworks */,
 				2DA206F81DE8B89B0004CE1D /* MediaPlayer.framework in Frameworks */,
+				2DFDF5B71E0FF13100B58523 /* Security.framework in Frameworks */,
 				2DA207071DE8B9950004CE1D /* SystemConfiguration.framework in Frameworks */,
+				2DFDF5C21E0FF96E00B58523 /* TencentOpenAPI.framework in Frameworks */,
 				2DA207081DE8B9950004CE1D /* VideoToolbox.framework in Frameworks */,
 				146834051AC3E58100842450 /* libReact.a in Frameworks */,
 				2D19AC981DF3DCF100D21BDC /* libRCTAnimation.a in Frameworks */,
@@ -325,8 +339,8 @@
 				832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */,
 				00C302EA1ABCBA2D00DB3ED1 /* libRCTVibration.a in Frameworks */,
 				139FDEF61B0652A700C62182 /* libRCTWebSocket.a in Frameworks */,
-				2D19AD6B1DF6AE6B00D21BDC /* libCodePush.a in Frameworks */,
 				2D8D220A1E0328F2004EC569 /* libLECValleyUIKit.a in Frameworks */,
+				2D19AD6B1DF6AE6B00D21BDC /* libCodePush.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -480,10 +494,11 @@
 		2DA206ED1DE8B7B10004CE1D /* Bundles */ = {
 			isa = PBXGroup;
 			children = (
-				2D342F461E07E17000341F94 /* LECValleyUIResource.bundle */,
-				2DA206EE1DE8B7CD0004CE1D /* LECPlayerResource.bundle */,
-				2DA206EF1DE8B7CD0004CE1D /* LECPlayerUIResource.bundle */,
-				2DA206F01DE8B7CD0004CE1D /* LECVodPlayerResource.bundle */,
+				2DFDF5AA1E0FEF7800B58523 /* LECPlayerResource.bundle */,
+				2DFDF5AB1E0FEF7800B58523 /* LECPlayerUIResource.bundle */,
+				2DFDF5AC1E0FEF7800B58523 /* LECValleyUIResource.bundle */,
+				2DFDF5AD1E0FEF7800B58523 /* LECVodPlayerResource.bundle */,
+				2DFDF5AE1E0FEF7800B58523 /* TencentOpenApi_IOS_Bundle.bundle */,
 			);
 			name = Bundles;
 			sourceTree = "<group>";
@@ -491,6 +506,7 @@
 		2DA206F41DE8B89A0004CE1D /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				2DFDF5BA1E0FF1F700B58523 /* libstdc++.tbd */,
 				2D0E62AD1E0B0112005A68AA /* libsqlite3.0.tbd */,
 				2D0E62AB1E0B0101005A68AA /* libc++.tbd */,
 				2DA207111DE8BAAC0004CE1D /* libz.1.2.5.tbd */,
@@ -498,16 +514,19 @@
 				2DA2070D1DE8BA8C0004CE1D /* libstdc++.6.0.9.tbd */,
 				2DA207091DE8BA510004CE1D /* libiconv.tbd */,
 				930FF21BCF8F403D8916C7DE /* libz.tbd */,
+				2DA206F51DE8B89B0004CE1D /* AdSupport.framework */,
 				2DA206F91DE8B9950004CE1D /* AudioToolbox.framework */,
 				2DA206FA1DE8B9950004CE1D /* CoreData.framework */,
 				2DA206FB1DE8B9950004CE1D /* CoreLocation.framework */,
+				2DFDF5B81E0FF1BB00B58523 /* CoreGraphics.framework */,
 				2DA206FC1DE8B9950004CE1D /* CoreMedia.framework */,
 				2DA206FD1DE8B9950004CE1D /* CoreTelephony.framework */,
 				2DA206FE1DE8B9950004CE1D /* JavaScriptCore.framework */,
-				2DA206FF1DE8B9950004CE1D /* SystemConfiguration.framework */,
-				2DA207001DE8B9950004CE1D /* VideoToolbox.framework */,
-				2DA206F51DE8B89B0004CE1D /* AdSupport.framework */,
 				2DA206F61DE8B89B0004CE1D /* MediaPlayer.framework */,
+				2DFDF5B61E0FF13100B58523 /* Security.framework */,
+				2DA206FF1DE8B9950004CE1D /* SystemConfiguration.framework */,
+				2DFDF5C11E0FF96E00B58523 /* TencentOpenAPI.framework */,
+				2DA207001DE8B9950004CE1D /* VideoToolbox.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -873,13 +892,14 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2DA206F11DE8B7CD0004CE1D /* LECPlayerResource.bundle in Resources */,
+				2DFDF5B31E0FEF7800B58523 /* TencentOpenApi_IOS_Bundle.bundle in Resources */,
 				2DFAE4B71E046743008937FD /* assets in Resources */,
-				2D342F471E07E17000341F94 /* LECValleyUIResource.bundle in Resources */,
-				2DA206F31DE8B7CD0004CE1D /* LECVodPlayerResource.bundle in Resources */,
-				2DA206F21DE8B7CD0004CE1D /* LECPlayerUIResource.bundle in Resources */,
+				2DFDF5B21E0FEF7800B58523 /* LECVodPlayerResource.bundle in Resources */,
+				2DFDF5B01E0FEF7800B58523 /* LECPlayerUIResource.bundle in Resources */,
+				2DFDF5AF1E0FEF7800B58523 /* LECPlayerResource.bundle in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */,
+				2DFDF5B11E0FEF7800B58523 /* LECValleyUIResource.bundle in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -996,26 +1016,33 @@
 				DEAD_CODE_STRIPPING = NO;
 				DEVELOPMENT_TEAM = "";
 				ENABLE_BITCODE = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/framework/**",
+				);
 				GCC_PREFIX_HEADER = "";
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 					"$(SRCROOT)/../node_modules/react-native/React/**",
 					"$(SRCROOT)/../node_modules/react-native-code-push/ios/CodePush/**",
-					"$(SRCROOT)/../../openappdev/ios/inc/**",
+					"$(SRCROOT)/inc/**",
 				);
 				INFOPLIST_FILE = DemoProject/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
-					"$(PROJECT_DIR)/../../openappdev/ios/Libs",
+					"$(PROJECT_DIR)/Libs",
 				);
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-lc++",
 					"-ObjC",
+					"-framework",
+					"\"TencentOpenAPI\"",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.lecloud.DemoProject;
 				PRODUCT_NAME = DemoProject;
@@ -1036,26 +1063,33 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = "";
 				ENABLE_BITCODE = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/framework/**",
+				);
 				GCC_PREFIX_HEADER = "";
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 					"$(SRCROOT)/../node_modules/react-native/React/**",
 					"$(SRCROOT)/../node_modules/react-native-code-push/ios/CodePush/**",
-					"$(SRCROOT)/../../openappdev/ios/inc/**",
+					"$(SRCROOT)/inc/**",
 				);
 				INFOPLIST_FILE = DemoProject/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
-					"$(PROJECT_DIR)/../../openappdev/ios/Libs",
+					"$(PROJECT_DIR)/Libs",
 				);
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-lc++",
 					"-ObjC",
+					"-framework",
+					"\"TencentOpenAPI\"",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.lecloud.DemoProject;
 				PRODUCT_NAME = DemoProject;
