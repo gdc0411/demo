@@ -132,7 +132,7 @@ RCT_EXPORT_METHOD(login:(NSString *)scopes
         resolve(@[[NSNull null]]);
     }
     else {
-        reject(@"-1",INVOKE_FAILED,nil);
+        reject(@"-3",INVOKE_FAILED,nil);
     }
 }
 
@@ -248,7 +248,7 @@ RCT_EXPORT_METHOD(logout)
     }else if (sent == EQQAPIAPPSHAREASYNC) {
         resolve(@[[NSNull null]]);
     }else {
-        reject(@"-1",INVOKE_FAILED,nil);
+        reject(@"-3",INVOKE_FAILED,nil);
     }
 }
 
@@ -261,8 +261,7 @@ RCT_EXPORT_METHOD(logout)
         NSString *name = item[@"CFBundleURLName"];
         if ([name isEqualToString:@"qq"]) {
             NSArray *schemes = item[@"CFBundleURLSchemes"];
-            if (schemes.count > 0)
-            {
+            if (schemes.count > 0){
                 appId = [schemes[0] substringFromIndex:@"tencent".length];
                 break;
             }
@@ -284,15 +283,14 @@ RCT_EXPORT_METHOD(logout)
         
     }
     NSMutableDictionary *body = @{@"type":@"QQShareResponse"}.mutableCopy;
-    body[@"errMsg"] = resp.errorDescription;
+    body[@"errStr"] = resp.errorDescription;
     if (resp.errorDescription) {
         body[@"errCode"] = @(-1);
-    }
-    else {
+    }else {
         body[@"errCode"] = @(0);
     }
-    body[@"result"] =resp.result;
-    body[@"extendInfo"] =resp.extendInfo;
+    body[@"result"]     = resp.result;
+    body[@"extendInfo"] = resp.extendInfo;
     
     [self.bridge.eventDispatcher sendAppEventWithName:EVENT_QQ_RESP
                                                  body:body];
@@ -308,10 +306,11 @@ RCT_EXPORT_METHOD(logout)
 {
     NSMutableDictionary *body = @{@"type":@"QQAuthorizeResponse"}.mutableCopy;
     body[@"errCode"] = @(0);
-    body[@"openid"] = _qqapi.openId;
-    body[@"access_token"] = _qqapi.accessToken;
+    body[@"openid"] = _qqapi.openId?_qqapi.openId:[NSNull null];
+    body[@"access_token"] = _qqapi.accessToken?_qqapi.accessToken:[NSNull null];
     body[@"expires_in"] = @([_qqapi.expirationDate timeIntervalSinceNow]*1000);
-    body[@"oauth_consumer_key"] =_qqapi.appId;
+    body[@"unionid"] = _qqapi.unionid?_qqapi.unionid:[NSNull null];
+    body[@"appid"] =_qqapi.appId?_qqapi.appId:[NSNull null];
     
     [self.bridge.eventDispatcher sendAppEventWithName:EVENT_QQ_RESP
                                                  body:body];
@@ -320,12 +319,12 @@ RCT_EXPORT_METHOD(logout)
 - (void)tencentDidNotLogin:(BOOL)cancelled
 {
     NSMutableDictionary *body = @{@"type":@"QQAuthorizeResponse"}.mutableCopy;
-    body[@"errCode"] = @(-1);
     if (cancelled) {
-        body[@"errMsg"] = @"login canceled";
-    }
-    else {
-        body[@"errMsg"] = @"login failed";
+        body[@"errCode"] = @(2);
+        body[@"errStr"] = @"login canceled";
+    }else {
+        body[@"errCode"] = @(1);
+        body[@"errStr"] = @"login failed";
     }
     [self.bridge.eventDispatcher sendAppEventWithName:EVENT_QQ_RESP
                                                  body:body];
