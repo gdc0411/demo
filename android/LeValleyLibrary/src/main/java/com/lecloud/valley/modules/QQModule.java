@@ -141,7 +141,7 @@ public class QQModule extends ReactContextBaseJavaModule implements IUiListener,
     }
 
     @ReactMethod
-    public void isQQAppSupportApi(Promise promise) {
+    public void isQQSupportApi(Promise promise) {
         if (api == null) {
             promise.reject("-1", MSG_NOT_REGISTERED);
             return;

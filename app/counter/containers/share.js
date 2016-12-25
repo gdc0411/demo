@@ -29,8 +29,8 @@ class share extends Component {
         super(props);
         this.state = {
             qqApiVersion: 'waiting...',
-            isQQAppInstalled: 'waiting...',
-            isQQAppSupportApi: 'waiting...',
+            isQQInstalled: 'waiting...',
+            isQQSupportApi: 'waiting...',
             wxApiVersion: 'waiting...',
             isWXAppSupportApi: 'waiting...',
             isWXAppInstalled: 'waiting...',
@@ -47,8 +47,8 @@ class share extends Component {
         try {
             this.setState({
                 qqApiVersion: await QQ.getApiVersion(),
-                isQQAppInstalled: await QQ.isQQInstalled(),
-                isQQAppSupportApi: await QQ.isQQAppSupportApi(),
+                isQQInstalled: await QQ.isQQInstalled(),
+                isQQSupportApi: await QQ.isQQSupportApi(),
                 wxApiVersion: await WeChat.getApiVersion(),
                 isWXAppSupportApi: await WeChat.isWXAppSupportApi(),
                 isWXAppInstalled: await WeChat.isWXAppInstalled()
@@ -246,11 +246,11 @@ class share extends Component {
 
                 <View style={{ top: 20, left: 10, position: 'absolute' }}>
                     <Text>QQapi版本：{this.state.qqApiVersion}</Text>
-                    <Text>QQ已安装：{String(this.state.isQQAppInstalled)}</Text>
-                    <Text>QQapi支持：{String(this.state.isQQAppSupportApi)}</Text>
+                    <Text>QQ已安装：{String(this.state.isQQInstalled)}</Text>
+                    <Text>QQ支持SSO：{String(this.state.isQQSupportApi)}</Text>
                     <Text>微信api版本：{this.state.wxApiVersion}</Text>
                     <Text>微信已安装：{String(this.state.isWXAppInstalled)}</Text>
-                    <Text>微信api支持：{String(this.state.isWXAppSupportApi)}</Text>
+                    <Text>微信支持api：{String(this.state.isWXAppSupportApi)}</Text>
                     {this.state.callbackStr ? <Text>回调结果：{String(this.state.callbackStr)}</Text> : null}
                 </View>
 
