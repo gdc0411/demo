@@ -104,18 +104,22 @@ RCT_EXPORT_METHOD(isQQInstalled:(RCTPromiseResolveBlock)resolve
 RCT_EXPORT_METHOD(isQQSupportApi:(RCTPromiseResolveBlock)resolve
                   reject:(RCTPromiseRejectBlock)reject)
 {
-    if ([QQApiInterface isQQSupportApi]) {
-        resolve(@[[NSNull null]]);
+    if( _qqapi == nil ){
+        reject(@"-1", NOT_REGISTERED,nil);
+        return;
     }
-    else {
-        reject(@"-1",INVOKE_FAILED,nil);
-    }
+    resolve(@([QQApiInterface isQQSupportApi]));
 }
 
 RCT_EXPORT_METHOD(login:(NSString *)scopes
                   resolve:(RCTPromiseResolveBlock)resolve
                   reject:(RCTPromiseRejectBlock)reject)
 {
+    if( _qqapi == nil ){
+        reject(@"-1", NOT_REGISTERED,nil);
+        return;
+    }
+    
     NSArray *scopeArray = nil;
     if (scopes && scopes.length) {
         scopeArray = [scopes componentsSeparatedByString:@","];
@@ -306,7 +310,7 @@ RCT_EXPORT_METHOD(logout)
     body[@"errCode"] = @(0);
     body[@"openid"] = _qqapi.openId;
     body[@"access_token"] = _qqapi.accessToken;
-    body[@"expires_in"] = @([_qqapi.expirationDate timeIntervalSince1970]*1000);
+    body[@"expires_in"] = @([_qqapi.expirationDate timeIntervalSinceNow]*1000);
     body[@"oauth_consumer_key"] =_qqapi.appId;
     
     [self.bridge.eventDispatcher sendAppEventWithName:EVENT_QQ_RESP
