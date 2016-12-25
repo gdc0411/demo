@@ -8,14 +8,11 @@
 
 #import "RCTQQModule.h"
 
-#import "TencentOAuth.h"
-#import "TencentOAuthObject.h"
-#import "QQApiInterface.h"
-#import "QQApiInterfaceObject.h"
-//#import <TencentOpenAPI/TencentOAuth.h>
-//#import <TencentOpenAPI/TencentOAuthObject.h>
-//#import <TencentOpenAPI/QQApiInterface.h>
-//#import <TencentOpenAPI/QQApiInterfaceObject.h>
+
+#import <TencentOpenAPI/TencentOAuth.h>
+#import <TencentOpenAPI/TencentOAuthObject.h>
+#import <TencentOpenAPI/QQApiInterface.h>
+#import <TencentOpenAPI/QQApiInterfaceObject.h>
 
 #import "../Libraries/Image/RCTImageLoader.h"
 
