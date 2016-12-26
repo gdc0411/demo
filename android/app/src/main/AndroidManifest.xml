@@ -72,7 +72,7 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
-                <data android:scheme="tencent1105823147" />
+                <data android:scheme="tencent${QQ_APPID}" />
             </intent-filter>
         </activity>
 
