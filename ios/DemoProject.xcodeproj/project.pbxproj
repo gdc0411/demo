@@ -50,6 +50,8 @@
 		2DA2070E1DE8BA8C0004CE1D /* libstdc++.6.0.9.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 2DA2070D1DE8BA8C0004CE1D /* libstdc++.6.0.9.tbd */; };
 		2DA207101DE8BA990004CE1D /* libxml2.2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 2DA2070F1DE8BA990004CE1D /* libxml2.2.tbd */; };
 		2DA207121DE8BAAC0004CE1D /* libz.1.2.5.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 2DA207111DE8BAAC0004CE1D /* libz.1.2.5.tbd */; };
+		2DE3D3651E11A45B00C39FB9 /* WeiboSDK.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 2DE3D3641E11A45B00C39FB9 /* WeiboSDK.bundle */; };
+		2DE3D3671E11A48E00C39FB9 /* libWeiboSDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2DE3D3661E11A48E00C39FB9 /* libWeiboSDK.a */; };
 		2DFAE4B71E046743008937FD /* assets in Resources */ = {isa = PBXBuildFile; fileRef = 2DFAE4B61E046743008937FD /* assets */; };
 		2DFDF5AF1E0FEF7800B58523 /* LECPlayerResource.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 2DFDF5AA1E0FEF7800B58523 /* LECPlayerResource.bundle */; };
 		2DFDF5B01E0FEF7800B58523 /* LECPlayerUIResource.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 2DFDF5AB1E0FEF7800B58523 /* LECPlayerUIResource.bundle */; };
@@ -270,6 +272,8 @@
 		2DA2070D1DE8BA8C0004CE1D /* libstdc++.6.0.9.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libstdc++.6.0.9.tbd"; path = "usr/lib/libstdc++.6.0.9.tbd"; sourceTree = SDKROOT; };
 		2DA2070F1DE8BA990004CE1D /* libxml2.2.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libxml2.2.tbd; path = usr/lib/libxml2.2.tbd; sourceTree = SDKROOT; };
 		2DA207111DE8BAAC0004CE1D /* libz.1.2.5.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.1.2.5.tbd; path = usr/lib/libz.1.2.5.tbd; sourceTree = SDKROOT; };
+		2DE3D3641E11A45B00C39FB9 /* WeiboSDK.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = WeiboSDK.bundle; sourceTree = "<group>"; };
+		2DE3D3661E11A48E00C39FB9 /* libWeiboSDK.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libWeiboSDK.a; path = Libs/libWeiboSDK.a; sourceTree = "<group>"; };
 		2DFAE4B61E046743008937FD /* assets */ = {isa = PBXFileReference; lastKnownFileType = folder; name = assets; path = bundle/assets; sourceTree = "<group>"; };
 		2DFDF5AA1E0FEF7800B58523 /* LECPlayerResource.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = LECPlayerResource.bundle; sourceTree = "<group>"; };
 		2DFDF5AB1E0FEF7800B58523 /* LECPlayerUIResource.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = LECPlayerUIResource.bundle; sourceTree = "<group>"; };
@@ -321,6 +325,7 @@
 				2DFDF5B91E0FF1BB00B58523 /* CoreGraphics.framework in Frameworks */,
 				2DA207051DE8B9950004CE1D /* CoreTelephony.framework in Frameworks */,
 				2DA207031DE8B9950004CE1D /* CoreLocation.framework in Frameworks */,
+				2DE3D3671E11A48E00C39FB9 /* libWeiboSDK.a in Frameworks */,
 				2DA207041DE8B9950004CE1D /* CoreMedia.framework in Frameworks */,
 				2DA207061DE8B9950004CE1D /* JavaScriptCore.framework in Frameworks */,
 				2DA206F81DE8B89B0004CE1D /* MediaPlayer.framework in Frameworks */,
@@ -470,6 +475,7 @@
 		2D8D20941E031A00004EC569 /* Libs */ = {
 			isa = PBXGroup;
 			children = (
+				2DE3D3661E11A48E00C39FB9 /* libWeiboSDK.a */,
 				2D0E62AF1E0B0183005A68AA /* libWeChatSDK.a */,
 				2D8D20971E031A80004EC569 /* libLECLivePlayerSDK.a */,
 				2D8D20981E031A80004EC569 /* libLECLivePlayerUISDK.a */,
@@ -494,6 +500,7 @@
 		2DA206ED1DE8B7B10004CE1D /* Bundles */ = {
 			isa = PBXGroup;
 			children = (
+				2DE3D3641E11A45B00C39FB9 /* WeiboSDK.bundle */,
 				2DFDF5AA1E0FEF7800B58523 /* LECPlayerResource.bundle */,
 				2DFDF5AB1E0FEF7800B58523 /* LECPlayerUIResource.bundle */,
 				2DFDF5AC1E0FEF7800B58523 /* LECValleyUIResource.bundle */,
@@ -897,6 +904,7 @@
 				2DFDF5B21E0FEF7800B58523 /* LECVodPlayerResource.bundle in Resources */,
 				2DFDF5B01E0FEF7800B58523 /* LECPlayerUIResource.bundle in Resources */,
 				2DFDF5AF1E0FEF7800B58523 /* LECPlayerResource.bundle in Resources */,
+				2DE3D3651E11A45B00C39FB9 /* WeiboSDK.bundle in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */,
 				2DFDF5B11E0FEF7800B58523 /* LECValleyUIResource.bundle in Resources */,

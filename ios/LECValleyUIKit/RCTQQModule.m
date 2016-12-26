@@ -141,8 +141,7 @@ RCT_EXPORT_METHOD(login:(NSString *)scopes
     BOOL success = [_qqapi authorize:scopeArray];
     if (success) {
         resolve(@[[NSNull null]]);
-    }
-    else {
+    }else {
         reject(@"-3",INVOKE_FAILED,nil);
     }
 }

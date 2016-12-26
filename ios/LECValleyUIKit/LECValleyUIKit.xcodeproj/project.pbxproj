@@ -23,6 +23,7 @@
 		2D8D22471E032DD3004EC569 /* UIView+FindUIViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D8D22411E032DD3004EC569 /* UIView+FindUIViewController.m */; };
 		2DDBF75A1E0674A500C9C1BF /* RCTLeSubVideo.m in Sources */ = {isa = PBXBuildFile; fileRef = 2DDBF7591E0674A500C9C1BF /* RCTLeSubVideo.m */; };
 		2DDBF7611E068F3400C9C1BF /* RCTLeSubVideoManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 2DDBF7601E068F3400C9C1BF /* RCTLeSubVideoManager.m */; };
+		2DE3D3631E11A30000C39FB9 /* RCTWeiboModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 2DE3D3621E11A30000C39FB9 /* RCTWeiboModule.m */; };
 		2DFDF5BE1E0FF69D00B58523 /* RCTQQModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 2DFDF5BD1E0FF69D00B58523 /* RCTQQModule.m */; };
 /* End PBXBuildFile section */
 
@@ -75,6 +76,8 @@
 		2DDBF7591E0674A500C9C1BF /* RCTLeSubVideo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCTLeSubVideo.m; sourceTree = "<group>"; };
 		2DDBF75F1E068F3400C9C1BF /* RCTLeSubVideoManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCTLeSubVideoManager.h; sourceTree = "<group>"; };
 		2DDBF7601E068F3400C9C1BF /* RCTLeSubVideoManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCTLeSubVideoManager.m; sourceTree = "<group>"; };
+		2DE3D3611E11A30000C39FB9 /* RCTWeiboModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCTWeiboModule.h; sourceTree = "<group>"; };
+		2DE3D3621E11A30000C39FB9 /* RCTWeiboModule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCTWeiboModule.m; sourceTree = "<group>"; };
 		2DFDF5BC1E0FF69D00B58523 /* RCTQQModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCTQQModule.h; sourceTree = "<group>"; };
 		2DFDF5BD1E0FF69D00B58523 /* RCTQQModule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCTQQModule.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -142,6 +145,8 @@
 				2D0C97981E07056500FB5279 /* BrightnessModule.m */,
 				2D0C97701E06CD1100FB5279 /* BrightnessView.h */,
 				2D0C97711E06CD1100FB5279 /* BrightnessView.m */,
+				2DE3D3611E11A30000C39FB9 /* RCTWeiboModule.h */,
+				2DE3D3621E11A30000C39FB9 /* RCTWeiboModule.m */,
 				2D0E62A81E0AFF75005A68AA /* RCTWeChatModule.h */,
 				2D0E62A91E0AFF75005A68AA /* RCTWeChatModule.m */,
 				2DFDF5BC1E0FF69D00B58523 /* RCTQQModule.h */,
@@ -237,6 +242,7 @@
 				2DDBF75A1E0674A500C9C1BF /* RCTLeSubVideo.m in Sources */,
 				2DFDF5BE1E0FF69D00B58523 /* RCTQQModule.m in Sources */,
 				2D8D22441E032DD3004EC569 /* RCTLeVideo.m in Sources */,
+				2DE3D3631E11A30000C39FB9 /* RCTWeiboModule.m in Sources */,
 				2D8D22421E032DD3004EC569 /* LCBaseViewController.m in Sources */,
 				2D0C97991E07056500FB5279 /* BrightnessModule.m in Sources */,
 				2D8D22321E032DC9004EC569 /* KeyChainStore.m in Sources */,
