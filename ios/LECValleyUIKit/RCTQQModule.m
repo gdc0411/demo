@@ -196,22 +196,26 @@ RCT_EXPORT_METHOD(logout)
     
     QQApiObject *message = nil;
     
-    if (type == 1) {
+    if (type == 1) { //图文
         message = [QQApiNewsObject
                    objectWithURL:[NSURL URLWithString:webpageUrl]
                    title:title
                    description:description
                    previewImageURL:[NSURL URLWithString:imgPath]];
-//    }else if (type isEqualToString: RCTQQShareTypeText]) {
-//        message = [QQApiTextObject objectWithText:description];
-    }else if ( type == 5) {
+        
+    }else if (type == 7) { //纯文字
+        
+        message = [QQApiTextObject objectWithText:description];
+        
+    }else if ( type == 5) { //纯图
+        
         NSData *imgData = UIImageJPEGRepresentation(image, 1);
         message = [QQApiImageObject objectWithData:imgData
                                   previewImageData:imgData
                                              title:title
                                        description:description];
         
-    }else if (type == 2) {
+    }else if (type == 2) { //音乐
         QQApiAudioObject *audioObj = [QQApiAudioObject objectWithURL:[NSURL URLWithString:webpageUrl]
                                                                title:title
                                                          description:description
@@ -220,8 +224,8 @@ RCT_EXPORT_METHOD(logout)
             [audioObj setFlashURL:[NSURL URLWithString:flashUrl]];
         }
         message = audioObj;
-    }
-    else if (type ==4 ) {
+        
+    }else if (type ==4 ) { //视频
         QQApiVideoObject *videoObj = [QQApiVideoObject objectWithURL:[NSURL URLWithString:webpageUrl]
                                                                title:title
                                                          description:description
@@ -277,23 +281,40 @@ RCT_EXPORT_METHOD(logout)
     
 }
 
++ (BOOL)isPureInt:(NSString *)string{
+    NSScanner* scan = [NSScanner scannerWithString:string];
+    int val;
+    return [scan scanInt:&val] && [scan isAtEnd];
+}
+
 - (void)onResp:(QQBaseResp *)resp
 {
-    if ([resp isKindOfClass:[SendMessageToQQResp class]]) {
+    if( resp.type == ESENDMESSAGETOQQRESPTYPE ){
         
+        NSMutableDictionary *body = @{@"type":@"QQShareResponse"}.mutableCopy;
+        
+        int errCode = -5; //非法返回
+        
+        int val;
+        if([[self class] isPureInt:resp.result]){
+            errCode = [resp.result intValue];
+        }
+        
+        body[@"errCode"] = @(errCode);
+        body[@"description"] = resp.errorDescription;
+        body[@"extendInfo"] = resp.extendInfo;
+        
+        if(errCode == 0){ //成功！
+            body[@"errStr"] = @"已分享！";
+        }else if(-4 == errCode){ //分享失败
+            body[@"errStr"] = @"分享失败，用户取消！";
+        }else {
+            body[@"errStr"] = [NSString stringWithFormat:@"分享失败：%@", resp.errorDescription] ;
+        }
+        
+        [self.bridge.eventDispatcher sendAppEventWithName:EVENT_QQ_RESP
+                                                     body:body];
     }
-    NSMutableDictionary *body = @{@"type":@"QQShareResponse"}.mutableCopy;
-    body[@"errStr"] = resp.errorDescription;
-    if (resp.errorDescription) {
-        body[@"errCode"] = @(-1);
-    }else {
-        body[@"errCode"] = @(0);
-    }
-    body[@"result"]     = resp.result;
-    body[@"extendInfo"] = resp.extendInfo;
-    
-    [self.bridge.eventDispatcher sendAppEventWithName:EVENT_QQ_RESP
-                                                 body:body];
 }
 
 - (void)isOnlineResponse:(NSDictionary *)response
@@ -321,10 +342,10 @@ RCT_EXPORT_METHOD(logout)
     NSMutableDictionary *body = @{@"type":@"QQAuthorizeResponse"}.mutableCopy;
     if (cancelled) {
         body[@"errCode"] = @(2);
-        body[@"errStr"] = @"login canceled";
+        body[@"errStr"] = @"授权失败，用户取消！";
     }else {
         body[@"errCode"] = @(1);
-        body[@"errStr"] = @"login failed";
+        body[@"errStr"] = @"授权失败，请稍后再试！";
     }
     [self.bridge.eventDispatcher sendAppEventWithName:EVENT_QQ_RESP
                                                  body:body];

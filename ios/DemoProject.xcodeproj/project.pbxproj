@@ -1041,8 +1041,6 @@
 					"$(inherited)",
 					"-lc++",
 					"-ObjC",
-					"-framework",
-					"\"TencentOpenAPI\"",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.lecloud.DemoProject;
 				PRODUCT_NAME = DemoProject;
@@ -1088,8 +1086,6 @@
 					"$(inherited)",
 					"-lc++",
 					"-ObjC",
-					"-framework",
-					"\"TencentOpenAPI\"",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.lecloud.DemoProject;
 				PRODUCT_NAME = DemoProject;

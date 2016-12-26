@@ -99,9 +99,9 @@ class share extends Component {
             .then((isInstalled) => {
                 if (isInstalled) {
                     QQ.shareToQQ({
-                        req_type: 1, //1:图文，2：音乐，5：纯图，6：应用
-                        imageUrl: 'http://cdn.huodongxing.com/file/20160426/11E69610D2AC0F75D7EB61C48EDEA840FB/30132422640007503.jpg',                        
-                        title: '应用工厂创新应用值得期待', 
+                        req_type: 1, //1:图文，2：音乐，5：纯图，6：应用，7：纯文本
+                        imageUrl: 'http://cdn.huodongxing.com/file/20160426/11E69610D2AC0F75D7EB61C48EDEA840FB/30132422640007503.jpg',
+                        title: '应用工厂创新应用值得期待',
                         summary: '应用工厂演示QQ分享实例',
                         targetUrl: 'http://www.lecloud.com/zh-cn/',
                         appName:'应用工厂演示',
@@ -129,8 +129,8 @@ class share extends Component {
                 if (isInstalled) {
                     QQ.shareToQzone({
                         req_type: 1, //1:图文, 3:说说, 4:视频
-                        imageUrl: 'http://cdn.huodongxing.com/file/20160426/11E69610D2AC0F75D7EB61C48EDEA840FB/30132422640007503.jpg',                        
-                        title: '应用工厂创新应用值得期待', 
+                        imageUrl: 'http://cdn.huodongxing.com/file/20160426/11E69610D2AC0F75D7EB61C48EDEA840FB/30132422640007503.jpg',
+                        title: '应用工厂创新应用值得期待',
                         summary: '应用工厂演示QQ分享实例',
                         targetUrl: 'http://www.lecloud.com/zh-cn/',
                         appName:'应用工厂演示',
