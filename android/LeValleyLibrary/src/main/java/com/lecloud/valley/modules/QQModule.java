@@ -37,6 +37,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.lecloud.valley.common.Constants.EVENT_PROP_SOCIAL_CODE;
+import static com.lecloud.valley.common.Constants.EVENT_PROP_SOCIAL_MSG;
 import static com.lecloud.valley.common.Constants.MSG_INVALID_ARGUMENT;
 import static com.lecloud.valley.common.Constants.MSG_NULL_ACTIVITY;
 import static com.lecloud.valley.common.Constants.QQ_SHARE_TYPE_APP;
@@ -106,10 +108,10 @@ public class QQModule extends ReactContextBaseJavaModule implements IUiListener,
     @Override
     public void initialize() {
         super.initialize();
-        getReactApplicationContext().addActivityEventListener(this);
+        context.addActivityEventListener(this);
         mEventEmitter = context.getJSModule(RCTNativeAppEventEmitter.class);
         if (api == null) {
-            api = Tencent.createInstance(appId, getReactApplicationContext().getApplicationContext());
+            api = Tencent.createInstance(appId, context.getApplicationContext());
         }
     }
 
@@ -119,7 +121,7 @@ public class QQModule extends ReactContextBaseJavaModule implements IUiListener,
             api = null;
         }
         mEventEmitter = null;
-        getReactApplicationContext().removeActivityEventListener(this);
+        context.removeActivityEventListener(this);
         super.onCatalystInstanceDestroy();
     }
 
@@ -413,7 +415,7 @@ public class QQModule extends ReactContextBaseJavaModule implements IUiListener,
             try {
                 JSONObject obj = (JSONObject) (o);
 
-                if (obj.has("ret")) resultMap.putInt("errCode", obj.getInt("ret"));
+                if (obj.has("ret")) resultMap.putInt(EVENT_PROP_SOCIAL_CODE, obj.getInt("ret"));
                 if (obj.has("openid"))
                     resultMap.putString("openid", obj.getString(Constants.PARAM_OPEN_ID));
                 if (obj.has("access_token"))
@@ -433,20 +435,20 @@ public class QQModule extends ReactContextBaseJavaModule implements IUiListener,
                 resultMap.putString("appid", appId);
                 resultMap.putString("secret", secret);
 
-                resultMap.putString("errStr", "QQ登录成功");
+                resultMap.putString(EVENT_PROP_SOCIAL_MSG, "QQ登录成功");
 
             } catch (Exception e) {
                 WritableMap map = Arguments.createMap();
-                map.putInt("errCode", Constants.ERROR_UNKNOWN);
-                map.putString("errStr", e.getLocalizedMessage());
+                map.putInt(EVENT_PROP_SOCIAL_CODE, Constants.ERROR_UNKNOWN);
+                map.putString(EVENT_PROP_SOCIAL_MSG, e.getLocalizedMessage());
 
                 if (mEventEmitter != null)
                     mEventEmitter.emit(Events.EVENT_QQ_RESP.toString(), map);
             }
         } else {
             resultMap.putString("type", "QQShareResponse");
-            resultMap.putInt("errCode", SHARE_RESULT_CODE_SUCCESSFUL);
-            resultMap.putString("errStr", "QQ分享成功");
+            resultMap.putInt(EVENT_PROP_SOCIAL_CODE, SHARE_RESULT_CODE_SUCCESSFUL);
+            resultMap.putString(EVENT_PROP_SOCIAL_MSG, "QQ分享成功");
         }
 
         if (mEventEmitter != null)
@@ -459,12 +461,12 @@ public class QQModule extends ReactContextBaseJavaModule implements IUiListener,
 
         if (isLoginOperation) {
             resultMap.putString("type", "QQAuthorizeResponse");
-            resultMap.putInt("errCode", SHARE_RESULT_CODE_FAILED);
-            resultMap.putString("errStr", "QQ授权失败，请稍后重试 " + uiError.errorDetail);
+            resultMap.putInt(EVENT_PROP_SOCIAL_CODE, SHARE_RESULT_CODE_FAILED);
+            resultMap.putString(EVENT_PROP_SOCIAL_MSG, "QQ授权失败，请稍后重试 " + uiError.errorDetail);
         } else {
             resultMap.putString("type", "QQShareResponse");
-            resultMap.putInt("errCode", SHARE_RESULT_CODE_FAILED);
-            resultMap.putString("errStr", "QQ分享失败，请稍后重试 " + uiError.errorDetail);
+            resultMap.putInt(EVENT_PROP_SOCIAL_CODE, SHARE_RESULT_CODE_FAILED);
+            resultMap.putString(EVENT_PROP_SOCIAL_MSG, "QQ分享失败，请稍后重试 " + uiError.errorDetail);
         }
 
         if (mEventEmitter != null)
@@ -477,12 +479,12 @@ public class QQModule extends ReactContextBaseJavaModule implements IUiListener,
 
         if (isLoginOperation) {
             resultMap.putString("type", "QQAuthorizeResponse");
-            resultMap.putInt("errCode", SHARE_RESULT_CODE_CANCEL);
-            resultMap.putString("errStr", "QQ授权失败，用户取消");
+            resultMap.putInt(EVENT_PROP_SOCIAL_CODE, SHARE_RESULT_CODE_CANCEL);
+            resultMap.putString(EVENT_PROP_SOCIAL_MSG, "QQ授权失败，用户取消");
         } else {
             resultMap.putString("type", "QQShareResponse");
-            resultMap.putInt("errCode", SHARE_RESULT_CODE_CANCEL);
-            resultMap.putString("errStr", "QQ分享失败，用户取消");
+            resultMap.putInt(EVENT_PROP_SOCIAL_CODE, SHARE_RESULT_CODE_CANCEL);
+            resultMap.putString(EVENT_PROP_SOCIAL_MSG, "QQ分享失败，用户取消");
         }
 
         if (mEventEmitter != null)

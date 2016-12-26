@@ -32,15 +32,13 @@ import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import com.facebook.react.bridge.Arguments;
-import com.facebook.react.bridge.Callback;
+import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.WritableMap;
-import com.facebook.react.modules.core.DeviceEventManagerModule;
 import com.facebook.react.modules.core.RCTNativeAppEventEmitter;
-import com.facebook.react.uimanager.events.RCTEventEmitter;
 import com.lecloud.valley.common.Events;
 import com.lecloud.valley.utils.LogUtils;
 import com.tencent.mm.sdk.constants.ConstantsAPI;
@@ -129,6 +127,8 @@ public class WeChatModule extends ReactContextBaseJavaModule implements IWXAPIEv
     public Map<String, Object> getConstants() {
         final Map<String, Object> constants = new HashMap<>();
         constants.put("isAppRegistered", gIsAppRegistered);
+        constants.put("APP_ID", appId);
+        constants.put("APP_SECRET", secret);
         constants.put("SHARE_TYPE_NEWS", WX_SHARE_TYPE_NEWS);
         constants.put("SHARE_TYPE_IMAGE", WX_SHARE_TYPE_IMAGE);
         constants.put("SHARE_TYPE_IMAGE_FILE", WX_SHARE_TYPE_IMAGE_FILE);
@@ -175,33 +175,33 @@ public class WeChatModule extends ReactContextBaseJavaModule implements IWXAPIEv
      * 微信是否安装
      */
     @ReactMethod
-    public void isWXAppInstalled(Callback callback) {
+    public void isWXAppInstalled(Promise promise) {
         if (api == null) {
-            callback.invoke(MSG_NOT_REGISTERED);
+            promise.reject("-1", MSG_NOT_REGISTERED);
             return;
         }
-        callback.invoke(null, api.isWXAppInstalled());
+        promise.resolve(api.isWXAppInstalled());
     }
 
     /**
      * 微信版本是否支持API
      */
     @ReactMethod
-    public void isWXAppSupportApi(Callback callback) {
+    public void isWXAppSupportApi(Promise promise) {
         if (api == null) {
-            callback.invoke(MSG_NOT_REGISTERED);
+            promise.reject("-1", MSG_NOT_REGISTERED);
             return;
         }
-        callback.invoke(null, api.isWXAppSupportAPI());
+        promise.resolve(api.isWXAppSupportAPI());
     }
 
     /**
      * 获得微信版本
      */
     @ReactMethod
-    public void getApiVersion(Callback callback) {
+    public void getApiVersion(Promise promise) {
         if (api == null) {
-            callback.invoke(MSG_NOT_REGISTERED);
+            promise.reject("-1", MSG_NOT_REGISTERED);
             return;
         }
         int wxSdkVersion = api.getWXAppSupportAPI();
@@ -210,29 +210,31 @@ public class WeChatModule extends ReactContextBaseJavaModule implements IWXAPIEv
 //        } else {
 //            Toast.makeText(WXEntryActivity.this, "wxSdkVersion = " + Integer.toHexString(wxSdkVersion) + "\ntimeline not supported", Toast.LENGTH_LONG).show();
 //        }
-        callback.invoke(null, Integer.toHexString(wxSdkVersion));
+        promise.resolve(Integer.toHexString(wxSdkVersion));
+//        callback.invoke(null, Integer.toHexString(wxSdkVersion));
     }
 
     /**
      * 调起微信APP
      */
     @ReactMethod
-    public void openWXApp(Callback callback) {
+    public void openWXApp(Promise promise) {
         if (api == null) {
-            callback.invoke(MSG_NOT_REGISTERED);
+            promise.reject("-1", MSG_NOT_REGISTERED);
             return;
         }
-        callback.invoke(null, api.openWXApp());
+        promise.resolve(api.openWXApp());
+//        callback.invoke(null, api.openWXApp());
     }
 
     /**
      * 微信登陆
      */
     @ReactMethod
-    public void sendAuth(ReadableMap config, Callback callback) {
+    public void sendAuth(ReadableMap config, Promise promise) {
         Log.d(TAG, LogUtils.getTraceInfo() + "微信登陆——— config：" + config.toString());
         if (api == null) {
-            callback.invoke(MSG_NOT_REGISTERED);
+            promise.reject("-1", MSG_NOT_REGISTERED);
             return;
         }
 
@@ -245,7 +247,11 @@ public class WeChatModule extends ReactContextBaseJavaModule implements IWXAPIEv
         } else {
             req.state = new Date().toString();
         }
-        callback.invoke(api.sendReq(req) ? null : MSG_INVOKE_FAILED);
+//        callback.invoke(api.sendReq(req) ? null : MSG_INVOKE_FAILED);
+        if (api.sendReq(req))
+            promise.resolve(null);
+        else
+            promise.reject("-3", MSG_INVOKE_FAILED);
     }
 
 
@@ -253,37 +259,37 @@ public class WeChatModule extends ReactContextBaseJavaModule implements IWXAPIEv
      * 微信分享朋友圈
      */
     @ReactMethod
-    public void shareToTimeline(ReadableMap data, Callback callback) {
+    public void shareToTimeline(ReadableMap data, Promise promise) {
         Log.d(TAG, LogUtils.getTraceInfo() + "微信分享朋友圈——— data：" + data.toString());
         if (api == null) {
-            callback.invoke(MSG_NOT_REGISTERED);
+            promise.reject("-1", MSG_NOT_REGISTERED);
             return;
         }
-        _share(SendMessageToWX.Req.WXSceneTimeline, data, callback);
+        _share(SendMessageToWX.Req.WXSceneTimeline, data, promise);
     }
 
     /**
      * 微信分享好友
      */
     @ReactMethod
-    public void shareToSession(ReadableMap data, Callback callback) {
+    public void shareToSession(ReadableMap data, Promise promise) {
         Log.d(TAG, LogUtils.getTraceInfo() + "微信分享好友——— data：" + data.toString());
         if (api == null) {
-            callback.invoke(MSG_NOT_REGISTERED);
+            promise.reject("-1", MSG_NOT_REGISTERED);
             return;
         }
-        _share(SendMessageToWX.Req.WXSceneSession, data, callback);
+        _share(SendMessageToWX.Req.WXSceneSession, data, promise);
     }
 
     /**
      * 微信支付
      */
     @ReactMethod
-    public void pay(ReadableMap data, Callback callback) {
+    public void pay(ReadableMap data, Promise promise) {
         Log.d(TAG, LogUtils.getTraceInfo() + "微信支付——— data：" + data.toString());
 
         if (api == null) {
-            callback.invoke(MSG_NOT_REGISTERED);
+            promise.reject("-1", MSG_NOT_REGISTERED);
             return;
         }
         PayReq payReq = new PayReq();
@@ -309,7 +315,11 @@ public class WeChatModule extends ReactContextBaseJavaModule implements IWXAPIEv
             payReq.extData = data.getString("extData");
         }
         payReq.appId = appId;
-        callback.invoke(api.sendReq(payReq) ? null : MSG_INVOKE_FAILED);
+
+        if (api.sendReq(payReq))
+            promise.resolve(null);
+        else
+            promise.reject("-3", MSG_INVOKE_FAILED);
     }
 
     @Override
@@ -344,8 +354,8 @@ public class WeChatModule extends ReactContextBaseJavaModule implements IWXAPIEv
             if (resp.url != null) map.putString("url", resp.url);
             if (resp.lang != null) map.putString("lang", resp.lang);
             if (resp.country != null) map.putString("country", resp.country);
-            map.putString("appid", appId);
-            map.putString("secret", secret);
+//            map.putString("appid", appId);
+//            map.putString("secret", secret);
 
         } else if (baseResp instanceof SendMessageToWX.Resp) {
             SendMessageToWX.Resp resp = (SendMessageToWX.Resp) (baseResp);
@@ -393,7 +403,7 @@ public class WeChatModule extends ReactContextBaseJavaModule implements IWXAPIEv
     }
 
 
-    private void _share(final int scene, final ReadableMap data, final Callback callback) {
+    private void _share(final int scene, final ReadableMap data, final Promise promise) {
         Uri uri = null;
         if (data.hasKey("thumbImage")) {
             String imageUrl = data.getString("thumbImage");
@@ -410,14 +420,14 @@ public class WeChatModule extends ReactContextBaseJavaModule implements IWXAPIEv
         }
 
         if (uri != null) {
-            this._getImage(uri, new ResizeOptions(100, 100), new ImageCallback() {
+            _getImage(uri, new ResizeOptions(100, 100), new ImageCallback() {
                 @Override
                 public void invoke(@Nullable Bitmap bitmap) {
-                    WeChatModule.this._share(scene, data, bitmap, callback);
+                    _share(scene, data, bitmap, promise);
                 }
             });
         } else {
-            this._share(scene, data, null, callback);
+            _share(scene, data, null, promise);
         }
     }
 
@@ -466,9 +476,10 @@ public class WeChatModule extends ReactContextBaseJavaModule implements IWXAPIEv
         }
     }
 
-    private void _share(final int scene, final ReadableMap data, final Bitmap thumbImage, final Callback callback) {
+    private void _share(final int scene, final ReadableMap data, final Bitmap thumbImage, final Promise promise) {
         if (!data.hasKey("type")) {
-            callback.invoke(MSG_INVALID_ARGUMENT);
+            promise.reject("-4", MSG_INVALID_ARGUMENT);
+//            callback.invoke(MSG_INVALID_ARGUMENT);
             return;
         }
         String type = data.getString("type");
@@ -486,9 +497,9 @@ public class WeChatModule extends ReactContextBaseJavaModule implements IWXAPIEv
                     @Override
                     public void invoke(@Nullable WXMediaMessage.IMediaObject mediaObject) {
                         if (mediaObject == null) {
-                            callback.invoke(MSG_INVALID_ARGUMENT);
+                            promise.reject("-4", MSG_INVALID_ARGUMENT);
                         } else {
-                            _share(scene, data, thumbImage, mediaObject, callback);
+                            _share(scene, data, thumbImage, mediaObject, promise);
                         }
                     }
                 });
@@ -498,9 +509,9 @@ public class WeChatModule extends ReactContextBaseJavaModule implements IWXAPIEv
                     @Override
                     public void invoke(@Nullable WXMediaMessage.IMediaObject mediaObject) {
                         if (mediaObject == null) {
-                            callback.invoke(MSG_INVALID_ARGUMENT);
+                            promise.reject("-4", MSG_INVALID_ARGUMENT);
                         } else {
-                            _share(scene, data, thumbImage, mediaObject, callback);
+                            _share(scene, data, thumbImage, mediaObject, promise);
                         }
                     }
                 });
@@ -517,13 +528,13 @@ public class WeChatModule extends ReactContextBaseJavaModule implements IWXAPIEv
         }
 
         if (mediaObject == null) {
-            callback.invoke(MSG_INVALID_ARGUMENT);
+            promise.reject("-4", MSG_INVALID_ARGUMENT);
         } else {
-            _share(scene, data, thumbImage, mediaObject, callback);
+            _share(scene, data, thumbImage, mediaObject, promise);
         }
     }
 
-    private void _share(int scene, ReadableMap data, Bitmap thumbImage, WXMediaMessage.IMediaObject mediaObject, Callback callback) {
+    private void _share(int scene, ReadableMap data, Bitmap thumbImage, WXMediaMessage.IMediaObject mediaObject, final Promise promise) {
 
         WXMediaMessage message = new WXMediaMessage();
         message.mediaObject = mediaObject;
@@ -552,7 +563,10 @@ public class WeChatModule extends ReactContextBaseJavaModule implements IWXAPIEv
         req.message = message;
         req.scene = scene;
         req.transaction = UUID.randomUUID().toString();
-        callback.invoke(null, api.sendReq(req));
+        if(api.sendReq(req))
+            promise.resolve(null);
+        else
+            promise.reject("-3", MSG_INVOKE_FAILED);
     }
 
     private WXTextObject _jsonToTextMedia(ReadableMap data) {

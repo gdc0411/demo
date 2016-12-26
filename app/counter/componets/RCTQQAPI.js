@@ -8,7 +8,6 @@
 'use strict';
 
 import { NativeModules, NativeAppEventEmitter } from 'react-native';
-import promisify from 'es6-promisify';
 
 const QQAPI = NativeModules.QQModule;
 
@@ -25,16 +24,6 @@ function translateError(err, result) {
         return this.reject(new Error(err));
     }
     this.reject(Object.assign(new Error(), { origin: err }));
-}
-
-function wrapCheckApi(nativeFunc) {
-    if (!nativeFunc) {
-        return undefined;
-    }
-    const promisified = promisify(nativeFunc, translateError);
-    return (...args) => {
-        return promisified(...args);
-    };
 }
 
 export const getApiVersion = QQAPI.getApiVersion;

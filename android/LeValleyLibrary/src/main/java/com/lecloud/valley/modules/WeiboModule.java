@@ -35,12 +35,15 @@ import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import com.facebook.react.bridge.ActivityEventListener;
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.Callback;
+import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.modules.core.RCTNativeAppEventEmitter;
+import com.lecloud.valley.common.Events;
+import com.sina.weibo.sdk.WeiboAppManager;
 import com.sina.weibo.sdk.api.ImageObject;
 import com.sina.weibo.sdk.api.MusicObject;
 import com.sina.weibo.sdk.api.TextObject;
@@ -59,33 +62,31 @@ import com.sina.weibo.sdk.auth.sso.SsoHandler;
 import com.sina.weibo.sdk.exception.WeiboException;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.annotation.Nullable;
 
+import static com.lecloud.valley.common.Constants.EVENT_PROP_SOCIAL_CODE;
+import static com.lecloud.valley.common.Constants.EVENT_PROP_SOCIAL_MSG;
+import static com.lecloud.valley.common.Constants.MSG_NOT_REGISTERED;
+import static com.lecloud.valley.common.Constants.MSG_NULL_ACTIVITY;
 import static com.lecloud.valley.common.Constants.REACT_CLASS_WEIBO_MODULE;
+import static com.lecloud.valley.common.Constants.WB_SHARE_TYPE_AUDIO;
+import static com.lecloud.valley.common.Constants.WB_SHARE_TYPE_IMAGE;
+import static com.lecloud.valley.common.Constants.WB_SHARE_TYPE_NEWS;
+import static com.lecloud.valley.common.Constants.WB_SHARE_TYPE_TEXT;
+import static com.lecloud.valley.common.Constants.WB_SHARE_TYPE_VIDEO;
 
 /**
  * Created by raojia on 2016/12/26.
  */
 public class WeiboModule extends ReactContextBaseJavaModule implements ActivityEventListener {
 
-    public WeiboModule(ReactApplicationContext reactContext) {
-        super(reactContext);
-        ApplicationInfo appInfo = null;
-        try {
-            appInfo = reactContext.getPackageManager().getApplicationInfo(reactContext.getPackageName(), PackageManager.GET_META_DATA);
-        } catch (PackageManager.NameNotFoundException e) {
-            throw new Error(e);
-        }
-        if (!appInfo.metaData.containsKey("WB_APPID")) {
-            throw new Error("meta-data WB_APPID not found in AndroidManifest.xml");
-        }
-        this.appId = appInfo.metaData.get("WB_APPID").toString();
-        this.appId = this.appId.substring(2);
+//    private static final String RCTWBEventName = "Weibo_Resp";
 
-    }
-
-    private static final String RCTWBEventName = "Weibo_Resp";
+    private final ReactApplicationContext context;
+    private RCTNativeAppEventEmitter mEventEmitter;
 
     private SsoHandler mSinaSsoHandler;
     private IWeiboShareAPI mSinaShareAPI;
@@ -107,18 +108,54 @@ public class WeiboModule extends ReactContextBaseJavaModule implements ActivityE
 
     private static WeiboModule gModule = null;
 
+    public WeiboModule(ReactApplicationContext reactContext) {
+        super(reactContext);
+        context = reactContext;
+
+        ApplicationInfo appInfo;
+        try {
+            appInfo = reactContext.getPackageManager().getApplicationInfo(reactContext.getPackageName(), PackageManager.GET_META_DATA);
+        } catch (PackageManager.NameNotFoundException e) {
+            throw new Error(e);
+        }
+        if (!appInfo.metaData.containsKey("WB_APPID")) {
+            throw new Error("meta-data WB_APPID not found in AndroidManifest.xml");
+        }
+        appId = appInfo.metaData.get("WB_APPID").toString();
+        appId = appId.substring(2);
+    }
+
+    @Override
+    public Map<String, Object> getConstants() {
+        final Map<String, Object> constants = new HashMap<>();
+        constants.put("SHARE_TYPE_NEWS", WB_SHARE_TYPE_NEWS);
+        constants.put("SHARE_TYPE_IMAGE", WB_SHARE_TYPE_IMAGE);
+        constants.put("SHARE_TYPE_TEXT", WB_SHARE_TYPE_TEXT);
+        constants.put("SHARE_TYPE_VIDEO", WB_SHARE_TYPE_VIDEO);
+        constants.put("SHARE_TYPE_AUDIO", WB_SHARE_TYPE_AUDIO);
+        return constants;
+    }
+
     @Override
     public void initialize() {
         super.initialize();
         gModule = this;
-        getReactApplicationContext().addActivityEventListener(this);
+
+        context.addActivityEventListener(this);
+        mEventEmitter = context.getJSModule(RCTNativeAppEventEmitter.class);
+
+        if (mSinaShareAPI == null) {
+            mSinaShareAPI = WeiboShareSDK.createWeiboAPI(context, appId);
+            mSinaShareAPI.registerApp();
+        }
     }
 
     @Override
     public void onCatalystInstanceDestroy() {
-        super.onCatalystInstanceDestroy();
         gModule = null;
-        getReactApplicationContext().removeActivityEventListener(this);
+        mEventEmitter = null;
+        context.removeActivityEventListener(this);
+        super.onCatalystInstanceDestroy();
     }
 
     @Override
@@ -126,22 +163,51 @@ public class WeiboModule extends ReactContextBaseJavaModule implements ActivityE
         return REACT_CLASS_WEIBO_MODULE;
     }
 
-    private IWeiboShareAPI registerShare() {
+
+    @ReactMethod
+    public void getApiVersion(Promise promise) {
         if (mSinaShareAPI == null) {
-            mSinaShareAPI = WeiboShareSDK.createWeiboAPI(getReactApplicationContext(), this.appId);
-            mSinaShareAPI.registerApp();
+            promise.reject("-1", MSG_NOT_REGISTERED);
+            return;
         }
-        return mSinaShareAPI;
+        promise.resolve("3.1.4");
     }
+
+    @ReactMethod
+    public void isWBInstalled(Promise promise) {
+        if (mSinaShareAPI == null) {
+            promise.reject("-1", MSG_NOT_REGISTERED);
+            return;
+        }
+        promise.resolve(mSinaShareAPI.isWeiboAppInstalled());
+    }
+
+    @ReactMethod
+    public void isWBSupportApi(Promise promise) {
+        if (mSinaShareAPI == null) {
+            promise.reject("-1", MSG_NOT_REGISTERED);
+            return;
+        }
+        promise.resolve(mSinaShareAPI.isWeiboAppSupportAPI());
+    }
+
+//    private IWeiboShareAPI registerShare() {
+//        if (mSinaShareAPI == null) {
+//            mSinaShareAPI = WeiboShareSDK.createWeiboAPI(getReactApplicationContext(), appId);
+//            mSinaShareAPI.registerApp();
+//        }
+//        return mSinaShareAPI;
+//    }
 
 
     @ReactMethod
-    public void login(final ReadableMap config, final Callback callback) {
+    public void login(final ReadableMap config, final Promise promise) {
 
-        AuthInfo sinaAuthInfo = this._genAuthInfo(config);
+        AuthInfo sinaAuthInfo = _genAuthInfo(config);
         mSinaSsoHandler = new SsoHandler(getCurrentActivity(), sinaAuthInfo);
-        mSinaSsoHandler.authorize(this.genWeiboAuthListener());
-        callback.invoke();
+        mSinaSsoHandler.authorize(genWeiboAuthListener());
+        promise.resolve(null);
+//        callback.invoke();
     }
 
     @ReactMethod
@@ -218,39 +284,46 @@ public class WeiboModule extends ReactContextBaseJavaModule implements ActivityE
                     event.putDouble("expirationDate", token.getExpiresTime());
                     event.putString("userID", token.getUid());
                     event.putString("refreshToken", token.getRefreshToken());
-                    event.putInt("errCode", 0);
+                    event.putInt(EVENT_PROP_SOCIAL_CODE, 0);
                 } else {
 //                    String code = bundle.getString("code", "");
-                    event.putInt("errCode", -1);
-                    event.putString("errMsg", "token invalid");
+                    event.putInt(EVENT_PROP_SOCIAL_CODE, -1);
+                    event.putString(EVENT_PROP_SOCIAL_MSG, "token invalid");
                 }
                 event.putString("type", "WBAuthorizeResponse");
-                getReactApplicationContext().getJSModule(RCTNativeAppEventEmitter.class).emit(RCTWBEventName, event);
+
+                if (mEventEmitter != null)
+                    mEventEmitter.emit(Events.EVENT_WEIBO_RESP.toString(), event);
+//                getReactApplicationContext().getJSModule(RCTNativeAppEventEmitter.class).emit(RCTWBEventName, event);
             }
 
             @Override
             public void onWeiboException(WeiboException e) {
                 WritableMap event = Arguments.createMap();
                 event.putString("type", "WBAuthorizeResponse");
-                event.putString("errMsg", e.getMessage());
-                event.putInt("errCode", -1);
-                getReactApplicationContext().getJSModule(RCTNativeAppEventEmitter.class).emit(RCTWBEventName, event);
+                event.putString(EVENT_PROP_SOCIAL_MSG, e.getMessage());
+                event.putInt(EVENT_PROP_SOCIAL_CODE, -1);
+                if (mEventEmitter != null)
+                    mEventEmitter.emit(Events.EVENT_WEIBO_RESP.toString(), event);
+//                getReactApplicationContext().getJSModule(RCTNativeAppEventEmitter.class).emit(RCTWBEventName, event);
             }
 
             @Override
             public void onCancel() {
                 WritableMap event = Arguments.createMap();
                 event.putString("type", "WBAuthorizeResponse");
-                event.putString("errMsg", "Cancel");
-                event.putInt("errCode", -1);
-                getReactApplicationContext().getJSModule(RCTNativeAppEventEmitter.class).emit(RCTWBEventName, event);
+                event.putString(EVENT_PROP_SOCIAL_CODE, "Cancel");
+                event.putInt(EVENT_PROP_SOCIAL_MSG, -1);
+                if (mEventEmitter != null)
+                    mEventEmitter.emit(Events.EVENT_WEIBO_RESP.toString(), event);
+//                getReactApplicationContext().getJSModule(RCTNativeAppEventEmitter.class).emit(RCTWBEventName, event);
             }
         };
     }
 
     private void _share(ReadableMap data, Bitmap bitmap) {
 
-        this.registerShare();
+//        this.registerShare();
         WeiboMultiMessage weiboMessage = new WeiboMultiMessage();//初始化微博的分享消息
         TextObject textObject = new TextObject();
         if (data.hasKey(RCTWBShareText)) {
@@ -318,12 +391,14 @@ public class WeiboModule extends ReactContextBaseJavaModule implements ActivityE
             event.putString("type", "WBAuthorizeResponse");
             event.putString("errMsg", "WeiBo API invoke returns false.");
             event.putInt("errCode", -1);
-            getReactApplicationContext().getJSModule(RCTNativeAppEventEmitter.class).emit(RCTWBEventName, event);
+            if (mEventEmitter != null)
+                mEventEmitter.emit(Events.EVENT_WEIBO_RESP.toString(), event);
+//            getReactApplicationContext().getJSModule(RCTNativeAppEventEmitter.class).emit(RCTWBEventName, event);
         }
     }
 
     public static boolean handleWeiboResponse(Intent intent, IWeiboHandler.Response response) {
-        gModule.registerShare();
+//        gModule.registerShare();
         boolean ret = gModule.mSinaShareAPI.handleWeiboResponse(intent, response);
         if (ret) {
             return ret;
@@ -336,9 +411,12 @@ public class WeiboModule extends ReactContextBaseJavaModule implements ActivityE
         map.putInt("errCode", baseResponse.errCode);
         map.putString("errMsg", baseResponse.errMsg);
         map.putString("type", "WBSendMessageToWeiboResponse");
-        gModule.getReactApplicationContext()
-                .getJSModule(RCTNativeAppEventEmitter.class)
-                .emit(RCTWBEventName, map);
+
+        if (gModule.mEventEmitter != null)
+            gModule.mEventEmitter.emit(Events.EVENT_WEIBO_RESP.toString(), map);
+//        gModule.getReactApplicationContext()
+//                .getJSModule(RCTNativeAppEventEmitter.class)
+//                .emit(RCTWBEventName, map);
     }
 
     static public class SinaEntryActivity extends Activity implements IWeiboHandler.Response {
@@ -364,7 +442,7 @@ public class WeiboModule extends ReactContextBaseJavaModule implements ActivityE
         if (config.hasKey("scope")) {
             scope = config.getString("scope");
         }
-        final AuthInfo sinaAuthInfo = new AuthInfo(getReactApplicationContext(), this.appId, redirectURI, scope);
+        final AuthInfo sinaAuthInfo = new AuthInfo(getReactApplicationContext(), appId, redirectURI, scope);
         return sinaAuthInfo;
     }
 

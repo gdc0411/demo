@@ -21,6 +21,7 @@ import { bindActionCreators } from 'redux';
 
 import * as WeChat from '../componets/RCTWechatAPI';
 import * as QQ from '../componets/RCTQQAPI';
+import * as Weibo from '../componets/RCTWeiboAPI';
 
 const {width, height} = Dimensions.get('window');
 
@@ -28,6 +29,9 @@ class social extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            wbApiVersion: 'waiting...',
+            isWBInstalled: 'waiting...',
+            isWBSupportApi: 'waiting...',
             qqApiVersion: 'waiting...',
             isQQInstalled: 'waiting...',
             isQQSupportApi: 'waiting...',
@@ -46,6 +50,9 @@ class social extends Component {
     async componentDidMount() {
         try {
             this.setState({
+                wbApiVersion: await Weibo.getApiVersion(),
+                isWBInstalled: await Weibo.isWBInstalled(),
+                isWBSupportApi: await Weibo.isWBSupportApi(),
                 qqApiVersion: await QQ.getApiVersion(),
                 isQQInstalled: await QQ.isQQInstalled(),
                 isQQSupportApi: await QQ.isQQSupportApi(),
@@ -72,20 +79,43 @@ class social extends Component {
         // console.log('isWXAppInstalled', typeof WeChat.isWXAppInstalled);
     }
 
+    //微博登陆
+    loginToWeibo = () => {
+        Weibo.isWBInstalled()
+            .then((isInstalled) => {
+                if (isInstalled) {
+                    Weibo.login({
+                        scope: 'all', // 默认 'all'
+                        redirectURI: '',
+                    })
+                        .catch(error => {
+                            console.log(error.message);
+                        }).then(resp => {
+                            console.log(resp);
+                            this.setState({
+                                callbackStr: JSON.stringify(resp)
+                            });
+                        });
+                } else {
+                    console.log('没有安装微博，请您安装微博之后再试');
+                }
+            });
+    }
+
     //QQ登陆
     loginToQQ = () => {
         QQ.isQQInstalled()
             .then((isInstalled) => {
                 if (isInstalled) {
                     QQ.login('get_simple_userinfo')
-                    .catch(error => {
-                        console.log(error.message);
-                    }).then(resp => {
-                        console.log(resp);
-                        this.setState({
-                            callbackStr: JSON.stringify(resp)
+                        .catch(error => {
+                            console.log(error.message);
+                        }).then(resp => {
+                            console.log(resp);
+                            this.setState({
+                                callbackStr: JSON.stringify(resp)
+                            });
                         });
-                    });
                 } else {
                     console.log('没有安装QQ，请您安装QQ之后再试');
                 }
@@ -104,7 +134,7 @@ class social extends Component {
                         title: '应用工厂创新应用值得期待',
                         summary: '应用工厂演示QQ分享实例',
                         targetUrl: 'http://www.lecloud.com/zh-cn/',
-                        appName:'应用工厂演示',
+                        appName: '应用工厂演示',
                         cflag: 2
                     }).catch((error) => {
                         console.log(error.message);
@@ -122,7 +152,7 @@ class social extends Component {
 
     }
 
-     //QQ分享给QZone
+    //QQ分享给QZone
     shareToQzone = () => {
         QQ.isQQInstalled()
             .then((isInstalled) => {
@@ -133,7 +163,7 @@ class social extends Component {
                         title: '应用工厂创新应用值得期待',
                         summary: '应用工厂演示QQ分享实例',
                         targetUrl: 'http://www.lecloud.com/zh-cn/',
-                        appName:'应用工厂演示',
+                        appName: '应用工厂演示',
                         cflag: 1
                     }).catch((error) => {
                         console.log(error.message);
@@ -220,7 +250,7 @@ class social extends Component {
                         thumbImage: 'http://cdn.huodongxing.com/file/20160426/11E69610D2AC0F75D7EB61C48EDEA840FB/30132422640007503.jpg',
                         type: WeChat.SHARE_TYPE_VIDEO,
                         description: '应用工厂演示微信分享范例',
-                        videoUrl:'http://www.lecloud.com/zh-cn/',
+                        videoUrl: 'http://www.lecloud.com/zh-cn/',
                         webpageUrl: 'http://www.lecloud.com/zh-cn/'
                     }).catch((error) => {
                         console.log(error.message);
@@ -246,6 +276,9 @@ class social extends Component {
             <View style={[styles.container]}>
 
                 <View style={{ top: 20, left: 10, position: 'absolute' }}>
+                    <Text>微博api版本：{this.state.wbApiVersion}</Text>
+                    <Text>微博已安装：{String(this.state.isWBInstalled)}</Text>
+                    <Text>微博支持api：{String(this.state.isWBSupportApi)}</Text>
                     <Text>QQapi版本：{this.state.qqApiVersion}</Text>
                     <Text>QQ已安装：{String(this.state.isQQInstalled)}</Text>
                     <Text>QQ支持SSO：{String(this.state.isQQSupportApi)}</Text>
@@ -253,6 +286,21 @@ class social extends Component {
                     <Text>微信已安装：{String(this.state.isWXAppInstalled)}</Text>
                     <Text>微信支持api：{String(this.state.isWXAppSupportApi)}</Text>
                     {this.state.callbackStr ? <Text>回调结果：{String(this.state.callbackStr)}</Text> : null}
+                </View>
+
+                <View style={[styles.wbContainer]}>
+                    <TouchableOpacity onPress={this.loginToWeibo}>
+                        <View style={{ alignItems: 'center' }}>
+                            <Image source={require('../../img/loginWeibo.png')} style={styles.bigcodeimage} />
+                            <Text>微博登录</Text>
+                        </View>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={this.shareToQzone}>
+                        <View style={{ alignItems: 'center' }}>
+                            <Image source={require('../../img/shareWeibo.png')} style={styles.bigcodeimage} />
+                            <Text>分享到微博</Text>
+                        </View>
+                    </TouchableOpacity>
                 </View>
 
                 <View style={[styles.qqContainer]}>
@@ -306,6 +354,17 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center'
     },
+    wbContainer: {
+        borderRadius: 10,
+        justifyContent: 'space-around',
+        alignItems: 'center',
+        width: width / 3 * 2,
+        height: height / 5,
+        flexDirection: 'row',
+        position: 'absolute',
+        bottom: 200,
+        left: width / 6
+    },
     qqContainer: {
         borderRadius: 10,
         justifyContent: 'space-around',
@@ -314,7 +373,7 @@ const styles = StyleSheet.create({
         height: height / 5,
         flexDirection: 'row',
         position: 'absolute',
-        bottom: 120,
+        bottom: 100,
         left: width / 6
     },
     wxContainer: {

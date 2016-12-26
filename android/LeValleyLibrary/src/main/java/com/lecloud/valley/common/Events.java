@@ -55,7 +55,7 @@ public enum Events {
     //第三方登录和分享事件
     EVENT_WECHAT_RESP("WeChat_Resp"), //微信响应事件
     EVENT_QQ_RESP("QQ_Resp"), //QQ响应事件
-
+    EVENT_WEIBO_RESP("Weibo_Resp"), //微博响应事件
 
     // 未命名的事件
     EVENT_OTHER_EVENT("onOtherEventInfo");  // 未知事件
