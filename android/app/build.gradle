@@ -98,13 +98,13 @@ android {
         }
         manifestPlaceholders = [
                 //微信的APPID
-                WX_APPID:"wxa9cc420610dce2cb",
+                WX_APPID : "wxa9cc420610dce2cb",
                 WX_SECRET: "a2239a7e15f0b19fad9f9d711f66ad70",
                 //QQ的APPID
-                QQ_APPID:"1105823147",
+                QQ_APPID : "1105823147",
                 QQ_APPKEY: "gidCGpumCa7CfnZs",
                 //微博APPID
-                WB_APPID : "547133116"
+                WB_APPID : "wb547133116"
         ]
     }
     splits {
