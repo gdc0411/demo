@@ -34,9 +34,17 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import static com.lecloud.valley.common.Constants.MSG_INVALID_ARGUMENT;
 import static com.lecloud.valley.common.Constants.MSG_NULL_ACTIVITY;
+import static com.lecloud.valley.common.Constants.QQ_SHARE_TYPE_APP;
+import static com.lecloud.valley.common.Constants.QQ_SHARE_TYPE_AUDIO;
+import static com.lecloud.valley.common.Constants.QQ_SHARE_TYPE_IMAGE;
+import static com.lecloud.valley.common.Constants.QQ_SHARE_TYPE_NEWS;
+import static com.lecloud.valley.common.Constants.QQ_SHARE_TYPE_TEXT;
+import static com.lecloud.valley.common.Constants.QQ_SHARE_TYPE_VIDEO;
 import static com.lecloud.valley.common.Constants.REACT_CLASS_QQ_MODULE;
 import static com.lecloud.valley.common.Constants.MSG_NOT_REGISTERED;
 import static com.lecloud.valley.common.Constants.MSG_INVOKE_FAILED;
@@ -50,19 +58,6 @@ public class QQModule extends ReactContextBaseJavaModule implements IUiListener,
 
     private final ReactApplicationContext context;
     private RCTNativeAppEventEmitter mEventEmitter;
-
-    //    private static final String RCTQQShareTypeNews = "news";
-//    private static final String RCTQQShareTypeImage = "image";
-//    private static final String RCTQQShareTypeText = "text";
-//    private static final String RCTQQShareTypeVideo = "video";
-//    private static final String RCTQQShareTypeAudio = "audio";
-//
-    private static final String RCTQQShareType = "type";
-//    private static final String RCTQQShareText = "text";
-//    private static final String RCTQQShareTitle = "title";
-//    private static final String RCTQQShareDescription = "description";
-//    private static final String RCTQQShareWebpageUrl = "webpageUrl";
-//    private static final String RCTQQShareImageUrl = "imageUrl";
 
     private static final int SHARE_RESULT_CODE_SUCCESSFUL = 0;
     private static final int SHARE_RESULT_CODE_FAILED = 1;
@@ -97,8 +92,15 @@ public class QQModule extends ReactContextBaseJavaModule implements IUiListener,
     }
 
     @Override
-    public String getName() {
-        return REACT_CLASS_QQ_MODULE;
+    public Map<String, Object> getConstants() {
+        final Map<String, Object> constants = new HashMap<>();
+        constants.put("SHARE_TYPE_NEWS", QQ_SHARE_TYPE_NEWS);
+        constants.put("SHARE_TYPE_IMAGE", QQ_SHARE_TYPE_IMAGE);
+        constants.put("SHARE_TYPE_TEXT", QQ_SHARE_TYPE_TEXT);
+        constants.put("SHARE_TYPE_VIDEO", QQ_SHARE_TYPE_VIDEO);
+        constants.put("SHARE_TYPE_AUDIO", QQ_SHARE_TYPE_AUDIO);
+        constants.put("SHARE_TYPE_APP", QQ_SHARE_TYPE_APP);
+        return constants;
     }
 
     @Override
@@ -119,6 +121,11 @@ public class QQModule extends ReactContextBaseJavaModule implements IUiListener,
         mEventEmitter = null;
         getReactApplicationContext().removeActivityEventListener(this);
         super.onCatalystInstanceDestroy();
+    }
+
+    @Override
+    public String getName() {
+        return REACT_CLASS_QQ_MODULE;
     }
 
     @ReactMethod
@@ -227,11 +234,30 @@ public class QQModule extends ReactContextBaseJavaModule implements IUiListener,
     }
 
 
+    @ReactMethod
+    public void logout(Promise promise) {
+        Log.d(TAG, LogUtils.getTraceInfo() + "QQ登录注销 ——— ");
+
+        isLoginOperation = true;
+
+        if (api == null) {
+            promise.reject("-1", MSG_NOT_REGISTERED);
+            return;
+        } else if (context.getCurrentActivity() == null) {
+            promise.reject("-2", MSG_NULL_ACTIVITY);
+            return;
+        }
+        if (api.isSessionValid()) {
+            api.logout(context.getCurrentActivity());
+            promise.resolve(null);
+        }
+    }
+
     private Bundle _makeQQShare(ReadableMap data) {
         Bundle bundle = null;
-        int type = data.hasKey("req_type") ? data.getInt("req_type") : QQShare.SHARE_TO_QQ_TYPE_DEFAULT;
+        String type = data.hasKey("type") ? data.getString("type") : QQ_SHARE_TYPE_NEWS;
         switch (type) {
-            case 1: //图文分享
+            case QQ_SHARE_TYPE_NEWS: //图文分享
 
                 bundle = new Bundle();
                 bundle.putInt(QQShare.SHARE_TO_QQ_KEY_TYPE, QQShare.SHARE_TO_QQ_TYPE_DEFAULT);
@@ -254,7 +280,7 @@ public class QQModule extends ReactContextBaseJavaModule implements IUiListener,
                     bundle.putInt(QQShare.SHARE_TO_QQ_EXT_INT, data.getInt("cflag"));
                 break;
 
-            case 5: //纯图片分享
+            case QQ_SHARE_TYPE_IMAGE: //纯图片分享
 
                 bundle = new Bundle();
                 bundle.putInt(QQShare.SHARE_TO_QQ_KEY_TYPE, QQShare.SHARE_TO_QQ_TYPE_IMAGE);
@@ -270,7 +296,7 @@ public class QQModule extends ReactContextBaseJavaModule implements IUiListener,
                     bundle.putInt(QQShare.SHARE_TO_QQ_EXT_INT, data.getInt("cflag"));
                 break;
 
-            case 2: //音乐分享
+            case QQ_SHARE_TYPE_AUDIO: //音乐分享
 
                 bundle = new Bundle();
                 bundle.putInt(QQShare.SHARE_TO_QQ_KEY_TYPE, QQShare.SHARE_TO_QQ_TYPE_AUDIO);
@@ -295,7 +321,8 @@ public class QQModule extends ReactContextBaseJavaModule implements IUiListener,
                     bundle.putInt(QQShare.SHARE_TO_QQ_EXT_INT, data.getInt("cflag"));
                 break;
 
-            case 6: //应用分享
+
+            case QQ_SHARE_TYPE_APP: //应用分享
 
                 bundle = new Bundle();
                 bundle.putInt(QQShare.SHARE_TO_QQ_KEY_TYPE, QQShare.SHARE_TO_QQ_TYPE_APP);
@@ -324,9 +351,9 @@ public class QQModule extends ReactContextBaseJavaModule implements IUiListener,
 
     private Bundle _makeQzoneShare(ReadableMap data) {
         Bundle bundle = null;
-        int type = data.hasKey("req_type") ? data.getInt("req_type") : QzoneShare.SHARE_TO_QZONE_TYPE_NO_TYPE;
+        String type = data.hasKey("type") ? data.getString("type") : QQ_SHARE_TYPE_NEWS;
         switch (type) {
-            case 1: //图文分享
+            case QQ_SHARE_TYPE_NEWS: //图文分享
                 bundle = new Bundle();
                 bundle.putInt(QzoneShare.SHARE_TO_QZONE_KEY_TYPE, QzoneShare.SHARE_TO_QZONE_TYPE_IMAGE_TEXT);
                 bundle.putString(QzoneShare.SHARE_TO_QQ_TITLE, data.hasKey("title") ? data.getString("title") : ""); //分享的标题，最长30个字符
@@ -343,8 +370,8 @@ public class QQModule extends ReactContextBaseJavaModule implements IUiListener,
                 }
                 break;
 
-            case 3: //发表说说、或上传图片
-            case 4: //上传视频
+            case QQ_SHARE_TYPE_IMAGE: //发表说说、或上传图片
+            case QQ_SHARE_TYPE_VIDEO: //上传视频
 
                 bundle = new Bundle();
                 bundle.putInt(QzoneShare.SHARE_TO_QZONE_KEY_TYPE, QzonePublish.PUBLISH_TO_QZONE_TYPE_PUBLISHMOOD);

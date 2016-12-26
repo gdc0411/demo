@@ -67,10 +67,19 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import static com.lecloud.valley.common.Constants.EVENT_PROP_SOCIAL_CODE;
+import static com.lecloud.valley.common.Constants.EVENT_PROP_SOCIAL_MSG;
 import static com.lecloud.valley.common.Constants.MSG_NOT_REGISTERED;
 import static com.lecloud.valley.common.Constants.MSG_INVOKE_FAILED;
 import static com.lecloud.valley.common.Constants.MSG_INVALID_ARGUMENT;
 import static com.lecloud.valley.common.Constants.REACT_CLASS_WECHAT_MODULE;
+import static com.lecloud.valley.common.Constants.WX_SHARE_TYPE_AUDIO;
+import static com.lecloud.valley.common.Constants.WX_SHARE_TYPE_FILE;
+import static com.lecloud.valley.common.Constants.WX_SHARE_TYPE_IMAGE;
+import static com.lecloud.valley.common.Constants.WX_SHARE_TYPE_IMAGE_FILE;
+import static com.lecloud.valley.common.Constants.WX_SHARE_TYPE_NEWS;
+import static com.lecloud.valley.common.Constants.WX_SHARE_TYPE_TEXT;
+import static com.lecloud.valley.common.Constants.WX_SHARE_TYPE_VIDEO;
 import static com.lecloud.valley.utils.LogUtils.TAG;
 
 /**
@@ -89,11 +98,6 @@ public class WeChatModule extends ReactContextBaseJavaModule implements IWXAPIEv
 
     private static final int TIMELINE_SUPPORTED_VERSION = 0x21020001;
 
-
-    @Override
-    public String getName() {
-        return REACT_CLASS_WECHAT_MODULE;
-    }
 
     public WeChatModule(ReactApplicationContext reactContext) {
 
@@ -125,6 +129,13 @@ public class WeChatModule extends ReactContextBaseJavaModule implements IWXAPIEv
     public Map<String, Object> getConstants() {
         final Map<String, Object> constants = new HashMap<>();
         constants.put("isAppRegistered", gIsAppRegistered);
+        constants.put("SHARE_TYPE_NEWS", WX_SHARE_TYPE_NEWS);
+        constants.put("SHARE_TYPE_IMAGE", WX_SHARE_TYPE_IMAGE);
+        constants.put("SHARE_TYPE_IMAGE_FILE", WX_SHARE_TYPE_IMAGE_FILE);
+        constants.put("SHARE_TYPE_TEXT", WX_SHARE_TYPE_TEXT);
+        constants.put("SHARE_TYPE_VIDEO", WX_SHARE_TYPE_VIDEO);
+        constants.put("SHARE_TYPE_AUDIO", WX_SHARE_TYPE_AUDIO);
+        constants.put("SHARE_TYPE_FILE", WX_SHARE_TYPE_FILE);
         return constants;
     }
 
@@ -153,6 +164,11 @@ public class WeChatModule extends ReactContextBaseJavaModule implements IWXAPIEv
         mEventEmitter = null;
         gModule = null;
         super.onCatalystInstanceDestroy();
+    }
+
+    @Override
+    public String getName() {
+        return REACT_CLASS_WECHAT_MODULE;
     }
 
     /**
@@ -231,6 +247,7 @@ public class WeChatModule extends ReactContextBaseJavaModule implements IWXAPIEv
         }
         callback.invoke(api.sendReq(req) ? null : MSG_INVOKE_FAILED);
     }
+
 
     /**
      * 微信分享朋友圈
@@ -312,11 +329,11 @@ public class WeChatModule extends ReactContextBaseJavaModule implements IWXAPIEv
     @Override
     public void onResp(BaseResp baseResp) {
         WritableMap map = Arguments.createMap();
-        map.putInt("errCode", baseResp.errCode);
+        map.putInt(EVENT_PROP_SOCIAL_CODE, baseResp.errCode);
         if (baseResp.errStr == null || baseResp.errStr.length() <= 0) {
-            map.putString("errStr", _getErrorMsg(baseResp.errCode));
+            map.putString(EVENT_PROP_SOCIAL_MSG, _getErrorMsg(baseResp.errCode));
         } else {
-            map.putString("errStr", baseResp.errStr);
+            map.putString(EVENT_PROP_SOCIAL_MSG, baseResp.errStr);
         }
         map.putString("transaction", baseResp.transaction);
         if (baseResp instanceof SendAuth.Resp) {
@@ -457,40 +474,46 @@ public class WeChatModule extends ReactContextBaseJavaModule implements IWXAPIEv
         String type = data.getString("type");
 
         WXMediaMessage.IMediaObject mediaObject = null;
-        if (type.equals("news")) {
-            mediaObject = _jsonToWebpageMedia(data);
-        } else if (type.equals("text")) {
-            mediaObject = _jsonToTextMedia(data);
-        } else if (type.equals("imageUrl") || type.equals("imageResource")) {
-            __jsonToImageUrlMedia(data, new MediaObjectCallback() {
-                @Override
-                public void invoke(@Nullable WXMediaMessage.IMediaObject mediaObject) {
-                    if (mediaObject == null) {
-                        callback.invoke(MSG_INVALID_ARGUMENT);
-                    } else {
-                        WeChatModule.this._share(scene, data, thumbImage, mediaObject, callback);
+        switch (type) {
+            case WX_SHARE_TYPE_NEWS:
+                mediaObject = _jsonToWebpageMedia(data);
+                break;
+            case WX_SHARE_TYPE_TEXT:
+                mediaObject = _jsonToTextMedia(data);
+                break;
+            case WX_SHARE_TYPE_IMAGE:
+                __jsonToImageUrlMedia(data, new MediaObjectCallback() {
+                    @Override
+                    public void invoke(@Nullable WXMediaMessage.IMediaObject mediaObject) {
+                        if (mediaObject == null) {
+                            callback.invoke(MSG_INVALID_ARGUMENT);
+                        } else {
+                            _share(scene, data, thumbImage, mediaObject, callback);
+                        }
                     }
-                }
-            });
-            return;
-        } else if (type.equals("imageFile")) {
-            __jsonToImageFileMedia(data, new MediaObjectCallback() {
-                @Override
-                public void invoke(@Nullable WXMediaMessage.IMediaObject mediaObject) {
-                    if (mediaObject == null) {
-                        callback.invoke(MSG_INVALID_ARGUMENT);
-                    } else {
-                        WeChatModule.this._share(scene, data, thumbImage, mediaObject, callback);
+                });
+                return;
+            case WX_SHARE_TYPE_IMAGE_FILE:
+                __jsonToImageFileMedia(data, new MediaObjectCallback() {
+                    @Override
+                    public void invoke(@Nullable WXMediaMessage.IMediaObject mediaObject) {
+                        if (mediaObject == null) {
+                            callback.invoke(MSG_INVALID_ARGUMENT);
+                        } else {
+                            _share(scene, data, thumbImage, mediaObject, callback);
+                        }
                     }
-                }
-            });
-            return;
-        } else if (type.equals("video")) {
-            mediaObject = __jsonToVideoMedia(data);
-        } else if (type.equals("audio")) {
-            mediaObject = __jsonToMusicMedia(data);
-        } else if (type.equals("file")) {
-            mediaObject = __jsonToFileMedia(data);
+                });
+                return;
+            case WX_SHARE_TYPE_VIDEO:
+                mediaObject = __jsonToVideoMedia(data);
+                break;
+            case WX_SHARE_TYPE_AUDIO:
+                mediaObject = __jsonToMusicMedia(data);
+                break;
+            case WX_SHARE_TYPE_FILE:
+                mediaObject = __jsonToFileMedia(data);
+                break;
         }
 
         if (mediaObject == null) {

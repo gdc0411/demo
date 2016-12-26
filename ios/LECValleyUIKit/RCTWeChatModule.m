@@ -18,24 +18,23 @@
 #import "RCTEventDispatcher.h"
 
 
-// define share type constants
+// 定义分享类型常量
 #define RCTWXShareTypeNews @"news"
 #define RCTWXShareTypeImage @"image"
-#define RCTWXShareTypeThumbImageUrl @"thumbImage"
-#define RCTWXShareTypeImageUrl @"imageUrl"
 #define RCTWXShareTypeImageFile @"imageFile"
-#define RCTWXShareTypeImageResource @"imageResource"
 #define RCTWXShareTypeText @"text"
 #define RCTWXShareTypeVideo @"video"
 #define RCTWXShareTypeAudio @"audio"
 #define RCTWXShareTypeFile @"file"
 
+// 定义分享字段名
 #define RCTWXShareType @"type"
 #define RCTWXShareTitle @"title"
 #define RCTWXShareText @"text"
 #define RCTWXShareDescription @"description"
 #define RCTWXShareWebpageUrl @"webpageUrl"
 #define RCTWXShareImageUrl @"imageUrl"
+#define RCTWXShareThumbImageUrl @"thumbImage"
 #define RCTWXShareThumbImageSize @"thumbImageSize"
 
 
@@ -56,7 +55,14 @@ RCT_EXPORT_MODULE()
 
 - (NSDictionary *)constantsToExport
 {
-    return @{ @"isAppRegistered":@(gIsApiRegistered)};
+    return @{ @"isAppRegistered"        : @(gIsApiRegistered),
+              @"SHARE_TYPE_NEWS"        : RCTWXShareTypeNews,
+              @"SHARE_TYPE_IMAGE"       : RCTWXShareTypeImage,
+              @"SHARE_TYPE_IMAGE_FILE"  : RCTWXShareTypeImageFile,
+              @"SHARE_TYPE_TEXT"        : RCTWXShareTypeText,
+              @"SHARE_TYPE_VIDEO"       : RCTWXShareTypeVideo,
+              @"SHARE_TYPE_AUDIO"       : RCTWXShareTypeAudio,
+              @"SHARE_TYPE_FILE"        : RCTWXShareTypeFile};
 }
 
 - (dispatch_queue_t)methodQueue
@@ -214,9 +220,7 @@ RCT_EXPORT_METHOD(pay:(NSDictionary *)data:(RCTResponseSenderBlock)callback)
                                        MediaTag:mediaTagName
                                        callBack:callback];
             
-        } else if ([type isEqualToString:RCTWXShareTypeImageUrl] ||
-                   [type isEqualToString:RCTWXShareTypeImageFile] ||
-                   [type isEqualToString:RCTWXShareTypeImageResource]) {
+        } else if ([type isEqualToString:RCTWXShareTypeImage]) {
             NSURL *url = [NSURL URLWithString:aData[RCTWXShareImageUrl]];
             NSURLRequest *imageRequest = [NSURLRequest requestWithURL:url];
             [self.bridge.imageLoader loadImageWithURLRequest:imageRequest callback:^(NSError *error, UIImage *image) {
@@ -264,7 +268,7 @@ RCT_EXPORT_METHOD(pay:(NSDictionary *)data:(RCTResponseSenderBlock)callback)
 
 - (void)shareToWeixinWithData:(NSDictionary *)aData scene:(int)aScene callback:(RCTResponseSenderBlock)aCallBack
 {
-    NSString *imageUrl = aData[RCTWXShareTypeThumbImageUrl];
+    NSString *imageUrl = aData[RCTWXShareThumbImageUrl];
     if (imageUrl.length && _bridge.imageLoader) {
         NSURL *url = [NSURL URLWithString:imageUrl];
         NSURLRequest *imageRequest = [NSURLRequest requestWithURL:url];

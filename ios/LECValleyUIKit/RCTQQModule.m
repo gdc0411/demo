@@ -27,6 +27,7 @@
 #define RCTQQShareTypeText @"text"
 #define RCTQQShareTypeVideo @"video"
 #define RCTQQShareTypeAudio @"audio"
+#define RCTQQShareTypeApp @"app"
 
 #define RCTQQShareType @"type"
 #define RCTQQShareTitle @"title"
@@ -46,6 +47,16 @@
 @synthesize bridge = _bridge;
 
 RCT_EXPORT_MODULE();
+
+- (NSDictionary *)constantsToExport
+{
+    return @{ @"SHARE_TYPE_NEWS"  : RCTQQShareTypeNews,
+              @"SHARE_TYPE_IMAGE" : RCTQQShareTypeImage,
+              @"SHARE_TYPE_TEXT"  : RCTQQShareTypeText,
+              @"SHARE_TYPE_VIDEO" : RCTQQShareTypeVideo,
+              @"SHARE_TYPE_AUDIO" : RCTQQShareTypeAudio,
+              @"SHARE_TYPE_APP"   : RCTQQShareTypeApp};
+}
 
 - (dispatch_queue_t)methodQueue
 {
@@ -152,7 +163,9 @@ RCT_EXPORT_METHOD(shareToQzone:(NSDictionary *)data
 
 RCT_EXPORT_METHOD(logout)
 {
-    [_qqapi logout:nil];
+    if( _qqapi != nil && [_qqapi isSessionValid] ){
+        [_qqapi logout:nil];
+    }
 }
 
 - (void)_shareToQQWithData:(NSDictionary *)aData
@@ -185,10 +198,9 @@ RCT_EXPORT_METHOD(logout)
                    resolve:(RCTPromiseResolveBlock)resolve
                     reject:(RCTPromiseRejectBlock)reject {
     
-    int type = [aData[@"req_type"] intValue];
+    NSString* type = aData[@"type"];
     
     NSString *title = aData[@"title"];
-    
     NSString *description= aData[@"summary"];
     NSString *imgPath = aData[@"imageUrl"];
     NSString *webpageUrl = aData[@"targetUrl"]? :@"";
@@ -196,18 +208,18 @@ RCT_EXPORT_METHOD(logout)
     
     QQApiObject *message = nil;
     
-    if (type == 1) { //图文
+    if ([type isEqualToString:RCTQQShareTypeNews]) { //图文
         message = [QQApiNewsObject
                    objectWithURL:[NSURL URLWithString:webpageUrl]
                    title:title
                    description:description
                    previewImageURL:[NSURL URLWithString:imgPath]];
         
-    }else if (type == 7) { //纯文字
+    }else if ([type isEqualToString:RCTQQShareTypeText]) { //纯文字
         
         message = [QQApiTextObject objectWithText:description];
         
-    }else if ( type == 5) { //纯图
+    }else if ( [type isEqualToString:RCTQQShareTypeImage]) { //纯图
         
         NSData *imgData = UIImageJPEGRepresentation(image, 1);
         message = [QQApiImageObject objectWithData:imgData
@@ -215,7 +227,7 @@ RCT_EXPORT_METHOD(logout)
                                              title:title
                                        description:description];
         
-    }else if (type == 2) { //音乐
+    }else if ([type isEqualToString:RCTQQShareTypeAudio]) { //音乐
         QQApiAudioObject *audioObj = [QQApiAudioObject objectWithURL:[NSURL URLWithString:webpageUrl]
                                                                title:title
                                                          description:description
@@ -225,7 +237,7 @@ RCT_EXPORT_METHOD(logout)
         }
         message = audioObj;
         
-    }else if (type ==4 ) { //视频
+    }else if ([type isEqualToString:RCTQQShareTypeVideo] ) { //视频
         QQApiVideoObject *videoObj = [QQApiVideoObject objectWithURL:[NSURL URLWithString:webpageUrl]
                                                                title:title
                                                          description:description

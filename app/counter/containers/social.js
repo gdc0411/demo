@@ -24,7 +24,7 @@ import * as QQ from '../componets/RCTQQAPI';
 
 const {width, height} = Dimensions.get('window');
 
-class share extends Component {
+class social extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -99,7 +99,7 @@ class share extends Component {
             .then((isInstalled) => {
                 if (isInstalled) {
                     QQ.shareToQQ({
-                        req_type: 1, //1:图文，2：音乐，5：纯图，6：应用，7：纯文本
+                        type: QQ.SHARE_TYPE_NEWS,
                         imageUrl: 'http://cdn.huodongxing.com/file/20160426/11E69610D2AC0F75D7EB61C48EDEA840FB/30132422640007503.jpg',
                         title: '应用工厂创新应用值得期待',
                         summary: '应用工厂演示QQ分享实例',
@@ -128,7 +128,7 @@ class share extends Component {
             .then((isInstalled) => {
                 if (isInstalled) {
                     QQ.shareToQzone({
-                        req_type: 1, //1:图文, 3:说说, 4:视频
+                        type: QQ.SHARE_TYPE_NEWS,
                         imageUrl: 'http://cdn.huodongxing.com/file/20160426/11E69610D2AC0F75D7EB61C48EDEA840FB/30132422640007503.jpg',
                         title: '应用工厂创新应用值得期待',
                         summary: '应用工厂演示QQ分享实例',
@@ -189,9 +189,9 @@ class share extends Component {
             .then((isInstalled) => {
                 if (isInstalled) {
                     WeChat.shareToSession({
-                        thumbImage: 'http://cdn.huodongxing.com/file/20160426/11E69610D2AC0F75D7EB61C48EDEA840FB/30132422640007503.jpg',
-                        type: 'news',
                         title: '应用工厂演示', // WeChat app treat title as file name
+                        thumbImage: 'http://cdn.huodongxing.com/file/20160426/11E69610D2AC0F75D7EB61C48EDEA840FB/30132422640007503.jpg',
+                        type: WeChat.SHARE_TYPE_NEWS,
                         description: '应用工厂演示微信分享范例',
                         webpageUrl: 'http://www.lecloud.com/zh-cn/',
                     }).catch((error) => {
@@ -217,9 +217,10 @@ class share extends Component {
                 if (isInstalled) {
                     WeChat.shareToTimeline({
                         title: '应用工厂演示',
-                        description: '应用工厂演示微信分享范例',
                         thumbImage: 'http://cdn.huodongxing.com/file/20160426/11E69610D2AC0F75D7EB61C48EDEA840FB/30132422640007503.jpg',
-                        type: 'news',
+                        type: WeChat.SHARE_TYPE_VIDEO,
+                        description: '应用工厂演示微信分享范例',
+                        videoUrl:'http://www.lecloud.com/zh-cn/',
                         webpageUrl: 'http://www.lecloud.com/zh-cn/'
                     }).catch((error) => {
                         console.log(error.message);
@@ -347,4 +348,4 @@ const styles = StyleSheet.create({
 
 
 //连接Redux
-export default share;
+export default social;

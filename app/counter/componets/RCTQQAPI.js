@@ -80,6 +80,31 @@ export function login(scopes) {
         .then(() => waitForResponse("QQAuthorizeResponse"));
 }
 
+/**
+ * 分享类型：图文、新闻（QQ，QZONE）
+ */
+export const SHARE_TYPE_NEWS = QQAPI.SHARE_TYPE_NEWS;
+/**
+ * 分享类型：纯图片（QQ、QZONE）
+ */
+export const SHARE_TYPE_IMAGE = QQAPI.SHARE_TYPE_IMAGE;
+/**
+ * 分享类型：纯文本(仅支持iOS版QQ)
+ */
+export const SHARE_TYPE_TEXT = QQAPI.SHARE_TYPE_TEXT;
+/**
+ * 分享类型：视频（仅支持iOS版QQ）
+ */
+export const SHARE_TYPE_VIDEO = QQAPI.SHARE_TYPE_VIDEO;
+/**
+ * 分享类型：音乐（QQ、QZone）
+ */
+export const SHARE_TYPE_AUDIO = QQAPI.SHARE_TYPE_AUDIO;
+/**
+ * 分享类型：应用推广（仅Android）
+ */
+export const SHARE_TYPE_APP = QQAPI.SHARE_TYPE_APP;
+
 export function shareToQQ(data = {}) {
     return QQAPI.shareToQQ(data)
         .then(() => waitForResponse("QQShareResponse"));

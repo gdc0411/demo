@@ -73,7 +73,7 @@ class home extends Component {
     //跳转到分享
     skipToShare = () => {
         const {navigator} = this.props;
-        navigator.push({ location: '/share' });
+        navigator.push({ location: '/social' });
     }
 
     //加

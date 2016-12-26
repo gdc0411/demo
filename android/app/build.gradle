@@ -96,6 +96,16 @@ android {
         ndk {
             abiFilters "armeabi-v7a", "x86"
         }
+        manifestPlaceholders = [
+                //微信的APPID
+                WX_APPID:"wxa9cc420610dce2cb",
+                WX_SECRET: "a2239a7e15f0b19fad9f9d711f66ad70",
+                //QQ的APPID
+                QQ_APPID:"1105823147",
+                QQ_APPKEY: "gidCGpumCa7CfnZs",
+                //微博APPID
+                WB_APPID : "547133116"
+        ]
     }
     splits {
         abi {
@@ -159,13 +169,12 @@ android {
         release.setRoot('build-types/release')
     }
 
-
     // applicationVariants are e.g. debug, release
     applicationVariants.all { variant ->
         variant.outputs.each { output ->
             // For each separate APK per architecture, set a unique version code as described here:
             // http://tools.android.com/tech-docs/new-build-system/user-guide/apk-splits
-            def versionCodes = ["armeabi-v7a":1, "x86":2]
+            def versionCodes = ["armeabi-v7a": 1, "x86": 2]
             def abi = output.getFilter(OutputFile.ABI)
             if (abi != null) {  // null for the universal-debug, universal-release variants
                 output.versionCodeOverride =
@@ -188,6 +197,6 @@ dependencies {
 // Run this once to be able to run the application with BUCK
 // puts all compile dependencies into folder libs for BUCK to use
 task copyDownloadableDepsToLibs(type: Copy) {
-  from configurations.compile
-  into 'libs'
+    from configurations.compile
+    into 'libs'
 }

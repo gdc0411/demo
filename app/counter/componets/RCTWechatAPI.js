@@ -99,7 +99,6 @@ export const getApiVersion = wrapCheckApi(WeChatAPI.getApiVersion);
  */
 export const openWXApp = wrapCheckApi(WeChatAPI.openWXApp);
 
-
 function wrapApi(nativeFunc) {
     if (!nativeFunc) {
         return undefined;
@@ -123,9 +122,38 @@ function wrapApi(nativeFunc) {
 }
 
 const nativeSendAuthRequest = wrapApi(WeChatAPI.sendAuth);
+
 const nativeShareToTimelineRequest = wrapApi(WeChatAPI.shareToTimeline);
 const nativeShareToSessionRequest = wrapApi(WeChatAPI.shareToSession);
 const nativePayRequest = wrapApi(WeChatAPI.pay);
+/**
+ * 分享类型：图文、新闻
+ */
+export const SHARE_TYPE_NEWS = WeChatAPI.SHARE_TYPE_NEWS;
+/**
+ * 分享类型：纯图片（网络地址）
+ */
+export const SHARE_TYPE_IMAGE = WeChatAPI.SHARE_TYPE_IMAGE;
+/**
+ * 分享类型：纯图片（本地相册）
+ */
+export const SHARE_TYPE_IMAGE_FILE = WeChatAPI.SHARE_TYPE_IMAGE_FILE;
+/**
+ * 分享类型：纯文本
+ */
+export const SHARE_TYPE_TEXT = WeChatAPI.SHARE_TYPE_TEXT;
+/**
+ * 分享类型：视频
+ */
+export const SHARE_TYPE_VIDEO = WeChatAPI.SHARE_TYPE_VIDEO;
+/**
+ * 分享类型：音乐
+ */
+export const SHARE_TYPE_AUDIO = WeChatAPI.SHARE_TYPE_AUDIO;
+/**
+ * 分享类型：文件
+ */
+export const SHARE_TYPE_FILE = WeChatAPI.SHARE_TYPE_FILE;
 
 /**
  * 微信登陆
@@ -145,7 +173,7 @@ export function sendAuth(config) {
  */
 export function getToken(data) {
     if (!(data && data.appid && data.secret && data.code)) return;
-    return fetch(`https://api.weixin.qq.com/sns/oauth2/access_token?appid=${data.appid}&secret=${data.secret}&code=${data.code}&grant_type=authorization_code`)        
+    return fetch(`https://api.weixin.qq.com/sns/oauth2/access_token?appid=${data.appid}&secret=${data.secret}&code=${data.code}&grant_type=authorization_code`)
         .then(response => response.json()).catch(error => reject(error));
 
 }

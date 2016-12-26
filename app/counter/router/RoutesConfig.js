@@ -6,7 +6,7 @@ import { Route } from 'react-router';
 import home from '../containers/home';
 import play from '../containers/play';
 import device from '../containers/device';
-import share from '../containers/share';
+import social from '../containers/social';
 import orient from '../containers/orient';
 
 export default module.exports = {
@@ -20,8 +20,8 @@ export default module.exports = {
             component: device
         },
         {
-            path: '/share',
-            component: share
+            path: '/social',
+            component: social
         },
         {
             path: '/orient',

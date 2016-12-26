@@ -159,4 +159,29 @@ public interface Constants {
     String MSG_INVOKE_FAILED = "INVOKE_FAILED";
     String MSG_INVALID_ARGUMENT = "INVALID_ARGUMENT";
 
+    String EVENT_PROP_SOCIAL_CODE = "errCode";
+    String EVENT_PROP_SOCIAL_MSG = "errStr";
+
+    String WX_SHARE_TYPE_NEWS = "news";
+    String WX_SHARE_TYPE_IMAGE = "image";
+    String WX_SHARE_TYPE_IMAGE_FILE = "imageFile";
+    String WX_SHARE_TYPE_TEXT = "text";
+    String WX_SHARE_TYPE_VIDEO = "video";
+    String WX_SHARE_TYPE_AUDIO = "audio";
+    String WX_SHARE_TYPE_FILE = "file";
+
+
+    String QQ_SHARE_TYPE_NEWS = "news";
+    String QQ_SHARE_TYPE_IMAGE = "image";
+    String QQ_SHARE_TYPE_TEXT = "text";
+    String QQ_SHARE_TYPE_VIDEO = "video";
+    String QQ_SHARE_TYPE_AUDIO = "audio";
+    String QQ_SHARE_TYPE_APP = "app";
+
+    String WB_SHARE_TYPE_NEWS = "news";
+    String WB_SHARE_TYPE_IMAGE = "image";
+    String WB_SHARE_TYPE_TEXT = "text";
+    String WB_SHARE_TYPE_VIDEO = "video";
+    String WB_SHARE_TYPE_AUDIO = "audio";
+
 }
