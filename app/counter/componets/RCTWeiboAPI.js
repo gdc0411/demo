@@ -87,6 +87,31 @@ export const isWBSupportApi = WeiboAPI.isWBSupportApi;
 // const nativeSendAuthRequest = wrapApi(WeiboAPI.login);
 // const nativeSendMessageRequest = wrapApi(WeiboAPI.shareToWeibo);
 
+/**
+ * 分享类型：图文、新闻
+ */
+export const SHARE_TYPE_NEWS = WeiboAPI.SHARE_TYPE_NEWS;
+/**
+ * 分享类型：纯图片（网络地址）
+ */
+export const SHARE_TYPE_IMAGE = WeiboAPI.SHARE_TYPE_IMAGE;
+/**
+ * 分享类型：纯文本
+ */
+export const SHARE_TYPE_TEXT = WeiboAPI.SHARE_TYPE_TEXT;
+/**
+ * 分享类型：视频
+ */
+export const SHARE_TYPE_VIDEO = WeiboAPI.SHARE_TYPE_VIDEO;
+/**
+ * 分享类型：音乐
+ */
+export const SHARE_TYPE_AUDIO = WeiboAPI.SHARE_TYPE_AUDIO;
+/**
+ * 分享类型：声音
+ */
+export const SHARE_TYPE_FILE = WeiboAPI.SHARE_TYPE_VOICE;
+
 export function login(config = {}) {
     checkData(config);
     // return Promise.all([waitForResponse('WBAuthorizeResponse'), nativeSendAuthRequest(config)]).then(v=>v[0]);
@@ -94,7 +119,9 @@ export function login(config = {}) {
     return WeiboAPI.login(config).then(() => waitForResponse("WBAuthorizeResponse"));
 }
 
-export function share(data) {
+export function shareToWeibo(data) {
     checkData(data);
-    return Promise.all([waitForResponse('WBSendMessageToWeiboResponse'), WeiboAPI.shareToWeibo(data)]).then(v => v[0]);
+    // return Promise.all([waitForResponse('WBSendMessageToWeiboResponse'), WeiboAPI.shareToWeibo(data)]).then(v => v[0]);
+    return WeiboAPI.shareToWeibo(data).then(() => waitForResponse("WBSendMessageToWeiboResponse"));
+    
 }

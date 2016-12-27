@@ -152,36 +152,35 @@ public interface Constants {
     String EVENT_PROP_EXTRA = "extra";
     String EVENT_PROP_EVENT = "event";
 
-//================= REACT_MESSAGE ====================
+//================= REACT_SOCIAL ====================
 
     String MSG_NOT_REGISTERED = "NOT_REGISTERED";
     String MSG_NULL_ACTIVITY = "NULL_ACTIVITY";
     String MSG_INVOKE_FAILED = "INVOKE_FAILED";
     String MSG_INVALID_ARGUMENT = "INVALID_ARGUMENT";
 
+    String CODE_NOT_REGISTERED = "-1";
+    String CODE_NULL_ACTIVITY = "-2";
+    String CODE_INVOKE_FAILED = "-3";
+    String CODE_INVALID_ARGUMENT = "-4";
+
+    int SHARE_RESULT_CODE_SUCCESSFUL = 0;
+    int SHARE_RESULT_CODE_FAILED = 1;
+    int SHARE_RESULT_CODE_CANCEL = 2;
+
     String EVENT_PROP_SOCIAL_CODE = "errCode";
     String EVENT_PROP_SOCIAL_MSG = "errStr";
-
-    String WX_SHARE_TYPE_NEWS = "news";
-    String WX_SHARE_TYPE_IMAGE = "image";
-    String WX_SHARE_TYPE_IMAGE_FILE = "imageFile";
-    String WX_SHARE_TYPE_TEXT = "text";
-    String WX_SHARE_TYPE_VIDEO = "video";
-    String WX_SHARE_TYPE_AUDIO = "audio";
-    String WX_SHARE_TYPE_FILE = "file";
+    String EVENT_PROP_SOCIAL_TYPE = "type";
 
 
-    String QQ_SHARE_TYPE_NEWS = "news";
-    String QQ_SHARE_TYPE_IMAGE = "image";
-    String QQ_SHARE_TYPE_TEXT = "text";
-    String QQ_SHARE_TYPE_VIDEO = "video";
-    String QQ_SHARE_TYPE_AUDIO = "audio";
-    String QQ_SHARE_TYPE_APP = "app";
-
-    String WB_SHARE_TYPE_NEWS = "news";
-    String WB_SHARE_TYPE_IMAGE = "image";
-    String WB_SHARE_TYPE_TEXT = "text";
-    String WB_SHARE_TYPE_VIDEO = "video";
-    String WB_SHARE_TYPE_AUDIO = "audio";
+    String SHARE_TYPE_NEWS = "news";
+    String SHARE_TYPE_IMAGE = "image";
+    String SHARE_TYPE_IMAGE_FILE = "imageFile";
+    String SHARE_TYPE_TEXT = "text";
+    String SHARE_TYPE_VIDEO = "video";
+    String SHARE_TYPE_AUDIO = "audio";
+    String SHARE_TYPE_VOICE = "voice";
+    String SHARE_TYPE_FILE = "file";
+    String SHARE_TYPE_APP = "app";
 
 }

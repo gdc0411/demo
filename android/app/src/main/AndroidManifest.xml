@@ -82,8 +82,8 @@
 
         <!-- WeiBo配置 -->
         <meta-data
-            android:name="WB_APPID"
-            android:value="${WB_APPID}" />
+            android:name="WB_APPKEY"
+            android:value="${WB_APPKEY}" />
 
         <activity
             android:name="com.sina.weibo.sdk.component.WeiboSdkBrowser"

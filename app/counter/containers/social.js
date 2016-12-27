@@ -86,7 +86,6 @@ class social extends Component {
                 if (isInstalled) {
                     Weibo.login({
                         scope: 'all', // 默认 'all'
-                        redirectURI: '',
                     })
                         .catch(error => {
                             console.log(error.message);
@@ -96,6 +95,32 @@ class social extends Component {
                                 callbackStr: JSON.stringify(resp)
                             });
                         });
+                } else {
+                    console.log('没有安装微博，请您安装微博之后再试');
+                }
+            });
+    }
+
+    //微博分享
+    shareToWeibo = () => {
+        Weibo.isWBInstalled()
+            .then((isInstalled) => {
+                if (isInstalled) {
+                    Weibo.shareToWeibo({
+                        type: Weibo.SHARE_TYPE_NEWS,
+                        imageUrl: 'http://cdn.huodongxing.com/file/20160426/11E69610D2AC0F75D7EB61C48EDEA840FB/30132422640007503.jpg',
+                        title: '应用工厂创新应用值得期待',
+                        description: '应用工厂演示QQ分享实例',
+                        webpageUrl: 'http://www.lecloud.com/zh-cn/'
+                    }).catch((error) => {
+                        console.log(error.message);
+                    }).then(resp => {
+                        console.log(resp);
+                        this.setState({
+                            callbackStr: JSON.stringify(resp)
+                        });
+                    });
+
                 } else {
                     console.log('没有安装微博，请您安装微博之后再试');
                 }
@@ -178,7 +203,6 @@ class social extends Component {
                     console.log('没有安装QQ，请您安装QQ之后再试');
                 }
             });
-
     }
 
     //微信登陆
@@ -295,7 +319,7 @@ class social extends Component {
                             <Text>微博登录</Text>
                         </View>
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={this.shareToQzone}>
+                    <TouchableOpacity onPress={this.shareToWeibo}>
                         <View style={{ alignItems: 'center' }}>
                             <Image source={require('../../img/shareWeibo.png')} style={styles.bigcodeimage} />
                             <Text>分享到微博</Text>

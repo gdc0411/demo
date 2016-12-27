@@ -37,19 +37,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.lecloud.valley.common.Constants.EVENT_PROP_SOCIAL_CODE;
-import static com.lecloud.valley.common.Constants.EVENT_PROP_SOCIAL_MSG;
-import static com.lecloud.valley.common.Constants.MSG_INVALID_ARGUMENT;
-import static com.lecloud.valley.common.Constants.MSG_NULL_ACTIVITY;
-import static com.lecloud.valley.common.Constants.QQ_SHARE_TYPE_APP;
-import static com.lecloud.valley.common.Constants.QQ_SHARE_TYPE_AUDIO;
-import static com.lecloud.valley.common.Constants.QQ_SHARE_TYPE_IMAGE;
-import static com.lecloud.valley.common.Constants.QQ_SHARE_TYPE_NEWS;
-import static com.lecloud.valley.common.Constants.QQ_SHARE_TYPE_TEXT;
-import static com.lecloud.valley.common.Constants.QQ_SHARE_TYPE_VIDEO;
-import static com.lecloud.valley.common.Constants.REACT_CLASS_QQ_MODULE;
-import static com.lecloud.valley.common.Constants.MSG_NOT_REGISTERED;
-import static com.lecloud.valley.common.Constants.MSG_INVOKE_FAILED;
+import static com.lecloud.valley.common.Constants.*;
 import static com.lecloud.valley.utils.LogUtils.TAG;
 
 /**
@@ -60,10 +48,6 @@ public class QQModule extends ReactContextBaseJavaModule implements IUiListener,
 
     private final ReactApplicationContext context;
     private RCTNativeAppEventEmitter mEventEmitter;
-
-    private static final int SHARE_RESULT_CODE_SUCCESSFUL = 0;
-    private static final int SHARE_RESULT_CODE_FAILED = 1;
-    private static final int SHARE_RESULT_CODE_CANCEL = 2;
 
     private static String appId = null;
     private static String secret = null;
@@ -76,7 +60,7 @@ public class QQModule extends ReactContextBaseJavaModule implements IUiListener,
         super(reactContext);
         context = reactContext;
 
-        ApplicationInfo appInfo = null;
+        ApplicationInfo appInfo;
         try {
             appInfo = context.getPackageManager().getApplicationInfo(context.getPackageName(), PackageManager.GET_META_DATA);
         } catch (PackageManager.NameNotFoundException e) {
@@ -96,12 +80,12 @@ public class QQModule extends ReactContextBaseJavaModule implements IUiListener,
     @Override
     public Map<String, Object> getConstants() {
         final Map<String, Object> constants = new HashMap<>();
-        constants.put("SHARE_TYPE_NEWS", QQ_SHARE_TYPE_NEWS);
-        constants.put("SHARE_TYPE_IMAGE", QQ_SHARE_TYPE_IMAGE);
-        constants.put("SHARE_TYPE_TEXT", QQ_SHARE_TYPE_TEXT);
-        constants.put("SHARE_TYPE_VIDEO", QQ_SHARE_TYPE_VIDEO);
-        constants.put("SHARE_TYPE_AUDIO", QQ_SHARE_TYPE_AUDIO);
-        constants.put("SHARE_TYPE_APP", QQ_SHARE_TYPE_APP);
+        constants.put("SHARE_TYPE_NEWS", SHARE_TYPE_NEWS);
+        constants.put("SHARE_TYPE_IMAGE", SHARE_TYPE_IMAGE);
+        constants.put("SHARE_TYPE_TEXT", SHARE_TYPE_TEXT);
+        constants.put("SHARE_TYPE_VIDEO", SHARE_TYPE_VIDEO);
+        constants.put("SHARE_TYPE_AUDIO", SHARE_TYPE_AUDIO);
+        constants.put("SHARE_TYPE_APP", SHARE_TYPE_APP);
         return constants;
     }
 
@@ -133,7 +117,7 @@ public class QQModule extends ReactContextBaseJavaModule implements IUiListener,
     @ReactMethod
     public void getApiVersion(Promise promise) {
         if (api == null) {
-            promise.reject("-1", MSG_NOT_REGISTERED);
+            promise.reject(CODE_NOT_REGISTERED, MSG_NOT_REGISTERED);
             return;
         }
         promise.resolve(Constants.SDK_VERSION_STRING);
@@ -142,10 +126,10 @@ public class QQModule extends ReactContextBaseJavaModule implements IUiListener,
     @ReactMethod
     public void isQQInstalled(Promise promise) {
         if (api == null) {
-            promise.reject("-1", MSG_NOT_REGISTERED);
+            promise.reject(CODE_NOT_REGISTERED, MSG_NOT_REGISTERED);
             return;
         } else if (context.getCurrentActivity() == null) {
-            promise.reject("-2", MSG_NULL_ACTIVITY);
+            promise.reject(CODE_NULL_ACTIVITY, MSG_NULL_ACTIVITY);
             return;
         }
         promise.resolve(SystemUtils.getAppVersionName(context.getCurrentActivity(), Constants.PACKAGE_QQ) != null ||
@@ -156,10 +140,10 @@ public class QQModule extends ReactContextBaseJavaModule implements IUiListener,
     @ReactMethod
     public void isQQSupportApi(Promise promise) {
         if (api == null) {
-            promise.reject("-1", MSG_NOT_REGISTERED);
+            promise.reject(CODE_NOT_REGISTERED, MSG_NOT_REGISTERED);
             return;
         } else if (context.getCurrentActivity() == null) {
-            promise.reject("-2", MSG_NULL_ACTIVITY);
+            promise.reject(CODE_NULL_ACTIVITY, MSG_NULL_ACTIVITY);
             return;
         }
         promise.resolve(api.isSupportSSOLogin(context.getCurrentActivity()));
@@ -173,17 +157,17 @@ public class QQModule extends ReactContextBaseJavaModule implements IUiListener,
         isLoginOperation = true;
 
         if (api == null) {
-            promise.reject("-1", MSG_NOT_REGISTERED);
+            promise.reject(CODE_NOT_REGISTERED, MSG_NOT_REGISTERED);
             return;
         } else if (context.getCurrentActivity() == null) {
-            promise.reject("-2", MSG_NULL_ACTIVITY);
+            promise.reject(CODE_NULL_ACTIVITY, MSG_NULL_ACTIVITY);
             return;
         }
         if (!api.isSessionValid()) {
             api.login(context.getCurrentActivity(), scopes == null ? "get_simple_userinfo" : scopes, this);
             promise.resolve(null);
         } else {
-            promise.reject("-3", MSG_INVOKE_FAILED);
+            promise.reject(CODE_INVOKE_FAILED, MSG_INVOKE_FAILED);
         }
     }
 
@@ -194,21 +178,21 @@ public class QQModule extends ReactContextBaseJavaModule implements IUiListener,
         isLoginOperation = false;
 
         if (api == null) {
-            promise.reject("-1", MSG_NOT_REGISTERED);
+            promise.reject(CODE_NOT_REGISTERED, MSG_NOT_REGISTERED);
             return;
         } else if (context.getCurrentActivity() == null) {
-            promise.reject("-2", MSG_NULL_ACTIVITY);
+            promise.reject(CODE_NULL_ACTIVITY, MSG_NULL_ACTIVITY);
             return;
         }
 
         Bundle param = _makeQQShare(data);
         if (param == null) {
-            promise.reject("-3", MSG_INVALID_ARGUMENT);
+            promise.reject(CODE_INVALID_ARGUMENT, MSG_INVALID_ARGUMENT);
             return;
         }
         api.shareToQQ(context.getCurrentActivity(), param, this);
-
         promise.resolve(null);
+
     }
 
     @ReactMethod
@@ -218,16 +202,16 @@ public class QQModule extends ReactContextBaseJavaModule implements IUiListener,
         isLoginOperation = false;
 
         if (api == null) {
-            promise.reject("-1", MSG_NOT_REGISTERED);
+            promise.reject(CODE_NOT_REGISTERED, MSG_NOT_REGISTERED);
             return;
         } else if (context.getCurrentActivity() == null) {
-            promise.reject("-2", MSG_NULL_ACTIVITY);
+            promise.reject(CODE_NULL_ACTIVITY, MSG_NULL_ACTIVITY);
             return;
         }
 
         Bundle param = _makeQzoneShare(data);
         if (param == null) {
-            promise.reject("-3", MSG_INVALID_ARGUMENT);
+            promise.reject(CODE_INVALID_ARGUMENT, MSG_INVALID_ARGUMENT);
             return;
         }
         api.shareToQzone(context.getCurrentActivity(), param, this);
@@ -243,10 +227,10 @@ public class QQModule extends ReactContextBaseJavaModule implements IUiListener,
         isLoginOperation = true;
 
         if (api == null) {
-            promise.reject("-1", MSG_NOT_REGISTERED);
+            promise.reject(CODE_NOT_REGISTERED, MSG_NOT_REGISTERED);
             return;
         } else if (context.getCurrentActivity() == null) {
-            promise.reject("-2", MSG_NULL_ACTIVITY);
+            promise.reject(CODE_NULL_ACTIVITY, MSG_NULL_ACTIVITY);
             return;
         }
         if (api.isSessionValid()) {
@@ -257,9 +241,10 @@ public class QQModule extends ReactContextBaseJavaModule implements IUiListener,
 
     private Bundle _makeQQShare(ReadableMap data) {
         Bundle bundle = null;
-        String type = data.hasKey("type") ? data.getString("type") : QQ_SHARE_TYPE_NEWS;
+        String type = data.hasKey("type") ? data.getString("type") : SHARE_TYPE_NEWS;
+
         switch (type) {
-            case QQ_SHARE_TYPE_NEWS: //图文分享
+            case SHARE_TYPE_NEWS: //图文分享
 
                 bundle = new Bundle();
                 bundle.putInt(QQShare.SHARE_TO_QQ_KEY_TYPE, QQShare.SHARE_TO_QQ_TYPE_DEFAULT);
@@ -282,7 +267,7 @@ public class QQModule extends ReactContextBaseJavaModule implements IUiListener,
                     bundle.putInt(QQShare.SHARE_TO_QQ_EXT_INT, data.getInt("cflag"));
                 break;
 
-            case QQ_SHARE_TYPE_IMAGE: //纯图片分享
+            case SHARE_TYPE_IMAGE: //纯图片分享
 
                 bundle = new Bundle();
                 bundle.putInt(QQShare.SHARE_TO_QQ_KEY_TYPE, QQShare.SHARE_TO_QQ_TYPE_IMAGE);
@@ -298,7 +283,7 @@ public class QQModule extends ReactContextBaseJavaModule implements IUiListener,
                     bundle.putInt(QQShare.SHARE_TO_QQ_EXT_INT, data.getInt("cflag"));
                 break;
 
-            case QQ_SHARE_TYPE_AUDIO: //音乐分享
+            case SHARE_TYPE_AUDIO: //音乐分享
 
                 bundle = new Bundle();
                 bundle.putInt(QQShare.SHARE_TO_QQ_KEY_TYPE, QQShare.SHARE_TO_QQ_TYPE_AUDIO);
@@ -324,7 +309,7 @@ public class QQModule extends ReactContextBaseJavaModule implements IUiListener,
                 break;
 
 
-            case QQ_SHARE_TYPE_APP: //应用分享
+            case SHARE_TYPE_APP: //应用分享
 
                 bundle = new Bundle();
                 bundle.putInt(QQShare.SHARE_TO_QQ_KEY_TYPE, QQShare.SHARE_TO_QQ_TYPE_APP);
@@ -353,9 +338,9 @@ public class QQModule extends ReactContextBaseJavaModule implements IUiListener,
 
     private Bundle _makeQzoneShare(ReadableMap data) {
         Bundle bundle = null;
-        String type = data.hasKey("type") ? data.getString("type") : QQ_SHARE_TYPE_NEWS;
+        String type = data.hasKey("type") ? data.getString("type") : SHARE_TYPE_NEWS;
         switch (type) {
-            case QQ_SHARE_TYPE_NEWS: //图文分享
+            case SHARE_TYPE_NEWS: //图文分享
                 bundle = new Bundle();
                 bundle.putInt(QzoneShare.SHARE_TO_QZONE_KEY_TYPE, QzoneShare.SHARE_TO_QZONE_TYPE_IMAGE_TEXT);
                 bundle.putString(QzoneShare.SHARE_TO_QQ_TITLE, data.hasKey("title") ? data.getString("title") : ""); //分享的标题，最长30个字符
@@ -372,8 +357,8 @@ public class QQModule extends ReactContextBaseJavaModule implements IUiListener,
                 }
                 break;
 
-            case QQ_SHARE_TYPE_IMAGE: //发表说说、或上传图片
-            case QQ_SHARE_TYPE_VIDEO: //上传视频
+            case SHARE_TYPE_IMAGE: //发表说说、或上传图片
+            case SHARE_TYPE_VIDEO: //上传视频
 
                 bundle = new Bundle();
                 bundle.putInt(QzoneShare.SHARE_TO_QZONE_KEY_TYPE, QzonePublish.PUBLISH_TO_QZONE_TYPE_PUBLISHMOOD);
@@ -411,7 +396,7 @@ public class QQModule extends ReactContextBaseJavaModule implements IUiListener,
         WritableMap resultMap = Arguments.createMap();
 
         if (isLoginOperation) {
-            resultMap.putString("type", "QQAuthorizeResponse");
+            resultMap.putString(EVENT_PROP_SOCIAL_TYPE, "QQAuthorizeResponse");
             try {
                 JSONObject obj = (JSONObject) (o);
 
@@ -432,8 +417,8 @@ public class QQModule extends ReactContextBaseJavaModule implements IUiListener,
                     resultMap.putInt("query_authority_cost", obj.getInt("query_authority_cost"));
                 if (obj.has("authority_cost"))
                     resultMap.putInt("authority_cost", obj.getInt("authority_cost"));
-                resultMap.putString("appid", appId);
-                resultMap.putString("secret", secret);
+//                resultMap.putString("appid", appId);
+//                resultMap.putString("secret", secret);
 
                 resultMap.putString(EVENT_PROP_SOCIAL_MSG, "QQ登录成功");
 
@@ -446,7 +431,7 @@ public class QQModule extends ReactContextBaseJavaModule implements IUiListener,
                     mEventEmitter.emit(Events.EVENT_QQ_RESP.toString(), map);
             }
         } else {
-            resultMap.putString("type", "QQShareResponse");
+            resultMap.putString(EVENT_PROP_SOCIAL_TYPE, "QQShareResponse");
             resultMap.putInt(EVENT_PROP_SOCIAL_CODE, SHARE_RESULT_CODE_SUCCESSFUL);
             resultMap.putString(EVENT_PROP_SOCIAL_MSG, "QQ分享成功");
         }
@@ -460,11 +445,11 @@ public class QQModule extends ReactContextBaseJavaModule implements IUiListener,
         WritableMap resultMap = Arguments.createMap();
 
         if (isLoginOperation) {
-            resultMap.putString("type", "QQAuthorizeResponse");
+            resultMap.putString(EVENT_PROP_SOCIAL_TYPE, "QQAuthorizeResponse");
             resultMap.putInt(EVENT_PROP_SOCIAL_CODE, SHARE_RESULT_CODE_FAILED);
             resultMap.putString(EVENT_PROP_SOCIAL_MSG, "QQ授权失败，请稍后重试 " + uiError.errorDetail);
         } else {
-            resultMap.putString("type", "QQShareResponse");
+            resultMap.putString(EVENT_PROP_SOCIAL_TYPE, "QQShareResponse");
             resultMap.putInt(EVENT_PROP_SOCIAL_CODE, SHARE_RESULT_CODE_FAILED);
             resultMap.putString(EVENT_PROP_SOCIAL_MSG, "QQ分享失败，请稍后重试 " + uiError.errorDetail);
         }
@@ -478,11 +463,11 @@ public class QQModule extends ReactContextBaseJavaModule implements IUiListener,
         WritableMap resultMap = Arguments.createMap();
 
         if (isLoginOperation) {
-            resultMap.putString("type", "QQAuthorizeResponse");
+            resultMap.putString(EVENT_PROP_SOCIAL_TYPE, "QQAuthorizeResponse");
             resultMap.putInt(EVENT_PROP_SOCIAL_CODE, SHARE_RESULT_CODE_CANCEL);
             resultMap.putString(EVENT_PROP_SOCIAL_MSG, "QQ授权失败，用户取消");
         } else {
-            resultMap.putString("type", "QQShareResponse");
+            resultMap.putString(EVENT_PROP_SOCIAL_TYPE, "QQShareResponse");
             resultMap.putInt(EVENT_PROP_SOCIAL_CODE, SHARE_RESULT_CODE_CANCEL);
             resultMap.putString(EVENT_PROP_SOCIAL_MSG, "QQ分享失败，用户取消");
         }
@@ -491,10 +476,4 @@ public class QQModule extends ReactContextBaseJavaModule implements IUiListener,
             mEventEmitter.emit(Events.EVENT_QQ_RESP.toString(), resultMap);
     }
 
-//    private void resolvePromise(ReadableMap resultMap) {
-//        getReactApplicationContext()
-//                .getJSModule(RCTNativeAppEventEmitter.class)
-//                .emit("QQ_Resp", resultMap);
-//
-//    }
 }

@@ -104,7 +104,7 @@ android {
                 QQ_APPID : "1105823147",
                 QQ_APPKEY: "gidCGpumCa7CfnZs",
                 //微博APPID
-                WB_APPID : "wb547133116"
+                WB_APPKEY : "wb547133116"
         ]
     }
     splits {
