@@ -15,9 +15,6 @@
 
 #import "../Libraries/Image/RCTImageLoader.h"
 
-#define INVOKE_FAILED (@"WeiBo API invoke returns false.")
-#define RCTWBEventName (@"Weibo_Resp")
-
 #define RCTWBShareTypeNews @"news"
 #define RCTWBShareTypeImage @"image"
 #define RCTWBShareTypeText @"text"
@@ -54,9 +51,10 @@ RCT_EXPORT_MODULE();
 {
     self = [super init];
     if (self) {
-        
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleOpenURL:) name:@"RCTOpenURLNotification" object:nil];
-        
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(handleOpenURL:)
+                                                     name:@"RCTOpenURLNotification"
+                                                   object:nil];        
         [self _autoRegisterAPI];
     }
     return self;
@@ -99,10 +97,8 @@ RCT_EXPORT_METHOD(isWBSupportApi:(RCTPromiseResolveBlock)resolve
 }
 
 
-RCT_EXPORT_METHOD(login:(NSDictionary *)config
-                  :(RCTResponseSenderBlock)callback)
+RCT_EXPORT_METHOD(login:(NSDictionary *)config:(RCTResponseSenderBlock)callback)
 {
-    
     WBAuthorizeRequest *request = [self _genAuthRequest:config];
     BOOL success = [WeiboSDK sendRequest:request];
     callback(@[success?[NSNull null]:INVOKE_FAILED]);
@@ -113,8 +109,7 @@ RCT_EXPORT_METHOD(logout)
     [WeiboSDK logOutWithToken:nil delegate:nil withTag:nil];
 }
 
-RCT_EXPORT_METHOD(shareToWeibo:(NSDictionary *)aData
-                  :(RCTResponseSenderBlock)callback)
+RCT_EXPORT_METHOD(shareToWeibo:(NSDictionary *)aData:(RCTResponseSenderBlock)callback)
 {
     NSString *imageUrl = aData[RCTWBShareImageUrl];
     if (imageUrl.length && _bridge.imageLoader) {
@@ -122,12 +117,22 @@ RCT_EXPORT_METHOD(shareToWeibo:(NSDictionary *)aData
         if (![aData[RCTWBShareType] isEqualToString:RCTWBShareTypeImage]) {
             size = CGSizeMake(80,80);
         }
-        [_bridge.imageLoader loadImageWithURLRequest:[RCTConvert NSURLRequest:imageUrl] size:size scale:1 clipped:FALSE resizeMode:UIViewContentModeScaleToFill progressBlock:nil partialLoadBlock: nil completionBlock:^(NSError *error, UIImage *image) {
+        [_bridge.imageLoader loadImageWithURLRequest:[RCTConvert NSURLRequest:imageUrl]
+                                                size:size scale:1
+                                             clipped:FALSE
+                                          resizeMode:UIViewContentModeScaleToFill
+                                       progressBlock:nil
+                                    partialLoadBlock:nil
+                                     completionBlock:^(NSError *error, UIImage *image) {
+                                         
             [self _shareWithData:aData image:image];
         }];
-    }
-    else {
-        [self _shareWithData:aData image:nil];
+        
+    }else {
+        
+        [self _shareWithData:aData
+                       image:nil];
+        
     }
     callback(@[[NSNull null]]);
 }
@@ -137,7 +142,8 @@ RCT_EXPORT_METHOD(shareToWeibo:(NSDictionary *)aData
 {
     NSDictionary *userInfo = note.userInfo;
     NSString *url = userInfo[@"url"];
-    [WeiboSDK handleOpenURL:[NSURL URLWithString:url] delegate:self];
+    [WeiboSDK handleOpenURL:[NSURL URLWithString:url]
+                   delegate:self];
 }
 
 
@@ -153,7 +159,7 @@ RCT_EXPORT_METHOD(shareToWeibo:(NSDictionary *)aData
 - (void)didReceiveWeiboResponse:(WBBaseResponse *)response
 {
     NSMutableDictionary *body = [NSMutableDictionary new];
-    body[@"errCode"] = @(response.statusCode);
+    body[EVENT_ERROR_CODE] = @(response.statusCode);
     // 分享
     if ([response isKindOfClass:WBSendMessageToWeiboResponse.class])
     {
@@ -171,7 +177,7 @@ RCT_EXPORT_METHOD(shareToWeibo:(NSDictionary *)aData
         }
         else
         {
-            body[@"errMsg"] = [self _getErrMsg:response.statusCode];
+            body[EVENT_ERROR_MSG] = [self _getErrMsg:response.statusCode];
         }
     }
     // 认证
@@ -188,10 +194,11 @@ RCT_EXPORT_METHOD(shareToWeibo:(NSDictionary *)aData
         }
         else
         {
-            body[@"errMsg"] = [self _getErrMsg:response.statusCode];
+            body[EVENT_ERROR_MSG] = [self _getErrMsg:response.statusCode];
         }
     }
-    [self.bridge.eventDispatcher sendAppEventWithName:RCTWBEventName body:body];
+    [self.bridge.eventDispatcher sendAppEventWithName:EVENT_WEIBO_RESP
+                                                 body:body];
 }
 
 #pragma mark - private
@@ -255,7 +262,8 @@ RCT_EXPORT_METHOD(shareToWeibo:(NSDictionary *)aData
     return errMsg;
 }
 
-- (void)_shareWithData:(NSDictionary *)aData image:(UIImage *)aImage
+- (void)_shareWithData:(NSDictionary *)aData
+                 image:(UIImage *)aImage
 {
     WBMessageObject *message = [WBMessageObject message];
     NSString *text = aData[RCTWBShareText];
@@ -299,15 +307,18 @@ RCT_EXPORT_METHOD(shareToWeibo:(NSDictionary *)aData
     
     WBAuthorizeRequest *authRequest = [self _genAuthRequest:aData];
     NSString *accessToken = aData[RCTWBShareAccessToken];
-    WBSendMessageToWeiboRequest *request = [WBSendMessageToWeiboRequest requestWithMessage:message authInfo:authRequest access_token:accessToken];
+    WBSendMessageToWeiboRequest *request = [WBSendMessageToWeiboRequest requestWithMessage:message
+                                                                                  authInfo:authRequest
+                                                                              access_token:accessToken];
     
     BOOL success = [WeiboSDK sendRequest:request];
     if (!success) {
         NSMutableDictionary *body = [NSMutableDictionary new];
-        body[@"errMsg"] = INVOKE_FAILED;
-        body[@"errCode"] = @(-1);
+        body[EVENT_ERROR_MSG] = INVOKE_FAILED;
+        body[EVENT_ERROR_CODE] = @(-1);
         body[@"type"] = @"WBSendMessageToWeiboResponse";
-        [_bridge.eventDispatcher sendAppEventWithName:RCTWBEventName body:body];
+        [_bridge.eventDispatcher sendAppEventWithName:EVENT_WEIBO_RESP
+                                                 body:body];
     }
 }
 

@@ -6,13 +6,14 @@
 //  Copyright © 2016年 leCloud. All rights reserved.
 //
 
-#import "RCTWeChatModule.h"
 #import "LECValley.h"
+#import "RCTWeChatModule.h"
 
 #import "WXApi.h"
 #import "WXApiObject.h"
 
 #import "../Libraries/Image/RCTImageLoader.h"
+
 #import "RCTLog.h"
 #import "RCTBridge.h"
 #import "RCTEventDispatcher.h"
@@ -141,7 +142,8 @@ RCT_EXPORT_METHOD(openWXApp:(RCTPromiseResolveBlock)resolve
 }
 
 
-RCT_EXPORT_METHOD(sendAuth:(NSDictionary *)config:(RCTPromiseResolveBlock)resolve
+RCT_EXPORT_METHOD(sendAuth:(NSDictionary *)config
+                  resolve:(RCTPromiseResolveBlock)resolve
                   reject:(RCTPromiseRejectBlock)reject)
 {
     SendAuthReq* req = [[SendAuthReq alloc] init];
@@ -156,7 +158,17 @@ RCT_EXPORT_METHOD(sendAuth:(NSDictionary *)config:(RCTPromiseResolveBlock)resolv
     }
 }
 
-RCT_EXPORT_METHOD(shareToTimeline:(NSDictionary *)data:
+RCT_EXPORT_METHOD(shareToSession:(NSDictionary *)data
+                  resolve:(RCTPromiseResolveBlock)resolve
+                  reject:(RCTPromiseRejectBlock)reject)
+{
+    [self shareToWeixinWithData:data
+                          scene:WXSceneSession
+                        resolve:(RCTPromiseResolveBlock)resolve
+                         reject:(RCTPromiseRejectBlock)reject];
+}
+
+RCT_EXPORT_METHOD(shareToTimeline:(NSDictionary *)data
                   resolve:(RCTPromiseResolveBlock)resolve
                   reject:(RCTPromiseRejectBlock)reject)
 {
@@ -166,16 +178,7 @@ RCT_EXPORT_METHOD(shareToTimeline:(NSDictionary *)data:
                          reject:(RCTPromiseRejectBlock)reject];
 }
 
-RCT_EXPORT_METHOD(shareToSession:(NSDictionary *)data:
-                  resolve:(RCTPromiseResolveBlock)resolve
-                  reject:(RCTPromiseRejectBlock)reject)
-{
-    [self shareToWeixinWithData:data scene:WXSceneSession
-                        resolve:(RCTPromiseResolveBlock)resolve
-                         reject:(RCTPromiseRejectBlock)reject];
-}
-
-RCT_EXPORT_METHOD(pay:(NSDictionary *)data:
+RCT_EXPORT_METHOD(pay:(NSDictionary *)data
                   resolve:(RCTPromiseResolveBlock)resolve
                   reject:(RCTPromiseRejectBlock)reject)
 {
@@ -410,13 +413,13 @@ RCT_EXPORT_METHOD(pay:(NSDictionary *)data:
 
 -(void) onResp:(BaseResp*)resp
 {
-    NSMutableDictionary *body = @{@"errCode":@(resp.errCode)}.mutableCopy;
-    body[@"errCode"] = @(resp.errCode);
+    NSMutableDictionary *body = @{EVENT_ERROR_CODE:@(resp.errCode)}.mutableCopy;
+    body[EVENT_ERROR_CODE] = @(resp.errCode);
     
     if (resp.errStr == nil || resp.errStr.length<=0) {
-        body[@"errMsg"] = [self _getErrorMsg:resp.errCode];
+        body[EVENT_ERROR_MSG] = [self _getErrorMsg:resp.errCode];
     }else{
-        body[@"errMsg"] = resp.errStr;
+        body[EVENT_ERROR_MSG] = resp.errStr;
     }
     
     if([resp isKindOfClass:[SendMessageToWXResp class]])
@@ -432,8 +435,8 @@ RCT_EXPORT_METHOD(pay:(NSDictionary *)data:
         body[@"lang"] = r.lang;
         body[@"country"] =r.country;
         body[@"type"] = @"SendAuth.Resp";
-        body[@"appid"] = gAppID;
-//        body[@"code"]= r.code;
+        body[@"code"]= r.code;
+//        body[@"appid"] = gAppID;
 //        body[@"secret"] = gSecret;
     }
     else if([resp isKindOfClass:[PayResp class]]) {

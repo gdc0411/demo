@@ -29,13 +29,18 @@
 
 //第三方登录的共享参数
 
-#define EVENT_WECHAT_RESP @"WeChat_Resp"
-#define EVENT_QQ_RESP @"QQ_Resp"
+#define EVENT_WECHAT_RESP   @"WeChat_Resp"
+#define EVENT_QQ_RESP       @"QQ_Resp"
+#define EVENT_WEIBO_RESP    @"Weibo_Resp"
 
+//事件字段定义
+#define EVENT_ERROR_CODE    @"errCode"
+#define EVENT_ERROR_MSG     @"errStr"
 
-#define NOT_REGISTERED @"NOT_REGISTERED"
-#define INVOKE_FAILED @"INVOKE_FAILED"
-#define INVALID_ARGUMENT @"INVALID_ARGUMENT"
+//事件处理响应
+#define NOT_REGISTERED      @"NOT_REGISTERED"
+#define INVOKE_FAILED       @"INVOKE_FAILED"
+#define INVALID_ARGUMENT    @"INVALID_ARGUMENT"
 
 
 #endif /* LECValley_h */

@@ -129,17 +129,17 @@ static UIInterfaceOrientationMask _orientation = UIInterfaceOrientationMaskAllBu
 
 RCT_EXPORT_MODULE();
 
-RCT_EXPORT_METHOD(getOrientation:(RCTResponseSenderBlock)callback)
+RCT_EXPORT_METHOD(getOrientation:(RCTPromiseResolveBlock)resolve
+                  reject:(RCTPromiseRejectBlock)reject)
 {
-  UIDeviceOrientation orientation = [[UIDevice currentDevice] orientation];
-  NSString *orientationStr = [self getOrientationStr:orientation];
-  callback(@[[NSNull null], orientationStr]);
+    UIDeviceOrientation orientation = [[UIDevice currentDevice] orientation];
+    NSString *orientationStr = [self getOrientationStr:orientation];
+    resolve(orientationStr);
 }
 
 
 RCT_EXPORT_METHOD(setOrientation:(int)requestedOrientation)
 {
-
   NSLog(@"外部控制——— 设置方向 orientation: %d", requestedOrientation);
   
   if(_isRotating) return;
