@@ -81,8 +81,8 @@ function checkData(data) {
 }
 
 export const getApiVersion = WeiboAPI.getApiVersion;
-export const isInstalled = WeiboAPI.isInstalled;
-export const isSupportApi = WeiboAPI.isSupportApi;
+export const isAppInstalled = WeiboAPI.isAppInstalled;
+export const isAppSupportApi = WeiboAPI.isAppSupportApi;
 
 // const nativeSendAuthRequest = wrapApi(WeiboAPI.login);
 // const nativeSendMessageRequest = wrapApi(WeiboAPI.shareToWeibo);

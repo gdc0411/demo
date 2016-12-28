@@ -88,7 +88,7 @@ RCT_EXPORT_METHOD(getApiVersion:(RCTPromiseResolveBlock)resolve
     resolve( [NSString stringWithFormat:@"%@.%@",[TencentOAuth sdkVersion],[TencentOAuth sdkSubVersion]]);
 }
 
-RCT_EXPORT_METHOD(isInstalled:(RCTPromiseResolveBlock)resolve
+RCT_EXPORT_METHOD(isAppInstalled:(RCTPromiseResolveBlock)resolve
                   reject:(RCTPromiseRejectBlock)reject)
 {
     if( _qqapi == nil ){
@@ -98,7 +98,7 @@ RCT_EXPORT_METHOD(isInstalled:(RCTPromiseResolveBlock)resolve
     resolve(@([QQApiInterface isQQInstalled]));
 }
 
-RCT_EXPORT_METHOD(isSupportApi:(RCTPromiseResolveBlock)resolve
+RCT_EXPORT_METHOD(isAppSupportApi:(RCTPromiseResolveBlock)resolve
                   reject:(RCTPromiseRejectBlock)reject)
 {
     if( _qqapi == nil ){
@@ -347,7 +347,7 @@ RCT_EXPORT_METHOD(logout)
     NSMutableDictionary *body = @{EVENT_PROP_SOCIAL_TYPE:@"QQAuthorizeResponse"}.mutableCopy;
     body[@"openid"] = _qqapi.openId?_qqapi.openId:[NSNull null];
     body[@"access_token"] = _qqapi.accessToken?_qqapi.accessToken:[NSNull null];
-    body[@"expires_in"] = @([_qqapi.expirationDate timeIntervalSinceNow]*1000);
+    body[@"expires_in"] = @([_qqapi.expirationDate timeIntervalSince1970]*1000);
     body[@"unionid"] = _qqapi.unionid?_qqapi.unionid:[NSNull null];
     body[@"appid"] =_qqapi.appId?_qqapi.appId:[NSNull null];
     body[EVENT_PROP_SOCIAL_CODE] = @(AUTH_RESULT_CODE_SUCCESSFUL);

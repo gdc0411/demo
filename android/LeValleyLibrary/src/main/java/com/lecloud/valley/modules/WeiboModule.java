@@ -158,7 +158,7 @@ public class WeiboModule extends ReactContextBaseJavaModule implements ActivityE
     }
 
     @ReactMethod
-    public void isInstalled(Promise promise) {
+    public void isAppInstalled(Promise promise) {
         if (mWeiboShareAPI == null) {
             promise.reject(CODE_NOT_REGISTERED, MSG_NOT_REGISTERED);
             return;
@@ -167,7 +167,7 @@ public class WeiboModule extends ReactContextBaseJavaModule implements ActivityE
     }
 
     @ReactMethod
-    public void isSupportApi(Promise promise) {
+    public void isAppSupportApi(Promise promise) {
         if (mWeiboShareAPI == null) {
             promise.reject(CODE_NOT_REGISTERED, MSG_NOT_REGISTERED);
             return;
@@ -194,10 +194,10 @@ public class WeiboModule extends ReactContextBaseJavaModule implements ActivityE
                     AccessTokenKeeper.writeAccessToken(context.getApplicationContext(), token);
                     WritableMap event = Arguments.createMap();
                     if (token.isSessionValid()) {
-                        event.putString("accessToken", token.getToken());
-                        event.putDouble("expirationDate", token.getExpiresTime());
-                        event.putString("userID", token.getUid());
-                        event.putString("refreshToken", token.getRefreshToken());
+                        event.putString("access_token", token.getToken());
+                        event.putDouble("expires_in", token.getExpiresTime());
+                        event.putString("openid", token.getUid());
+                        event.putString("refresh_token", token.getRefreshToken());
                         event.putInt(EVENT_PROP_SOCIAL_CODE, SHARE_RESULT_CODE_SUCCESSFUL);
                     } else {
 //                    String code = bundle.getString("code", "");

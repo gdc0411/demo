@@ -51,11 +51,11 @@ class social extends Component {
         try {
             this.setState({
                 wbApiVersion: await Weibo.getApiVersion(),
-                isWBInstalled: await Weibo.isInstalled(),
-                isWBSupportApi: await Weibo.isSupportApi(),
+                isWBInstalled: await Weibo.isAppInstalled(),
+                isWBSupportApi: await Weibo.isAppSupportApi(),
                 qqApiVersion: await QQ.getApiVersion(),
-                isQQInstalled: await QQ.isInstalled(),
-                isQQSupportApi: await QQ.isSupportApi(),
+                isQQInstalled: await QQ.isAppInstalled(),
+                isQQSupportApi: await QQ.isAppSupportApi(),
                 wxApiVersion: await WeChat.getApiVersion(),
                 isWXAppSupportApi: await WeChat.isAppSupportApi(),
                 isWXAppInstalled: await WeChat.isAppInstalled()
@@ -81,7 +81,7 @@ class social extends Component {
 
     //微博登陆
     loginToWeibo = () => {
-        Weibo.isInstalled()
+        Weibo.isAppInstalled()
             .then((isInstalled) => {
                 if (isInstalled) {
                     Weibo.login({
@@ -103,7 +103,7 @@ class social extends Component {
 
     //微博分享
     shareToWeibo = () => {
-        Weibo.isInstalled()
+        Weibo.isAppInstalled()
             .then((isInstalled) => {
                 if (isInstalled) {
                     Weibo.shareToWeibo({
@@ -131,7 +131,7 @@ class social extends Component {
 
     //QQ登陆
     loginToQQ = () => {
-        QQ.isInstalled()
+        QQ.isAppInstalled()
             .then((isInstalled) => {
                 if (isInstalled) {
                     QQ.login('get_simple_userinfo')
@@ -152,7 +152,7 @@ class social extends Component {
 
     //QQ分享给好友
     shareToQQ = () => {
-        QQ.isInstalled()
+        QQ.isAppInstalled()
             .then((isInstalled) => {
                 if (isInstalled) {
                     QQ.shareToQQ({
@@ -181,7 +181,7 @@ class social extends Component {
 
     //QQ分享给QZone
     shareToQzone = () => {
-        QQ.isInstalled()
+        QQ.isAppInstalled()
             .then((isInstalled) => {
                 if (isInstalled) {
                     QQ.shareToQzone({

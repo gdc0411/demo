@@ -125,7 +125,7 @@ public class QQModule extends ReactContextBaseJavaModule implements IUiListener,
     }
 
     @ReactMethod
-    public void isInstalled(Promise promise) {
+    public void isAppInstalled(Promise promise) {
         if (api == null) {
             promise.reject(CODE_NOT_REGISTERED, MSG_NOT_REGISTERED);
             return;
@@ -139,7 +139,7 @@ public class QQModule extends ReactContextBaseJavaModule implements IUiListener,
     }
 
     @ReactMethod
-    public void isSupportApi(Promise promise) {
+    public void isAppSupportApi(Promise promise) {
         if (api == null) {
             promise.reject(CODE_NOT_REGISTERED, MSG_NOT_REGISTERED);
             return;
@@ -408,8 +408,10 @@ public class QQModule extends ReactContextBaseJavaModule implements IUiListener,
                     resultMap.putString("access_token", obj.getString(Constants.PARAM_ACCESS_TOKEN));
                 if (obj.has("pay_token"))
                     resultMap.putString("pay_token", obj.getString("pay_token"));
+
                 if (obj.has("expires_in"))
-                    resultMap.putInt("expires_in", (int) obj.getLong(Constants.PARAM_EXPIRES_IN));
+                    resultMap.putDouble("expires_in", System.currentTimeMillis() + obj.getLong(Constants.PARAM_EXPIRES_IN));
+
                 if (obj.has("pf")) resultMap.putString("pf", obj.getString("pf"));
                 if (obj.has("pfkey")) resultMap.putString("pfkey", obj.getString("pfkey"));
                 if (obj.has("msg")) resultMap.putString("msg", obj.getString("msg"));

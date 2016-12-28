@@ -27,8 +27,8 @@ function translateError(err, result) {
 }
 
 export const getApiVersion = QQAPI.getApiVersion;
-export const isInstalled = QQAPI.isInstalled;
-export const isSupportApi = QQAPI.isSupportApi;
+export const isAppInstalled = QQAPI.isAppInstalled;
+export const isAppSupportApi = QQAPI.isAppSupportApi;
 
 // export const isQQSupportApi = QQAPI.isQQSupportApi;
 

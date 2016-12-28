@@ -126,6 +126,10 @@ RCT_EXPORT_METHOD(sendAuth:(NSDictionary *)config
                   resolve:(RCTPromiseResolveBlock)resolve
                   reject:(RCTPromiseRejectBlock)reject)
 {
+    if( !gIsApiRegistered ){
+        reject(CODE_NOT_REGISTERED, NOT_REGISTERED,nil);
+        return;
+    }
     SendAuthReq* req = [[SendAuthReq alloc] init];
     req.scope = config[@"scope"];
     req.state = config[@"state"]?:[NSDate date].description;
@@ -142,6 +146,11 @@ RCT_EXPORT_METHOD(shareToSession:(NSDictionary *)data
                   resolve:(RCTPromiseResolveBlock)resolve
                   reject:(RCTPromiseRejectBlock)reject)
 {
+    if( !gIsApiRegistered ){
+        reject(CODE_NOT_REGISTERED, NOT_REGISTERED,nil);
+        return;
+    }
+    
     [self shareToWeixinWithData:data
                           scene:WXSceneSession
                         resolve:(RCTPromiseResolveBlock)resolve
@@ -152,6 +161,11 @@ RCT_EXPORT_METHOD(shareToTimeline:(NSDictionary *)data
                   resolve:(RCTPromiseResolveBlock)resolve
                   reject:(RCTPromiseRejectBlock)reject)
 {
+    if( !gIsApiRegistered ){
+        reject(CODE_NOT_REGISTERED, NOT_REGISTERED,nil);
+        return;
+    }
+    
     [self shareToWeixinWithData:data
                           scene:WXSceneTimeline
                         resolve:(RCTPromiseResolveBlock)resolve
@@ -162,6 +176,11 @@ RCT_EXPORT_METHOD(pay:(NSDictionary *)data
                   resolve:(RCTPromiseResolveBlock)resolve
                   reject:(RCTPromiseRejectBlock)reject)
 {
+    if( !gIsApiRegistered ){
+        reject(CODE_NOT_REGISTERED, NOT_REGISTERED,nil);
+        return;
+    }
+    
     PayReq* req             = [PayReq new];
     req.partnerId           = data[@"partnerId"];
     req.prepayId            = data[@"prepayId"];
@@ -395,12 +414,12 @@ RCT_EXPORT_METHOD(pay:(NSDictionary *)data
 {
     NSMutableDictionary *body = @{EVENT_PROP_SOCIAL_CODE:@(resp.errCode)}.mutableCopy;
     body[@"wxCode"] = @(resp.errCode);
-    body[@"wxStr"] = resp.errStr;
+    body[@"wxStr"]  = resp.errStr;
     
     if([resp isKindOfClass:[SendMessageToWXResp class]]){
-        SendMessageToWXResp *r = (SendMessageToWXResp *)resp;
-        body[@"lang"]    = r.lang;
-        body[@"country"] = r.country;
+        SendMessageToWXResp *r  = (SendMessageToWXResp *)resp;
+        body[@"lang"]           = r.lang;
+        body[@"country"]        = r.country;
         body[EVENT_PROP_SOCIAL_TYPE]    = @"SendMessageToWX.Resp";
         
         if (resp.errCode == WXSuccess) {
@@ -436,7 +455,7 @@ RCT_EXPORT_METHOD(pay:(NSDictionary *)data
     else if([resp isKindOfClass:[PayResp class]]) {
         PayResp *r          = (PayResp *)resp;
         body[@"returnKey"]  = r.returnKey;
-        body[EVENT_PROP_SOCIAL_TYPE]       = @"Pay.Resp";
+        body[EVENT_PROP_SOCIAL_TYPE]    = @"Pay.Resp";
     }
     
     [self.bridge.eventDispatcher sendAppEventWithName:EVENT_WECHAT_RESP
