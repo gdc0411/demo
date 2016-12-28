@@ -81,8 +81,8 @@ function checkData(data) {
 }
 
 export const getApiVersion = WeiboAPI.getApiVersion;
-export const isWBInstalled = WeiboAPI.isWBInstalled;
-export const isWBSupportApi = WeiboAPI.isWBSupportApi;
+export const isInstalled = WeiboAPI.isInstalled;
+export const isSupportApi = WeiboAPI.isSupportApi;
 
 // const nativeSendAuthRequest = wrapApi(WeiboAPI.login);
 // const nativeSendMessageRequest = wrapApi(WeiboAPI.shareToWeibo);
@@ -123,5 +123,5 @@ export function shareToWeibo(data) {
     checkData(data);
     // return Promise.all([waitForResponse('WBSendMessageToWeiboResponse'), WeiboAPI.shareToWeibo(data)]).then(v => v[0]);
     return WeiboAPI.shareToWeibo(data).then(() => waitForResponse("WBSendMessageToWeiboResponse"));
-    
+
 }

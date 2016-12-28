@@ -84,7 +84,7 @@ RCT_EXPORT_METHOD(getApiVersion:(RCTPromiseResolveBlock)resolve
     resolve([WXApi getApiVersion]);
 }
 
-RCT_EXPORT_METHOD(isWXAppInstalled:(RCTPromiseResolveBlock)resolve
+RCT_EXPORT_METHOD(isAppInstalled:(RCTPromiseResolveBlock)resolve
                   reject:(RCTPromiseRejectBlock)reject)
 {
     if( !gIsApiRegistered ){
@@ -94,7 +94,7 @@ RCT_EXPORT_METHOD(isWXAppInstalled:(RCTPromiseResolveBlock)resolve
     resolve(@([WXApi isWXAppInstalled]));
 }
 
-RCT_EXPORT_METHOD(isWXAppSupportApi:(RCTPromiseResolveBlock)resolve
+RCT_EXPORT_METHOD(isAppSupportApi:(RCTPromiseResolveBlock)resolve
                   reject:(RCTPromiseRejectBlock)reject)
 {
     if( !gIsApiRegistered ){
@@ -105,7 +105,7 @@ RCT_EXPORT_METHOD(isWXAppSupportApi:(RCTPromiseResolveBlock)resolve
 }
 
 
-RCT_EXPORT_METHOD(openWXApp:(RCTPromiseResolveBlock)resolve
+RCT_EXPORT_METHOD(openApp:(RCTPromiseResolveBlock)resolve
                   reject:(RCTPromiseRejectBlock)reject)
 {
     if( !gIsApiRegistered ){

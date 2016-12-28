@@ -69,7 +69,6 @@ RCT_EXPORT_METHOD(getApiVersion:(RCTPromiseResolveBlock)resolve
         reject(CODE_NOT_REGISTERED, NOT_REGISTERED,nil);
         return;
     }
-    
     resolve( [WeiboSDK getSDKVersion]);
 }
 

@@ -76,14 +76,14 @@ NativeAppEventEmitter.addListener('WeChat_Resp', resp => {
  * @method isWXAppInstalled
  * @return {Promise}
  */
-export const isWXAppInstalled = WeChatAPI.isWXAppInstalled;//wrapCheckApi(WeChatAPI.isWXAppInstalled);
+export const isAppInstalled = WeChatAPI.isAppInstalled;//wrapCheckApi(WeChatAPI.isWXAppInstalled);
 
 /**
  * 微信版本是否支持API
  * @method isWXAppSupportApi
  * @return {Promise}
  */
-export const isWXAppSupportApi = WeChatAPI.isWXAppSupportApi;//wrapCheckApi(WeChatAPI.isWXAppSupportApi);
+export const isAppSupportApi = WeChatAPI.isAppSupportApi;//wrapCheckApi(WeChatAPI.isWXAppSupportApi);
 
 /**
  * 获得微信版本
@@ -97,7 +97,7 @@ export const getApiVersion = WeChatAPI.getApiVersion;//wrapCheckApi(WeChatAPI.ge
  * @method openWXApp
  * @return {Promise}
  */
-export const openWXApp = WeChatAPI.openWXApp; //wrapCheckApi(WeChatAPI.openWXApp);
+export const openApp = WeChatAPI.openApp; //wrapCheckApi(WeChatAPI.openWXApp);
 
 // function wrapApi(nativeFunc) {
 //     if (!nativeFunc) {

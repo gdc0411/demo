@@ -51,14 +51,14 @@ class social extends Component {
         try {
             this.setState({
                 wbApiVersion: await Weibo.getApiVersion(),
-                isWBInstalled: await Weibo.isWBInstalled(),
-                isWBSupportApi: await Weibo.isWBSupportApi(),
+                isWBInstalled: await Weibo.isInstalled(),
+                isWBSupportApi: await Weibo.isSupportApi(),
                 qqApiVersion: await QQ.getApiVersion(),
-                isQQInstalled: await QQ.isQQInstalled(),
-                isQQSupportApi: await QQ.isQQSupportApi(),
+                isQQInstalled: await QQ.isInstalled(),
+                isQQSupportApi: await QQ.isSupportApi(),
                 wxApiVersion: await WeChat.getApiVersion(),
-                isWXAppSupportApi: await WeChat.isWXAppSupportApi(),
-                isWXAppInstalled: await WeChat.isWXAppInstalled()
+                isWXAppSupportApi: await WeChat.isAppSupportApi(),
+                isWXAppInstalled: await WeChat.isAppInstalled()
             });
             console.log(this.state);
         } catch (e) {
@@ -81,7 +81,7 @@ class social extends Component {
 
     //微博登陆
     loginToWeibo = () => {
-        Weibo.isWBInstalled()
+        Weibo.isInstalled()
             .then((isInstalled) => {
                 if (isInstalled) {
                     Weibo.login({
@@ -103,7 +103,7 @@ class social extends Component {
 
     //微博分享
     shareToWeibo = () => {
-        Weibo.isWBInstalled()
+        Weibo.isInstalled()
             .then((isInstalled) => {
                 if (isInstalled) {
                     Weibo.shareToWeibo({
@@ -131,7 +131,7 @@ class social extends Component {
 
     //QQ登陆
     loginToQQ = () => {
-        QQ.isQQInstalled()
+        QQ.isInstalled()
             .then((isInstalled) => {
                 if (isInstalled) {
                     QQ.login('get_simple_userinfo')
@@ -152,7 +152,7 @@ class social extends Component {
 
     //QQ分享给好友
     shareToQQ = () => {
-        QQ.isQQInstalled()
+        QQ.isInstalled()
             .then((isInstalled) => {
                 if (isInstalled) {
                     QQ.shareToQQ({
@@ -181,7 +181,7 @@ class social extends Component {
 
     //QQ分享给QZone
     shareToQzone = () => {
-        QQ.isQQInstalled()
+        QQ.isInstalled()
             .then((isInstalled) => {
                 if (isInstalled) {
                     QQ.shareToQzone({
@@ -210,7 +210,7 @@ class social extends Component {
 
     //微信登陆
     loginToWeixin = () => {
-        WeChat.isWXAppInstalled()
+        WeChat.isAppInstalled()
             .then((isInstalled) => {
                 if (isInstalled) {
                     WeChat.sendAuth({
@@ -242,7 +242,7 @@ class social extends Component {
 
     //微信分享给朋友
     shareToFrends = () => {
-        WeChat.isWXAppInstalled()
+        WeChat.isAppInstalled()
             .then((isInstalled) => {
                 if (isInstalled) {
                     WeChat.shareToSession({
@@ -269,7 +269,7 @@ class social extends Component {
 
     //微信分享到朋友圈
     shareToPyq = () => {
-        WeChat.isWXAppInstalled()
+        WeChat.isAppInstalled()
             .then((isInstalled) => {
                 if (isInstalled) {
                     WeChat.shareToTimeline({

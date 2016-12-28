@@ -161,7 +161,7 @@ public class WeChatModule extends ReactContextBaseJavaModule implements IWXAPIEv
      * 微信是否安装
      */
     @ReactMethod
-    public void isWXAppInstalled(Promise promise) {
+    public void isAppInstalled(Promise promise) {
         if (api == null) {
             promise.reject(CODE_NOT_REGISTERED, MSG_NOT_REGISTERED);
             return;
@@ -173,7 +173,7 @@ public class WeChatModule extends ReactContextBaseJavaModule implements IWXAPIEv
      * 微信版本是否支持API
      */
     @ReactMethod
-    public void isWXAppSupportApi(Promise promise) {
+    public void isAppSupportApi(Promise promise) {
         if (api == null) {
             promise.reject(CODE_NOT_REGISTERED, MSG_NOT_REGISTERED);
             return;
@@ -204,7 +204,7 @@ public class WeChatModule extends ReactContextBaseJavaModule implements IWXAPIEv
      * 调起微信APP
      */
     @ReactMethod
-    public void openWXApp(Promise promise) {
+    public void openApp(Promise promise) {
         if (api == null) {
             promise.reject(CODE_NOT_REGISTERED, MSG_NOT_REGISTERED);
             return;

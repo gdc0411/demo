@@ -88,7 +88,7 @@ RCT_EXPORT_METHOD(getApiVersion:(RCTPromiseResolveBlock)resolve
     resolve( [NSString stringWithFormat:@"%@.%@",[TencentOAuth sdkVersion],[TencentOAuth sdkSubVersion]]);
 }
 
-RCT_EXPORT_METHOD(isQQInstalled:(RCTPromiseResolveBlock)resolve
+RCT_EXPORT_METHOD(isInstalled:(RCTPromiseResolveBlock)resolve
                   reject:(RCTPromiseRejectBlock)reject)
 {
     if( _qqapi == nil ){
@@ -98,7 +98,7 @@ RCT_EXPORT_METHOD(isQQInstalled:(RCTPromiseResolveBlock)resolve
     resolve(@([QQApiInterface isQQInstalled]));
 }
 
-RCT_EXPORT_METHOD(isQQSupportApi:(RCTPromiseResolveBlock)resolve
+RCT_EXPORT_METHOD(isSupportApi:(RCTPromiseResolveBlock)resolve
                   reject:(RCTPromiseRejectBlock)reject)
 {
     if( _qqapi == nil ){

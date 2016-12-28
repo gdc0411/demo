@@ -158,7 +158,7 @@ public class WeiboModule extends ReactContextBaseJavaModule implements ActivityE
     }
 
     @ReactMethod
-    public void isWBInstalled(Promise promise) {
+    public void isInstalled(Promise promise) {
         if (mWeiboShareAPI == null) {
             promise.reject(CODE_NOT_REGISTERED, MSG_NOT_REGISTERED);
             return;
@@ -167,7 +167,7 @@ public class WeiboModule extends ReactContextBaseJavaModule implements ActivityE
     }
 
     @ReactMethod
-    public void isWBSupportApi(Promise promise) {
+    public void isSupportApi(Promise promise) {
         if (mWeiboShareAPI == null) {
             promise.reject(CODE_NOT_REGISTERED, MSG_NOT_REGISTERED);
             return;
