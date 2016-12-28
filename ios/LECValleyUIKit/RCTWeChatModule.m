@@ -423,25 +423,6 @@ RCT_EXPORT_METHOD(pay:(NSDictionary *)data
         body[EVENT_PROP_SOCIAL_TYPE]    = @"SendMessageToWX.Resp";
         
         if (resp.errCode == WXSuccess) {
-            body[EVENT_PROP_SOCIAL_CODE]  = @(AUTH_RESULT_CODE_SUCCESSFUL);
-            body[EVENT_PROP_SOCIAL_MSG]   = AUTH_RESULT_MSG_SUCCESSFUL;
-        } else if (resp.errCode == WXErrCodeUserCancel || resp.errCode == WXErrCodeAuthDeny) {
-            body[EVENT_PROP_SOCIAL_CODE]  = @(AUTH_RESULT_CODE_CANCEL);
-            body[EVENT_PROP_SOCIAL_MSG]   = AUTH_RESULT_MSG_CANCEL;
-        } else {
-            body[EVENT_PROP_SOCIAL_CODE]  = @(AUTH_RESULT_CODE_FAILED);
-            body[EVENT_PROP_SOCIAL_MSG]   = AUTH_RESULT_MSG_FAILED;
-        }
-    }
-    else if ([resp isKindOfClass:[SendAuthResp class]]) {
-        SendAuthResp *r  = (SendAuthResp *)resp;
-        body[@"state"]   = r.state;
-        body[@"lang"]    = r.lang;
-        body[@"country"] = r.country;
-        body[EVENT_PROP_SOCIAL_TYPE]    = @"SendAuth.Resp";
-        body[EVENT_PROP_SOCIAL_CODE]    = r.code;
-        
-        if (resp.errCode == WXSuccess) {
             body[EVENT_PROP_SOCIAL_CODE]  = @(SHARE_RESULT_CODE_SUCCESSFUL);
             body[EVENT_PROP_SOCIAL_MSG]   = SHARE_RESULT_MSG_SUCCESSFUL;
         } else if (resp.errCode == WXErrCodeUserCancel || resp.errCode == WXErrCodeAuthDeny) {
@@ -451,6 +432,27 @@ RCT_EXPORT_METHOD(pay:(NSDictionary *)data
             body[EVENT_PROP_SOCIAL_CODE]  = @(SHARE_RESULT_CODE_FAILED);
             body[EVENT_PROP_SOCIAL_MSG]   = SHARE_RESULT_MSG_FAILED;
         }
+        
+    } else if ([resp isKindOfClass:[SendAuthResp class]]) {
+        
+        SendAuthResp *r  = (SendAuthResp *)resp;
+        body[@"state"]   = r.state;
+        body[@"lang"]    = r.lang;
+        body[@"country"] = r.country;
+        body[@"code"]    = r.code;        
+        body[EVENT_PROP_SOCIAL_TYPE]    = @"SendAuth.Resp";
+        
+        if (resp.errCode == WXSuccess) {
+            body[EVENT_PROP_SOCIAL_CODE]  = @(AUTH_RESULT_CODE_SUCCESSFUL);
+            body[EVENT_PROP_SOCIAL_MSG]   = AUTH_RESULT_MSG_SUCCESSFUL;
+        } else if (resp.errCode == WXErrCodeUserCancel || resp.errCode == WXErrCodeAuthDeny) {
+            body[EVENT_PROP_SOCIAL_CODE]  = @(AUTH_RESULT_CODE_CANCEL);
+            body[EVENT_PROP_SOCIAL_MSG]   = AUTH_RESULT_MSG_CANCEL;
+        } else {
+            body[EVENT_PROP_SOCIAL_CODE]  = @(AUTH_RESULT_CODE_FAILED);
+            body[EVENT_PROP_SOCIAL_MSG]   = AUTH_RESULT_MSG_FAILED;
+        }
+        
     }
     else if([resp isKindOfClass:[PayResp class]]) {
         PayResp *r          = (PayResp *)resp;
