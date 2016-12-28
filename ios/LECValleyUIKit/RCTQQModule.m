@@ -21,19 +21,6 @@
 #import "RCTLog.h"
 #import "RCTEventDispatcher.h"
 
-#define RCTQQShareTypeNews @"news"
-#define RCTQQShareTypeImage @"image"
-#define RCTQQShareTypeText @"text"
-#define RCTQQShareTypeVideo @"video"
-#define RCTQQShareTypeAudio @"audio"
-#define RCTQQShareTypeApp @"app"
-
-#define RCTQQShareType @"type"
-#define RCTQQShareTitle @"title"
-#define RCTQQShareDescription @"description"
-#define RCTQQShareWebpageUrl @"webpageUrl"
-#define RCTQQShareImageUrl @"imageUrl"
-
 
 @interface RCTQQModule()<QQApiInterfaceDelegate, TencentSessionDelegate> {
     TencentOAuth* _qqapi;
@@ -49,12 +36,12 @@ RCT_EXPORT_MODULE();
 
 - (NSDictionary *)constantsToExport
 {
-    return @{ @"SHARE_TYPE_NEWS"  : RCTQQShareTypeNews,
-              @"SHARE_TYPE_IMAGE" : RCTQQShareTypeImage,
-              @"SHARE_TYPE_TEXT"  : RCTQQShareTypeText,
-              @"SHARE_TYPE_VIDEO" : RCTQQShareTypeVideo,
-              @"SHARE_TYPE_AUDIO" : RCTQQShareTypeAudio,
-              @"SHARE_TYPE_APP"   : RCTQQShareTypeApp};
+    return @{ @"SHARE_TYPE_NEWS"  : SHARE_TYPE_NEWS,
+              @"SHARE_TYPE_IMAGE" : SHARE_TYPE_IMAGE,
+              @"SHARE_TYPE_TEXT"  : SHARE_TYPE_TEXT,
+              @"SHARE_TYPE_VIDEO" : SHARE_TYPE_VIDEO,
+              @"SHARE_TYPE_AUDIO" : SHARE_TYPE_AUDIO,
+              @"SHARE_TYPE_APP"   : SHARE_TYPE_APP};
 }
 
 - (dispatch_queue_t)methodQueue
@@ -95,7 +82,7 @@ RCT_EXPORT_METHOD(getApiVersion:(RCTPromiseResolveBlock)resolve
                   reject:(RCTPromiseRejectBlock)reject)
 {
     if( _qqapi == nil ){
-        reject(@"-1", NOT_REGISTERED,nil);
+        reject(CODE_NOT_REGISTERED, NOT_REGISTERED,nil);
         return;
     }
     resolve( [NSString stringWithFormat:@"%@.%@",[TencentOAuth sdkVersion],[TencentOAuth sdkSubVersion]]);
@@ -105,7 +92,7 @@ RCT_EXPORT_METHOD(isQQInstalled:(RCTPromiseResolveBlock)resolve
                   reject:(RCTPromiseRejectBlock)reject)
 {
     if( _qqapi == nil ){
-        reject(@"-1", NOT_REGISTERED,nil);
+        reject(CODE_NOT_REGISTERED, NOT_REGISTERED,nil);
         return;
     }
     resolve(@([QQApiInterface isQQInstalled]));
@@ -126,7 +113,7 @@ RCT_EXPORT_METHOD(login:(NSString *)scopes
                   reject:(RCTPromiseRejectBlock)reject)
 {
     if( _qqapi == nil ){
-        reject(@"-1", NOT_REGISTERED,nil);
+        reject(CODE_NOT_REGISTERED, NOT_REGISTERED,nil);
         return;
     }
     
@@ -141,7 +128,7 @@ RCT_EXPORT_METHOD(login:(NSString *)scopes
     if (success) {
         resolve(@[[NSNull null]]);
     }else {
-        reject(@"-3",INVOKE_FAILED,nil);
+        reject(CODE_INVOKE_FAILED,INVOKE_FAILED,nil);
     }
 }
 
@@ -150,7 +137,7 @@ RCT_EXPORT_METHOD(shareToQQ:(NSDictionary *)data
                   reject:(RCTPromiseRejectBlock)reject)
 {
     if( _qqapi == nil ){
-        reject(@"-1", NOT_REGISTERED,nil);
+        reject(CODE_NOT_REGISTERED, NOT_REGISTERED,nil);
         return;
     }
     
@@ -162,7 +149,7 @@ RCT_EXPORT_METHOD(shareToQzone:(NSDictionary *)data
                   reject:(RCTPromiseRejectBlock)reject)
 {
     if( _qqapi == nil ){
-        reject(@"-1", NOT_REGISTERED,nil);
+        reject(CODE_NOT_REGISTERED, NOT_REGISTERED,nil);
         return;
     }
     
@@ -182,12 +169,11 @@ RCT_EXPORT_METHOD(logout)
                    resolve:(RCTPromiseResolveBlock)resolve
                     reject:(RCTPromiseRejectBlock)reject{
     
-    NSString *imageUrl = aData[RCTQQShareImageUrl];
-    
+    NSString *imageUrl = aData[SHARE_PROP_IMAGE];    
     if (imageUrl.length && _bridge.imageLoader) {
         
         CGSize size = CGSizeZero;
-        if ([aData[@"type"] intValue] != 5 ) {
+        if ([aData[SHARE_PROP_TYPE] isEqualToString:SHARE_PROP_IMAGE]) {
             CGFloat thumbImageSize = 80;
             size = CGSizeMake(thumbImageSize,thumbImageSize);
         }
@@ -196,7 +182,6 @@ RCT_EXPORT_METHOD(logout)
                                             callback:^(NSError *error, UIImage *image) {
                                                 
             dispatch_async(dispatch_get_main_queue(), ^{
-                
                 [self _shareToQQWithData:aData
                                    image:image
                                    scene:aScene
@@ -204,9 +189,7 @@ RCT_EXPORT_METHOD(logout)
                                   reject:reject];
             });
         }];
-    }
-    else {
-        
+    }else {
         [self _shareToQQWithData:aData
                            image:nil
                            scene:aScene
@@ -222,17 +205,17 @@ RCT_EXPORT_METHOD(logout)
                    resolve:(RCTPromiseResolveBlock)resolve
                     reject:(RCTPromiseRejectBlock)reject {
     
-    NSString* type = aData[@"type"];
+    NSString* type = aData[SHARE_PROP_TYPE];
     
-    NSString *title = aData[@"title"];
-    NSString *description= aData[@"summary"];
-    NSString *imgPath = aData[@"imageUrl"];
-    NSString *webpageUrl = aData[@"targetUrl"]? :@"";
+    NSString *title = aData[SHARE_PROP_TITLE];
+    NSString *description= aData[SHARE_PROP_DESP];
+    NSString *imgPath = aData[SHARE_PROP_THUMB_IMAGE];
+    NSString *webpageUrl = aData[SHARE_PROP_TARGET]? :@"";
     NSString *flashUrl = aData[@"flashUrl"];
     
     QQApiObject *message = nil;
     
-    if ([type isEqualToString:RCTQQShareTypeNews]) { //图文
+    if ([type isEqualToString:SHARE_TYPE_NEWS]) { //图文
         
         message = [QQApiNewsObject
                    objectWithURL:[NSURL URLWithString:webpageUrl]
@@ -240,11 +223,11 @@ RCT_EXPORT_METHOD(logout)
                    description:description
                    previewImageURL:[NSURL URLWithString:imgPath]];
         
-    }else if ([type isEqualToString:RCTQQShareTypeText]) { //纯文字
+    }else if ([type isEqualToString:SHARE_TYPE_TEXT]) { //纯文字
         
         message = [QQApiTextObject objectWithText:description];
         
-    }else if ([type isEqualToString:RCTQQShareTypeImage]) { //纯图
+    }else if ([type isEqualToString:SHARE_TYPE_IMAGE]) { //纯图
         
         NSData *imgData = UIImageJPEGRepresentation(image, 1);
         message = [QQApiImageObject objectWithData:imgData
@@ -252,7 +235,7 @@ RCT_EXPORT_METHOD(logout)
                                              title:title
                                        description:description];
         
-    }else if ([type isEqualToString:RCTQQShareTypeAudio]) { //音乐
+    }else if ([type isEqualToString:SHARE_TYPE_AUDIO]) { //音乐
         QQApiAudioObject *audioObj = [QQApiAudioObject objectWithURL:[NSURL URLWithString:webpageUrl]
                                                                title:title
                                                          description:description
@@ -262,7 +245,7 @@ RCT_EXPORT_METHOD(logout)
         }
         message = audioObj;
         
-    }else if ([type isEqualToString:RCTQQShareTypeVideo] ) { //视频
+    }else if ([type isEqualToString:SHARE_TYPE_VIDEO] ) { //视频
         QQApiVideoObject *videoObj = [QQApiVideoObject objectWithURL:[NSURL URLWithString:webpageUrl]
                                                                title:title
                                                          description:description
@@ -289,7 +272,7 @@ RCT_EXPORT_METHOD(logout)
     }else if (sent == EQQAPIAPPSHAREASYNC) {
         resolve(@[[NSNull null]]);
     }else {
-        reject(@"-3",INVOKE_FAILED,nil);
+        reject(CODE_INVOKE_FAILED,INVOKE_FAILED,nil);
     }
 }
 
@@ -328,8 +311,7 @@ RCT_EXPORT_METHOD(logout)
 {
     if( resp.type == ESENDMESSAGETOQQRESPTYPE ){
         
-        NSMutableDictionary *body = @{@"type":@"QQShareResponse"}.mutableCopy;
-        
+        NSMutableDictionary *body = @{EVENT_PROP_SOCIAL_TYPE:@"QQShareResponse"}.mutableCopy;
         int errCode = -5; //非法返回
         
         int val;
@@ -337,16 +319,16 @@ RCT_EXPORT_METHOD(logout)
             errCode = [resp.result intValue];
         }
         
-        body[EVENT_ERROR_CODE] = @(errCode);
         body[@"description"] = resp.errorDescription;
         body[@"extendInfo"] = resp.extendInfo;
         
-        if(errCode == 0){ //成功！
-            body[EVENT_ERROR_MSG] = @"分享成功！";
-        }else if(-4 == errCode){ //分享失败
-            body[EVENT_ERROR_MSG] = @"分享失败，用户取消！";
+        if(errCode == 0){
+            body[EVENT_PROP_SOCIAL_CODE] = @(SHARE_RESULT_CODE_SUCCESSFUL);
+            body[EVENT_PROP_SOCIAL_MSG] = SHARE_RESULT_MSG_SUCCESSFUL;
+        }else if(-4 == errCode){
+            body[EVENT_PROP_SOCIAL_MSG] = SHARE_RESULT_MSG_CANCEL;
         }else {
-            body[EVENT_ERROR_MSG] = [NSString stringWithFormat:@"分享失败：%@", resp.errorDescription] ;
+            body[EVENT_PROP_SOCIAL_MSG] = [NSString stringWithFormat:@"%@：%@", SHARE_RESULT_MSG_FAILED, resp.errorDescription] ;
         }
         
         [self.bridge.eventDispatcher sendAppEventWithName:EVENT_QQ_RESP
@@ -362,13 +344,14 @@ RCT_EXPORT_METHOD(logout)
 #pragma mark - oauth delegate
 - (void)tencentDidLogin
 {
-    NSMutableDictionary *body = @{@"type":@"QQAuthorizeResponse"}.mutableCopy;
-    body[EVENT_ERROR_CODE] = @(0);
+    NSMutableDictionary *body = @{EVENT_PROP_SOCIAL_TYPE:@"QQAuthorizeResponse"}.mutableCopy;
     body[@"openid"] = _qqapi.openId?_qqapi.openId:[NSNull null];
     body[@"access_token"] = _qqapi.accessToken?_qqapi.accessToken:[NSNull null];
     body[@"expires_in"] = @([_qqapi.expirationDate timeIntervalSinceNow]*1000);
     body[@"unionid"] = _qqapi.unionid?_qqapi.unionid:[NSNull null];
     body[@"appid"] =_qqapi.appId?_qqapi.appId:[NSNull null];
+    body[EVENT_PROP_SOCIAL_CODE] = @(AUTH_RESULT_CODE_SUCCESSFUL);
+    body[EVENT_PROP_SOCIAL_MSG] = AUTH_RESULT_MSG_SUCCESSFUL;
     
     [self.bridge.eventDispatcher sendAppEventWithName:EVENT_QQ_RESP
                                                  body:body];
@@ -376,13 +359,13 @@ RCT_EXPORT_METHOD(logout)
 
 - (void)tencentDidNotLogin:(BOOL)cancelled
 {
-    NSMutableDictionary *body = @{@"type":@"QQAuthorizeResponse"}.mutableCopy;
+    NSMutableDictionary *body = @{EVENT_PROP_SOCIAL_TYPE:@"QQAuthorizeResponse"}.mutableCopy;
     if (cancelled) {
-        body[EVENT_ERROR_CODE] = @(2);
-        body[EVENT_ERROR_MSG] = @"授权失败，用户取消！";
+        body[EVENT_PROP_SOCIAL_CODE] = @(AUTH_RESULT_CODE_CANCEL);
+        body[EVENT_PROP_SOCIAL_MSG] = AUTH_RESULT_MSG_CANCEL;
     }else {
-        body[EVENT_ERROR_CODE] = @(1);
-        body[EVENT_ERROR_MSG] = @"授权失败，请稍后再试！";
+        body[EVENT_PROP_SOCIAL_CODE] = @(AUTH_RESULT_CODE_FAILED);
+        body[EVENT_PROP_SOCIAL_MSG] = AUTH_RESULT_MSG_FAILED;
     }
     [self.bridge.eventDispatcher sendAppEventWithName:EVENT_QQ_RESP
                                                  body:body];

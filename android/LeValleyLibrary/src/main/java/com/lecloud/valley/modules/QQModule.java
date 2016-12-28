@@ -33,6 +33,7 @@ import com.tencent.tauth.UiError;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -241,7 +242,7 @@ public class QQModule extends ReactContextBaseJavaModule implements IUiListener,
 
     private Bundle _makeQQShare(ReadableMap data) {
         Bundle bundle = null;
-        String type = data.hasKey("type") ? data.getString("type") : SHARE_TYPE_NEWS;
+        String type = data.hasKey(SHARE_PROP_TYPE) ? data.getString(SHARE_PROP_TYPE) : SHARE_TYPE_NEWS;
 
         switch (type) {
             case SHARE_TYPE_NEWS: //图文分享
@@ -249,17 +250,17 @@ public class QQModule extends ReactContextBaseJavaModule implements IUiListener,
                 bundle = new Bundle();
                 bundle.putInt(QQShare.SHARE_TO_QQ_KEY_TYPE, QQShare.SHARE_TO_QQ_TYPE_DEFAULT);
                 //这条分享消息被好友点击后的跳转的URL
-                bundle.putString(QQShare.SHARE_TO_QQ_TARGET_URL, data.hasKey("targetUrl") ? data.getString("targetUrl") : "http://www.lecloud.com");
-                bundle.putString(QQShare.SHARE_TO_QQ_TITLE, data.hasKey("title") ? data.getString("title") : ""); //分享的标题，最长30个字符
+                bundle.putString(QQShare.SHARE_TO_QQ_TARGET_URL, data.hasKey(SHARE_PROP_TARGET) ? data.getString(SHARE_PROP_TARGET) : "http://www.lecloud.com");
+                bundle.putString(QQShare.SHARE_TO_QQ_TITLE, data.hasKey(SHARE_PROP_TITLE) ? data.getString(SHARE_PROP_TITLE) : ""); //分享的标题，最长30个字符
                 //分享的消息摘要，最长 40 个字符
-                if (data.hasKey("summary"))
-                    bundle.putString(QQShare.SHARE_TO_QQ_SUMMARY, data.getString("summary"));
+                if (data.hasKey(SHARE_PROP_DESP))
+                    bundle.putString(QQShare.SHARE_TO_QQ_SUMMARY, data.getString(SHARE_PROP_DESP));
                 //分享图片的 URL或本地路径
-                if (data.hasKey("imageUrl"))
-                    bundle.putString(QQShare.SHARE_TO_QQ_IMAGE_URL, data.getString("imageUrl"));
+                if (data.hasKey(SHARE_PROP_THUMB_IMAGE))
+                    bundle.putString(QQShare.SHARE_TO_QQ_IMAGE_URL, data.getString(SHARE_PROP_THUMB_IMAGE));
                 //手Q客户端顶部 ，替换“返回 ”按钮文字，如果为空用返回代替
-                if (data.hasKey("appName"))
-                    bundle.putString(QQShare.SHARE_TO_QQ_APP_NAME, data.getString("appName"));
+                if (data.hasKey(SHARE_PROP_APPNAME))
+                    bundle.putString(QQShare.SHARE_TO_QQ_APP_NAME, data.getString(SHARE_PROP_APPNAME));
                 //分享时是否自动打开分享到QZone的对话框
                 // QQShare.SHARE_TO_QQ_FLAG_QZONE_AUTO_OPEN = 1
                 // QQShare.SHARE_TO_QQ_FLAG_QZONE_ITEM_HIDE = 2
@@ -274,8 +275,8 @@ public class QQModule extends ReactContextBaseJavaModule implements IUiListener,
                 //这条分享消息被好友点击后的跳转的URL
                 bundle.putString(QQShare.SHARE_TO_QQ_IMAGE_LOCAL_URL, data.hasKey("imageLocalUrl") ? data.getString("imageLocalUrl") : "http://www.lecloud.com");
                 //手Q客户端顶部 ，替换“返回 ”按钮文字，如果为空用返回代替
-                if (data.hasKey("appName"))
-                    bundle.putString(QQShare.SHARE_TO_QQ_APP_NAME, data.getString("appName"));
+                if (data.hasKey(SHARE_PROP_APPNAME))
+                    bundle.putString(QQShare.SHARE_TO_QQ_APP_NAME, data.getString(SHARE_PROP_APPNAME));
                 //分享时是否自动打开分享到QZone的对话框
                 // QQShare.SHARE_TO_QQ_FLAG_QZONE_AUTO_OPEN = 1
                 // QQShare.SHARE_TO_QQ_FLAG_QZONE_ITEM_HIDE = 2
@@ -288,19 +289,19 @@ public class QQModule extends ReactContextBaseJavaModule implements IUiListener,
                 bundle = new Bundle();
                 bundle.putInt(QQShare.SHARE_TO_QQ_KEY_TYPE, QQShare.SHARE_TO_QQ_TYPE_AUDIO);
                 //这条分享消息被好友点击后的跳转的URL
-                bundle.putString(QQShare.SHARE_TO_QQ_TARGET_URL, data.hasKey("targetUrl") ? data.getString("targetUrl") : "http://www.lecloud.com");
-                bundle.putString(QQShare.SHARE_TO_QQ_AUDIO_URL, data.hasKey("audio_url") ? data.getString("audio_url") : "");
+                bundle.putString(QQShare.SHARE_TO_QQ_TARGET_URL, data.hasKey(SHARE_PROP_TARGET) ? data.getString(SHARE_PROP_TARGET) : "http://www.lecloud.com");
+                bundle.putString(QQShare.SHARE_TO_QQ_AUDIO_URL, data.hasKey(SHARE_PROP_AUDIO) ? data.getString(SHARE_PROP_AUDIO) : "");
                 //分享的标题摘要，最长 30 个字符
-                bundle.putString(QQShare.SHARE_TO_QQ_TITLE, data.hasKey("title") ? data.getString("title") : ""); //分享的标题，最长30个字符
+                bundle.putString(QQShare.SHARE_TO_QQ_TITLE, data.hasKey(SHARE_PROP_TITLE) ? data.getString(SHARE_PROP_TITLE) : ""); //分享的标题，最长30个字符
                 //分享的消息摘要，最长 40 个字符
-                if (data.hasKey("summary"))
-                    bundle.putString(QQShare.SHARE_TO_QQ_SUMMARY, data.getString("summary"));
+                if (data.hasKey(SHARE_PROP_DESP))
+                    bundle.putString(QQShare.SHARE_TO_QQ_SUMMARY, data.getString(SHARE_PROP_DESP));
                 //分享图片的 URL或本地路径
-                if (data.hasKey("imageUrl"))
-                    bundle.putString(QQShare.SHARE_TO_QQ_IMAGE_URL, data.getString("imageUrl"));
+                if (data.hasKey(SHARE_PROP_IMAGE))
+                    bundle.putString(QQShare.SHARE_TO_QQ_IMAGE_URL, data.getString(SHARE_TYPE_IMAGE));
                 //手Q客户端顶部 ，替换“返回 ”按钮文字，如果为空用返回代替
-                if (data.hasKey("appName"))
-                    bundle.putString(QQShare.SHARE_TO_QQ_APP_NAME, data.getString("appName"));
+                if (data.hasKey(SHARE_PROP_APPNAME))
+                    bundle.putString(QQShare.SHARE_TO_QQ_APP_NAME, data.getString(SHARE_PROP_APPNAME));
                 //分享时是否自动打开分享到QZone的对话框
                 // QQShare.SHARE_TO_QQ_FLAG_QZONE_AUTO_OPEN = 1
                 // QQShare.SHARE_TO_QQ_FLAG_QZONE_ITEM_HIDE = 2
@@ -314,16 +315,16 @@ public class QQModule extends ReactContextBaseJavaModule implements IUiListener,
                 bundle = new Bundle();
                 bundle.putInt(QQShare.SHARE_TO_QQ_KEY_TYPE, QQShare.SHARE_TO_QQ_TYPE_APP);
                 //分享的标题摘要，最长 30 个字符
-                bundle.putString(QQShare.SHARE_TO_QQ_TITLE, data.hasKey("title") ? data.getString("title") : ""); //分享的标题，最长30个字符
+                bundle.putString(QQShare.SHARE_TO_QQ_TITLE, data.hasKey(SHARE_PROP_TITLE) ? data.getString(SHARE_PROP_TITLE) : ""); //分享的标题，最长30个字符
                 //分享的消息摘要，最长 40 个字符
-                if (data.hasKey("summary"))
-                    bundle.putString(QQShare.SHARE_TO_QQ_SUMMARY, data.getString("summary"));
+                if (data.hasKey(SHARE_PROP_DESP))
+                    bundle.putString(QQShare.SHARE_TO_QQ_SUMMARY, data.getString(SHARE_PROP_DESP));
                 //分享图片的 URL或本地路径
-                if (data.hasKey("imageUrl"))
-                    bundle.putString(QQShare.SHARE_TO_QQ_IMAGE_URL, data.getString("imageUrl"));
+                if (data.hasKey(SHARE_PROP_IMAGE))
+                    bundle.putString(QQShare.SHARE_TO_QQ_IMAGE_URL, data.getString(SHARE_PROP_IMAGE));
                 //手Q客户端顶部 ，替换“返回 ”按钮文字，如果为空用返回代替
-                if (data.hasKey("appName"))
-                    bundle.putString(QQShare.SHARE_TO_QQ_APP_NAME, data.getString("appName"));
+                if (data.hasKey(SHARE_PROP_APPNAME))
+                    bundle.putString(QQShare.SHARE_TO_QQ_APP_NAME, data.getString(SHARE_PROP_APPNAME));
                 //分享时是否自动打开分享到QZone的对话框
                 // QQShare.SHARE_TO_QQ_FLAG_QZONE_AUTO_OPEN = 1
                 // QQShare.SHARE_TO_QQ_FLAG_QZONE_ITEM_HIDE = 2
@@ -338,21 +339,21 @@ public class QQModule extends ReactContextBaseJavaModule implements IUiListener,
 
     private Bundle _makeQzoneShare(ReadableMap data) {
         Bundle bundle = null;
-        String type = data.hasKey("type") ? data.getString("type") : SHARE_TYPE_NEWS;
+        String type = data.hasKey(SHARE_PROP_TYPE) ? data.getString(SHARE_PROP_TYPE) : SHARE_TYPE_NEWS;
         switch (type) {
             case SHARE_TYPE_NEWS: //图文分享
                 bundle = new Bundle();
                 bundle.putInt(QzoneShare.SHARE_TO_QZONE_KEY_TYPE, QzoneShare.SHARE_TO_QZONE_TYPE_IMAGE_TEXT);
-                bundle.putString(QzoneShare.SHARE_TO_QQ_TITLE, data.hasKey("title") ? data.getString("title") : ""); //分享的标题，最长30个字符
+                bundle.putString(QzoneShare.SHARE_TO_QQ_TITLE, data.hasKey(SHARE_PROP_TITLE) ? data.getString(SHARE_PROP_TITLE) : ""); //分享的标题，最长30个字符
                 //分享的消息摘要，最长 40 个字符
-                if (data.hasKey("summary"))
-                    bundle.putString(QzoneShare.SHARE_TO_QQ_SUMMARY, data.getString("summary"));
+                if (data.hasKey(SHARE_PROP_DESP))
+                    bundle.putString(QzoneShare.SHARE_TO_QQ_SUMMARY, data.getString(SHARE_PROP_DESP));
                 //这条分享消息被好友点击后的跳转的URL
-                bundle.putString(QzoneShare.SHARE_TO_QQ_TARGET_URL, data.hasKey("targetUrl") ? data.getString("targetUrl") : "http://www.lecloud.com");
+                bundle.putString(QzoneShare.SHARE_TO_QQ_TARGET_URL, data.hasKey(SHARE_PROP_TARGET) ?
+                        data.getString(SHARE_PROP_TARGET) : "http://www.lecloud.com");
                 //分享图片的 URL或本地路径
-                if (data.hasKey("imageUrl")) {
-                    ArrayList<String> al = new ArrayList<>();
-                    al.add(data.getString("imageUrl"));
+                if (data.hasKey(SHARE_PROP_IMAGE)) {
+                    ArrayList<String> al = new ArrayList<>(Arrays.asList(data.getString(SHARE_PROP_IMAGE).split(",")));
                     bundle.putStringArrayList(QzoneShare.SHARE_TO_QQ_IMAGE_URL, al);
                 }
                 break;
@@ -363,12 +364,12 @@ public class QQModule extends ReactContextBaseJavaModule implements IUiListener,
                 bundle = new Bundle();
                 bundle.putInt(QzoneShare.SHARE_TO_QZONE_KEY_TYPE, QzonePublish.PUBLISH_TO_QZONE_TYPE_PUBLISHMOOD);
                 //分享的消息摘要，最长 40 个字符
-                if (data.hasKey("summary"))
-                    bundle.putString(QzoneShare.SHARE_TO_QQ_SUMMARY, data.getString("summary"));
+                if (data.hasKey(SHARE_PROP_DESP))
+                    bundle.putString(QzoneShare.SHARE_TO_QQ_SUMMARY, data.getString(SHARE_PROP_DESP));
                 // 本地图片 todo 变成arrayList
-                if (data.hasKey("imageUrl")) {
+                if (data.hasKey(SHARE_PROP_IMAGE)) {
                     ArrayList<String> al = new ArrayList<>();
-                    al.add(data.getString("imageUrl"));
+                    al.add(data.getString(SHARE_PROP_IMAGE));
                     bundle.putStringArrayList(QzoneShare.SHARE_TO_QQ_IMAGE_URL, al);
                 }
                 //发表的视频，只支持本地地址，发表视频时必填
@@ -417,10 +418,8 @@ public class QQModule extends ReactContextBaseJavaModule implements IUiListener,
                     resultMap.putInt("query_authority_cost", obj.getInt("query_authority_cost"));
                 if (obj.has("authority_cost"))
                     resultMap.putInt("authority_cost", obj.getInt("authority_cost"));
-//                resultMap.putString("appid", appId);
-//                resultMap.putString("secret", secret);
 
-                resultMap.putString(EVENT_PROP_SOCIAL_MSG, "QQ登录成功");
+                resultMap.putString(EVENT_PROP_SOCIAL_MSG, AUTH_RESULT_MSG_SUCCESSFUL);
 
             } catch (Exception e) {
                 WritableMap map = Arguments.createMap();
@@ -433,7 +432,7 @@ public class QQModule extends ReactContextBaseJavaModule implements IUiListener,
         } else {
             resultMap.putString(EVENT_PROP_SOCIAL_TYPE, "QQShareResponse");
             resultMap.putInt(EVENT_PROP_SOCIAL_CODE, SHARE_RESULT_CODE_SUCCESSFUL);
-            resultMap.putString(EVENT_PROP_SOCIAL_MSG, "QQ分享成功");
+            resultMap.putString(EVENT_PROP_SOCIAL_MSG, SHARE_RESULT_MSG_SUCCESSFUL);
         }
 
         if (mEventEmitter != null)
@@ -446,12 +445,12 @@ public class QQModule extends ReactContextBaseJavaModule implements IUiListener,
 
         if (isLoginOperation) {
             resultMap.putString(EVENT_PROP_SOCIAL_TYPE, "QQAuthorizeResponse");
-            resultMap.putInt(EVENT_PROP_SOCIAL_CODE, SHARE_RESULT_CODE_FAILED);
-            resultMap.putString(EVENT_PROP_SOCIAL_MSG, "QQ授权失败，请稍后重试 " + uiError.errorDetail);
+            resultMap.putInt(EVENT_PROP_SOCIAL_CODE, AUTH_RESULT_CODE_FAILED);
+            resultMap.putString(EVENT_PROP_SOCIAL_MSG, AUTH_RESULT_MSG_FAILED + ":" + uiError.errorDetail);
         } else {
             resultMap.putString(EVENT_PROP_SOCIAL_TYPE, "QQShareResponse");
             resultMap.putInt(EVENT_PROP_SOCIAL_CODE, SHARE_RESULT_CODE_FAILED);
-            resultMap.putString(EVENT_PROP_SOCIAL_MSG, "QQ分享失败，请稍后重试 " + uiError.errorDetail);
+            resultMap.putString(EVENT_PROP_SOCIAL_MSG, SHARE_RESULT_MSG_FAILED +":" + uiError.errorDetail);
         }
 
         if (mEventEmitter != null)
@@ -464,14 +463,13 @@ public class QQModule extends ReactContextBaseJavaModule implements IUiListener,
 
         if (isLoginOperation) {
             resultMap.putString(EVENT_PROP_SOCIAL_TYPE, "QQAuthorizeResponse");
-            resultMap.putInt(EVENT_PROP_SOCIAL_CODE, SHARE_RESULT_CODE_CANCEL);
-            resultMap.putString(EVENT_PROP_SOCIAL_MSG, "QQ授权失败，用户取消");
+            resultMap.putInt(EVENT_PROP_SOCIAL_CODE, AUTH_RESULT_CODE_CANCEL);
+            resultMap.putString(EVENT_PROP_SOCIAL_MSG, AUTH_RESULT_MSG_CANCEL);
         } else {
             resultMap.putString(EVENT_PROP_SOCIAL_TYPE, "QQShareResponse");
             resultMap.putInt(EVENT_PROP_SOCIAL_CODE, SHARE_RESULT_CODE_CANCEL);
-            resultMap.putString(EVENT_PROP_SOCIAL_MSG, "QQ分享失败，用户取消");
+            resultMap.putString(EVENT_PROP_SOCIAL_MSG, SHARE_RESULT_MSG_CANCEL);
         }
-
         if (mEventEmitter != null)
             mEventEmitter.emit(Events.EVENT_QQ_RESP.toString(), resultMap);
     }

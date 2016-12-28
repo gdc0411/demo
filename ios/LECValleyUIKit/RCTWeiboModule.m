@@ -15,19 +15,6 @@
 
 #import "../Libraries/Image/RCTImageLoader.h"
 
-#define RCTWBShareTypeNews @"news"
-#define RCTWBShareTypeImage @"image"
-#define RCTWBShareTypeText @"text"
-#define RCTWBShareTypeVideo @"video"
-#define RCTWBShareTypeAudio @"audio"
-
-#define RCTWBShareType @"type"
-#define RCTWBShareText @"text"
-#define RCTWBShareTitle @"title"
-#define RCTWBShareDescription @"description"
-#define RCTWBShareWebpageUrl @"webpageUrl"
-#define RCTWBShareImageUrl @"imageUrl"
-#define RCTWBShareAccessToken @"accessToken"
 
 BOOL gRegister = NO;
 
@@ -41,6 +28,16 @@ BOOL gRegister = NO;
 @synthesize bridge = _bridge;
 
 RCT_EXPORT_MODULE();
+
+- (NSDictionary *)constantsToExport
+{
+    return @{ @"SHARE_TYPE_NEWS"        : SHARE_TYPE_NEWS,
+              @"SHARE_TYPE_IMAGE"       : SHARE_TYPE_IMAGE,
+              @"SHARE_TYPE_TEXT"        : SHARE_TYPE_TEXT,
+              @"SHARE_TYPE_VIDEO"       : SHARE_TYPE_VIDEO,
+              @"SHARE_TYPE_AUDIO"       : SHARE_TYPE_AUDIO,
+              @"SHARE_TYPE_VOICE"       : SHARE_TYPE_VOICE};
+}
 
 - (dispatch_queue_t)methodQueue
 {
@@ -69,7 +66,7 @@ RCT_EXPORT_METHOD(getApiVersion:(RCTPromiseResolveBlock)resolve
                   reject:(RCTPromiseRejectBlock)reject)
 {
     if( !gRegister ){
-        reject(@"-1", NOT_REGISTERED,nil);
+        reject(CODE_NOT_REGISTERED, NOT_REGISTERED,nil);
         return;
     }
     
@@ -80,7 +77,7 @@ RCT_EXPORT_METHOD(isWBInstalled:(RCTPromiseResolveBlock)resolve
                   reject:(RCTPromiseRejectBlock)reject)
 {
     if( !gRegister ){
-        reject(@"-1", NOT_REGISTERED,nil);
+        reject(CODE_NOT_REGISTERED, NOT_REGISTERED,nil);
         return;
     }
     resolve( @([WeiboSDK isWeiboAppInstalled]));
@@ -90,7 +87,7 @@ RCT_EXPORT_METHOD(isWBSupportApi:(RCTPromiseResolveBlock)resolve
                   reject:(RCTPromiseRejectBlock)reject)
 {
     if( !gRegister ){
-        reject(@"-1", NOT_REGISTERED,nil);
+        reject(CODE_NOT_REGISTERED, NOT_REGISTERED,nil);
         return;
     }
     resolve( @([WeiboSDK isCanSSOInWeiboApp]));
@@ -111,10 +108,10 @@ RCT_EXPORT_METHOD(logout)
 
 RCT_EXPORT_METHOD(shareToWeibo:(NSDictionary *)aData:(RCTResponseSenderBlock)callback)
 {
-    NSString *imageUrl = aData[RCTWBShareImageUrl];
+    NSString *imageUrl = aData[@"imageUrl"];
     if (imageUrl.length && _bridge.imageLoader) {
         CGSize size = CGSizeZero;
-        if (![aData[RCTWBShareType] isEqualToString:RCTWBShareTypeImage]) {
+        if (![aData[SHARE_PROP_TYPE] isEqualToString:SHARE_TYPE_IMAGE]) {
             size = CGSizeMake(80,80);
         }
         [_bridge.imageLoader loadImageWithURLRequest:[RCTConvert NSURLRequest:imageUrl]
@@ -159,13 +156,12 @@ RCT_EXPORT_METHOD(shareToWeibo:(NSDictionary *)aData:(RCTResponseSenderBlock)cal
 - (void)didReceiveWeiboResponse:(WBBaseResponse *)response
 {
     NSMutableDictionary *body = [NSMutableDictionary new];
-    body[EVENT_ERROR_CODE] = @(response.statusCode);
+    body[EVENT_PROP_SOCIAL_CODE] = @(response.statusCode);
     // 分享
-    if ([response isKindOfClass:WBSendMessageToWeiboResponse.class])
-    {
-        body[@"type"] = @"WBSendMessageToWeiboResponse";
-        if (response.statusCode == WeiboSDKResponseStatusCodeSuccess)
-        {
+    if ([response isKindOfClass:WBSendMessageToWeiboResponse.class]){
+        
+        body[SHARE_PROP_TYPE] = @"WBSendMessageToWeiboResponse";
+        if (response.statusCode == WeiboSDKResponseStatusCodeSuccess){
             WBSendMessageToWeiboResponse *sendResponse = (WBSendMessageToWeiboResponse *)response;
             WBAuthorizeResponse *authorizeResponse = sendResponse.authResponse;
             if (sendResponse.authResponse != nil) {
@@ -174,18 +170,14 @@ RCT_EXPORT_METHOD(shareToWeibo:(NSDictionary *)aData:(RCTResponseSenderBlock)cal
                 body[@"expirationDate"] = @([authorizeResponse.expirationDate timeIntervalSince1970]);
                 body[@"refreshToken"] = authorizeResponse.refreshToken;
             }
+        }else{
+            body[EVENT_PROP_SOCIAL_MSG] = [self _getErrMsg:response.statusCode];
         }
-        else
-        {
-            body[EVENT_ERROR_MSG] = [self _getErrMsg:response.statusCode];
-        }
-    }
-    // 认证
-    else if ([response isKindOfClass:WBAuthorizeResponse.class])
-    {
-        body[@"type"] = @"WBAuthorizeResponse";
-        if (response.statusCode == WeiboSDKResponseStatusCodeSuccess)
-        {
+        
+    } else if ([response isKindOfClass:WBAuthorizeResponse.class]){ // 认证
+        
+        body[SHARE_PROP_TYPE] = @"WBAuthorizeResponse";
+        if (response.statusCode == WeiboSDKResponseStatusCodeSuccess){
             WBAuthorizeResponse *authorizeResponse = (WBAuthorizeResponse *)response;
             body[@"userID"] = authorizeResponse.userID;
             body[@"accessToken"] = authorizeResponse.accessToken;
@@ -194,7 +186,7 @@ RCT_EXPORT_METHOD(shareToWeibo:(NSDictionary *)aData:(RCTResponseSenderBlock)cal
         }
         else
         {
-            body[EVENT_ERROR_MSG] = [self _getErrMsg:response.statusCode];
+            body[EVENT_PROP_SOCIAL_MSG] = [self _getErrMsg:response.statusCode];
         }
     }
     [self.bridge.eventDispatcher sendAppEventWithName:EVENT_WEIBO_RESP
@@ -266,13 +258,13 @@ RCT_EXPORT_METHOD(shareToWeibo:(NSDictionary *)aData:(RCTResponseSenderBlock)cal
                  image:(UIImage *)aImage
 {
     WBMessageObject *message = [WBMessageObject message];
-    NSString *text = aData[RCTWBShareText];
+    NSString *text = aData[SHARE_PROP_TEXT];
     message.text = text;
     
-    NSString *type = aData[RCTWBShareType];
-    if ([type isEqualToString:RCTWBShareTypeText]) {
+    NSString *type = aData[SHARE_PROP_TYPE];
+    if ([type isEqualToString:SHARE_TYPE_TEXT]) {
     }
-    else if ([type isEqualToString:RCTWBShareTypeImage]) {
+    else if ([type isEqualToString:SHARE_TYPE_IMAGE]) {
         //        大小不能超过10M
         WBImageObject *imageObject = [WBImageObject new];
         if (aImage) {
@@ -281,24 +273,24 @@ RCT_EXPORT_METHOD(shareToWeibo:(NSDictionary *)aData:(RCTResponseSenderBlock)cal
         message.imageObject = imageObject;
     }
     else {
-        if ([type isEqualToString:RCTWBShareTypeVideo]) {
+        if ([type isEqualToString:SHARE_TYPE_VIDEO]) {
             WBVideoObject *videoObject = [WBVideoObject new];
-            videoObject.videoUrl = aData[RCTWBShareWebpageUrl];
+            videoObject.videoUrl = aData[SHARE_PROP_VIDEO];
             message.mediaObject = videoObject;
         }
-        else if ([type isEqualToString:RCTWBShareTypeAudio]) {
+        else if ([type isEqualToString:SHARE_TYPE_AUDIO]) {
             WBMusicObject *musicObject = [WBMusicObject new];
-            musicObject.musicUrl = aData[RCTWBShareWebpageUrl];
+            musicObject.musicUrl = aData[SHARE_PROP_AUDIO];
             message.mediaObject = musicObject;
         }
         else {
             WBWebpageObject *webpageObject = [WBWebpageObject new];
-            webpageObject.webpageUrl = aData[RCTWBShareWebpageUrl];
+            webpageObject.webpageUrl = aData[SHARE_PROP_TARGET];
             message.mediaObject = webpageObject;
         }
         message.mediaObject.objectID = [NSDate date].description;
-        message.mediaObject.description = aData[RCTWBShareDescription];
-        message.mediaObject.title = aData[RCTWBShareTitle];
+        message.mediaObject.description = aData[SHARE_PROP_DESP];
+        message.mediaObject.title = aData[SHARE_PROP_TITLE];
         if (aImage) {
             //            @warning 大小小于32k
             message.mediaObject.thumbnailData = UIImageJPEGRepresentation(aImage, 0.7);
@@ -306,7 +298,7 @@ RCT_EXPORT_METHOD(shareToWeibo:(NSDictionary *)aData:(RCTResponseSenderBlock)cal
     }
     
     WBAuthorizeRequest *authRequest = [self _genAuthRequest:aData];
-    NSString *accessToken = aData[RCTWBShareAccessToken];
+    NSString *accessToken = @"";//aData[RCTWBShareAccessToken];
     WBSendMessageToWeiboRequest *request = [WBSendMessageToWeiboRequest requestWithMessage:message
                                                                                   authInfo:authRequest
                                                                               access_token:accessToken];
@@ -314,9 +306,9 @@ RCT_EXPORT_METHOD(shareToWeibo:(NSDictionary *)aData:(RCTResponseSenderBlock)cal
     BOOL success = [WeiboSDK sendRequest:request];
     if (!success) {
         NSMutableDictionary *body = [NSMutableDictionary new];
-        body[EVENT_ERROR_MSG] = INVOKE_FAILED;
-        body[EVENT_ERROR_CODE] = @(-1);
-        body[@"type"] = @"WBSendMessageToWeiboResponse";
+        body[EVENT_PROP_SOCIAL_CODE] = @(-1);
+        body[EVENT_PROP_SOCIAL_MSG] = INVOKE_FAILED;
+        body[EVENT_PROP_SOCIAL_TYPE] = @"WBSendMessageToWeiboResponse";
         [_bridge.eventDispatcher sendAppEventWithName:EVENT_WEIBO_RESP
                                                  body:body];
     }

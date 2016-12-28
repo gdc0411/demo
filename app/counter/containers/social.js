@@ -108,9 +108,11 @@ class social extends Component {
                 if (isInstalled) {
                     Weibo.shareToWeibo({
                         type: Weibo.SHARE_TYPE_NEWS,
+                        thumbImage: 'http://cdn.huodongxing.com/file/20160426/11E69610D2AC0F75D7EB61C48EDEA840FB/30132422640007503.jpg',
                         imageUrl: 'http://cdn.huodongxing.com/file/20160426/11E69610D2AC0F75D7EB61C48EDEA840FB/30132422640007503.jpg',
-                        title: '应用工厂创新应用值得期待',
+                        title: '乐视云开放框架介绍',
                         description: '应用工厂演示QQ分享实例',
+                        text: '应用工厂演示QQ分享实例。LeValley是一套提供组件化开放功能的跨平台客户端框架，采用前端开发模式来定义移动应用，功能分解化，让模块开发变得快速而可维护。',
                         webpageUrl: 'http://www.lecloud.com/zh-cn/'
                     }).catch((error) => {
                         console.log(error.message);
@@ -155,10 +157,10 @@ class social extends Component {
                 if (isInstalled) {
                     QQ.shareToQQ({
                         type: QQ.SHARE_TYPE_NEWS,
-                        imageUrl: 'http://cdn.huodongxing.com/file/20160426/11E69610D2AC0F75D7EB61C48EDEA840FB/30132422640007503.jpg',
-                        title: '应用工厂创新应用值得期待',
-                        summary: '应用工厂演示QQ分享实例',
-                        targetUrl: 'http://www.lecloud.com/zh-cn/',
+                        title: '乐视云开放框架介绍',
+                        thumbImage: 'http://cdn.huodongxing.com/file/20160426/11E69610D2AC0F75D7EB61C48EDEA840FB/30132422640007503.jpg',
+                        description: '应用工厂演示QQ分享实例，LeValley框架值得期待',
+                        webpageUrl: 'http://www.lecloud.com/zh-cn/',
                         appName: '应用工厂演示',
                         cflag: 2
                     }).catch((error) => {
@@ -184,10 +186,11 @@ class social extends Component {
                 if (isInstalled) {
                     QQ.shareToQzone({
                         type: QQ.SHARE_TYPE_NEWS,
-                        imageUrl: 'http://cdn.huodongxing.com/file/20160426/11E69610D2AC0F75D7EB61C48EDEA840FB/30132422640007503.jpg',
-                        title: '应用工厂创新应用值得期待',
-                        summary: '应用工厂演示QQ分享实例',
-                        targetUrl: 'http://www.lecloud.com/zh-cn/',
+                        title: '乐视云开放框架介绍',
+                        thumbImage: 'http://cdn.huodongxing.com/file/20160426/11E69610D2AC0F75D7EB61C48EDEA840FB/30132422640007503.jpg',
+                        imageUrl: 'http://cdn.huodongxing.com/file/20160426/11E69610D2AC0F75D7EB61C48EDEA840FB/30132422640007503.jpg,http://s2.51cto.com/wyfs02/M00/86/23/wKioL1e1psOjhcELAAMgatkMzjE767.png',
+                        description: '应用工厂演示QQ分享实例，LeValley框架值得期待',
+                        webpageUrl: 'http://www.lecloud.com/zh-cn/',
                         appName: '应用工厂演示',
                         cflag: 1
                     }).catch((error) => {

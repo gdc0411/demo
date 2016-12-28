@@ -202,7 +202,7 @@ public class WeiboModule extends ReactContextBaseJavaModule implements ActivityE
                     } else {
 //                    String code = bundle.getString("code", "");
                         event.putInt(EVENT_PROP_SOCIAL_CODE, SHARE_RESULT_CODE_CANCEL);
-                        event.putString(EVENT_PROP_SOCIAL_MSG, "授权失败，请稍后重试！");
+                        event.putString(EVENT_PROP_SOCIAL_MSG, SHARE_RESULT_MSG_CANCEL);
                     }
                     event.putString(EVENT_PROP_SOCIAL_TYPE, "WBAuthorizeResponse");
 
@@ -214,8 +214,8 @@ public class WeiboModule extends ReactContextBaseJavaModule implements ActivityE
                 public void onWeiboException(WeiboException e) {
                     WritableMap event = Arguments.createMap();
                     event.putString(EVENT_PROP_SOCIAL_TYPE, "WBAuthorizeResponse");
-                    event.putString(EVENT_PROP_SOCIAL_MSG, "授权失败，请稍后重试：" + e.getMessage());
                     event.putInt(EVENT_PROP_SOCIAL_CODE, SHARE_RESULT_CODE_FAILED);
+                    event.putString(EVENT_PROP_SOCIAL_MSG, SHARE_RESULT_MSG_FAILED + "：" + e.getMessage());
                     if (mEventEmitter != null)
                         mEventEmitter.emit(Events.EVENT_WEIBO_RESP.toString(), event);
                 }
@@ -224,8 +224,8 @@ public class WeiboModule extends ReactContextBaseJavaModule implements ActivityE
                 public void onCancel() {
                     WritableMap event = Arguments.createMap();
                     event.putString(EVENT_PROP_SOCIAL_TYPE, "WBAuthorizeResponse");
-                    event.putString(EVENT_PROP_SOCIAL_CODE, "授权失败，用户取消");
                     event.putInt(EVENT_PROP_SOCIAL_MSG, SHARE_RESULT_CODE_CANCEL);
+                    event.putString(EVENT_PROP_SOCIAL_CODE, SHARE_RESULT_MSG_CANCEL);
                     if (mEventEmitter != null)
                         mEventEmitter.emit(Events.EVENT_WEIBO_RESP.toString(), event);
                 }
@@ -246,8 +246,8 @@ public class WeiboModule extends ReactContextBaseJavaModule implements ActivityE
             return;
         }
 
-        if (data.hasKey("imageUrl")) {
-            String imageUrl = data.getString("imageUrl");
+        if (data.hasKey(SHARE_PROP_THUMB_IMAGE)) {
+            String imageUrl = data.getString(SHARE_PROP_THUMB_IMAGE);
             DataSubscriber<CloseableReference<CloseableImage>> dataSubscriber =
                     new BaseDataSubscriber<CloseableReference<CloseableImage>>() {
 
@@ -286,9 +286,7 @@ public class WeiboModule extends ReactContextBaseJavaModule implements ActivityE
             _downloadImage(imageUrl, resizeOptions, dataSubscriber);
 
         } else {
-
             _share(data, null);
-
         }
 
         promise.resolve(null);
@@ -302,7 +300,7 @@ public class WeiboModule extends ReactContextBaseJavaModule implements ActivityE
     }
 
     public void onActivityResult(Activity activity, int requestCode, int resultCode, Intent data) {
-        this.onActivityResult(requestCode, resultCode, data);
+        onActivityResult(requestCode, resultCode, data);
     }
 
     public void onNewIntent(Intent intent) {
@@ -312,12 +310,12 @@ public class WeiboModule extends ReactContextBaseJavaModule implements ActivityE
 
     private void _share(ReadableMap data, Bitmap bitmap) {
         WeiboMultiMessage weiboMessage = new WeiboMultiMessage();//初始化微博的分享消息
-        String type = data.hasKey("type") ? data.getString("type") : SHARE_TYPE_NEWS;
+        String type = data.hasKey(SHARE_PROP_TYPE) ? data.getString(SHARE_PROP_TYPE) : SHARE_TYPE_NEWS;
 
-        if (data.hasKey("text")) {
+        if (data.hasKey(SHARE_PROP_TEXT)) {
             //创建文本消息对象
             TextObject textObject = new TextObject();
-            textObject.text = data.getString("text");
+            textObject.text = data.getString(SHARE_PROP_TEXT);
             weiboMessage.textObject = textObject;
         }
 
@@ -332,42 +330,42 @@ public class WeiboModule extends ReactContextBaseJavaModule implements ActivityE
         switch (type) {
             case SHARE_TYPE_NEWS:
                 WebpageObject webpageObject = new WebpageObject();
-                if (data.hasKey("webpageUrl")) {
-                    webpageObject.actionUrl = data.getString("webpageUrl");
+                if (data.hasKey(SHARE_PROP_TARGET)) {
+                    webpageObject.actionUrl = data.getString(SHARE_PROP_TARGET);
                 }
                 weiboMessage.mediaObject = webpageObject;
                 break;
 
             case SHARE_TYPE_VIDEO:
                 VideoObject videoObject = new VideoObject();
-                if (data.hasKey("webpageUrl")) {
-                    videoObject.dataUrl = data.getString("webpageUrl");
+                if (data.hasKey(SHARE_PROP_VIDEO)) {
+                    videoObject.dataUrl = data.getString(SHARE_PROP_VIDEO);
                 }
                 weiboMessage.mediaObject = videoObject;
                 break;
 
             case SHARE_TYPE_AUDIO:
                 MusicObject musicObject = new MusicObject();
-                if (data.hasKey("webpageUrl")) {
-                    musicObject.dataUrl = data.getString("webpageUrl");
+                if (data.hasKey(SHARE_PROP_AUDIO)) {
+                    musicObject.dataUrl = data.getString(SHARE_PROP_AUDIO);
                 }
                 weiboMessage.mediaObject = musicObject;
                 break;
 
             case SHARE_TYPE_VOICE:
                 VoiceObject voiceObject = new VoiceObject();
-                if (data.hasKey("webpageUrl")) {
-                    voiceObject.dataUrl = data.getString("webpageUrl");
+                if (data.hasKey(SHARE_PROP_AUDIO)) {
+                    voiceObject.dataUrl = data.getString(SHARE_PROP_AUDIO);
                 }
                 weiboMessage.mediaObject = voiceObject;
                 break;
         }
 
-        if (data.hasKey("description")) {
-            weiboMessage.mediaObject.description = data.getString("description");
+        if (data.hasKey(SHARE_PROP_DESP)) {
+            weiboMessage.mediaObject.description = data.getString(SHARE_PROP_DESP);
         }
-        if (data.hasKey("title")) {
-            weiboMessage.mediaObject.title = data.getString("title");
+        if (data.hasKey(SHARE_PROP_TITLE)) {
+            weiboMessage.mediaObject.title = data.getString(SHARE_PROP_TITLE);
         }
         if (bitmap != null) {
             weiboMessage.mediaObject.setThumbImage(bitmap);
@@ -400,8 +398,8 @@ public class WeiboModule extends ReactContextBaseJavaModule implements ActivityE
         if (!success) {
             WritableMap event = Arguments.createMap();
             event.putString(EVENT_PROP_SOCIAL_TYPE, "WBSendMessageToWeiboResponse");
-            event.putString(EVENT_PROP_SOCIAL_MSG, "分享失败，请稍后重试：WeiBo API invoke returns false.");
             event.putInt(EVENT_PROP_SOCIAL_CODE, SHARE_RESULT_CODE_FAILED);
+            event.putString(EVENT_PROP_SOCIAL_MSG, SHARE_RESULT_MSG_FAILED + ":WeiBo API invoke returns false.");
             if (mEventEmitter != null)
                 mEventEmitter.emit(Events.EVENT_WEIBO_RESP.toString(), event);
         }
@@ -413,18 +411,18 @@ public class WeiboModule extends ReactContextBaseJavaModule implements ActivityE
 
     private static void onShareResponse(BaseResponse baseResponse) {
         WritableMap map = Arguments.createMap();
+        map.putInt("wbCode", baseResponse.errCode);
+        map.putString("wbMsg", baseResponse.errMsg);
+
         if (baseResponse.errCode == 0) {
-            map.putInt(EVENT_PROP_SOCIAL_CODE, baseResponse.errCode);
-            map.putString(EVENT_PROP_SOCIAL_MSG, "分享成功");
-
+            map.putInt(EVENT_PROP_SOCIAL_CODE, SHARE_RESULT_CODE_SUCCESSFUL);
+            map.putString(EVENT_PROP_SOCIAL_MSG, SHARE_RESULT_MSG_SUCCESSFUL);
         } else if (baseResponse.errCode == 1) {
-            map.putInt(EVENT_PROP_SOCIAL_CODE, baseResponse.errCode);
-            map.putString(EVENT_PROP_SOCIAL_MSG, "分享失败，用户取消");
-
+            map.putInt(EVENT_PROP_SOCIAL_CODE, SHARE_RESULT_CODE_CANCEL);
+            map.putString(EVENT_PROP_SOCIAL_MSG, SHARE_RESULT_MSG_CANCEL);
         } else {
-            map.putInt(EVENT_PROP_SOCIAL_CODE, baseResponse.errCode);
-            map.putString(EVENT_PROP_SOCIAL_MSG, "分享失败，请稍后重试");
-
+            map.putInt(EVENT_PROP_SOCIAL_CODE, SHARE_RESULT_CODE_FAILED);
+            map.putString(EVENT_PROP_SOCIAL_MSG, SHARE_RESULT_MSG_FAILED);
         }
         map.putString(EVENT_PROP_SOCIAL_TYPE, "WBSendMessageToWeiboResponse");
 

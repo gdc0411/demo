@@ -19,26 +19,6 @@
 #import "RCTEventDispatcher.h"
 
 
-// 定义分享类型常量
-#define RCTWXShareTypeNews @"news"
-#define RCTWXShareTypeImage @"image"
-#define RCTWXShareTypeImageFile @"imageFile"
-#define RCTWXShareTypeText @"text"
-#define RCTWXShareTypeVideo @"video"
-#define RCTWXShareTypeAudio @"audio"
-#define RCTWXShareTypeFile @"file"
-
-// 定义分享字段名
-#define RCTWXShareType @"type"
-#define RCTWXShareTitle @"title"
-#define RCTWXShareText @"text"
-#define RCTWXShareDescription @"description"
-#define RCTWXShareWebpageUrl @"webpageUrl"
-#define RCTWXShareImageUrl @"imageUrl"
-#define RCTWXShareThumbImageUrl @"thumbImage"
-#define RCTWXShareThumbImageSize @"thumbImageSize"
-
-
 @interface RCTWeChatModule()<WXApiDelegate>
 
 @end
@@ -59,13 +39,13 @@ RCT_EXPORT_MODULE()
     return @{ @"isAppRegistered"        : @(gIsApiRegistered),
               @"APP_ID"                 : gAppID,
               @"APP_SECRET"             : gSecret,
-              @"SHARE_TYPE_NEWS"        : RCTWXShareTypeNews,
-              @"SHARE_TYPE_IMAGE"       : RCTWXShareTypeImage,
-              @"SHARE_TYPE_IMAGE_FILE"  : RCTWXShareTypeImageFile,
-              @"SHARE_TYPE_TEXT"        : RCTWXShareTypeText,
-              @"SHARE_TYPE_VIDEO"       : RCTWXShareTypeVideo,
-              @"SHARE_TYPE_AUDIO"       : RCTWXShareTypeAudio,
-              @"SHARE_TYPE_FILE"        : RCTWXShareTypeFile};
+              @"SHARE_TYPE_NEWS"        : SHARE_TYPE_NEWS,
+              @"SHARE_TYPE_IMAGE"       : SHARE_TYPE_IMAGE,
+              @"SHARE_TYPE_IMAGE_FILE"  : SHARE_TYPE_IMAGE_FILE,
+              @"SHARE_TYPE_TEXT"        : SHARE_TYPE_TEXT,
+              @"SHARE_TYPE_VIDEO"       : SHARE_TYPE_VIDEO,
+              @"SHARE_TYPE_AUDIO"       : SHARE_TYPE_AUDIO,
+              @"SHARE_TYPE_FILE"        : SHARE_TYPE_FILE};
 }
 
 - (dispatch_queue_t)methodQueue
@@ -97,8 +77,8 @@ RCT_EXPORT_MODULE()
 RCT_EXPORT_METHOD(getApiVersion:(RCTPromiseResolveBlock)resolve
                   reject:(RCTPromiseRejectBlock)reject)
 {
-    if( !gIsApiRegistered ){
-        reject(@"-1", NOT_REGISTERED,nil);
+    if( !gIsApiRegistered){
+        reject(CODE_NOT_REGISTERED, NOT_REGISTERED, nil);
         return;
     }
     resolve([WXApi getApiVersion]);
@@ -108,7 +88,7 @@ RCT_EXPORT_METHOD(isWXAppInstalled:(RCTPromiseResolveBlock)resolve
                   reject:(RCTPromiseRejectBlock)reject)
 {
     if( !gIsApiRegistered ){
-        reject(@"-1", NOT_REGISTERED,nil);
+        reject(CODE_NOT_REGISTERED, NOT_REGISTERED,nil);
         return;
     }
     resolve(@([WXApi isWXAppInstalled]));
@@ -118,7 +98,7 @@ RCT_EXPORT_METHOD(isWXAppSupportApi:(RCTPromiseResolveBlock)resolve
                   reject:(RCTPromiseRejectBlock)reject)
 {
     if( !gIsApiRegistered ){
-        reject(@"-1", NOT_REGISTERED,nil);
+        reject(CODE_NOT_REGISTERED, NOT_REGISTERED,nil);
         return;
     }
     resolve(@([WXApi isWXAppSupportApi]));
@@ -129,7 +109,7 @@ RCT_EXPORT_METHOD(openWXApp:(RCTPromiseResolveBlock)resolve
                   reject:(RCTPromiseRejectBlock)reject)
 {
     if( !gIsApiRegistered ){
-        reject(@"-1", NOT_REGISTERED,nil);
+        reject(CODE_NOT_REGISTERED, NOT_REGISTERED,nil);
         return;
     }
     
@@ -137,7 +117,7 @@ RCT_EXPORT_METHOD(openWXApp:(RCTPromiseResolveBlock)resolve
     if (success) {
         resolve(@[[NSNull null]]);
     }else {
-        reject(@"-3",INVOKE_FAILED,nil);
+        reject(CODE_INVOKE_FAILED,INVOKE_FAILED,nil);
     }
 }
 
@@ -154,7 +134,7 @@ RCT_EXPORT_METHOD(sendAuth:(NSDictionary *)config
     if (success) {
         resolve(@[[NSNull null]]);
     }else {
-        reject(@"-3",INVOKE_FAILED,nil);
+        reject(CODE_INVOKE_FAILED,INVOKE_FAILED,nil);
     }
 }
 
@@ -193,7 +173,7 @@ RCT_EXPORT_METHOD(pay:(NSDictionary *)data
     if (success) {
         resolve(@[[NSNull null]]);
     }else {
-        reject(@"-3",INVOKE_FAILED,nil);
+        reject(CODE_INVOKE_FAILED,INVOKE_FAILED,nil);
     }
 }
 
@@ -210,25 +190,25 @@ RCT_EXPORT_METHOD(pay:(NSDictionary *)data
                       resolve:(RCTPromiseResolveBlock)resolve
                        reject:(RCTPromiseRejectBlock)reject
 {
-    NSString *type = aData[RCTWXShareType];
+    NSString *type = aData[SHARE_PROP_TYPE];
     
-    if ([type isEqualToString:RCTWXShareTypeText]) {
-        NSString *text = aData[RCTWXShareDescription];
+    if ([type isEqualToString:SHARE_TYPE_TEXT]) {
+        NSString *text = aData[SHARE_PROP_DESP];
         [self shareToWeixinWithTextMessage:aScene
                                       Text:text
                                    resolve:resolve
                                     reject:reject];
     } else {
-        NSString * title = aData[RCTWXShareTitle];
-        NSString * description = aData[RCTWXShareDescription];
+        NSString * title = aData[SHARE_PROP_TITLE];
+        NSString * description = aData[SHARE_PROP_DESP];
         NSString * mediaTagName = aData[@"mediaTagName"];
         NSString * messageAction = aData[@"messageAction"];
         NSString * messageExt = aData[@"messageExt"];
         
-        if (type.length <= 0 || [type isEqualToString:RCTWXShareTypeNews]) {
-            NSString * webpageUrl = aData[RCTWXShareWebpageUrl];
+        if (type.length <= 0 || [type isEqualToString:SHARE_TYPE_NEWS]) {
+            NSString * webpageUrl = aData[SHARE_PROP_TARGET];
             if (webpageUrl.length <= 0) {
-                reject(@"-4",@[@"webpageUrl required"],nil);
+                reject(CODE_INVALID_ARGUMENT,@[@"webpageUrl required"],nil);
                 return;
             }
             
@@ -246,9 +226,9 @@ RCT_EXPORT_METHOD(pay:(NSDictionary *)data
                                         resolve:resolve
                                          reject:reject];
             
-        } else if ([type isEqualToString:RCTWXShareTypeAudio]) {
+        } else if ([type isEqualToString:SHARE_TYPE_AUDIO]) {
             WXMusicObject *musicObject = [WXMusicObject new];
-            musicObject.musicUrl = aData[@"musicUrl"];
+            musicObject.musicUrl = aData[SHARE_PROP_AUDIO];
             musicObject.musicLowBandUrl = aData[@"musicLowBandUrl"];
             musicObject.musicDataUrl = aData[@"musicDataUrl"];
             musicObject.musicLowBandDataUrl = aData[@"musicLowBandDataUrl"];
@@ -264,9 +244,9 @@ RCT_EXPORT_METHOD(pay:(NSDictionary *)data
                                         resolve:resolve
                                          reject:reject];
             
-        } else if ([type isEqualToString:RCTWXShareTypeVideo]) {
+        } else if ([type isEqualToString:SHARE_TYPE_VIDEO]) {
             WXVideoObject *videoObject = [WXVideoObject new];
-            videoObject.videoUrl = aData[@"videoUrl"];
+            videoObject.videoUrl = aData[SHARE_PROP_VIDEO];
             videoObject.videoLowBandUrl = aData[@"videoLowBandUrl"];
             
             [self shareToWeixinWithMediaMessage:aScene
@@ -280,12 +260,12 @@ RCT_EXPORT_METHOD(pay:(NSDictionary *)data
                                         resolve:resolve
                                          reject:reject];
             
-        } else if ([type isEqualToString:RCTWXShareTypeImage]) {
-            NSURL *url = [NSURL URLWithString:aData[RCTWXShareImageUrl]];
+        } else if ([type isEqualToString:SHARE_TYPE_IMAGE]) {
+            NSURL *url = [NSURL URLWithString:aData[SHARE_PROP_IMAGE]];
             NSURLRequest *imageRequest = [NSURLRequest requestWithURL:url];
             [self.bridge.imageLoader loadImageWithURLRequest:imageRequest callback:^(NSError *error, UIImage *image) {
                 if (image == nil){
-                    reject(@"-4",@[@"fail to load image resource"],nil);
+                    reject(CODE_INVALID_ARGUMENT,@[@"fail to load image resource"],nil);
                 } else {
                     WXImageObject *imageObject = [WXImageObject object];
                     imageObject.imageData = UIImagePNGRepresentation(image);
@@ -303,7 +283,7 @@ RCT_EXPORT_METHOD(pay:(NSDictionary *)data
                     
                 }
             }];
-        } else if ([type isEqualToString:RCTWXShareTypeFile]) {
+        } else if ([type isEqualToString:SHARE_TYPE_IMAGE_FILE]) {
             NSString * filePath = aData[@"filePath"];
             NSString * fileExtension = aData[@"fileExtension"];
             
@@ -323,8 +303,7 @@ RCT_EXPORT_METHOD(pay:(NSDictionary *)data
                                          reject:reject];
             
         } else {
-            reject(@"-4",INVALID_ARGUMENT, nil);
-            //callback(@[INVALID_ARGUMENT]);
+            reject(CODE_INVALID_ARGUMENT,INVALID_ARGUMENT, nil);
         }
     }
 }
@@ -334,14 +313,15 @@ RCT_EXPORT_METHOD(pay:(NSDictionary *)data
                       resolve:(RCTPromiseResolveBlock)resolve
                        reject:(RCTPromiseRejectBlock)reject
 {
-    NSString *imageUrl = aData[RCTWXShareThumbImageUrl];
+    NSString *imageUrl = aData[SHARE_PROP_THUMB_IMAGE];
     if (imageUrl.length && _bridge.imageLoader) {
         NSURL *url = [NSURL URLWithString:imageUrl];
         NSURLRequest *imageRequest = [NSURLRequest requestWithURL:url];
         [_bridge.imageLoader loadImageWithURLRequest:imageRequest size:CGSizeMake(100, 100) scale:1 clipped:FALSE resizeMode:RCTResizeModeStretch progressBlock:nil partialLoadBlock:nil
                                      completionBlock:^(NSError *error, UIImage *image) {
                                          [self shareToWeixinWithData:aData
-                                                          thumbImage:image scene:aScene
+                                                          thumbImage:image
+                                                               scene:aScene
                                                              resolve:resolve
                                                               reject:reject];
                                      }];
@@ -369,7 +349,7 @@ RCT_EXPORT_METHOD(pay:(NSDictionary *)data
     if(success)
         resolve([NSNull null]);
     else
-        reject(@"-3",INVOKE_FAILED, nil);
+        reject(CODE_INVOKE_FAILED,INVOKE_FAILED, nil);
 }
 
 - (void)shareToWeixinWithMediaMessage:(int)aScene
@@ -384,12 +364,12 @@ RCT_EXPORT_METHOD(pay:(NSDictionary *)data
                                reject:(RCTPromiseRejectBlock)reject
 {
     WXMediaMessage *message = [WXMediaMessage message];
-    message.title = title;
-    message.description = description;
-    message.mediaObject = mediaObject;
-    message.messageExt = messageExt;
-    message.messageAction = action;
-    message.mediaTagName = tagName;
+    message.title           = title;
+    message.description     = description;
+    message.mediaObject     = mediaObject;
+    message.messageExt      = messageExt;
+    message.messageAction   = action;
+    message.mediaTagName    = tagName;
     [message setThumbImage:thumbImage];
     
     SendMessageToWXReq* req = [SendMessageToWXReq new];
@@ -401,7 +381,7 @@ RCT_EXPORT_METHOD(pay:(NSDictionary *)data
     if(success)
         resolve([NSNull null]);
     else
-        reject(@"-3",INVOKE_FAILED, nil);
+        reject(CODE_INVOKE_FAILED,INVOKE_FAILED, nil);
 }
 
 #pragma mark - wx callback
@@ -413,38 +393,50 @@ RCT_EXPORT_METHOD(pay:(NSDictionary *)data
 
 -(void) onResp:(BaseResp*)resp
 {
-    NSMutableDictionary *body = @{EVENT_ERROR_CODE:@(resp.errCode)}.mutableCopy;
-    body[EVENT_ERROR_CODE] = @(resp.errCode);
+    NSMutableDictionary *body = @{EVENT_PROP_SOCIAL_CODE:@(resp.errCode)}.mutableCopy;
+    body[@"wxCode"] = @(resp.errCode);
+    body[@"wxStr"] = resp.errStr;
     
-    if (resp.errStr == nil || resp.errStr.length<=0) {
-        body[EVENT_ERROR_MSG] = [self _getErrorMsg:resp.errCode];
-    }else{
-        body[EVENT_ERROR_MSG] = resp.errStr;
-    }
-    
-    if([resp isKindOfClass:[SendMessageToWXResp class]])
-    {
+    if([resp isKindOfClass:[SendMessageToWXResp class]]){
         SendMessageToWXResp *r = (SendMessageToWXResp *)resp;
-        body[@"lang"] = r.lang;
-        body[@"country"] =r.country;
-        body[@"type"] = @"SendMessageToWX.Resp";
+        body[@"lang"]    = r.lang;
+        body[@"country"] = r.country;
+        body[EVENT_PROP_SOCIAL_TYPE]    = @"SendMessageToWX.Resp";
+        
+        if (resp.errCode == WXSuccess) {
+            body[EVENT_PROP_SOCIAL_CODE]  = @(AUTH_RESULT_CODE_SUCCESSFUL);
+            body[EVENT_PROP_SOCIAL_MSG]   = AUTH_RESULT_MSG_SUCCESSFUL;
+        } else if (resp.errCode == WXErrCodeUserCancel || resp.errCode == WXErrCodeAuthDeny) {
+            body[EVENT_PROP_SOCIAL_CODE]  = @(AUTH_RESULT_CODE_CANCEL);
+            body[EVENT_PROP_SOCIAL_MSG]   = AUTH_RESULT_MSG_CANCEL;
+        } else {
+            body[EVENT_PROP_SOCIAL_CODE]  = @(AUTH_RESULT_CODE_FAILED);
+            body[EVENT_PROP_SOCIAL_MSG]   = AUTH_RESULT_MSG_FAILED;
+        }
     }
     else if ([resp isKindOfClass:[SendAuthResp class]]) {
-        SendAuthResp *r = (SendAuthResp *)resp;
-        body[@"state"] = r.state;
-        body[@"lang"] = r.lang;
-        body[@"country"] =r.country;
-        body[@"type"] = @"SendAuth.Resp";
-        body[@"code"]= r.code;
-//        body[@"appid"] = gAppID;
-//        body[@"secret"] = gSecret;
+        SendAuthResp *r  = (SendAuthResp *)resp;
+        body[@"state"]   = r.state;
+        body[@"lang"]    = r.lang;
+        body[@"country"] = r.country;
+        body[EVENT_PROP_SOCIAL_TYPE]    = @"SendAuth.Resp";
+        body[EVENT_PROP_SOCIAL_CODE]    = r.code;
+        
+        if (resp.errCode == WXSuccess) {
+            body[EVENT_PROP_SOCIAL_CODE]  = @(SHARE_RESULT_CODE_SUCCESSFUL);
+            body[EVENT_PROP_SOCIAL_MSG]   = SHARE_RESULT_MSG_SUCCESSFUL;
+        } else if (resp.errCode == WXErrCodeUserCancel || resp.errCode == WXErrCodeAuthDeny) {
+            body[EVENT_PROP_SOCIAL_CODE]  = @(SHARE_RESULT_CODE_CANCEL);
+            body[EVENT_PROP_SOCIAL_MSG]   = SHARE_RESULT_MSG_CANCEL;
+        } else {
+            body[EVENT_PROP_SOCIAL_CODE]  = @(SHARE_RESULT_CODE_FAILED);
+            body[EVENT_PROP_SOCIAL_MSG]   = SHARE_RESULT_MSG_FAILED;
+        }
     }
     else if([resp isKindOfClass:[PayResp class]]) {
-        PayResp *r = (PayResp *)resp;
-//        body[@"appid"] = gAppID;
-//        body[@"secret"] = gSecret;
-        body[@"returnKey"] = r.returnKey;
-        body[@"type"]= @"Pay.Resp";
+        PayResp *r          = (PayResp *)resp;
+        body[@"returnKey"]  = r.returnKey;
+        body[EVENT_PROP_SOCIAL_TYPE]       = @"Pay.Resp";
     }
     
     [self.bridge.eventDispatcher sendAppEventWithName:EVENT_WECHAT_RESP

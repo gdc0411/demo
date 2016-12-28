@@ -324,13 +324,10 @@ public class WeChatModule extends ReactContextBaseJavaModule implements IWXAPIEv
     @Override
     public void onResp(BaseResp baseResp) {
         WritableMap map = Arguments.createMap();
-        map.putInt(EVENT_PROP_SOCIAL_CODE, baseResp.errCode);
-        if (baseResp.errStr == null || baseResp.errStr.length() <= 0) {
-            map.putString(EVENT_PROP_SOCIAL_MSG, _getErrorMsg(baseResp.errCode));
-        } else {
-            map.putString(EVENT_PROP_SOCIAL_MSG, baseResp.errStr);
-        }
+        map.putInt("wxCode", baseResp.errCode);
+        map.putString("wxStr", baseResp.errStr);
         map.putString("transaction", baseResp.transaction);
+
         if (baseResp instanceof SendAuth.Resp) {
             SendAuth.Resp resp = (SendAuth.Resp) (baseResp);
             map.putString(EVENT_PROP_SOCIAL_TYPE, "SendAuth.Resp");
@@ -339,14 +336,34 @@ public class WeChatModule extends ReactContextBaseJavaModule implements IWXAPIEv
             if (resp.url != null) map.putString("url", resp.url);
             if (resp.lang != null) map.putString("lang", resp.lang);
             if (resp.country != null) map.putString("country", resp.country);
-//            map.putString("appid", appId);
-//            map.putString("secret", secret);
+
+            if (baseResp.errCode == BaseResp.ErrCode.ERR_OK) {
+                map.putInt(EVENT_PROP_SOCIAL_CODE, AUTH_RESULT_CODE_SUCCESSFUL);
+                map.putString(EVENT_PROP_SOCIAL_MSG, AUTH_RESULT_MSG_SUCCESSFUL);
+            } else if (baseResp.errCode == BaseResp.ErrCode.ERR_USER_CANCEL || baseResp.errCode == BaseResp.ErrCode.ERR_AUTH_DENIED) {
+                map.putInt(EVENT_PROP_SOCIAL_CODE, AUTH_RESULT_CODE_CANCEL);
+                map.putString(EVENT_PROP_SOCIAL_MSG, AUTH_RESULT_MSG_CANCEL);
+            } else {
+                map.putInt(EVENT_PROP_SOCIAL_CODE, AUTH_RESULT_CODE_FAILED);
+                map.putString(EVENT_PROP_SOCIAL_MSG, AUTH_RESULT_MSG_FAILED);
+            }
 
         } else if (baseResp instanceof SendMessageToWX.Resp) {
             SendMessageToWX.Resp resp = (SendMessageToWX.Resp) (baseResp);
             map.putString(EVENT_PROP_SOCIAL_TYPE, "SendMessageToWX.Resp");
             if (resp.openId != null) map.putString("openId", resp.openId);
             if (resp.transaction != null) map.putString("transaction", resp.transaction);
+
+            if (baseResp.errCode == BaseResp.ErrCode.ERR_OK) {
+                map.putInt(EVENT_PROP_SOCIAL_CODE, SHARE_RESULT_CODE_SUCCESSFUL);
+                map.putString(EVENT_PROP_SOCIAL_MSG, SHARE_RESULT_MSG_SUCCESSFUL);
+            } else if (baseResp.errCode == BaseResp.ErrCode.ERR_USER_CANCEL || baseResp.errCode == BaseResp.ErrCode.ERR_AUTH_DENIED) {
+                map.putInt(EVENT_PROP_SOCIAL_CODE, SHARE_RESULT_CODE_CANCEL);
+                map.putString(EVENT_PROP_SOCIAL_MSG, SHARE_RESULT_MSG_CANCEL);
+            } else {
+                map.putInt(EVENT_PROP_SOCIAL_CODE, SHARE_RESULT_CODE_FAILED);
+                map.putString(EVENT_PROP_SOCIAL_MSG, SHARE_RESULT_MSG_FAILED);
+            }
 
         } else if (baseResp instanceof PayResp) {
             PayResp resp = (PayResp) (baseResp);
@@ -390,9 +407,8 @@ public class WeChatModule extends ReactContextBaseJavaModule implements IWXAPIEv
 
     private void _share(final int scene, final ReadableMap data, final Promise promise) {
         Uri uri = null;
-        if (data.hasKey("thumbImage")) {
-            String imageUrl = data.getString("thumbImage");
-
+        if (data.hasKey(SHARE_PROP_THUMB_IMAGE)) {
+            String imageUrl = data.getString(SHARE_PROP_THUMB_IMAGE);
             try {
                 uri = Uri.parse(imageUrl);
                 // Verify scheme is set, so that relative uri (used by static resources) are not handled.
@@ -463,12 +479,11 @@ public class WeChatModule extends ReactContextBaseJavaModule implements IWXAPIEv
     }
 
     private void _share(final int scene, final ReadableMap data, final Bitmap thumbImage, final Promise promise) {
-        if (!data.hasKey("type")) {
+        if (!data.hasKey(SHARE_PROP_TYPE)) {
             promise.reject(CODE_INVOKE_FAILED, MSG_INVOKE_FAILED);
-//            callback.invoke(MSG_INVALID_ARGUMENT);
             return;
         }
-        String type = data.getString("type");
+        String type = data.getString(SHARE_PROP_TYPE);
         WXMediaMessage.IMediaObject mediaObject = null;
         switch (type) {
             case SHARE_TYPE_NEWS:
@@ -528,11 +543,11 @@ public class WeChatModule extends ReactContextBaseJavaModule implements IWXAPIEv
             message.setThumbImage(thumbImage);
         }
 
-        if (data.hasKey("title")) {
-            message.title = data.getString("title");
+        if (data.hasKey(SHARE_PROP_TITLE)) {
+            message.title = data.getString(SHARE_PROP_TITLE);
         }
-        if (data.hasKey("description")) {
-            message.description = data.getString("description");
+        if (data.hasKey(SHARE_PROP_DESP)) {
+            message.description = data.getString(SHARE_PROP_DESP);
         }
         if (data.hasKey("mediaTagName")) {
             message.mediaTagName = data.getString("mediaTagName");
@@ -549,29 +564,29 @@ public class WeChatModule extends ReactContextBaseJavaModule implements IWXAPIEv
         req.scene = scene;
         req.transaction = UUID.randomUUID().toString();
 
-        if(api.sendReq(req))
+        if (api.sendReq(req))
             promise.resolve(null);
         else
             promise.reject(CODE_INVOKE_FAILED, MSG_INVOKE_FAILED);
     }
 
     private WXTextObject _jsonToTextMedia(ReadableMap data) {
-        if (!data.hasKey("description")) {
+        if (!data.hasKey(SHARE_PROP_DESP)) {
             return null;
         }
 
         WXTextObject ret = new WXTextObject();
-        ret.text = data.getString("description");
+        ret.text = data.getString(SHARE_PROP_DESP);
         return ret;
     }
 
     private WXWebpageObject _jsonToWebpageMedia(ReadableMap data) {
-        if (!data.hasKey("webpageUrl")) {
+        if (!data.hasKey(SHARE_PROP_TARGET)) {
             return null;
         }
 
         WXWebpageObject ret = new WXWebpageObject();
-        ret.webpageUrl = data.getString("webpageUrl");
+        ret.webpageUrl = data.getString(SHARE_PROP_TARGET);
         if (data.hasKey("extInfo")) {
             ret.extInfo = data.getString("extInfo");
         }
@@ -604,21 +619,21 @@ public class WeChatModule extends ReactContextBaseJavaModule implements IWXAPIEv
     }
 
     private void __jsonToImageUrlMedia(ReadableMap data, MediaObjectCallback callback) {
-        if (!data.hasKey("imageUrl")) {
+        if (!data.hasKey(SHARE_PROP_THUMB_IMAGE)) {
             callback.invoke(null);
             return;
         }
-        String imageUrl = data.getString("imageUrl");
+        String imageUrl = data.getString(SHARE_PROP_THUMB_IMAGE);
         __jsonToImageMedia(imageUrl, callback);
     }
 
     private void __jsonToImageFileMedia(ReadableMap data, MediaObjectCallback callback) {
-        if (!data.hasKey("imageUrl")) {
+        if (!data.hasKey(SHARE_PROP_THUMB_IMAGE)) {
             callback.invoke(null);
             return;
         }
 
-        String imageUrl = data.getString("imageUrl");
+        String imageUrl = data.getString(SHARE_PROP_THUMB_IMAGE);
         if (!imageUrl.toLowerCase().startsWith("file://")) {
             imageUrl = "file://" + imageUrl;
         }
@@ -626,22 +641,22 @@ public class WeChatModule extends ReactContextBaseJavaModule implements IWXAPIEv
     }
 
     private WXMusicObject __jsonToMusicMedia(ReadableMap data) {
-        if (!data.hasKey("musicUrl")) {
+        if (!data.hasKey(SHARE_PROP_AUDIO)) {
             return null;
         }
 
         WXMusicObject ret = new WXMusicObject();
-        ret.musicUrl = data.getString("musicUrl");
+        ret.musicUrl = data.getString(SHARE_PROP_AUDIO);
         return ret;
     }
 
     private WXVideoObject __jsonToVideoMedia(ReadableMap data) {
-        if (!data.hasKey("videoUrl")) {
+        if (!data.hasKey(SHARE_PROP_VIDEO)) {
             return null;
         }
 
         WXVideoObject ret = new WXVideoObject();
-        ret.videoUrl = data.getString("videoUrl");
+        ret.videoUrl = data.getString(SHARE_PROP_VIDEO);
         return ret;
     }
 

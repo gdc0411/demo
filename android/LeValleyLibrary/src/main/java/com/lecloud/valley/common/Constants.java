@@ -154,25 +154,7 @@ public interface Constants {
 
 //================= REACT_SOCIAL ====================
 
-    String MSG_NOT_REGISTERED = "NOT_REGISTERED";
-    String MSG_NULL_ACTIVITY = "NULL_ACTIVITY";
-    String MSG_INVOKE_FAILED = "INVOKE_FAILED";
-    String MSG_INVALID_ARGUMENT = "INVALID_ARGUMENT";
-
-    String CODE_NOT_REGISTERED = "-1";
-    String CODE_NULL_ACTIVITY = "-2";
-    String CODE_INVOKE_FAILED = "-3";
-    String CODE_INVALID_ARGUMENT = "-4";
-
-    int SHARE_RESULT_CODE_SUCCESSFUL = 0;
-    int SHARE_RESULT_CODE_FAILED = 1;
-    int SHARE_RESULT_CODE_CANCEL = 2;
-
-    String EVENT_PROP_SOCIAL_CODE = "errCode";
-    String EVENT_PROP_SOCIAL_MSG = "errStr";
-    String EVENT_PROP_SOCIAL_TYPE = "type";
-
-
+    // 定义分享类型常量
     String SHARE_TYPE_NEWS = "news";
     String SHARE_TYPE_IMAGE = "image";
     String SHARE_TYPE_IMAGE_FILE = "imageFile";
@@ -182,5 +164,52 @@ public interface Constants {
     String SHARE_TYPE_VOICE = "voice";
     String SHARE_TYPE_FILE = "file";
     String SHARE_TYPE_APP = "app";
+
+    // 定义分享共性字段名
+    String SHARE_PROP_TYPE = "type";
+    String SHARE_PROP_TITLE = "title";
+    String SHARE_PROP_TEXT = "text";
+    String SHARE_PROP_DESP = "description";
+    String SHARE_PROP_TARGET = "webpageUrl";
+    String SHARE_PROP_THUMB_IMAGE = "thumbImage";
+    String SHARE_PROP_IMAGE = "imageUrl";
+    String SHARE_PROP_VIDEO = "videoUrl";
+    String SHARE_PROP_AUDIO = "audioUrl";
+    String SHARE_PROP_APPNAME = "appName";
+
+    //事件字段定义
+    String EVENT_PROP_SOCIAL_CODE = "errCode";
+    String EVENT_PROP_SOCIAL_MSG = "errMsg";
+    String EVENT_PROP_SOCIAL_TYPE = "type";
+
+    //授权和分享返回码和消息体
+    int AUTH_RESULT_CODE_SUCCESSFUL = 0;
+    int AUTH_RESULT_CODE_FAILED = 1;
+    int AUTH_RESULT_CODE_CANCEL = 2;
+
+    String AUTH_RESULT_MSG_SUCCESSFUL = "登录成功";
+    String AUTH_RESULT_MSG_FAILED = "授权失败，请稍后重试";
+    String AUTH_RESULT_MSG_CANCEL = "授权失败，用户取消";
+
+    int SHARE_RESULT_CODE_SUCCESSFUL = 0;
+    int SHARE_RESULT_CODE_FAILED = 1;
+    int SHARE_RESULT_CODE_CANCEL = 2;
+
+
+    String SHARE_RESULT_MSG_SUCCESSFUL = "分享成功";
+    String SHARE_RESULT_MSG_FAILED = "分享失败，请稍后重试";
+    String SHARE_RESULT_MSG_CANCEL = "分享失败，用户取消";
+
+    //事件返回码
+    String CODE_NOT_REGISTERED = "-1";
+    String CODE_NULL_ACTIVITY = "-2";
+    String CODE_INVOKE_FAILED = "-3";
+    String CODE_INVALID_ARGUMENT = "-4";
+
+    //事件处理响应
+    String MSG_NOT_REGISTERED = "NOT_REGISTERED";
+    String MSG_NULL_ACTIVITY = "NULL_ACTIVITY";
+    String MSG_INVOKE_FAILED = "INVOKE_FAILED";
+    String MSG_INVALID_ARGUMENT = "INVALID_ARGUMENT";
 
 }
