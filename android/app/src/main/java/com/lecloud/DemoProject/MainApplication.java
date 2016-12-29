@@ -15,6 +15,8 @@ import com.microsoft.codepush.react.CodePush;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
+import com.umeng.message.IUmengRegisterCallback;
+import com.umeng.message.PushAgent;
 
 import static com.lecloud.valley.utils.LogUtils.TAG;
 
@@ -67,6 +69,21 @@ public class MainApplication extends Application implements ReactApplication {
             } catch (IllegalAccessException e) {
                 e.printStackTrace();
             }
+
+            //友盟注册
+            PushAgent mPushAgent = PushAgent.getInstance(this);
+            //注册推送服务，每次调用register方法都会回调该接口
+            mPushAgent.register(new IUmengRegisterCallback() {
+
+                @Override
+                public void onSuccess(String deviceToken) {
+                    //注册成功会返回device Token
+                }
+                @Override
+                public void onFailure(String s, String s1) {
+
+                }
+            });
 
             //设置域名LeCloudPlayerConfig.HOST_DEFAULT代表国内版
             SharedPreferences preferences = getSharedPreferences("host", Context.MODE_PRIVATE);

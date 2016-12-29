@@ -13,6 +13,9 @@ import com.facebook.react.ReactInstanceManager;
 import com.facebook.react.ReactRootView;
 import com.facebook.react.modules.core.DefaultHardwareBackBtnHandler;
 import com.facebook.react.shell.MainReactPackage;
+import com.umeng.message.PushAgent;
+
+import static anetwork.channel.http.NetworkSdkSetting.context;
 
 public class MainActivity extends ReactActivity implements DefaultHardwareBackBtnHandler {
 
@@ -31,6 +34,8 @@ public class MainActivity extends ReactActivity implements DefaultHardwareBackBt
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        PushAgent.getInstance(context).onAppStart();
     }
 
     @Override
