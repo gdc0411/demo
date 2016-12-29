@@ -106,9 +106,7 @@ android {
                 //微博APPID
                 WB_APPKEY : "wb3843617848",
                 //友盟APPKEY
-                WB_APPKEY : "586489b1310c935f850008cf",
-                //友盟APPKEY
-                UMENG_APPKEY : "5faf57db14459326faaa21c4f0159fc3",
+                UMENG_APPKEY : "586489b1310c935f850008cf",
                 //UMENG_SECRET
                 UMENG_MESSAGE_SECRET : "5faf57db14459326faaa21c4f0159fc3",
                 //UMENG_CHANNEL
