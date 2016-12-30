@@ -3,7 +3,8 @@ package com.lecloud.valley.demo.sample;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 
-import com.lecloud.demo.R;
+import com.lecloud.valley.demo.R;
+import com.lecloud.valley.demo.R;
 import com.facebook.react.uimanager.SimpleViewManager;
 import com.facebook.react.uimanager.ThemedReactContext;
 import com.facebook.react.uimanager.annotations.ReactProp;

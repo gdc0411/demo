@@ -4,7 +4,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 
-import com.lecloud.demo.R;
+import com.lecloud.valley.demo.R;
 
 public class VodSDKActivity extends AppCompatActivity {
 

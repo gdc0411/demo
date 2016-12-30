@@ -88,7 +88,7 @@ android {
     buildToolsVersion "23.0.1"
 
     defaultConfig {
-        applicationId "com.lecloud.DemoProject"
+        applicationId "com.lecloud.valley.demo"
         minSdkVersion 16
         targetSdkVersion 22
         versionCode 1
@@ -106,9 +106,9 @@ android {
                 //微博APPID
                 WB_APPKEY : "wb3843617848",
                 //友盟APPKEY
-                UMENG_APPKEY : "586489b1310c935f850008cf",
+                UMENG_APPKEY : "5865dc088f4a9d37ca002232",
                 //UMENG_SECRET
-                UMENG_MESSAGE_SECRET : "5faf57db14459326faaa21c4f0159fc3",
+                UMENG_MESSAGE_SECRET : "3cab7bf2e3da2e416230c3fa017223c6",
                 //UMENG_CHANNEL
                 UMENG_CHANNEL : "LeValley"
         ]

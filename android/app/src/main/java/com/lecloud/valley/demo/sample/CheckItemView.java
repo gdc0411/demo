@@ -7,7 +7,7 @@ import android.widget.CheckBox;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.lecloud.demo.R;
+import com.lecloud.valley.demo.R;
 
 /**
  * Created by LizaRao on 2016/9/5.

@@ -153,14 +153,14 @@ public class MainApplication extends Application implements ReactApplication {
 
         @Override
         protected boolean getUseDeveloperSupport() {
-            return com.lecloud.demo.BuildConfig.DEBUG;
+            return com.lecloud.valley.demo.BuildConfig.DEBUG;
         }
 
         @Override
         protected List<ReactPackage> getPackages() {
             return Arrays.<ReactPackage>asList(
                     new MainReactPackage(),
-                    new CodePush(com.lecloud.demo.BuildConfig.CODEPUSH_KEY, getApplicationContext(), com.lecloud.demo.BuildConfig.DEBUG),
+                    new CodePush(com.lecloud.valley.demo.BuildConfig.CODEPUSH_KEY, getApplicationContext(), com.lecloud.valley.demo.BuildConfig.DEBUG),
                     new RJReactPackage()
 
             );

@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.lecloud.DemoProject">
+    package="com.lecloud.valley.demo">
 
 
     <application
-        android:name=".MainApplication"
+        android:name="com.lecloud.valley.demo.MainApplication"
         android:allowBackup="true"
         android:icon="@mipmap/lecloud"
         android:label="@string/app_name"
         android:largeHeap="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".MainActivity"
+            android:name="com.lecloud.valley.demo.MainActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize|layoutDirection"
             android:label="@string/app_name">
             <intent-filter>
@@ -20,13 +20,13 @@
             </intent-filter>
         </activity>
         <activity android:name="com.facebook.react.devsupport.DevSettingsActivity" />
-        <activity android:name=".sample.VodSDKActivity" />
+        <activity android:name="com.lecloud.valley.demo.sample.VodSDKActivity" />
 
-        <activity
-            android:name="com.lecloud.skin.activity.FeedBackActivity"
-            android:configChanges="keyboard|screenSize|orientation|layoutDirection"
-            android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.NoTitleBar" />
+        <!--<activity-->
+            <!--android:name="com.lecloud.skin.activity.FeedBackActivity"-->
+            <!--android:configChanges="keyboard|screenSize|orientation|layoutDirection"-->
+            <!--android:screenOrientation="portrait"-->
+            <!--android:theme="@android:style/Theme.NoTitleBar" />-->
 
         <service
             android:name="com.letvcloud.cmf.MediaService"
@@ -41,7 +41,7 @@
             android:value="${WX_SECRET}" />
 
         <activity
-            android:name=".wxapi.WXEntryActivity"
+            android:name="com.lecloud.valley.demo.wxapi.WXEntryActivity"
             android:exported="true"
             android:label="@string/app_name"
             android:launchMode="singleTop">
