@@ -49,6 +49,7 @@ class App extends Component {
                 return top.ref.handleBack();
             }
 
+
             navigator.pop();
             return true;//应用来接管默认行为
         }
