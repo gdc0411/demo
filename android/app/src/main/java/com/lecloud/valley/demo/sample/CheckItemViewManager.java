@@ -1,4 +1,4 @@
-package com.lecloud.DemoProject.sample;
+package com.lecloud.valley.demo.sample;
 
 import com.facebook.react.uimanager.SimpleViewManager;
 import com.facebook.react.uimanager.ThemedReactContext;

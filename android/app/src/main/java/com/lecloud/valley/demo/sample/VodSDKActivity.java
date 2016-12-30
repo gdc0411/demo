@@ -1,10 +1,10 @@
-package com.lecloud.DemoProject.sample;
+package com.lecloud.valley.demo.sample;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 
-import com.lecloud.DemoProject.R;
+import com.lecloud.demo.R;
 
 public class VodSDKActivity extends AppCompatActivity {
 

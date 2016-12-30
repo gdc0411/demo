@@ -1,4 +1,4 @@
-package com.lecloud.DemoProject.sample;
+package com.lecloud.valley.demo.sample;
 
 import android.content.Intent;
 import android.os.Bundle;

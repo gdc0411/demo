@@ -1,4 +1,4 @@
-package com.lecloud.DemoProject.sample;
+package com.lecloud.valley.demo.sample;
 
 import android.content.Context;
 import android.util.AttributeSet;
@@ -7,7 +7,7 @@ import android.widget.CheckBox;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.lecloud.DemoProject.R;
+import com.lecloud.demo.R;
 
 /**
  * Created by LizaRao on 2016/9/5.

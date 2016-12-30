@@ -1,4 +1,4 @@
-package com.lecloud.DemoProject;
+package com.lecloud.valley.demo;
 
 import android.app.ActivityManager;
 import android.app.Application;
@@ -78,10 +78,11 @@ public class MainApplication extends Application implements ReactApplication {
                 @Override
                 public void onSuccess(String deviceToken) {
                     //注册成功会返回device Token
+                    Log.d(TAG, "友盟注册成功：DeviceToken+"+ deviceToken);
                 }
                 @Override
                 public void onFailure(String s, String s1) {
-
+                    Log.d(TAG, "注册友盟出错了！s:"+ s + ",s1:" + s1);
                 }
             });
 
@@ -152,14 +153,14 @@ public class MainApplication extends Application implements ReactApplication {
 
         @Override
         protected boolean getUseDeveloperSupport() {
-            return BuildConfig.DEBUG;
+            return com.lecloud.demo.BuildConfig.DEBUG;
         }
 
         @Override
         protected List<ReactPackage> getPackages() {
             return Arrays.<ReactPackage>asList(
                     new MainReactPackage(),
-                    new CodePush(BuildConfig.CODEPUSH_KEY, getApplicationContext(), BuildConfig.DEBUG),
+                    new CodePush(com.lecloud.demo.BuildConfig.CODEPUSH_KEY, getApplicationContext(), com.lecloud.demo.BuildConfig.DEBUG),
                     new RJReactPackage()
 
             );

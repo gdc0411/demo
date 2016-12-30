@@ -1,10 +1,9 @@
-package com.lecloud.DemoProject.sample;
+package com.lecloud.valley.demo.sample;
 
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
-import android.graphics.drawable.DrawableWrapper;
 
-import com.lecloud.DemoProject.R;
+import com.lecloud.demo.R;
 import com.facebook.react.uimanager.SimpleViewManager;
 import com.facebook.react.uimanager.ThemedReactContext;
 import com.facebook.react.uimanager.annotations.ReactProp;

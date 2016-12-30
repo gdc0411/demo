@@ -1,16 +1,15 @@
-package com.lecloud.DemoProject;
+package com.lecloud.valley.demo;
 
-import com.lecloud.valley.leecoSdk.LeReactPlayerManager;
 import com.lecloud.valley.leecoSdk.LeReactSubVideoViewManager;
 import com.lecloud.valley.leecoSdk.LeReactVideoViewManager;
 import com.lecloud.valley.modules.OrientationModule;
-import com.lecloud.DemoProject.sample.CallbackModule;
-import com.lecloud.DemoProject.sample.CheckItemViewManager;
-import com.lecloud.DemoProject.sample.ConstModule;
-import com.lecloud.DemoProject.sample.EmbedModule;
-import com.lecloud.DemoProject.sample.KenBurnsViewManager;
-import com.lecloud.DemoProject.sample.PromiseModule;
-import com.lecloud.DemoProject.sample.RJNativeModule;
+import com.lecloud.valley.demo.sample.CallbackModule;
+import com.lecloud.valley.demo.sample.CheckItemViewManager;
+import com.lecloud.valley.demo.sample.ConstModule;
+import com.lecloud.valley.demo.sample.EmbedModule;
+import com.lecloud.valley.demo.sample.KenBurnsViewManager;
+import com.lecloud.valley.demo.sample.PromiseModule;
+import com.lecloud.valley.demo.sample.RJNativeModule;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.bridge.JavaScriptModule;
 import com.facebook.react.bridge.NativeModule;
