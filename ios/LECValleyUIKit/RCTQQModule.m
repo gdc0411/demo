@@ -314,7 +314,7 @@ RCT_EXPORT_METHOD(logout)
         NSMutableDictionary *body = @{EVENT_PROP_SOCIAL_TYPE:@"QQShareResponse"}.mutableCopy;
         int errCode = -5; //非法返回
         
-        int val;
+//        int val;
         if([[self class] isPureInt:resp.result]){
             errCode = [resp.result intValue];
         }

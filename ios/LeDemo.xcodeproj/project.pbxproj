@@ -657,8 +657,17 @@
 						DevelopmentTeam = ULW82G2846;
 						ProvisioningStyle = Manual;
 						SystemCapabilities = {
+							com.apple.GameCenter = {
+								enabled = 0;
+							};
+							com.apple.InAppPurchase = {
+								enabled = 0;
+							};
 							com.apple.Keychain = {
 								enabled = 1;
+							};
+							com.apple.Push = {
+								enabled = 0;
 							};
 						};
 					};
@@ -1054,7 +1063,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.lecloud.valley.demo;
 				PRODUCT_NAME = LeDemo;
-				PROVISIONING_PROFILE = "ca824281-266b-491f-aa12-126ff6913dc6";
+				PROVISIONING_PROFILE = "7b2c88f8-57a0-4e27-a79a-4a2f25ba6c38";
 				PROVISIONING_PROFILE_SPECIFIER = LeDemo;
 				TEST_HOST = "";
 				VALID_ARCHS = "arm64 armv7 armv7s";
@@ -1101,7 +1110,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.lecloud.valley.demo;
 				PRODUCT_NAME = LeDemo;
-				PROVISIONING_PROFILE = "ca824281-266b-491f-aa12-126ff6913dc6";
+				PROVISIONING_PROFILE = "7b2c88f8-57a0-4e27-a79a-4a2f25ba6c38";
 				PROVISIONING_PROFILE_SPECIFIER = LeDemo;
 				TEST_HOST = "";
 				VALID_ARCHS = "arm64 armv7 armv7s";
