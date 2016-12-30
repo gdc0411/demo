@@ -60,7 +60,7 @@ public class MainActivity extends ReactActivity implements DefaultHardwareBackBt
 //                .setInitialLifecycleState(LifecycleState.RESUMED)
 //                .build();
 //
-//        mReactRootView.startReactApplication(mReactInstanceManager, "DemoProject", null);
+//        mReactRootView.startReactApplication(mReactInstanceManager, "LeDemo", null);
 //        setContentView(mReactRootView);
 //    }
 
