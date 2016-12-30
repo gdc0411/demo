@@ -1,4 +1,4 @@
-rootProject.name = 'DemoProject'
+rootProject.name = 'LeDemo'
 
 include ':app'
 include ':LeValleyLibrary'

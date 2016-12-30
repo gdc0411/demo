@@ -19,7 +19,7 @@ public class MainActivity extends ReactActivity implements DefaultHardwareBackBt
      */
     @Override
     protected String getMainComponentName() {
-        return "DemoProject";
+        return "LeDemo";
     }
 
     private ReactInstanceManager mReactInstanceManager;

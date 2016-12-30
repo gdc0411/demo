@@ -14,7 +14,7 @@ import {
 import App from './app/counter/index';
 
 
-class DemoProject extends Component {
+class LeDemo extends Component {
   render() {
     return (
         <App></App>
@@ -22,4 +22,4 @@ class DemoProject extends Component {
   }
 }
 
-AppRegistry.registerComponent('DemoProject', () => DemoProject);
+AppRegistry.registerComponent('LeDemo', () => LeDemo);

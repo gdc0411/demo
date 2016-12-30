@@ -16,7 +16,7 @@ import App from './app/counter/index';
 
 const enableHotUpdate = false;
 
-class DemoProject extends Component {
+class LeDemo extends Component {
 
     codePushStatusDidChange(status) {
         switch (status) {
@@ -68,7 +68,7 @@ class DemoProject extends Component {
 }
 
 if (enableHotUpdate) {
-    DemoProject = codePush(DemoProject);
+    LeDemo = codePush(LeDemo);
 }
 
-AppRegistry.registerComponent('DemoProject', () => DemoProject);
+AppRegistry.registerComponent('LeDemo', () => LeDemo);

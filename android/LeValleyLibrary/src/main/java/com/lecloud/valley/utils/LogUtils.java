@@ -6,7 +6,7 @@ package com.lecloud.valley.utils;
 
 public class LogUtils {
 
-    public static final String TAG = "DemoProject";
+    public static final String TAG = "LeDemo";
 
     public static String getTraceInfo() {
         StringBuilder sb = new StringBuilder();
