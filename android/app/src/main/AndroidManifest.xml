@@ -2,7 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.lecloud.valley.demo">
 
-
     <application
         android:name="com.lecloud.valley.demo.MainApplication"
         android:allowBackup="true"
@@ -41,7 +40,7 @@
             android:value="${WX_SECRET}" />
 
         <activity
-            android:name="com.lecloud.valley.demo.wxapi.WXEntryActivity"
+            android:name=".wxapi.WXEntryActivity"
             android:exported="true"
             android:label="@string/app_name"
             android:launchMode="singleTop">
@@ -80,7 +79,7 @@
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
 
 
-        <!-- WeiBo配置 -->
+        <!-- 微博配置 -->
         <meta-data
             android:name="WB_APPKEY"
             android:value="${WB_APPKEY}" />
@@ -117,7 +116,7 @@
         </meta-data>
         <meta-data
             android:name="UMENG_CHANNEL"
-            android:value="${UMENG_CHANNEL}" >
+            android:value="Umeng" >
         </meta-data>
 
 

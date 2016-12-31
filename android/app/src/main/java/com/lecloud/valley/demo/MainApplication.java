@@ -18,8 +18,6 @@ import com.facebook.react.shell.MainReactPackage;
 import com.umeng.message.IUmengRegisterCallback;
 import com.umeng.message.PushAgent;
 
-import static com.lecloud.valley.utils.LogUtils.TAG;
-
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
@@ -27,6 +25,7 @@ import java.util.List;
 
 public class MainApplication extends Application implements ReactApplication {
 
+    public static final String TAG = "LeDemo";
 
 //    private static final RJReactPackage rjPackage = new RJReactPackage();
 //    public static RJReactPackage getRjPackage() {
@@ -72,17 +71,20 @@ public class MainApplication extends Application implements ReactApplication {
 
             //友盟注册
             PushAgent mPushAgent = PushAgent.getInstance(this);
+
+//            mPushAgent.setPushCheck(true);
+
             //注册推送服务，每次调用register方法都会回调该接口
             mPushAgent.register(new IUmengRegisterCallback() {
 
                 @Override
                 public void onSuccess(String deviceToken) {
                     //注册成功会返回device Token
-                    Log.d(TAG, "友盟注册成功：DeviceToken+"+ deviceToken);
+                    Log.d(TAG, "友盟注册成功：DeviceToken: "+ deviceToken);
                 }
                 @Override
                 public void onFailure(String s, String s1) {
-                    Log.d(TAG, "注册友盟出错了！s:"+ s + ",s1:" + s1);
+                    Log.d(TAG, "友盟注册出错了！s:"+ s + ",s1:" + s1);
                 }
             });
 

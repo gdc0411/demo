@@ -90,12 +90,13 @@ android {
     defaultConfig {
         applicationId "com.lecloud.valley.demo"
         minSdkVersion 16
-        targetSdkVersion 22
+        targetSdkVersion 23
         versionCode 1
         versionName "1.0"
         ndk {
             abiFilters "armeabi-v7a", "x86"
         }
+
         manifestPlaceholders = [
                 //微信的APPID
                 WX_APPID : "wxa9cc420610dce2cb",
@@ -106,11 +107,11 @@ android {
                 //微博APPID
                 WB_APPKEY : "wb3843617848",
                 //友盟APPKEY
-                UMENG_APPKEY : "5865dc088f4a9d37ca002232",
+                UMENG_APPKEY : "5867813b45297d1cf6000d96",
                 //UMENG_SECRET
-                UMENG_MESSAGE_SECRET : "3cab7bf2e3da2e416230c3fa017223c6",
+                UMENG_MESSAGE_SECRET : "849963720d0ccd1e477a97c660cb962b",
                 //UMENG_CHANNEL
-                UMENG_CHANNEL : "LeValley"
+                //UMENG_CHANNEL : "LeValley"
         ]
     }
     splits {
@@ -158,8 +159,8 @@ android {
 //            renderscript.srcDirs = ['src']
 //            res.srcDirs = ['res']
 //            assets.srcDirs = ['assets']
-            jniLibs.srcDirs = ['libs']  //设置目标的so存放路径
-            jni.srcDirs = [] //disable automatic ndk-build call
+//            jniLibs.srcDirs = ['libs']  //设置目标的so存放路径
+//            jni.srcDirs = [] //disable automatic ndk-build call
         }
 
         // Move the tests to tests/java, tests/res, etc...
@@ -194,7 +195,6 @@ dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile project(':react-native-code-push')
     compile project(':LeValleyLibrary')
-    compile project(':PushSDK')
     compile 'com.android.support:appcompat-v7:23.0.1'
     compile 'com.facebook.react:react-native:+'
     // From node_modules

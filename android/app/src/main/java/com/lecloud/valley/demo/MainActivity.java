@@ -29,7 +29,7 @@ public class MainActivity extends ReactActivity implements DefaultHardwareBackBt
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        PushAgent.getInstance(context).onAppStart();
+//        PushAgent.getInstance(context).onAppStart();
     }
 
     @Override
