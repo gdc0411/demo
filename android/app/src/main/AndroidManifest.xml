@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.lecloud.valley.demo">
 
     <application
@@ -21,43 +22,23 @@
         <activity android:name="com.facebook.react.devsupport.DevSettingsActivity" />
         <activity android:name="com.lecloud.valley.demo.sample.VodSDKActivity" />
 
-        <!--<activity-->
-            <!--android:name="com.lecloud.skin.activity.FeedBackActivity"-->
-            <!--android:configChanges="keyboard|screenSize|orientation|layoutDirection"-->
-            <!--android:screenOrientation="portrait"-->
-            <!--android:theme="@android:style/Theme.NoTitleBar" />-->
-
-        <service
-            android:name="com.letvcloud.cmf.MediaService"
-            android:process=":cmf" />
-
-        <!-- 微信开放平台配置 -->
         <meta-data
             android:name="WX_APPID"
-            android:value="${WX_APPID}" />
+            android:value="${WX_APPID}"
+            tools:replace="android:value" />
         <meta-data
             android:name="WX_SECRET"
-            android:value="${WX_SECRET}" />
+            android:value="${WX_SECRET}"
+            tools:replace="android:value" />
 
-        <activity
-            android:name=".wxapi.WXEntryActivity"
-            android:exported="true"
-            android:label="@string/app_name"
-            android:launchMode="singleTop">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <data android:scheme="sdksample" />
-            </intent-filter>
-        </activity>
-
-        <!-- QQ开放平台配置 -->
         <meta-data
             android:name="QQ_APPID"
-            android:value="${QQ_APPID}" />
+            android:value="${QQ_APPID}"
+            tools:replace="android:value"/>
         <meta-data
             android:name="QQ_APPKEY"
-            android:value="${QQ_APPKEY}" />
+            android:value="${QQ_APPKEY}"
+            tools:replace="android:value"/>
 
         <activity
             android:name="com.tencent.tauth.AuthActivity"
@@ -65,59 +46,29 @@
             android:noHistory="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
-
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-
                 <data android:scheme="tencent${QQ_APPID}" />
             </intent-filter>
         </activity>
 
-        <activity
-            android:name="com.tencent.connect.common.AssistActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
-
-
-        <!-- 微博配置 -->
         <meta-data
             android:name="WB_APPKEY"
-            android:value="${WB_APPKEY}" />
+            android:value="${WB_APPKEY}"
+            tools:replace="android:value" />
 
-        <activity
-            android:name="com.sina.weibo.sdk.component.WeiboSdkBrowser"
-            android:configChanges="keyboardHidden|orientation"
-            android:exported="false"
-            android:windowSoftInputMode="adjustResize" />
-
-        <service
-            android:name="com.sina.weibo.sdk.net.DownloadService"
-            android:exported="false" />
-
-        <activity
-            android:name="com.lecloud.valley.modules.WeiboModule$SinaEntryActivity"
-            android:configChanges="keyboardHidden|orientation"
-            android:screenOrientation="portrait">
-            <intent-filter>
-                <action android:name="com.sina.weibo.sdk.action.ACTION_SDK_REQ_ACTIVITY" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
-
-
-        <!-- 友盟配置 -->
         <meta-data
             android:name="UMENG_APPKEY"
-            android:value="${UMENG_APPKEY}">
-        </meta-data>
+            android:value="${UMENG_APPKEY}"
+            tools:replace="android:value" />
         <meta-data
             android:name="UMENG_MESSAGE_SECRET"
-            android:value="${UMENG_MESSAGE_SECRET}">
-        </meta-data>
+            android:value="${UMENG_MESSAGE_SECRET}"
+            tools:replace="android:value" />
         <meta-data
             android:name="UMENG_CHANNEL"
-            android:value="Umeng" >
-        </meta-data>
+            android:value="${UMENG_CHANNEL}"
+            tools:replace="android:value" />
 
 
     </application>

@@ -46,6 +46,98 @@
         android:label="@string/app_name"
         android:supportsRtl="true">
 
+        <!-- LePlayerSDK配置 -->
+        <service
+            android:name="com.letvcloud.cmf.MediaService"
+            android:process=":cmf" />
+        <!--<activity-->
+        <!--android:name="com.lecloud.skin.activity.FeedBackActivity"-->
+        <!--android:configChanges="keyboard|screenSize|orientation|layoutDirection"-->
+        <!--android:screenOrientation="portrait"-->
+        <!--android:theme="@android:style/Theme.NoTitleBar" />-->
+
+        <!-- 微信开放平台配置 -->
+        <meta-data
+            android:name="WX_APPID"
+            android:value="${WX_APPID}" />
+        <meta-data
+            android:name="WX_SECRET"
+            android:value="${WX_SECRET}" />
+
+        <activity
+            android:name="${applicationId}.wxapi.WXEntryActivity"
+            android:exported="true"
+            android:label="@string/app_name"
+            android:launchMode="singleTop">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:scheme="sdksample" />
+            </intent-filter>
+        </activity>
+
+        <!-- QQ开放平台配置 -->
+        <meta-data
+            android:name="QQ_APPID"
+            android:value="${QQ_APPID}" />
+        <meta-data
+            android:name="QQ_APPKEY"
+            android:value="${QQ_APPKEY}" />
+
+        <activity
+            android:name="com.tencent.tauth.AuthActivity"
+            android:launchMode="singleTask"
+            android:noHistory="true">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="tencent${QQ_APPID}"
+                    />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name="com.tencent.connect.common.AssistActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+
+
+        <!-- 微博配置 -->
+        <meta-data
+            android:name="WB_APPKEY"
+            android:value="${WB_APPKEY}" />
+
+        <activity
+            android:name="com.sina.weibo.sdk.component.WeiboSdkBrowser"
+            android:configChanges="keyboardHidden|orientation"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+
+        <service
+            android:name="com.sina.weibo.sdk.net.DownloadService"
+            android:exported="false" />
+
+        <activity
+            android:name=".modules.WeiboModule$SinaEntryActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="com.sina.weibo.sdk.action.ACTION_SDK_REQ_ACTIVITY" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <!-- 友盟配置 -->
+        <meta-data
+            android:name="UMENG_APPKEY"
+            android:value="${UMENG_APPKEY}" />
+        <meta-data
+            android:name="UMENG_MESSAGE_SECRET"
+            android:value="${UMENG_MESSAGE_SECRET}" />
+        <meta-data
+            android:name="UMENG_CHANNEL"
+            android:value="${UMENG_CHANNEL}" />
 
         <service
             android:name="com.taobao.accs.ChannelService"
@@ -99,8 +191,7 @@
 
         <service
             android:name="com.taobao.accs.ChannelService$KernelService"
-            android:process=":channel">
-        </service>
+            android:process=":channel" />
 
         <service
             android:name="org.android.agoo.accs.AgooService"
@@ -110,7 +201,8 @@
             </intent-filter>
         </service>
 
-        <service android:name="com.umeng.message.UmengIntentService"
+        <service
+            android:name="com.umeng.message.UmengIntentService"
             android:exported="true"
             android:process=":channel">
             <intent-filter>
@@ -133,6 +225,7 @@
         <receiver
             android:name="com.umeng.message.NotificationProxyBroadcastReceiver"
             android:exported="false" />
+
         <service
             android:name="com.umeng.message.UmengMessageCallbackHandlerService"
             android:exported="false">
@@ -156,11 +249,12 @@
         <service
             android:name="com.umeng.message.UmengMessageIntentReceiverService"
             android:exported="true"
-            android:process=":channel" >
+            android:process=":channel">
             <intent-filter>
                 <action android:name="org.android.agoo.client.MessageReceiverService" />
             </intent-filter>
         </service>
+
         <provider
             android:name="com.umeng.message.provider.MessageProvider"
             android:authorities="${applicationId}.umeng.message"
