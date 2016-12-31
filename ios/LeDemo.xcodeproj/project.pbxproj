@@ -26,6 +26,7 @@
 		2D0E62B01E0B0183005A68AA /* libWeChatSDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D0E62AF1E0B0183005A68AA /* libWeChatSDK.a */; };
 		2D19AC981DF3DCF100D21BDC /* libRCTAnimation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D19AC861DF3DBA600D21BDC /* libRCTAnimation.a */; };
 		2D19AD6B1DF6AE6B00D21BDC /* libCodePush.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D1C9A441DC1EAB60020E496 /* libCodePush.a */; };
+		2D2AFC391E17C5BF00D0231B /* index.ios.jsbundle in Resources */ = {isa = PBXBuildFile; fileRef = 2D2AFC381E17C5BF00D0231B /* index.ios.jsbundle */; };
 		2D8D209F1E031A80004EC569 /* libLECLivePlayerSDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D8D20971E031A80004EC569 /* libLECLivePlayerSDK.a */; };
 		2D8D20A01E031A80004EC569 /* libLECLivePlayerUISDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D8D20981E031A80004EC569 /* libLECLivePlayerUISDK.a */; };
 		2D8D20A11E031A80004EC569 /* libLECPlayerFoundation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D8D20991E031A80004EC569 /* libLECPlayerFoundation.a */; };
@@ -249,6 +250,7 @@
 		2D0E62AD1E0B0112005A68AA /* libsqlite3.0.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.0.tbd; path = usr/lib/libsqlite3.0.tbd; sourceTree = SDKROOT; };
 		2D0E62AF1E0B0183005A68AA /* libWeChatSDK.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libWeChatSDK.a; path = ../../openappdev/ios/Libs/libWeChatSDK.a; sourceTree = "<group>"; };
 		2D19AC801DF3DBA600D21BDC /* RCTAnimation.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTAnimation.xcodeproj; path = "../node_modules/react-native/Libraries/NativeAnimation/RCTAnimation.xcodeproj"; sourceTree = "<group>"; };
+		2D2AFC381E17C5BF00D0231B /* index.ios.jsbundle */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = index.ios.jsbundle; path = bundle/index.ios.jsbundle; sourceTree = "<group>"; };
 		2D62FED01E169206002EED8E /* LeDemo.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = LeDemo.entitlements; path = LeDemo/LeDemo.entitlements; sourceTree = "<group>"; };
 		2D8D20971E031A80004EC569 /* libLECLivePlayerSDK.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libLECLivePlayerSDK.a; path = ../../../XcodeProjects/lecloud_iOS_vrp_SDK_v4.3.1_20160923/SDK4.3.1/Libs/libLECLivePlayerSDK.a; sourceTree = "<group>"; };
 		2D8D20981E031A80004EC569 /* libLECLivePlayerUISDK.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libLECLivePlayerUISDK.a; path = ../../../XcodeProjects/lecloud_iOS_vrp_SDK_v4.3.1_20160923/SDK4.3.1/Libs/libLECLivePlayerUISDK.a; sourceTree = "<group>"; };
@@ -435,6 +437,7 @@
 		13B07FAE1A68108700A75B9A /* LeDemo */ = {
 			isa = PBXGroup;
 			children = (
+				2D2AFC381E17C5BF00D0231B /* index.ios.jsbundle */,
 				2D62FED01E169206002EED8E /* LeDemo.entitlements */,
 				2DFAE4B61E046743008937FD /* assets */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
@@ -920,6 +923,7 @@
 				2DE3D3651E11A45B00C39FB9 /* WeiboSDK.bundle in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */,
+				2D2AFC391E17C5BF00D0231B /* index.ios.jsbundle in Resources */,
 				2DFDF5B11E0FEF7800B58523 /* LECValleyUIResource.bundle in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
