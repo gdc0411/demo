@@ -262,9 +262,6 @@
 				GCC_PREFIX_HEADER = "$(SRCROOT)/pchFile.pch";
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
-					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
-					"$(SRCROOT)/../../react-native/React/**",
-					"$(SRCROOT)/../../node_modules/react-native/React/**",
 					"$(SRCROOT)/../inc/**",
 				);
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
@@ -284,9 +281,6 @@
 				GCC_PREFIX_HEADER = "$(SRCROOT)/pchFile.pch";
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
-					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
-					"$(SRCROOT)/../../react-native/React/**",
-					"$(SRCROOT)/../../node_modules/react-native/React/**",
 					"$(SRCROOT)/../inc/**",
 				);
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
