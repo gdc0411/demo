@@ -8,7 +8,8 @@
 
 #import "RCTLinearGradientManager.h"
 #import "RCTLinearGradient.h"
-#import "RCTBridge.h"
+
+#import <React/RCTBridge.h>
 
 @implementation RCTLinearGradientManager
 

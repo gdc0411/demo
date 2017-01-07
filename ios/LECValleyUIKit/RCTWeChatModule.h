@@ -6,7 +6,7 @@
 //  Copyright © 2016年 leCloud. All rights reserved.
 //
 
-#import "RCTBridgeModule.h"
+#import <React/RCTBridgeModule.h>
 
 #import <UIKit/UIKit.h>
 

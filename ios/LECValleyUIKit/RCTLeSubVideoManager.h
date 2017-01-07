@@ -6,7 +6,7 @@
 //  Copyright © 2016年 leCloud. All rights reserved.
 //
 
-#import "RCTViewManager.h"
+#import <React/RCTViewManager.h>
 
 @interface RCTLeSubVideoManager : RCTViewManager
 

@@ -6,7 +6,7 @@
 //  Copyright © 2016年 LeCloud. All rights reserved.
 //
 
-#import "RCTViewManager.h"
+#import <React/RCTViewManager.h>
 
 @interface RCTLinearGradientManager : RCTViewManager
 

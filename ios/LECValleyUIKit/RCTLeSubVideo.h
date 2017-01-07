@@ -6,7 +6,7 @@
 //  Copyright © 2016年 LeCloud. All rights reserved.
 //
 
-#import "RCTView.h"
+#import <React/RCTView.h>
 #import "UIView+FindUIViewController.h"
 
 #import "RCTLeVideoPlayerViewControllerDelegate.h"

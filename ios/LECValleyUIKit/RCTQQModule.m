@@ -15,11 +15,11 @@
 #import <TencentOpenAPI/QQApiInterface.h>
 #import <TencentOpenAPI/QQApiInterfaceObject.h>
 
-#import "../Libraries/Image/RCTImageLoader.h"
+#import <React/RCTImageLoader.h>
 
-#import "RCTBridge.h"
-#import "RCTLog.h"
-#import "RCTEventDispatcher.h"
+#import <React/RCTBridge.h>
+#import <React/RCTLog.h>
+#import <React/RCTEventDispatcher.h>
 
 
 @interface RCTQQModule()<QQApiInterfaceDelegate, TencentSessionDelegate> {

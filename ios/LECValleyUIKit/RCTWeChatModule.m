@@ -12,11 +12,11 @@
 #import "WXApi.h"
 #import "WXApiObject.h"
 
-#import "../Libraries/Image/RCTImageLoader.h"
+#import <React/RCTImageLoader.h>
 
-#import "RCTLog.h"
-#import "RCTBridge.h"
-#import "RCTEventDispatcher.h"
+#import <React/RCTLog.h>
+#import <React/RCTBridge.h>
+#import <React/RCTEventDispatcher.h>
 
 
 @interface RCTWeChatModule()<WXApiDelegate>

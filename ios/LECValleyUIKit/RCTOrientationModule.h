@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 
 //#import "RCTBridgeModule.h"
-#import "RCTEventEmitter.h"
+#import <React/RCTEventEmitter.h>
 
 
 @interface RCTOrientationModule : RCTEventEmitter <RCTBridgeModule>

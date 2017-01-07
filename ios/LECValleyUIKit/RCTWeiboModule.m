@@ -10,10 +10,10 @@
 
 #import "RCTWeiboModule.h"
 #import "WeiboSDK.h"
-#import "RCTBridge.h"
-#import "RCTEventDispatcher.h"
 
-#import "../Libraries/Image/RCTImageLoader.h"
+#import <React/RCTBridge.h>
+#import <React/RCTEventDispatcher.h>
+#import <React/RCTImageLoader.h>
 
 
 BOOL gRegister = NO;

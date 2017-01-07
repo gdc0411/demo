@@ -9,8 +9,8 @@
 #import "LECValley.h"
 
 
-#import "RCTConvert.h"
-#import "UIView+React.h"
+#import <React/RCTConvert.h>
+#import <React/UIView+React.h>
 
 #import "VolumeModule.h"
 #import "BrightnessModule.h"
@@ -784,8 +784,10 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
     if (_playMode == LCPlayerVod) { //VOD模式下参数
         [event setValue:[NSNumber numberWithLong:(_duration==0)?player.duration:_duration] forKey:@"duration"]; //视频总长度（VOD）
         [event setValue:[NSNumber numberWithLong:_lastPosition] forKey:@"currentTime"]; //当前播放位置（VOD）
-        [event setValue:[NSNumber numberWithBool:((LECVODPlayer*)player).isPanorama] forKey:@"isPano"]; //是否全景（VOD）
-        [event setValue:[NSNumber numberWithBool:((LECVODPlayer*)player).allowDownload] forKey:@"isDownload"]; //是否可以下载（VOD）
+        [event setValue:[NSNumber numberWithBool:[((LECVODPlayer*)player) respondsToSelector:@selector(isPanorama)]?
+                         ((LECVODPlayer*)player).isPanorama:NO] forKey:@"isPano"]; //是否全景（VOD）
+        [event setValue:[NSNumber numberWithBool:[((LECVODPlayer*)player) respondsToSelector:@selector(allowDownload)]?
+                         ((LECVODPlayer*)player).allowDownload:NO] forKey:@"isDownload"]; //是否可以下载（VOD）
         
     } else if(_playMode == LCPlayerActionLive ) { //ACTION模式参数
         
