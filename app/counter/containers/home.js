@@ -44,12 +44,17 @@ class home extends Component {
 
     _recvNotify = message => {
         console.log("onUmengReceiveMessage:", message);
-        alert('onUmengReceiveMessage' + message);
+        alert('onUmengReceiveMessage' + JSON.stringify(message));
     }
 
     _openNotify = message => {
         console.log("onUmengOpenMessage:", message);
-        alert('onUmengOpenMessage' + message);
+        // alert('onUmengOpenMessage' + JSON.stringify(message));
+
+        if (message.extra && message.extra.uri) {
+            const {navigator} = this.props;
+            navigator.push({ location: message.extra.uri });
+        }
     }
 
     componentWillMount() {
