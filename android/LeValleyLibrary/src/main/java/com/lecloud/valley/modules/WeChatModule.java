@@ -5,30 +5,19 @@ import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.PixelFormat;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.NinePatchDrawable;
 import android.net.Uri;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.facebook.common.executors.UiThreadImmediateExecutorService;
-import com.facebook.common.internal.Preconditions;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.common.util.UriUtil;
-import com.facebook.datasource.BaseDataSubscriber;
 import com.facebook.datasource.DataSource;
-import com.facebook.datasource.DataSubscriber;
 import com.facebook.drawee.backends.pipeline.Fresco;
-import com.facebook.drawee.drawable.OrientedDrawable;
 import com.facebook.imagepipeline.common.ResizeOptions;
 import com.facebook.imagepipeline.core.ImagePipeline;
 import com.facebook.imagepipeline.datasource.BaseBitmapDataSubscriber;
 import com.facebook.imagepipeline.image.CloseableImage;
-import com.facebook.imagepipeline.image.CloseableStaticBitmap;
-import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import com.facebook.react.bridge.Arguments;
@@ -59,7 +48,6 @@ import com.tencent.mm.sdk.openapi.IWXAPI;
 import com.tencent.mm.sdk.openapi.IWXAPIEventHandler;
 import com.tencent.mm.sdk.openapi.WXAPIFactory;
 
-import java.io.ByteArrayOutputStream;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -73,7 +61,7 @@ import static com.lecloud.valley.utils.LogUtils.TAG;
  */
 public class WeChatModule extends ReactContextBaseJavaModule implements IWXAPIEventHandler {
 
-    private final ReactApplicationContext context;
+    private final ReactApplicationContext mReactContext;
     private RCTNativeAppEventEmitter mEventEmitter;
 
     private static String appId = null;
@@ -88,12 +76,12 @@ public class WeChatModule extends ReactContextBaseJavaModule implements IWXAPIEv
     public WeChatModule(ReactApplicationContext reactContext) {
 
         super(reactContext);
-        context = reactContext;
+        mReactContext = reactContext;
 
         if (appId == null) {
             ApplicationInfo appInfo;
             try {
-                appInfo = context.getPackageManager().getApplicationInfo(context.getPackageName(), PackageManager.GET_META_DATA);
+                appInfo = mReactContext.getPackageManager().getApplicationInfo(mReactContext.getPackageName(), PackageManager.GET_META_DATA);
             } catch (PackageManager.NameNotFoundException e) {
                 throw new Error(e);
             }
@@ -139,7 +127,7 @@ public class WeChatModule extends ReactContextBaseJavaModule implements IWXAPIEv
             gIsAppRegistered = api.registerApp(appId);
         }
         gModule = this;
-        mEventEmitter = context.getJSModule(RCTNativeAppEventEmitter.class);
+        mEventEmitter = mReactContext.getJSModule(RCTNativeAppEventEmitter.class);
     }
 
     @Override
@@ -413,7 +401,7 @@ public class WeChatModule extends ReactContextBaseJavaModule implements IWXAPIEv
                 uri = Uri.parse(imageUrl);
                 // Verify scheme is set, so that relative uri (used by static resources) are not handled.
                 if (uri.getScheme() == null) {
-                    uri = getResourceDrawableUri(context, imageUrl);
+                    uri = getResourceDrawableUri(mReactContext, imageUrl);
                 }
             } catch (Exception e) {
                 // ignore malformed uri, then attempt to extract resource ID.

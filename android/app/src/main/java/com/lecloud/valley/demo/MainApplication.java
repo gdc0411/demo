@@ -2,11 +2,13 @@ package com.lecloud.valley.demo;
 
 import android.app.ActivityManager;
 import android.app.Application;
+import android.app.Notification;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
 
 import com.lecloud.valley.handler.CrashHandler;
+import com.lecloud.valley.modules.UmengPushModule;
 import com.lecloud.valley.utils.LogUtils;
 import com.facebook.react.ReactApplication;
 import com.lecloud.sdk.config.LeCloudPlayerConfig;
@@ -17,6 +19,8 @@ import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
 import com.umeng.message.IUmengRegisterCallback;
 import com.umeng.message.PushAgent;
+import com.umeng.message.UmengMessageHandler;
+import com.umeng.message.entity.UMessage;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -51,7 +55,9 @@ public class MainApplication extends Application implements ReactApplication {
         super.onCreate();
         Log.d(TAG, LogUtils.getTraceInfo() + "Application start-------");
         String processName = getProcessName(this, android.os.Process.myPid());
+
         if (getApplicationInfo().packageName.equals(processName)) {
+
             //TODO CrashHandler是一个抓取崩溃log的工具类（可选）
             CrashHandler.getInstance(this);
             try {
@@ -59,24 +65,17 @@ public class MainApplication extends Application implements ReactApplication {
                 Method methodGetRuntime = clazzRuntime.getDeclaredMethod("getRuntime");
                 Method methodIs64Bit = clazzRuntime.getDeclaredMethod("is64Bit");
                 Log.d(TAG, "VM bits " + methodIs64Bit.invoke(methodGetRuntime.invoke(null)));
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-            } catch (NoSuchMethodException e) {
-                e.printStackTrace();
-            } catch (InvocationTargetException e) {
-                e.printStackTrace();
-            } catch (IllegalAccessException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
 
+
             //友盟注册
             PushAgent mPushAgent = PushAgent.getInstance(this);
-
 //            mPushAgent.setPushCheck(true);
 
             //注册推送服务，每次调用register方法都会回调该接口
             mPushAgent.register(new IUmengRegisterCallback() {
-
                 @Override
                 public void onSuccess(String deviceToken) {
                     //注册成功会返回device Token
@@ -87,6 +86,19 @@ public class MainApplication extends Application implements ReactApplication {
                     Log.d(TAG, "友盟注册出错了！s:"+ s + ",s1:" + s1);
                 }
             });
+            //统计应用启动数据
+            mPushAgent.onAppStart();
+
+            //设置通知点击处理者
+            mPushAgent.setNotificationClickHandler(UmengPushModule.notificationClickHandler);
+
+            //设置消息和通知的处理
+            mPushAgent.setMessageHandler(UmengPushModule.messageHandler);
+
+            //设置debug状态
+            if(BuildConfig.DEBUG) {
+                mPushAgent.setDebugMode(true);
+            }
 
             //设置域名LeCloudPlayerConfig.HOST_DEFAULT代表国内版
             SharedPreferences preferences = getSharedPreferences("host", Context.MODE_PRIVATE);
@@ -99,7 +111,6 @@ public class MainApplication extends Application implements ReactApplication {
                     public void onCdeStartSuccess() {
                         //cde启动成功
                         Log.d(TAG, LogUtils.getTraceInfo() + "onCdeStartSuccess -------");
-
                     }
 
                     @Override
@@ -108,7 +119,6 @@ public class MainApplication extends Application implements ReactApplication {
                         //如果使用remote版本则可能是remote下载失败
                         //如果使用普通版本，则可能是so文件加载失败导致
                         Log.d(TAG, LogUtils.getTraceInfo() + "onCdeStartFail -------");
-
                     }
 
                     @Override

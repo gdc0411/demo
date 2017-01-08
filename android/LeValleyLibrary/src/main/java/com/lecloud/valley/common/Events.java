@@ -57,6 +57,10 @@ public enum Events {
     EVENT_QQ_RESP("QQ_Resp"), //QQ响应事件
     EVENT_WEIBO_RESP("Weibo_Resp"), //微博响应事件
 
+    //第三方登录和分享事件
+    EVENT_UMENG_RECV_MESSAGE("onUmengReceiveMessage"), //收到友盟推送
+    EVENT_UMENG_OPEN_MESSAGE("onUmengOpenMessage"), //打开友盟推送
+
     // 未命名的事件
     EVENT_OTHER_EVENT("onOtherEventInfo");  // 未知事件
 

@@ -18,7 +18,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import Orientation from '../componets/RCTOrientation';
-
+import UmengPush from '../componets/RCTUmengPush';
 
 import * as calcActions from '../actions/calcAction';
 
@@ -36,11 +36,31 @@ const {height: SCREEN_HEIGHT, width: SCREEN_WIDTH} = Dimensions.get('window');
  */
 class home extends Component {
 
+    constructor() {
+        super();
+        this._recvNotify = this._recvNotify.bind(this);
+        this._openNotify = this._openNotify.bind(this);
+    }
+
+    _recvNotify = message => {
+        console.log("onUmengReceiveMessage:", message);
+        alert('onUmengReceiveMessage' + message);
+    }
+
+    _openNotify = message => {
+        console.log("onUmengOpenMessage:", message);
+        alert('onUmengOpenMessage' + message);
+    }
+
     componentWillMount() {
+        // UmengPush.addUmengReceiveMessageListener(this._recvNotify);
+        UmengPush.addUmengOpenMessageListener(this._openNotify);
         Orientation.setOrientation(1);
     }
 
     componentWillUnmount() {
+        // UmengPush.removeUmengReceiveMessageListener(this._recvNotify);
+        UmengPush.removeUmengOpenMessageListener(this._openNotify);
         Orientation.setOrientation(-1);
     }
 

@@ -15,12 +15,9 @@ import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.WritableMap;
-import com.facebook.react.modules.core.DeviceEventManagerModule;
 import com.facebook.react.modules.core.RCTNativeAppEventEmitter;
 import com.lecloud.valley.common.Events;
 import com.lecloud.valley.utils.LogUtils;
-import com.tencent.connect.auth.QQAuth;
-import com.tencent.connect.auth.QQToken;
 import com.tencent.connect.common.Constants;
 import com.tencent.connect.share.QQShare;
 import com.tencent.connect.share.QzonePublish;
@@ -34,7 +31,6 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -47,7 +43,7 @@ import static com.lecloud.valley.utils.LogUtils.TAG;
 
 public class QQModule extends ReactContextBaseJavaModule implements IUiListener, ActivityEventListener {
 
-    private final ReactApplicationContext context;
+    private final ReactApplicationContext mReactContext;
     private RCTNativeAppEventEmitter mEventEmitter;
 
     private static String appId = null;
@@ -59,11 +55,11 @@ public class QQModule extends ReactContextBaseJavaModule implements IUiListener,
 
     public QQModule(ReactApplicationContext reactContext) {
         super(reactContext);
-        context = reactContext;
+        mReactContext = reactContext;
 
         ApplicationInfo appInfo;
         try {
-            appInfo = context.getPackageManager().getApplicationInfo(context.getPackageName(), PackageManager.GET_META_DATA);
+            appInfo = mReactContext.getPackageManager().getApplicationInfo(mReactContext.getPackageName(), PackageManager.GET_META_DATA);
         } catch (PackageManager.NameNotFoundException e) {
             throw new Error(e);
         }
@@ -93,10 +89,10 @@ public class QQModule extends ReactContextBaseJavaModule implements IUiListener,
     @Override
     public void initialize() {
         super.initialize();
-        context.addActivityEventListener(this);
-        mEventEmitter = context.getJSModule(RCTNativeAppEventEmitter.class);
+        mReactContext.addActivityEventListener(this);
+        mEventEmitter = mReactContext.getJSModule(RCTNativeAppEventEmitter.class);
         if (api == null) {
-            api = Tencent.createInstance(appId, context.getApplicationContext());
+            api = Tencent.createInstance(appId, mReactContext.getApplicationContext());
         }
     }
 
@@ -106,7 +102,7 @@ public class QQModule extends ReactContextBaseJavaModule implements IUiListener,
             api = null;
         }
         mEventEmitter = null;
-        context.removeActivityEventListener(this);
+        mReactContext.removeActivityEventListener(this);
         super.onCatalystInstanceDestroy();
     }
 
@@ -129,13 +125,13 @@ public class QQModule extends ReactContextBaseJavaModule implements IUiListener,
         if (api == null) {
             promise.reject(CODE_NOT_REGISTERED, MSG_NOT_REGISTERED);
             return;
-        } else if (context.getCurrentActivity() == null) {
+        } else if (mReactContext.getCurrentActivity() == null) {
             promise.reject(CODE_NULL_ACTIVITY, MSG_NULL_ACTIVITY);
             return;
         }
-        promise.resolve(SystemUtils.getAppVersionName(context.getCurrentActivity(), Constants.PACKAGE_QQ) != null ||
-                SystemUtils.getAppVersionName(context.getCurrentActivity(), Constants.PACKAGE_QQ_PAD) != null ||
-                SystemUtils.getAppVersionName(context.getCurrentActivity(), Constants.PACKAGE_QZONE) != null);
+        promise.resolve(SystemUtils.getAppVersionName(mReactContext.getCurrentActivity(), Constants.PACKAGE_QQ) != null ||
+                SystemUtils.getAppVersionName(mReactContext.getCurrentActivity(), Constants.PACKAGE_QQ_PAD) != null ||
+                SystemUtils.getAppVersionName(mReactContext.getCurrentActivity(), Constants.PACKAGE_QZONE) != null);
     }
 
     @ReactMethod
@@ -143,11 +139,11 @@ public class QQModule extends ReactContextBaseJavaModule implements IUiListener,
         if (api == null) {
             promise.reject(CODE_NOT_REGISTERED, MSG_NOT_REGISTERED);
             return;
-        } else if (context.getCurrentActivity() == null) {
+        } else if (mReactContext.getCurrentActivity() == null) {
             promise.reject(CODE_NULL_ACTIVITY, MSG_NULL_ACTIVITY);
             return;
         }
-        promise.resolve(api.isSupportSSOLogin(context.getCurrentActivity()));
+        promise.resolve(api.isSupportSSOLogin(mReactContext.getCurrentActivity()));
 
     }
 
@@ -160,12 +156,12 @@ public class QQModule extends ReactContextBaseJavaModule implements IUiListener,
         if (api == null) {
             promise.reject(CODE_NOT_REGISTERED, MSG_NOT_REGISTERED);
             return;
-        } else if (context.getCurrentActivity() == null) {
+        } else if (mReactContext.getCurrentActivity() == null) {
             promise.reject(CODE_NULL_ACTIVITY, MSG_NULL_ACTIVITY);
             return;
         }
         if (!api.isSessionValid()) {
-            api.login(context.getCurrentActivity(), scopes == null ? "get_simple_userinfo" : scopes, this);
+            api.login(mReactContext.getCurrentActivity(), scopes == null ? "get_simple_userinfo" : scopes, this);
             promise.resolve(null);
         } else {
             promise.reject(CODE_INVOKE_FAILED, MSG_INVOKE_FAILED);
@@ -181,7 +177,7 @@ public class QQModule extends ReactContextBaseJavaModule implements IUiListener,
         if (api == null) {
             promise.reject(CODE_NOT_REGISTERED, MSG_NOT_REGISTERED);
             return;
-        } else if (context.getCurrentActivity() == null) {
+        } else if (mReactContext.getCurrentActivity() == null) {
             promise.reject(CODE_NULL_ACTIVITY, MSG_NULL_ACTIVITY);
             return;
         }
@@ -191,7 +187,7 @@ public class QQModule extends ReactContextBaseJavaModule implements IUiListener,
             promise.reject(CODE_INVALID_ARGUMENT, MSG_INVALID_ARGUMENT);
             return;
         }
-        api.shareToQQ(context.getCurrentActivity(), param, this);
+        api.shareToQQ(mReactContext.getCurrentActivity(), param, this);
         promise.resolve(null);
 
     }
@@ -205,7 +201,7 @@ public class QQModule extends ReactContextBaseJavaModule implements IUiListener,
         if (api == null) {
             promise.reject(CODE_NOT_REGISTERED, MSG_NOT_REGISTERED);
             return;
-        } else if (context.getCurrentActivity() == null) {
+        } else if (mReactContext.getCurrentActivity() == null) {
             promise.reject(CODE_NULL_ACTIVITY, MSG_NULL_ACTIVITY);
             return;
         }
@@ -215,7 +211,7 @@ public class QQModule extends ReactContextBaseJavaModule implements IUiListener,
             promise.reject(CODE_INVALID_ARGUMENT, MSG_INVALID_ARGUMENT);
             return;
         }
-        api.shareToQzone(context.getCurrentActivity(), param, this);
+        api.shareToQzone(mReactContext.getCurrentActivity(), param, this);
 
         promise.resolve(null);
     }
@@ -230,12 +226,12 @@ public class QQModule extends ReactContextBaseJavaModule implements IUiListener,
         if (api == null) {
             promise.reject(CODE_NOT_REGISTERED, MSG_NOT_REGISTERED);
             return;
-        } else if (context.getCurrentActivity() == null) {
+        } else if (mReactContext.getCurrentActivity() == null) {
             promise.reject(CODE_NULL_ACTIVITY, MSG_NULL_ACTIVITY);
             return;
         }
         if (api.isSessionValid()) {
-            api.logout(context.getCurrentActivity());
+            api.logout(mReactContext.getCurrentActivity());
             promise.resolve(null);
         }
     }

@@ -25,6 +25,8 @@ public interface Constants {
 
     String REACT_CLASS_WEIBO_MODULE = "RCTWeiboModule";
 
+    String REACT_CLASS_UMENG_PUSH_MODULE = "RCTUmengPushModule";
+
 //============== REACT_METHOD ======================
 
     //方法

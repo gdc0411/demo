@@ -13,9 +13,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.NinePatchDrawable;
 import android.net.Uri;
-import android.net.rtp.AudioCodec;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.util.Log;
 
 import com.facebook.common.executors.UiThreadImmediateExecutorService;
@@ -63,7 +61,6 @@ import com.sina.weibo.sdk.auth.Oauth2AccessToken;
 import com.sina.weibo.sdk.auth.WeiboAuthListener;
 import com.sina.weibo.sdk.auth.sso.SsoHandler;
 import com.sina.weibo.sdk.exception.WeiboException;
-import com.sina.weibo.sdk.utils.Utility;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -80,7 +77,7 @@ import static com.lecloud.valley.utils.LogUtils.TAG;
  */
 public class WeiboModule extends ReactContextBaseJavaModule implements ActivityEventListener {
 
-    private final ReactApplicationContext context;
+    private final ReactApplicationContext mReactContext;
     private RCTNativeAppEventEmitter mEventEmitter;
 
     private SsoHandler mWeiboSsoHandler;
@@ -91,7 +88,7 @@ public class WeiboModule extends ReactContextBaseJavaModule implements ActivityE
 
     public WeiboModule(ReactApplicationContext reactContext) {
         super(reactContext);
-        context = reactContext;
+        mReactContext = reactContext;
 
         ApplicationInfo appInfo;
         try {
@@ -123,11 +120,11 @@ public class WeiboModule extends ReactContextBaseJavaModule implements ActivityE
         super.initialize();
         gModule = this;
 
-        context.addActivityEventListener(this);
-        mEventEmitter = context.getJSModule(RCTNativeAppEventEmitter.class);
+        mReactContext.addActivityEventListener(this);
+        mEventEmitter = mReactContext.getJSModule(RCTNativeAppEventEmitter.class);
 
         if (mWeiboShareAPI == null) {
-            mWeiboShareAPI = WeiboShareSDK.createWeiboAPI(context, appId);
+            mWeiboShareAPI = WeiboShareSDK.createWeiboAPI(mReactContext, appId);
             mWeiboShareAPI.registerApp();
         }
     }
@@ -138,7 +135,7 @@ public class WeiboModule extends ReactContextBaseJavaModule implements ActivityE
         mEventEmitter = null;
         mWeiboShareAPI = null;
         mWeiboSsoHandler = null;
-        context.removeActivityEventListener(this);
+        mReactContext.removeActivityEventListener(this);
         super.onCatalystInstanceDestroy();
     }
 
@@ -179,19 +176,19 @@ public class WeiboModule extends ReactContextBaseJavaModule implements ActivityE
     public void login(final ReadableMap config, final Promise promise) {
         Log.d(TAG, LogUtils.getTraceInfo() + "微博登陆——— config：" + config.toString());
 
-        if (context.getCurrentActivity() == null) {
+        if (mReactContext.getCurrentActivity() == null) {
             promise.reject(CODE_NULL_ACTIVITY, MSG_NULL_ACTIVITY);
             return;
         }
         if (mWeiboSsoHandler == null) {
             AuthInfo sinaAuthInfo = _genAuthInfo(config);
-            mWeiboSsoHandler = new SsoHandler(context.getCurrentActivity(), sinaAuthInfo);
+            mWeiboSsoHandler = new SsoHandler(mReactContext.getCurrentActivity(), sinaAuthInfo);
             mWeiboSsoHandler.authorize(new WeiboAuthListener() {
                 @Override
                 public void onComplete(Bundle bundle) {
 
                     final Oauth2AccessToken token = Oauth2AccessToken.parseAccessToken(bundle);
-                    AccessTokenKeeper.writeAccessToken(context.getApplicationContext(), token);
+                    AccessTokenKeeper.writeAccessToken(mReactContext.getApplicationContext(), token);
                     WritableMap event = Arguments.createMap();
                     if (token.isSessionValid()) {
                         event.putString("access_token", token.getToken());
@@ -241,7 +238,7 @@ public class WeiboModule extends ReactContextBaseJavaModule implements ActivityE
         if (mWeiboShareAPI == null) {
             promise.reject(CODE_NOT_REGISTERED, MSG_NOT_REGISTERED);
             return;
-        } else if (context.getCurrentActivity() == null) {
+        } else if (mReactContext.getCurrentActivity() == null) {
             promise.reject(CODE_NULL_ACTIVITY, MSG_NULL_ACTIVITY);
             return;
         }
@@ -381,7 +378,7 @@ public class WeiboModule extends ReactContextBaseJavaModule implements ActivityE
 //        if (data.hasKey("accessToken")) {
 //            accessToken = data.getString("accessToken");
 //        }
-        Oauth2AccessToken accessToken = AccessTokenKeeper.readAccessToken(context.getApplicationContext());
+        Oauth2AccessToken accessToken = AccessTokenKeeper.readAccessToken(mReactContext.getApplicationContext());
         String token = "";
         if (accessToken != null) {
             token = accessToken.getToken();
@@ -453,7 +450,7 @@ public class WeiboModule extends ReactContextBaseJavaModule implements ActivityE
         if (config != null && config.hasKey("scope")) {
             scope = config.getString("scope");
         }
-        return new AuthInfo(context, appId, redirectURI, scope);
+        return new AuthInfo(mReactContext, appId, redirectURI, scope);
     }
 
     private void _downloadImage(String imageUrl, ResizeOptions resizeOptions, DataSubscriber<CloseableReference<CloseableImage>> dataSubscriber) {
@@ -468,7 +465,7 @@ public class WeiboModule extends ReactContextBaseJavaModule implements ActivityE
             // ignore malformed uri, then attempt to extract resource ID.
         }
         if (uri == null) {
-            uri = _getResourceDrawableUri(context, imageUrl);
+            uri = _getResourceDrawableUri(mReactContext, imageUrl);
         } else {
         }
 
@@ -506,7 +503,7 @@ public class WeiboModule extends ReactContextBaseJavaModule implements ActivityE
         if (closeableImage instanceof CloseableStaticBitmap) {
             CloseableStaticBitmap closeableStaticBitmap = (CloseableStaticBitmap) closeableImage;
             BitmapDrawable bitmapDrawable = new BitmapDrawable(
-                    context.getResources(),
+                    mReactContext.getResources(),
                     closeableStaticBitmap.getUnderlyingBitmap());
             if (closeableStaticBitmap.getRotationAngle() == 0 ||
                     closeableStaticBitmap.getRotationAngle() == EncodedImage.UNKNOWN_ROTATION_ANGLE) {

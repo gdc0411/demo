@@ -16,7 +16,7 @@ var listeners = {};
 const onOrientationDidChangeEvent = "onOrientationDidChange";
 
 var id = 0;
-var META = '__listener_id';
+var META = '__orient_listener_id';
 
 function getKey(listener) {
     if (!listener.hasOwnProperty(META)) {
