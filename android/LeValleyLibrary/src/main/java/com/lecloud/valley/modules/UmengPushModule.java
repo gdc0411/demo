@@ -74,9 +74,10 @@ public class UmengPushModule extends ReactContextBaseJavaModule implements Lifec
     public static UmengMessageHandler messageHandler = new UmengMessageHandler() {
         @Override
         public Notification getNotification(Context context, UMessage msg) {
+            Notification notification = super.getNotification(context, msg);
             messageHandlerSendEvent(msg);
             Log.i(TAG, msg.toString());
-            return super.getNotification(context, msg);
+            return notification;
         }
 
         @Override

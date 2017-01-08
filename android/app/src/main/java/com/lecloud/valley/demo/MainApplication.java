@@ -93,7 +93,7 @@ public class MainApplication extends Application implements ReactApplication {
             mPushAgent.setNotificationClickHandler(UmengPushModule.notificationClickHandler);
 
             //设置消息和通知的处理
-            mPushAgent.setMessageHandler(UmengPushModule.messageHandler);
+//            mPushAgent.setMessageHandler(UmengPushModule.messageHandler);
 
             //设置debug状态
             if(BuildConfig.DEBUG) {
