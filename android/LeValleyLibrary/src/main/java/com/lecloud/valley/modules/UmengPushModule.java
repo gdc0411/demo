@@ -72,18 +72,46 @@ public class UmengPushModule extends ReactContextBaseJavaModule implements Lifec
     };
 
     public static UmengMessageHandler messageHandler = new UmengMessageHandler() {
+        /**
+         * 自定义通知栏样式的回调方法
+         * */
         @Override
-        public Notification getNotification(Context context, UMessage msg) {
-            Notification notification = super.getNotification(context, msg);
-            messageHandlerSendEvent(msg);
-            Log.i(TAG, msg.toString());
-            return notification;
+        public Notification getNotification(final Context context, final UMessage msg) {
+//            Notification notification = super.getNotification(context, msg);
+//            messageHandlerSendEvent(msg);
+//            Log.i(TAG, msg.toString());
+//            return notification;
+            switch (msg.builder_id) {
+                case 1: //自定义消息展示
+                    Notification.Builder builder = new Notification.Builder(context);
+//                    RemoteViews myNotificationView = new RemoteViews(context.getPackageName(), R.layout.notification_view);
+//                    myNotificationView.setTextViewText(R.id.notification_title, msg.title);
+//                    myNotificationView.setTextViewText(R.id.notification_text, msg.text);
+//                    myNotificationView.setImageViewBitmap(R.id.notification_large_icon, getLargeIcon(context, msg));
+//                    myNotificationView.setImageViewResource(R.id.notification_small_icon, getSmallIconId(context, msg));
+//                    builder.setContent(myNotificationView)
+//                            .setSmallIcon(getSmallIconId(context, msg))
+//                            .setTicker(msg.ticker)
+//                            .setAutoCancel(true);
+                    return builder.getNotification();
+                default:
+                    //默认为0，若填写的builder_id并不存在，也使用默认。
+                    return super.getNotification(context, msg);
+            }
         }
 
+        /**
+         * 自定义消息的回调方法
+         * */
         @Override
-        public void dealWithCustomMessage(Context context, UMessage msg) {
-            super.dealWithCustomMessage(context, msg);
-            messageHandlerSendEvent(msg);
+        public void dealWithCustomMessage(final Context context, final UMessage msg) {
+//            super.dealWithCustomMessage(context, msg);
+            new Handler().post(new Runnable() {
+                @Override
+                public void run() {
+                    messageHandlerSendEvent(msg);
+                }
+            });
         }
     };
 

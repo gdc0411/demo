@@ -18,6 +18,7 @@ import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
 import com.umeng.message.IUmengRegisterCallback;
+import com.umeng.message.MsgConstant;
 import com.umeng.message.PushAgent;
 import com.umeng.message.UmengMessageHandler;
 import com.umeng.message.entity.UMessage;
@@ -72,33 +73,43 @@ public class MainApplication extends Application implements ReactApplication {
 
             //友盟注册
             PushAgent mPushAgent = PushAgent.getInstance(this);
-//            mPushAgent.setPushCheck(true);
+//            //sdk开启通知声音
+//            mPushAgent.setNotificationPlaySound(MsgConstant.NOTIFICATION_PLAY_SDK_ENABLE);
+//            // sdk关闭通知声音
+//            mPushAgent.setNotificationPlaySound(MsgConstant.NOTIFICATION_PLAY_SDK_DISABLE);
+//            // 通知声音由服务端控制
+//            mPushAgent.setNotificationPlaySound(MsgConstant.NOTIFICATION_PLAY_SERVER);
+//
+//            mPushAgent.setNotificationPlayLights(MsgConstant.NOTIFICATION_PLAY_SDK_DISABLE);
+//            mPushAgent.setNotificationPlayVibrate(MsgConstant.NOTIFICATION_PLAY_SDK_DISABLE);
+
+            //设置消息和通知的处理
+            mPushAgent.setMessageHandler(UmengPushModule.messageHandler);
+
+            //设置通知点击处理者
+            mPushAgent.setNotificationClickHandler(UmengPushModule.notificationClickHandler);
+
+            //设置debug状态
+            if (BuildConfig.DEBUG) {
+                mPushAgent.setDebugMode(true);
+            }
 
             //注册推送服务，每次调用register方法都会回调该接口
             mPushAgent.register(new IUmengRegisterCallback() {
                 @Override
                 public void onSuccess(String deviceToken) {
                     //注册成功会返回device Token
-                    Log.d(TAG, "友盟注册成功：DeviceToken: "+ deviceToken);
+                    Log.d(TAG, "友盟注册成功：DeviceToken: " + deviceToken);
                 }
+
                 @Override
                 public void onFailure(String s, String s1) {
-                    Log.d(TAG, "友盟注册出错了！s:"+ s + ",s1:" + s1);
+                    Log.d(TAG, "友盟注册出错了！s:" + s + ",s1:" + s1);
                 }
             });
+
             //统计应用启动数据
             mPushAgent.onAppStart();
-
-            //设置通知点击处理者
-            mPushAgent.setNotificationClickHandler(UmengPushModule.notificationClickHandler);
-
-            //设置消息和通知的处理
-            mPushAgent.setMessageHandler(UmengPushModule.messageHandler);
-
-            //设置debug状态
-            if(BuildConfig.DEBUG) {
-                mPushAgent.setDebugMode(true);
-            }
 
             //设置域名LeCloudPlayerConfig.HOST_DEFAULT代表国内版
             SharedPreferences preferences = getSharedPreferences("host", Context.MODE_PRIVATE);
