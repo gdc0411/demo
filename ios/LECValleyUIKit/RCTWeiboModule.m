@@ -153,8 +153,7 @@ RCT_EXPORT_METHOD(shareToWeibo:(NSDictionary *)aData
 {
     NSDictionary *userInfo = note.userInfo;
     NSString *url = userInfo[@"url"];
-    [WeiboSDK handleOpenURL:[NSURL URLWithString:url]
-                   delegate:self];
+    [WeiboSDK handleOpenURL:[NSURL URLWithString:url] delegate:self];
 }
 
 

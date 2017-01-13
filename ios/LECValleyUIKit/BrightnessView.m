@@ -101,8 +101,7 @@
     [self updateLongView:[UIScreen mainScreen].brightness];
 }
 
-#pragma makr - 通知 KVO
-
+#pragma mark - 通知 KVO
 - (void)addNotification {
     
     [[NSNotificationCenter defaultCenter] addObserver:self

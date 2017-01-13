@@ -6,15 +6,24 @@
 //  Copyright © 2017年 leCloud. All rights reserved.
 //
 
-//#import <React/RCTBridgeModule.h>
+#import "UMessage.h"
+
 #import <React/RCTEventEmitter.h>
 
 @interface RCTUmengPushModule : RCTEventEmitter <RCTBridgeModule>
 
-+ (void)application:(UIApplication *)application registerWithAppkey:(NSString *)appkey launchOptions:(NSDictionary *)launchOptions;
++ (void) registerWithlaunchOptions:(NSDictionary *)launchOptions;
 
-+ (void)application:(UIApplication *)application didRegisterDeviceToken:(NSData *)deviceToken;
++ (void) didFailToRegisterWithError:(NSError *)error;
 
-+ (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo;
++ (void) didRegisterDeviceToken:(NSData *)deviceToken;
+
++ (void) didReceiveRemoteNotification:(NSDictionary *)userInfo;
+
++ (void) userNotificationCenter:(UNUserNotificationCenter *)center willPresentNotification:(UNNotification *)notification
+          withCompletionHandler:(void (^)(UNNotificationPresentationOptions))completionHandler;
+
++ (void) userNotificationCenter:(UNUserNotificationCenter *)center didReceiveNotificationResponse:(UNNotificationResponse *)response
+          withCompletionHandler:(void (^)())completionHandler;
 
 @end

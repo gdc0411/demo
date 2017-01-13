@@ -37,6 +37,36 @@
   return [RCTOrientationModule getOrientation];
 }
 
+- (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken
+{
+  [RCTUmengPushModule didRegisterDeviceToken:deviceToken];
+}
+
+- (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error
+{
+  [RCTUmengPushModule didFailToRegisterWithError:error];
+}
+
+//iOS10以下使用这个方法接收通知
+- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo
+{
+  [RCTUmengPushModule didReceiveRemoteNotification:userInfo];
+}
+
+//iOS10新增：处理前台收到通知的代理方法
+- (void)userNotificationCenter:(UNUserNotificationCenter *)center willPresentNotification:(UNNotification *)notification
+         withCompletionHandler:(void (^)(UNNotificationPresentationOptions))completionHandler
+{
+  [RCTUmengPushModule userNotificationCenter:center willPresentNotification:notification withCompletionHandler:completionHandler];
+}
+
+//iOS10新增：处理后台点击通知的代理方法
+-(void)userNotificationCenter:(UNUserNotificationCenter *)center didReceiveNotificationResponse:(UNNotificationResponse *)response
+        withCompletionHandler:(void (^)())completionHandler
+{
+  [RCTUmengPushModule userNotificationCenter:center didReceiveNotificationResponse:response withCompletionHandler:completionHandler];
+}
+
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
   
@@ -54,38 +84,7 @@
    */
   [[UIApplication sharedApplication] setStatusBarOrientation:(UIInterfaceOrientationPortrait) animated:NO];
   
-  /*
-   *******************************************************************
-   *******************************************************************
-   友盟功能导入:
-   */
-  //初始化方法,也可以使用(void)startWithAppkey:(NSString *)appKey launchOptions:(NSDictionary * )launchOptions httpsenable:(BOOL)value;这个方法，方便设置https请求。
-//    [UMessage startWithAppkey:@"586781631c5dd0359f001286" launchOptions:launchOptions];
-  
-  [RCTUmengPushModule application:application registerWithAppkey:@"586781631c5dd0359f001286" launchOptions:launchOptions];
-  
-  
-  //注册通知，如果要使用category的自定义策略，可以参考demo中的代码。
-//    [UMessage registerForRemoteNotifications];
-  
-  //  //iOS10必须加下面这段代码。
-//    UNUserNotificationCenter *center = [UNUserNotificationCenter currentNotificationCenter];
-//    center.delegate = self;
-//    UNAuthorizationOptions types10 = UNAuthorizationOptionBadge|UNAuthorizationOptionAlert|UNAuthorizationOptionSound;
-//    [center requestAuthorizationWithOptions:types10
-//                          completionHandler:^(BOOL granted, NSError * _Nullable error) {
-//                            if (granted) {
-//                              //点击允许
-//                              //这里可以添加一些自己的逻辑
-//                            } else {
-//                              //点击不允许
-//                              //这里可以添加一些自己的逻辑
-//                            }
-//                          }];
-//  //打开日志，方便调试
-//  [UMessage setLogEnabled:YES];
-  
-  
+
   /*
    *******************************************************************
    *******************************************************************
@@ -116,6 +115,11 @@
   [[LECPlayerFoundation sharedFoundation]fileLogEnable:NO];
   [[LECPlayerFoundation sharedFoundation] consoleLogEnable:YES];
   
+  /*
+   友盟功能导入:
+   */
+  [RCTUmengPushModule registerWithlaunchOptions:launchOptions];
+  
   
   RCTRootView *rootView = [[RCTRootView alloc] initWithBundleURL:jsCodeLocation
                                                       moduleName:@"LeDemo"
@@ -132,87 +136,6 @@
   [self.window makeKeyAndVisible];
   
   return YES;
-}
-
-
-- (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken
-{
-  //1.2.7版本开始不需要用户再手动注册devicetoken，SDK会自动注册
-  // [UMessage registerDeviceToken:deviceToken];
-  
-  NSString* pushToken = [[[[deviceToken description] stringByReplacingOccurrencesOfString: @"<" withString: @""]
-                          stringByReplacingOccurrencesOfString: @">" withString: @""]
-                         stringByReplacingOccurrencesOfString: @" " withString: @""];
-  
-  NSLog(@"友盟注册成功：DeviceToken:%@", pushToken);
-}
-
-
-- (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error
-{
-  //如果注册不成功，打印错误信息，可以在网上找到对应的解决方案
-  //1.2.7版本开始自动捕获这个方法，log以application:didFailToRegisterForRemoteNotificationsWithError开头
-  NSLog(@"友盟注册失败：DeviceToken:%@", error);
-  
-}
-
-//iOS10以下使用这个方法接收通知
-- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo
-{
-  [RCTUmengPushModule application:application didReceiveRemoteNotification:userInfo];
-  
-  //关闭友盟自带的弹出框
-//  [UMessage setAutoAlert:NO];
-//  [UMessage didReceiveRemoteNotification:userInfo];
-  
-  //    self.userInfo = userInfo;
-  //    //定制自定的的弹出框
-  //    if([UIApplication sharedApplication].applicationState == UIApplicationStateActive)
-  //    {
-  //        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"标题"
-  //                                                            message:@"Test On ApplicationStateActive"
-  //                                                           delegate:self
-  //                                                  cancelButtonTitle:@"确定"
-  //                                                  otherButtonTitles:nil];
-  //
-  //        [alertView show];
-  //
-  //    }
-}
-
-
-//iOS10新增：处理前台收到通知的代理方法
--(void)userNotificationCenter:(UNUserNotificationCenter *)center willPresentNotification:(UNNotification *)notification
-        withCompletionHandler:(void (^)(UNNotificationPresentationOptions))completionHandler{
-  
-  NSDictionary * userInfo = notification.request.content.userInfo;
-  if([notification.request.trigger isKindOfClass:[UNPushNotificationTrigger class]]) {
-    //应用处于前台时的远程推送接受
-    //关闭友盟自带的弹出框
-    [UMessage setAutoAlert:NO];
-    //必须加这句代码
-    [UMessage didReceiveRemoteNotification:userInfo];
-    
-  }else{
-    //应用处于前台时的本地推送接受
-  }
-  //当应用处于前台时提示设置，需要哪个可以设置哪一个
-  completionHandler(UNNotificationPresentationOptionSound|UNNotificationPresentationOptionBadge|UNNotificationPresentationOptionAlert);
-}
-
-//iOS10新增：处理后台点击通知的代理方法
--(void)userNotificationCenter:(UNUserNotificationCenter *)center didReceiveNotificationResponse:(UNNotificationResponse *)response
-        withCompletionHandler:(void (^)())completionHandler{
-  
-  NSDictionary * userInfo = response.notification.request.content.userInfo;
-  if([response.notification.request.trigger isKindOfClass:[UNPushNotificationTrigger class]]) {
-    //应用处于后台时的远程推送接受
-    //必须加这句代码
-    [UMessage didReceiveRemoteNotification:userInfo];
-    
-  }else{
-    //应用处于后台时的本地推送接受
-  }
 }
 
 

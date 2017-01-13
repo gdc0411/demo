@@ -57,7 +57,10 @@ RCT_EXPORT_MODULE()
     if (self) {
         [self _autoRegisterAPI];
         
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleOpenURL:) name:@"RCTOpenURLNotification" object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(handleOpenURL:)
+                                                     name:@"RCTOpenURLNotification"
+                                                   object:nil];
     }
     return self;
 }

@@ -69,8 +69,7 @@ RCT_EXPORT_MODULE();
     NSDictionary *userInfo = note.userInfo;
     NSString *url = userInfo[@"url"];
     if ([TencentOAuth HandleOpenURL:[NSURL URLWithString:url]]) {
-    }
-    else {
+    }else {
         [QQApiInterface handleOpenURL:[NSURL URLWithString:url] delegate:self];
     }
 }

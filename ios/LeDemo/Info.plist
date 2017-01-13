@@ -66,6 +66,16 @@
 				<string>wb3843617848</string>
 			</array>
 		</dict>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>umeng_push</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>umeng586781631c5dd0359f001286</string>
+			</array>
+		</dict>
 	</array>
 	<key>CFBundleVersion</key>
 	<string>1</string>
