@@ -6,12 +6,15 @@
 //  Copyright © 2017年 leCloud. All rights reserved.
 //
 
-#import <React/RCTBridgeModule.h>
+//#import <React/RCTBridgeModule.h>
+#import <React/RCTEventEmitter.h>
 
-@interface RCTUmengPushModule : NSObject<RCTBridgeModule>
+@interface RCTUmengPushModule : RCTEventEmitter <RCTBridgeModule>
 
-+ (void)registerWithAppkey:(NSString *)appkey launchOptions:(NSDictionary *)launchOptions;
++ (void)application:(UIApplication *)application registerWithAppkey:(NSString *)appkey launchOptions:(NSDictionary *)launchOptions;
+
 + (void)application:(UIApplication *)application didRegisterDeviceToken:(NSData *)deviceToken;
+
 + (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo;
 
 @end

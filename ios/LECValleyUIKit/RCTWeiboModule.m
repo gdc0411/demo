@@ -6,14 +6,14 @@
 //  Copyright © 2016年 leCloud. All rights reserved.
 //
 
-#import "LECValley.h"
-
+#import "Social.h"
 #import "RCTWeiboModule.h"
+
 #import "WeiboSDK.h"
 
-#import <React/RCTBridge.h>
-#import <React/RCTEventDispatcher.h>
 #import <React/RCTImageLoader.h>
+//#import <React/RCTBridge.h>
+#import <React/RCTEventDispatcher.h>
 
 
 BOOL gRegister = NO;

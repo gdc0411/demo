@@ -50,6 +50,7 @@
 		2D0E62A91E0AFF75005A68AA /* RCTWeChatModule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCTWeChatModule.m; sourceTree = "<group>"; };
 		2D124EFC1E262EE90041DFD0 /* RCTUmengPushModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCTUmengPushModule.h; sourceTree = "<group>"; };
 		2D124EFD1E262EE90041DFD0 /* RCTUmengPushModule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCTUmengPushModule.m; sourceTree = "<group>"; };
+		2D124F001E28EA3E0041DFD0 /* Social.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Social.h; sourceTree = "<group>"; };
 		2D8D219D1E032386004EC569 /* pchFile.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pchFile.pch; sourceTree = "<group>"; };
 		2D8D21E51E0324FE004EC569 /* libLECValleyUIKit.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libLECValleyUIKit.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		2D8D22231E032DB1004EC569 /* RCTLinearGradient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCTLinearGradient.h; sourceTree = "<group>"; };
@@ -148,6 +149,7 @@
 				2D0C97981E07056500FB5279 /* BrightnessModule.m */,
 				2D0C97701E06CD1100FB5279 /* BrightnessView.h */,
 				2D0C97711E06CD1100FB5279 /* BrightnessView.m */,
+				2D124F001E28EA3E0041DFD0 /* Social.h */,
 				2DE3D3611E11A30000C39FB9 /* RCTWeiboModule.h */,
 				2DE3D3621E11A30000C39FB9 /* RCTWeiboModule.m */,
 				2D0E62A81E0AFF75005A68AA /* RCTWeChatModule.h */,

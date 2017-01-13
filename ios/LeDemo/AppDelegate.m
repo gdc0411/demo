@@ -11,6 +11,9 @@
 #import "CodePush.h"
 
 #import "UMessage.h"
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 100000
+#import <UserNotifications/UserNotifications.h>
+#endif
 
 #import <React/RCTBundleURLProvider.h>
 #import <React/RCTRootView.h>
@@ -18,14 +21,13 @@
 
 #import "LECPlayerFoundation.h"
 #import "RCTOrientationModule.h"
+#import "RCTUmengPushModule.h"
 
 
 #define kLCTestBundleID   @"com.lecloud.sdkTest"
 
 
 @implementation AppDelegate
-
-
 
 - (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation {
   return [RCTLinkingManager application:application openURL:url sourceApplication:sourceApplication annotation:annotation];
@@ -41,7 +43,7 @@
   NSURL *jsCodeLocation;
   
 #ifdef DEBUG
-//    jsCodeLocation = [[NSBundle mainBundle] URLForResource:@"index.ios" withExtension:@"jsbundle"];
+  //    jsCodeLocation = [[NSBundle mainBundle] URLForResource:@"index.ios" withExtension:@"jsbundle"];
   jsCodeLocation = [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"index.ios" fallbackResource:nil];
 #else
   jsCodeLocation = [CodePush bundleURL];
@@ -58,27 +60,30 @@
    友盟功能导入:
    */
   //初始化方法,也可以使用(void)startWithAppkey:(NSString *)appKey launchOptions:(NSDictionary * )launchOptions httpsenable:(BOOL)value;这个方法，方便设置https请求。
-  [UMessage startWithAppkey:@"586781631c5dd0359f001286" launchOptions:launchOptions];
+//    [UMessage startWithAppkey:@"586781631c5dd0359f001286" launchOptions:launchOptions];
+  
+  [RCTUmengPushModule application:application registerWithAppkey:@"586781631c5dd0359f001286" launchOptions:launchOptions];
+  
   
   //注册通知，如果要使用category的自定义策略，可以参考demo中的代码。
-  [UMessage registerForRemoteNotifications];
+//    [UMessage registerForRemoteNotifications];
   
-  //iOS10必须加下面这段代码。
-  UNUserNotificationCenter *center = [UNUserNotificationCenter currentNotificationCenter];
-  center.delegate = self;
-  UNAuthorizationOptions types10 = UNAuthorizationOptionBadge|UNAuthorizationOptionAlert|UNAuthorizationOptionSound;
-  [center requestAuthorizationWithOptions:types10
-                        completionHandler:^(BOOL granted, NSError * _Nullable error) {
-                          if (granted) {
-                            //点击允许
-                            //这里可以添加一些自己的逻辑
-                          } else {
-                            //点击不允许
-                            //这里可以添加一些自己的逻辑
-                          }
-                        }];
-  //打开日志，方便调试
-  [UMessage setLogEnabled:YES];
+  //  //iOS10必须加下面这段代码。
+//    UNUserNotificationCenter *center = [UNUserNotificationCenter currentNotificationCenter];
+//    center.delegate = self;
+//    UNAuthorizationOptions types10 = UNAuthorizationOptionBadge|UNAuthorizationOptionAlert|UNAuthorizationOptionSound;
+//    [center requestAuthorizationWithOptions:types10
+//                          completionHandler:^(BOOL granted, NSError * _Nullable error) {
+//                            if (granted) {
+//                              //点击允许
+//                              //这里可以添加一些自己的逻辑
+//                            } else {
+//                              //点击不允许
+//                              //这里可以添加一些自己的逻辑
+//                            }
+//                          }];
+//  //打开日志，方便调试
+//  [UMessage setLogEnabled:YES];
   
   
   /*
@@ -116,6 +121,7 @@
                                                       moduleName:@"LeDemo"
                                                initialProperties:nil
                                                    launchOptions:launchOptions];
+  
   rootView.backgroundColor = [[UIColor alloc] initWithRed:1.0f green:1.0f blue:1.0f alpha:1];
   
   self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
@@ -129,12 +135,35 @@
 }
 
 
+- (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken
+{
+  //1.2.7版本开始不需要用户再手动注册devicetoken，SDK会自动注册
+  // [UMessage registerDeviceToken:deviceToken];
+  
+  NSString* pushToken = [[[[deviceToken description] stringByReplacingOccurrencesOfString: @"<" withString: @""]
+                          stringByReplacingOccurrencesOfString: @">" withString: @""]
+                         stringByReplacingOccurrencesOfString: @" " withString: @""];
+  
+  NSLog(@"友盟注册成功：DeviceToken:%@", pushToken);
+}
+
+
+- (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error
+{
+  //如果注册不成功，打印错误信息，可以在网上找到对应的解决方案
+  //1.2.7版本开始自动捕获这个方法，log以application:didFailToRegisterForRemoteNotificationsWithError开头
+  NSLog(@"友盟注册失败：DeviceToken:%@", error);
+  
+}
+
 //iOS10以下使用这个方法接收通知
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo
 {
+  [RCTUmengPushModule application:application didReceiveRemoteNotification:userInfo];
+  
   //关闭友盟自带的弹出框
-  [UMessage setAutoAlert:NO];
-  [UMessage didReceiveRemoteNotification:userInfo];
+//  [UMessage setAutoAlert:NO];
+//  [UMessage didReceiveRemoteNotification:userInfo];
   
   //    self.userInfo = userInfo;
   //    //定制自定的的弹出框
@@ -153,8 +182,7 @@
 
 
 //iOS10新增：处理前台收到通知的代理方法
--(void)userNotificationCenter:(UNUserNotificationCenter *)center
-      willPresentNotification:(UNNotification *)notification
+-(void)userNotificationCenter:(UNUserNotificationCenter *)center willPresentNotification:(UNNotification *)notification
         withCompletionHandler:(void (^)(UNNotificationPresentationOptions))completionHandler{
   
   NSDictionary * userInfo = notification.request.content.userInfo;
@@ -173,8 +201,7 @@
 }
 
 //iOS10新增：处理后台点击通知的代理方法
--(void)userNotificationCenter:(UNUserNotificationCenter *)center
-didReceiveNotificationResponse:(UNNotificationResponse *)response
+-(void)userNotificationCenter:(UNUserNotificationCenter *)center didReceiveNotificationResponse:(UNNotificationResponse *)response
         withCompletionHandler:(void (^)())completionHandler{
   
   NSDictionary * userInfo = response.notification.request.content.userInfo;

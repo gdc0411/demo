@@ -42,12 +42,12 @@ class home extends Component {
         this._openNotify = this._openNotify.bind(this);
     }
 
-    _recvNotify = message => {
+    _recvNotify(message){
         console.log("onUmengReceiveMessage:", message);
         alert('onUmengReceiveMessage' + JSON.stringify(message));
     }
 
-    _openNotify = message => {
+    _openNotify(message){
         console.log("onUmengOpenMessage:", message);
         // alert('onUmengOpenMessage' + JSON.stringify(message));
 
@@ -58,15 +58,15 @@ class home extends Component {
     }
 
     componentWillMount() {
+        Orientation.setOrientation(1);
         // UmengPush.addUmengReceiveMessageListener(this._recvNotify);
         UmengPush.addUmengOpenMessageListener(this._openNotify);
-        Orientation.setOrientation(1);
     }
 
     componentWillUnmount() {
+        Orientation.setOrientation(-1);
         // UmengPush.removeUmengReceiveMessageListener(this._recvNotify);
         UmengPush.removeUmengOpenMessageListener(this._openNotify);
-        Orientation.setOrientation(-1);
     }
 
     //跳转到播放页

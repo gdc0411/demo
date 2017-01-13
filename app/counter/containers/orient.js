@@ -20,21 +20,21 @@ class orient extends Component {
       or: init,
       // sor: init,
     };
-    this._updateOrientation = this._updateOrientation.bind(this);    
+    this._updateOrientation = this._updateOrientation.bind(this);
   }
 
   _updateOrientation(or) {
     this.setState({ or });
   }
- 
+
   componentWillMount() {
     Orientation.addOnOrientationListener(this._updateOrientation);
   }
-  
+
   componentWillUnmount() {
     Orientation.removeOnOrientationListener(this._updateOrientation);
   }
-  
+
 
   render() {
     const { init, or, sor} = this.state;

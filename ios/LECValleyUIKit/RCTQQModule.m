@@ -6,7 +6,7 @@
 //  Copyright © 2016年 leCloud. All rights reserved.
 //
 
-#import "LECValley.h"
+#import "Social.h"
 
 #import "RCTQQModule.h"
 
@@ -16,9 +16,6 @@
 #import <TencentOpenAPI/QQApiInterfaceObject.h>
 
 #import <React/RCTImageLoader.h>
-
-#import <React/RCTBridge.h>
-#import <React/RCTLog.h>
 #import <React/RCTEventDispatcher.h>
 
 
