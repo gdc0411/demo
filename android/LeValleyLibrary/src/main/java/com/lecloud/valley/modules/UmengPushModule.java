@@ -78,8 +78,13 @@ public class UmengPushModule extends ReactContextBaseJavaModule implements Lifec
         @Override
         public Notification getNotification(final Context context, final UMessage msg) {
 //            Notification notification = super.getNotification(context, msg);
-//            messageHandlerSendEvent(msg);
-//            Log.i(TAG, msg.toString());
+            new Handler().post(new Runnable() {
+                @Override
+                public void run() {
+                    messageHandlerSendEvent(msg);
+                }
+            });
+            Log.i(TAG, msg.toString());
 //            return notification;
             switch (msg.builder_id) {
                 case 1: //自定义消息展示
@@ -105,7 +110,7 @@ public class UmengPushModule extends ReactContextBaseJavaModule implements Lifec
          * */
         @Override
         public void dealWithCustomMessage(final Context context, final UMessage msg) {
-//            super.dealWithCustomMessage(context, msg);
+            super.dealWithCustomMessage(context, msg);
             new Handler().post(new Runnable() {
                 @Override
                 public void run() {

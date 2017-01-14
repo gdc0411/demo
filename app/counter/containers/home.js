@@ -59,13 +59,13 @@ class home extends Component {
 
     componentWillMount() {
         Orientation.setOrientation(1);
-        // UmengPush.addUmengReceiveMessageListener(this._recvNotify);
+        UmengPush.addUmengReceiveMessageListener(this._recvNotify);
         UmengPush.addUmengOpenMessageListener(this._openNotify);
     }
 
     componentWillUnmount() {
         Orientation.setOrientation(-1);
-        // UmengPush.removeUmengReceiveMessageListener(this._recvNotify);
+        UmengPush.removeUmengReceiveMessageListener(this._recvNotify);
         UmengPush.removeUmengOpenMessageListener(this._openNotify);
     }
 
