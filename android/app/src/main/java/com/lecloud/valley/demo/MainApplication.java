@@ -93,7 +93,7 @@ public class MainApplication extends Application implements ReactApplication {
 
             //设置debug状态
             if (BuildConfig.DEBUG) {
-                mPushAgent.setDebugMode(true);
+//                mPushAgent.setDebugMode(true);
             }
 
             //注册推送服务，每次调用register方法都会回调该接口
