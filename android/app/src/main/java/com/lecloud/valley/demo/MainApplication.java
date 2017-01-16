@@ -5,6 +5,7 @@ import android.app.Application;
 import android.app.Notification;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Handler;
 import android.util.Log;
 
 import com.lecloud.valley.handler.CrashHandler;
@@ -72,7 +73,8 @@ public class MainApplication extends Application implements ReactApplication {
 
 
             //友盟注册
-            PushAgent mPushAgent = PushAgent.getInstance(this);
+            final PushAgent mPushAgent = PushAgent.getInstance(this);
+
 //            //sdk开启通知声音
 //            mPushAgent.setNotificationPlaySound(MsgConstant.NOTIFICATION_PLAY_SDK_ENABLE);
 //            // sdk关闭通知声音
@@ -100,6 +102,12 @@ public class MainApplication extends Application implements ReactApplication {
                 public void onSuccess(String deviceToken) {
                     //注册成功会返回device Token
                     Log.d(TAG, "友盟注册成功：DeviceToken: " + deviceToken);
+                    new Handler().post(new Runnable() {
+                        @Override
+                        public void run() {
+                            mPushAgent.onAppStart();
+                        }
+                    });
                 }
 
                 @Override
