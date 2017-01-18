@@ -71,6 +71,7 @@ public class MainApplication extends Application implements ReactApplication {
                 e.printStackTrace();
             }
 
+//            final UmengPushModule mUmentPushModule = UmengPushModule.getInstance(this);
 
             //友盟注册
             final PushAgent mPushAgent = PushAgent.getInstance(this);
@@ -86,14 +87,14 @@ public class MainApplication extends Application implements ReactApplication {
 //            mPushAgent.setNotificationPlayVibrate(MsgConstant.NOTIFICATION_PLAY_SDK_DISABLE);
 
             //设置消息和通知的处理
-            mPushAgent.setMessageHandler(UmengPushModule.messageHandler);
-
-            //设置通知点击处理者
-            mPushAgent.setNotificationClickHandler(UmengPushModule.notificationClickHandler);
+//            mPushAgent.setMessageHandler(mUmentPushModule.messageHandler);
+//
+//            //设置通知点击处理者
+//            mPushAgent.setNotificationClickHandler(mUmentPushModule.notificationClickHandler);
 
             //设置debug状态
             if (BuildConfig.DEBUG) {
-//                mPushAgent.setDebugMode(true);
+                mPushAgent.setDebugMode(true);
             }
 
             //注册推送服务，每次调用register方法都会回调该接口
@@ -102,12 +103,6 @@ public class MainApplication extends Application implements ReactApplication {
                 public void onSuccess(String deviceToken) {
                     //注册成功会返回device Token
                     Log.d(TAG, "友盟注册成功：DeviceToken: " + deviceToken);
-                    new Handler().post(new Runnable() {
-                        @Override
-                        public void run() {
-                            mPushAgent.onAppStart();
-                        }
-                    });
                 }
 
                 @Override

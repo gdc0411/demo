@@ -44,7 +44,7 @@ public class UmengPushModule extends ReactContextBaseJavaModule implements Lifec
 
     private static UMessage tmpMessage;
 
-    public static UmengNotificationClickHandler notificationClickHandler = new UmengNotificationClickHandler() {
+    public UmengNotificationClickHandler notificationClickHandler = new UmengNotificationClickHandler() {
         @Override
         public void launchApp(Context context, UMessage msg) {
             super.launchApp(context, msg);
@@ -71,7 +71,7 @@ public class UmengPushModule extends ReactContextBaseJavaModule implements Lifec
         }
     };
 
-    public static UmengMessageHandler messageHandler = new UmengMessageHandler() {
+    public UmengMessageHandler messageHandler = new UmengMessageHandler() {
         /**
          * 自定义通知栏样式的回调方法
          * */
@@ -125,6 +125,13 @@ public class UmengPushModule extends ReactContextBaseJavaModule implements Lifec
         return REACT_CLASS_UMENG_PUSH_MODULE;
     }
 
+
+    public static synchronized UmengPushModule getInstance(Context context) {
+        if(gModule == null) {
+            gModule = new UmengPushModule((ReactApplicationContext) context.getApplicationContext());
+        }
+        return gModule;
+    }
 
     public UmengPushModule(ReactApplicationContext reactContext) {
         super(reactContext);
@@ -187,7 +194,7 @@ public class UmengPushModule extends ReactContextBaseJavaModule implements Lifec
      *
      * @param msg
      */
-    private static void messageHandlerSendEvent(UMessage msg) {
+    private void messageHandlerSendEvent(UMessage msg) {
         if (gModule == null) {
             return;
         }
