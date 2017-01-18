@@ -96,6 +96,7 @@ public class LeReactVideoViewManager extends SimpleViewManager<LeReactVideoView>
                 bundle.putBoolean("saas", !src.hasKey(PROP_SRC_VOD_SAAS) || src.getBoolean(PROP_SRC_VOD_SAAS));
                 bundle.putBoolean("pano", src.hasKey(PROP_SRC_IS_PANO) && src.getBoolean(PROP_SRC_IS_PANO));
 //                bundle.putBoolean("hasSkin", src.hasKey(PROP_SRC_HAS_SKIN) && src.getBoolean(PROP_SRC_HAS_SKIN));
+                bundle.putBoolean("repeat", src.hasKey(PROP_SRC_IS_REPEAT) && src.getBoolean(PROP_SRC_IS_REPEAT));
                 videoView.setSrc(bundle);
                 break;
 
@@ -126,6 +127,7 @@ public class LeReactVideoViewManager extends SimpleViewManager<LeReactVideoView>
                 bundle.putString("path", src.hasKey(PROP_SRC_URI) ? src.getString(PROP_SRC_URI) :"");
                 bundle.putBoolean("pano", src.hasKey(PROP_SRC_IS_PANO) && src.getBoolean(PROP_SRC_IS_PANO));
 //                bundle.putBoolean("hasSkin", src.hasKey(PROP_SRC_HAS_SKIN) && src.getBoolean(PROP_SRC_HAS_SKIN));
+                bundle.putBoolean("repeat", src.hasKey(PROP_SRC_IS_REPEAT) && src.getBoolean(PROP_SRC_IS_REPEAT));
                 videoView.setSrc(bundle);
                 break;
         }
@@ -138,6 +140,11 @@ public class LeReactVideoViewManager extends SimpleViewManager<LeReactVideoView>
         videoView.setPaused(paused);
     }
 
+
+    @ReactProp(name = PROP_REPEAT)
+    public void setRepeat(final LeReactVideoView videoView, final int repeat) {
+        videoView.setRepeat(repeat);
+    }
 
     /**
      * 视频Seek到某一位置（VOD）

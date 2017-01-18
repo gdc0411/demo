@@ -50,9 +50,12 @@ public interface Constants {
     String PROP_SRC_STREAM_ID = "streamId";
     String PROP_SRC_STREAM_URL = "streamUrl";
     String PROP_SRC_IS_PANO = "pano";
+    String PROP_SRC_IS_REPEAT = "repeat";
 
     // 暂停方法
     String PROP_PAUSED = "paused";
+    // 重播方法
+    String PROP_REPEAT = "repeat";
     // 快进方法
     String PROP_SEEK = "seek";
     // 切换码率

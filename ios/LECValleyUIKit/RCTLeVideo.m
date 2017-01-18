@@ -39,11 +39,10 @@
     BOOL _isFullScreen;
     
 }
-@property (nonatomic, strong) LECPlayer *lePlayer;
-@property (nonatomic, strong) LECPlayerOption *option;
 
-@property (nonatomic, strong) BrightnessModule *brigtnessModule;
-
+@property (nonatomic, strong) LECPlayer         *lePlayer;
+@property (nonatomic, strong) LECPlayerOption   *option;
+@property (nonatomic, strong) BrightnessModule  *brigtnessModule;
 
 //@property(nonatomic) CGFloat screenBrightness NS_AVAILABLE_IOS(5_0);        // 0 .. 1.0, where 1.0 is maximum brightness. Only supported by main screen.
 
@@ -129,7 +128,9 @@
     int _originVolume; //原音量0-100
     int _originBrightness;  //原屏幕亮度百分比 0-100
     
-    BOOL _paused;
+    BOOL _paused; //是否暂停
+    BOOL _repeat; //是否重播
+    
     BOOL _playInBackground;
     BOOL _playWhenInactive;
     NSString * _resizeMode;
@@ -220,7 +221,16 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
     paused? [self pause]: [self play];
     _paused = paused;
     NSLog(@"外部控制——— 播放暂停：%@", paused?@"YES":@"NO");
+}
+
+- (void)setRepeat:(int)repeat
+{
+    if(_lePlayer == nil || _isPlaying || _isAdPlaying )
+        return;
     
+    [self play];
+    
+    NSLog(@"外部控制——— 重播：%@", repeat?@"YES":@"NO");
 }
 
 
@@ -411,10 +421,10 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
         _lePlayer = [[LECVODPlayer alloc] init];
         _lePlayer.delegate = self;
         
-        self.frame = LCRect_PlayerHalfFrame;
-        _lePlayer.videoView.frame = self.bounds;
-        _lePlayer.videoView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin| UIViewAutoresizingFlexibleWidth| UIViewAutoresizingFlexibleHeight;
-        _lePlayer.videoView.contentMode = UIViewContentModeScaleAspectFit;
+        self.frame  = LCRect_PlayerHalfFrame;
+        _lePlayer.videoView.frame               = self.bounds;
+        _lePlayer.videoView.autoresizingMask    = UIViewAutoresizingFlexibleLeftMargin| UIViewAutoresizingFlexibleWidth| UIViewAutoresizingFlexibleHeight;
+        _lePlayer.videoView.contentMode         = UIViewContentModeScaleAspectFit;
         
         [self addSubview:_lePlayer.videoView];
         [self sendSubviewToBack:_lePlayer.videoView];
@@ -423,7 +433,8 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
         NSString *uuid = [source objectForKey:@"uuid"];
         NSString *vuid = [source objectForKey:@"vuid"];
         NSString *buinessline = [source objectForKey:@"businessline"];
-        bool saas = [RCTConvert BOOL:[source objectForKey:@"saas"]];
+        bool saas  = [RCTConvert BOOL:[source objectForKey:@"saas"]];
+        _repeat    = [RCTConvert BOOL:[source objectForKey:@"repeat"]];
         
         if (uuid.length != 0 && vuid.length != 0 && buinessline.length != 0 ) {
             [self usePlayerViewController]; // 创建controller
@@ -571,6 +582,7 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
         [self sendSubviewToBack:_lePlayer.videoView];
         
         NSString* url = [source objectForKey:@"uri"];
+        _repeat  = [RCTConvert BOOL:[source objectForKey:@"repeat"]];
         
         if (url.length != 0 ) {
             [self usePlayerViewController]; // 创建controller
@@ -587,7 +599,7 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
                 [wSelf play];//注册完成后自动播放
                 
             }else{
-                wSelf.onVideoError?wSelf.onVideoError(@{@"errorCode":@"-1",@"errorMsg":@"播放器注册失败,请检查URL"}):nil;
+                wSelf.onVideoError? wSelf.onVideoError(@{@"errorCode":@"-1",@"errorMsg":@"播放器注册失败,请检查URL"}):nil;
             }
         }];
     }
@@ -625,7 +637,7 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
 /*重置状态量*/
 - (void) initFieldParaStates
 {
-    _isSeeking = false;
+    _isSeeking = NO;
     
     _title = nil;
     _duration = 0;
@@ -706,8 +718,7 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
     }
     
     [_lePlayer pause];
-    
-    
+        
     if( _playMode == LCPlayerVod)
         _onVideoPause?_onVideoPause(@{@"duration":[NSNumber numberWithLong:_duration],
                                       @"currentTime":[NSNumber numberWithLong:_currentTime],}):nil;
@@ -858,6 +869,9 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
 {
     _isPlaying = NO;
     _onVideoEnd?_onVideoEnd(nil):nil;
+    
+    _repeat?[self play] : nil;
+    
 }
 
 /*缓冲事件*/

@@ -96,7 +96,8 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
     private String mCurrentRate;  // 当前视频码率
 
     private boolean mPaused = false;  // 暂停状态
-    private boolean isCompleted = false;   // 是否播放完毕
+    private boolean mRepeat = false;  // 重播状态
+    protected boolean isCompleted = false;   // 是否播放完毕
     private boolean isSeeking = false;  // 是否在缓冲加载状态
 
     private boolean mPlayInBackground = false;  //是否后台播放
@@ -316,6 +317,7 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
 
         mPlayMode = newPlayMode;
         mPano = bundle.containsKey(PROP_SRC_IS_PANO) && bundle.getBoolean(PROP_SRC_IS_PANO);
+        mRepeat = bundle.containsKey(PROP_SRC_IS_REPEAT) && bundle.getBoolean(PROP_SRC_IS_REPEAT);
 
         //创建播放器
         initLePlayerIfNeeded();
@@ -989,6 +991,9 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
     private boolean processCompletion(int what, Bundle bundle) {
         isCompleted = true;
         mEventEmitter.receiveEvent(mViewId, Events.EVENT_END.toString(), null);
+
+        if(mRepeat) setSeekTo(0); //是否重播
+
         return true;
     }
 

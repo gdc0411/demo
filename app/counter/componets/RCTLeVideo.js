@@ -88,9 +88,11 @@ export default class Video extends Component {
         volume: PropTypes.number,
         /* 亮度值百分比0-100 */
         brightness: PropTypes.number,
-        /* 设置屏幕方向 */
-        /*orientation: PropTypes.number,*/
+        /* 暂停 */
         paused: PropTypes.bool,
+        /* 重播 */
+        repeat: PropTypes.number,
+        /* 点击广告 */
         clickAd: PropTypes.bool,
         /* 设置机位（直播） */
         live: PropTypes.string,
@@ -174,6 +176,7 @@ export default class Video extends Component {
                 utoken: source.utoken,
                 pano: source.pano || false,
                 uri: uri,
+                repeat: source.repeat || false,
             },
             /*回调函数属性赋值*/
             onVideoSourceLoad: (event) => { this.props.onVideoSourceLoad && this.props.onVideoSourceLoad(event.nativeEvent); },

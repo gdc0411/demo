@@ -44,6 +44,8 @@ class play extends Component {
             orientation: -1,
             /* 暂停/播放状态 */
             paused: false,
+            /* 重播 */
+            repeat: 0,
             /* 跳转 */
             seek: -1,
             /* 播放码率 */
@@ -116,7 +118,6 @@ class play extends Component {
      * @memberOf VideoPlayer
      */
     onLoad = (data) => {
-
         let ratesStr = '';
         if (data.rateList !== undefined) {
             let arr = data.rateList; //获得码率列表
@@ -361,10 +362,10 @@ class play extends Component {
                 source = { playMode: 10000, uuid: "838389", vuid: "200271100", businessline: "102", saas: true, pano: false };
                 break;
             case '5': //活动直播 官方demo
-                source = { playMode: 10002, actionId: "A2016062700000gx", usehls: false, customerId: "838389", businessline: "102", cuid: "", utoken: "", pano: false };
+                source = { playMode: 10002, actionId: "A2016062700000gx", usehls: false, customerId: "838389", businessline: "102", cuid: "", utoken: "", pano: false};
                 break;
             case '6': //活动直播 泸州
-                source = { playMode: 10002, actionId: "A2016111100001zn", usehls: false, customerId: "865024", businessline: "102", cuid: "", utoken: "", pano: false };
+                source = { playMode: 10002, actionId: "A2016111100001zn", usehls: false, customerId: "865024", businessline: "102", cuid: "", utoken: "", pano: false};
                 break;
             case '7': //活动直播 自己推流
                 source = { playMode: 10002, actionId: "A2016122300000md", usehls: false, customerId: "", businessline: "", cuid: "", utoken: "", pano: false };
@@ -430,6 +431,7 @@ class play extends Component {
                         volume={this.state.volume}
                         brightness={this.state.brightness}
                         paused={this.state.paused}
+                        repeat={this.state.repeat}
                         live={this.state.live}
                         clickAd={this.state.clickAd}
                         onVideoSourceLoad={(data) => { this.setState({ sourceInfo: `视频源: ${data.src}` }); } }
@@ -467,6 +469,7 @@ class play extends Component {
                         <Text style={styles.controlOption} onPress={this.handleBack} > 返 回 </Text>
                         <Text style={styles.controlOption} onPress={() => { this.setState({ seek: this.state.currentTime + 30 }); } } > + 30s </Text>
                         <Text style={styles.controlOption} onPress={() => { this.setState({ seek: this.state.currentTime - 30 }); } } > - 30s </Text>
+                        <Text style={styles.controlOption} onPress={() => { this.setState({ repeat: this.state.repeat + 1 }); } } > 重 播 </Text>
                     </View>
                     <View style={styles.infoDisplays}>
                         <View style={styles.bufferDisplay}>

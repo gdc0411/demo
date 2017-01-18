@@ -29,6 +29,7 @@ RCT_EXPORT_MODULE();
 
 RCT_EXPORT_VIEW_PROPERTY(src, NSDictionary); // 数据源
 RCT_EXPORT_VIEW_PROPERTY(paused, BOOL);  // 开始或暂停
+RCT_EXPORT_VIEW_PROPERTY(repeat, int);  // 重播
 RCT_EXPORT_VIEW_PROPERTY(seek, int);  // seek位置
 RCT_EXPORT_VIEW_PROPERTY(rate, NSString*);  // 切换码率
 RCT_EXPORT_VIEW_PROPERTY(live, NSString*);  // 切换机位

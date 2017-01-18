@@ -94,6 +94,17 @@ public class LeReactVideoView extends RelativeLayout {
             mLePlayer.setPaused(paused);
     }
 
+
+    /**
+     * 设置视频暂停和启动（VOD、LIVE）
+     *
+     * @param repeat 操作id
+     */
+    public void setRepeat(final int repeat) {
+        if (mLePlayer != null && mLePlayer.isCompleted )
+            setSeekTo(0);
+    }
+
     public void setPlayInBackground(final boolean playInBackground) {
         if (mLePlayer != null)
             mLePlayer.setPlayInBackground(playInBackground);
