@@ -56,8 +56,51 @@ public class MainApplication extends Application implements ReactApplication {
     public void onCreate() {
         super.onCreate();
         Log.d(TAG, LogUtils.getTraceInfo() + "Application start-------");
-        String processName = getProcessName(this, android.os.Process.myPid());
 
+        //            final UmengPushModule mUmentPushModule = UmengPushModule.getInstance(this);
+
+        //友盟注册
+        final PushAgent mPushAgent = PushAgent.getInstance(this);
+
+        //设置debug状态
+        if (BuildConfig.DEBUG) {
+            mPushAgent.setDebugMode(true);
+        }
+
+//            //sdk开启通知声音
+//            mPushAgent.setNotificationPlaySound(MsgConstant.NOTIFICATION_PLAY_SDK_ENABLE);
+//            // sdk关闭通知声音
+//            mPushAgent.setNotificationPlaySound(MsgConstant.NOTIFICATION_PLAY_SDK_DISABLE);
+//            // 通知声音由服务端控制
+//            mPushAgent.setNotificationPlaySound(MsgConstant.NOTIFICATION_PLAY_SERVER);
+//
+//            mPushAgent.setNotificationPlayLights(MsgConstant.NOTIFICATION_PLAY_SDK_DISABLE);
+//            mPushAgent.setNotificationPlayVibrate(MsgConstant.NOTIFICATION_PLAY_SDK_DISABLE);
+
+        //设置消息和通知的处理
+            mPushAgent.setMessageHandler(UmengPushModule.messageHandler);
+
+            //设置通知点击处理者
+            mPushAgent.setNotificationClickHandler(UmengPushModule.notificationClickHandler);
+
+        //注册推送服务，每次调用register方法都会回调该接口
+        mPushAgent.register(new IUmengRegisterCallback() {
+            @Override
+            public void onSuccess(String deviceToken) {
+                //注册成功会返回device Token
+                Log.d(TAG, "友盟注册成功：DeviceToken: " + deviceToken);
+            }
+
+            @Override
+            public void onFailure(String s, String s1) {
+                Log.d(TAG, "友盟注册出错了！s:" + s + ",s1:" + s1);
+            }
+        });
+
+        //统计应用启动数据
+        mPushAgent.onAppStart();
+
+        String processName = getProcessName(this, android.os.Process.myPid());
         if (getApplicationInfo().packageName.equals(processName)) {
 
             //TODO CrashHandler是一个抓取崩溃log的工具类（可选）
@@ -70,49 +113,6 @@ public class MainApplication extends Application implements ReactApplication {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-
-//            final UmengPushModule mUmentPushModule = UmengPushModule.getInstance(this);
-
-            //友盟注册
-            final PushAgent mPushAgent = PushAgent.getInstance(this);
-
-//            //sdk开启通知声音
-//            mPushAgent.setNotificationPlaySound(MsgConstant.NOTIFICATION_PLAY_SDK_ENABLE);
-//            // sdk关闭通知声音
-//            mPushAgent.setNotificationPlaySound(MsgConstant.NOTIFICATION_PLAY_SDK_DISABLE);
-//            // 通知声音由服务端控制
-//            mPushAgent.setNotificationPlaySound(MsgConstant.NOTIFICATION_PLAY_SERVER);
-//
-//            mPushAgent.setNotificationPlayLights(MsgConstant.NOTIFICATION_PLAY_SDK_DISABLE);
-//            mPushAgent.setNotificationPlayVibrate(MsgConstant.NOTIFICATION_PLAY_SDK_DISABLE);
-
-            //设置消息和通知的处理
-//            mPushAgent.setMessageHandler(mUmentPushModule.messageHandler);
-//
-//            //设置通知点击处理者
-//            mPushAgent.setNotificationClickHandler(mUmentPushModule.notificationClickHandler);
-
-            //设置debug状态
-            if (BuildConfig.DEBUG) {
-                mPushAgent.setDebugMode(true);
-            }
-
-            //注册推送服务，每次调用register方法都会回调该接口
-            mPushAgent.register(new IUmengRegisterCallback() {
-                @Override
-                public void onSuccess(String deviceToken) {
-                    //注册成功会返回device Token
-                    Log.d(TAG, "友盟注册成功：DeviceToken: " + deviceToken);
-                }
-
-                @Override
-                public void onFailure(String s, String s1) {
-                    Log.d(TAG, "友盟注册出错了！s:" + s + ",s1:" + s1);
-                }
-            });
-
-            //统计应用启动数据
-            mPushAgent.onAppStart();
 
             //设置域名LeCloudPlayerConfig.HOST_DEFAULT代表国内版
             SharedPreferences preferences = getSharedPreferences("host", Context.MODE_PRIVATE);
