@@ -245,12 +245,26 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
         
         _isSeeking = YES;
         
-        __weak typeof(self) wSelf = self;
-        _lastPosition = seek > _duration ? _duration : seek;
-        [_lePlayer seekToPosition: seek > _duration ? (int)_duration : seek completion:^{
-            _isSeeking = NO;
-            wSelf.onVideoSeekComplete?wSelf.onVideoSeekComplete(nil):nil;
-        }];
+        if( !_isPlaying && !_isAdPlaying ){
+            
+            __weak typeof(self) wSelf = self;
+            [self playAndSeek:^{
+                _lastPosition = seek > _duration ? _duration : seek;
+                [wSelf setSeek: _lastPosition];
+            }];
+        }
+        else
+        {
+            __weak typeof(self) wSelf = self;
+            _lastPosition = seek > _duration ? _duration : seek;
+            [_lePlayer seekToPosition: seek > _duration ? (int)_duration : seek completion:^{
+                _isSeeking = NO;
+                wSelf.onVideoSeekComplete?wSelf.onVideoSeekComplete(nil):nil;
+                
+            }];
+        }
+        
+        
         NSLog(@"外部控制——— SEEK TO: %d", seek);
         
     }else if(_playMode == LCPlayerActionLive){
@@ -680,6 +694,30 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
     }];
 }
 
+- (void)playAndSeek:(void (^)())completion;
+{
+    if (_isPlaying || _lePlayer == nil ) {
+        return;
+    }
+    __weak typeof(self) wSelf = self;
+    [_lePlayer playWithCompletion:^{
+        
+        if( _playMode == LCPlayerVod)
+            wSelf.onVideoResume?wSelf.onVideoResume(@{@"duration":[NSNumber numberWithLong:_duration],
+                                                      @"currentTime":[NSNumber numberWithLong:_currentTime],}):nil;
+        else if(_playMode == LCPlayerActionLive)
+            wSelf.onVideoResume?wSelf.onVideoResume(@{@"beginTime":[NSNumber numberWithLong:_beginTime],
+                                                      @"serverTime":[NSNumber numberWithLong:_serverTime],
+                                                      @"currentTime":[NSNumber numberWithLong:_currentTime],}):nil;
+        _paused = NO;
+        _isPlaying = YES;
+                
+        completion();
+    }];
+}
+
+
+
 - (void)resume
 {
     if (_isPlaying || _lePlayer == nil) {
@@ -718,7 +756,7 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
     }
     
     [_lePlayer pause];
-        
+    
     if( _playMode == LCPlayerVod)
         _onVideoPause?_onVideoPause(@{@"duration":[NSNumber numberWithLong:_duration],
                                       @"currentTime":[NSNumber numberWithLong:_currentTime],}):nil;
