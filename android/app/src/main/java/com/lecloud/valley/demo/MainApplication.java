@@ -57,8 +57,6 @@ public class MainApplication extends Application implements ReactApplication {
         super.onCreate();
         Log.d(TAG, LogUtils.getTraceInfo() + "Application start-------");
 
-        //            final UmengPushModule mUmentPushModule = UmengPushModule.getInstance(this);
-
         //友盟注册
         final PushAgent mPushAgent = PushAgent.getInstance(this);
 
@@ -78,10 +76,10 @@ public class MainApplication extends Application implements ReactApplication {
 //            mPushAgent.setNotificationPlayVibrate(MsgConstant.NOTIFICATION_PLAY_SDK_DISABLE);
 
         //设置消息和通知的处理
-            mPushAgent.setMessageHandler(UmengPushModule.messageHandler);
+        mPushAgent.setMessageHandler(UmengPushModule.messageHandler);
 
-            //设置通知点击处理者
-            mPushAgent.setNotificationClickHandler(UmengPushModule.notificationClickHandler);
+        //设置通知点击处理者
+        mPushAgent.setNotificationClickHandler(UmengPushModule.notificationClickHandler);
 
         //注册推送服务，每次调用register方法都会回调该接口
         mPushAgent.register(new IUmengRegisterCallback() {
