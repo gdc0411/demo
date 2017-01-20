@@ -6,6 +6,7 @@ import android.graphics.Matrix;
 import android.graphics.SurfaceTexture;
 import android.os.Bundle;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.Surface;
 import android.view.TextureView;
 
@@ -21,7 +22,10 @@ import com.lecloud.sdk.player.IMediaDataActionPlayer;
 import com.lecloud.sdk.player.IMediaDataLivePlayer;
 import com.lecloud.sdk.player.IMediaDataPlayer;
 import com.lecloud.sdk.player.IPlayer;
+import com.lecloud.valley.utils.LogUtils;
 import com.letvcloud.cmf.MediaPlayer;
+
+import static com.facebook.react.common.ReactConstants.TAG;
 
 /**
  * Created by raojia on 2016/11/10.
@@ -74,12 +78,11 @@ public class LeTextureView extends TextureView implements TextureView.SurfaceTex
     @Override
     public void onSurfaceTextureSizeChanged(SurfaceTexture surface, int width, int height) {
 //        Log.i(TAG, LogUtils.getTraceInfo() + "onSurfaceTextureSizeChanged..." + surface);
-
     }
 
     @Override
     public boolean onSurfaceTextureDestroyed(SurfaceTexture surface) {
-//        Log.i(TAG, LogUtils.getTraceInfo() + "onSurfaceTextureAvailable..." + surface);
+        Log.i(TAG, LogUtils.getTraceInfo() + "onSurfaceTextureDestroyed..." + surface);
         //todo 删除surface
         return false;
     }

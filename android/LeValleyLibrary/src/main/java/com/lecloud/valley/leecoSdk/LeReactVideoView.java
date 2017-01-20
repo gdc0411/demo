@@ -30,14 +30,20 @@ public class LeReactVideoView extends RelativeLayout {
         mWaterMark.setZOrderOnTop(true);
         mWaterMark.getHolder().setFormat(PixelFormat.TRANSPARENT);
 
+        LayoutParams params = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+        addView(mWaterMark, params);
+
+        initPlayer();
+    }
+
+    private void initPlayer() {
+
         mLePlayer = new LeReactPlayer(mThemedReactContext);
         mLePlayer.setEventEmitter(mThemedReactContext.getJSModule(RCTEventEmitter.class));
         mLePlayer.setWaterMarkSurface(mWaterMark);
 
         LayoutParams params = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
         addView(mLePlayer, params);
-        addView(mWaterMark, params);
-
     }
 
     /**
@@ -47,6 +53,9 @@ public class LeReactVideoView extends RelativeLayout {
      * @return
      */
     public void setSrc(final Bundle bundle) {
+
+//        initPlayer();
+
         if (mLePlayer != null) {
             mLePlayer.setViewId(getId());
             mLePlayer.setSrc(bundle);
@@ -101,7 +110,7 @@ public class LeReactVideoView extends RelativeLayout {
      * @param repeat 操作id
      */
     public void setRepeat(final int repeat) {
-        if (mLePlayer != null && mLePlayer.isCompleted )
+        if (mLePlayer != null && mLePlayer.isCompleted)
             setSeekTo(0);
     }
 

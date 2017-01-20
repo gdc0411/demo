@@ -360,6 +360,7 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
         mCoverConfig = null;
         mActionInfo = null;
         mCurrentLiveInfo = null;
+
     }
 
     /**
@@ -676,10 +677,7 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
      */
     public void cleanupMediaPlayerResources() {
         Log.d(TAG, LogUtils.getTraceInfo() + "控件清理 cleanupMediaPlayerResources 调起！");
-
-//        if (mCurrentOritentation != ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
-//            setOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-
+        
         if (mMediaPlayer != null) {
             mLePlayerValid = false;
 
@@ -1529,6 +1527,10 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
                 handled = true;
                 event = "AD_ERROR";
                 processAdvertError(state, bundle);
+                break;
+
+            default:
+                videoState(state, bundle);
                 break;
 
         }
