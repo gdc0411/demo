@@ -311,9 +311,10 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
 
         // 播放模式切换，重新创建Player
         int newPlayMode = bundle.containsKey(PROP_SRC_PLAY_MODE) ? bundle.getInt(PROP_SRC_PLAY_MODE) : -1;
-        if (mPlayMode != -1 && newPlayMode != mPlayMode) {
-            cleanupMediaPlayerResources();
-        }
+//        if (mPlayMode != -1 && newPlayMode != mPlayMode) {
+//            cleanupMediaPlayerResources();
+//        }
+        cleanupMediaPlayerResources();
 
         mPlayMode = newPlayMode;
         mPano = bundle.containsKey(PROP_SRC_IS_PANO) && bundle.getBoolean(PROP_SRC_IS_PANO);
@@ -323,7 +324,7 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
         initLePlayerIfNeeded();
 
         if (mMediaPlayer != null) {
-            clearDataSource();
+//            clearDataSource();
 
             //初始化状态变量
             initFieldParaStates();
@@ -1433,11 +1434,13 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
             case PlayerEvent.VIEW_PREPARE_VIDEO_SURFACE: // 添加了视频播放器SurfaceView 8001
                 handled = true;
                 event = "VIEW_PREPARE_VIDEO_SURFACE";
+                setDisplay();
                 break;
 
             case PlayerEvent.VIEW_PREPARE_AD_SURFACE:  // 添加了广告播放器SurfaceView 8002
                 handled = true;
                 event = "VIEW_PREPARE_AD_SURFACE";
+                setDisplay();
                 break;
 
         }

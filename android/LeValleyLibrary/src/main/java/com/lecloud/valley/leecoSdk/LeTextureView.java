@@ -34,6 +34,8 @@ public class LeTextureView extends TextureView implements TextureView.SurfaceTex
 
     protected IPlayer mMediaPlayer;
 
+    protected Surface mSurface;
+
     protected ScalableType mScalableType = ScalableType.NONE;
 
     public LeTextureView(Context context) {
@@ -67,10 +69,10 @@ public class LeTextureView extends TextureView implements TextureView.SurfaceTex
 
     @Override
     public void onSurfaceTextureAvailable(SurfaceTexture surfaceTexture, int width, int height) {
-//        Log.i(TAG, LogUtils.getTraceInfo() + "onSurfaceTextureAvailable..." + surfaceTexture);
-        Surface surface = new Surface(surfaceTexture);
+        Log.i(TAG, LogUtils.getTraceInfo() + "onSurfaceTextureAvailable..." + surfaceTexture);
+        mSurface = new Surface(surfaceTexture);
         if (mMediaPlayer != null) {
-            mMediaPlayer.setDisplay(surface);
+            mMediaPlayer.setDisplay(mSurface);
         }
 
     }
@@ -125,47 +127,56 @@ public class LeTextureView extends TextureView implements TextureView.SurfaceTex
     }
 
     public void setOnMediaDataPlayerListener(MediaDataPlayerListener mediaDataPlayerListener) {
-        if (mMediaPlayer instanceof IMediaDataPlayer)
+        if (mMediaPlayer != null && mMediaPlayer instanceof IMediaDataPlayer)
             ((IMediaDataPlayer) mMediaPlayer).setOnMediaDataPlayerListener(mediaDataPlayerListener);
     }
 
     public void setOnAdPlayerListener(AdPlayerListener adPlayerListener) {
-        if (mMediaPlayer instanceof IMediaDataPlayer)
+        if (mMediaPlayer != null && mMediaPlayer instanceof IMediaDataPlayer)
             ((IMediaDataPlayer) mMediaPlayer).setOnAdPlayerListener(adPlayerListener);
     }
 
     public void setOnPlayStateListener(OnPlayStateListener onPlayStateListener) {
-        mMediaPlayer.setOnPlayStateListener(onPlayStateListener);
+        if (mMediaPlayer != null)
+            mMediaPlayer.setOnPlayStateListener(onPlayStateListener);
     }
 
     public void setOnVideoRotateListener(MediaPlayer.OnVideoRotateListener onVideoRotateListener) {
-        mMediaPlayer.setOnVideoRotateListener(onVideoRotateListener);
+        if (mMediaPlayer != null)
+            mMediaPlayer.setOnVideoRotateListener(onVideoRotateListener);
     }
 
     public void setDataSource(String path) {
-        mMediaPlayer.setDataSource(path);
+        if (mMediaPlayer != null)
+            mMediaPlayer.setDataSource(path);
     }
 
 
     public void setDataSource(Bundle bundle) {
-        if (mMediaPlayer instanceof IMediaDataPlayer)
+        if (mMediaPlayer != null && mMediaPlayer instanceof IMediaDataPlayer)
             ((IMediaDataPlayer) mMediaPlayer).setDataSourceByMediaData(bundle);
     }
 
     public void setDataSourceByLiveId(String liveId) {
-        if (mMediaPlayer instanceof IMediaDataPlayer)
+        if (mMediaPlayer != null && mMediaPlayer instanceof IMediaDataPlayer)
             ((IMediaDataActionPlayer) this.mMediaPlayer).setDataSourceByLiveId(liveId);
     }
 
     public void setDataSourceByRate(String rate) {
-        if (mMediaPlayer instanceof IMediaDataPlayer)
+        if (mMediaPlayer != null && mMediaPlayer instanceof IMediaDataPlayer)
             ((IMediaDataPlayer) mMediaPlayer).setDataSourceByRate(rate);
     }
 
     public void clearDataSource() {
-        mMediaPlayer.clearDataSource();
+        if (mMediaPlayer != null)
+            mMediaPlayer.clearDataSource();
     }
 
+
+    public void setDisplay() {
+        if (mSurface != null && mMediaPlayer != null)
+            mMediaPlayer.setDisplay(mSurface);
+    }
 
     public void setScalableType(ScalableType scalableType) {
         mScalableType = scalableType;
@@ -173,52 +184,58 @@ public class LeTextureView extends TextureView implements TextureView.SurfaceTex
     }
 
     public long getCurrentPosition() {
-        return mMediaPlayer.getCurrentPosition();
+        return mMediaPlayer != null ? mMediaPlayer.getCurrentPosition() : -1;
     }
 
     public long getDuration() {
-        return mMediaPlayer.getDuration();
+        return mMediaPlayer != null ? mMediaPlayer.getDuration() : -1;
     }
 
     public int getVideoHeight() {
-        return mMediaPlayer.getVideoHeight();
+        return mMediaPlayer != null ? mMediaPlayer.getVideoHeight() : -1;
     }
 
     public int getVideoWidth() {
-        return mMediaPlayer.getVideoWidth();
+        return mMediaPlayer != null ? mMediaPlayer.getVideoWidth() : -1;
     }
 
     public boolean isPlaying() {
-        return mMediaPlayer.isPlaying();
+        return mMediaPlayer != null && mMediaPlayer.isPlaying();
     }
 
     public void retry() {
-        mMediaPlayer.retry();
+        if (mMediaPlayer != null)
+            mMediaPlayer.retry();
     }
 
     public void pause() {
-        mMediaPlayer.pause();
+        if (mMediaPlayer != null)
+            mMediaPlayer.pause();
     }
 
     public void seekTo(long msec) {
-        mMediaPlayer.seekTo(msec);
+        if (mMediaPlayer != null)
+            mMediaPlayer.seekTo(msec);
     }
 
     public void seekTimeShift(long time) {
-        if (mMediaPlayer instanceof IMediaDataLivePlayer)
+        if (mMediaPlayer != null && mMediaPlayer instanceof IMediaDataLivePlayer)
             ((IMediaDataLivePlayer) mMediaPlayer).seekTimeShift(time);
     }
 
     public void seekToLastPostion(long msec) {
-        mMediaPlayer.seekToLastPostion(msec);
+        if (mMediaPlayer != null)
+            mMediaPlayer.seekToLastPostion(msec);
     }
 
     public void setVolume(float leftVolume, float rightVolume) {
-        mMediaPlayer.setVolume(leftVolume, rightVolume);
+        if (mMediaPlayer != null)
+            mMediaPlayer.setVolume(leftVolume, rightVolume);
     }
 
     public void start() {
-        mMediaPlayer.start();
+        if (mMediaPlayer != null)
+            mMediaPlayer.start();
     }
 
     public void startTimeShift() {
@@ -227,55 +244,61 @@ public class LeTextureView extends TextureView implements TextureView.SurfaceTex
     }
 
     public void stopTimeShift() {
-        if (mMediaPlayer instanceof IMediaDataLivePlayer)
+        if (mMediaPlayer != null && mMediaPlayer instanceof IMediaDataLivePlayer)
             ((IMediaDataLivePlayer) mMediaPlayer).stopTimeShift();
     }
 
     public void stop() {
-        mMediaPlayer.stop();
+        if (mMediaPlayer != null)
+            mMediaPlayer.stop();
     }
 
     public void setCacheWatermark(int markHigh, int markLow) {
-        mMediaPlayer.setCacheWatermark(markHigh, markLow);
+        if (mMediaPlayer != null)
+            mMediaPlayer.setCacheWatermark(markHigh, markLow);
     }
 
     public void setMaxDelayTime(int delayTime) {
-        mMediaPlayer.setMaxDelayTime(delayTime);
+        if (mMediaPlayer != null)
+            mMediaPlayer.setMaxDelayTime(delayTime);
     }
 
     public void setCachePreSize(int cachePreSize) {
-        mMediaPlayer.setCachePreSize(cachePreSize);
+        if (mMediaPlayer != null)
+            mMediaPlayer.setCachePreSize(cachePreSize);
     }
 
     public void setCacheMaxSize(int cacheMaxSize) {
-        mMediaPlayer.setCachePreSize(cacheMaxSize);
+        if (mMediaPlayer != null)
+            mMediaPlayer.setCachePreSize(cacheMaxSize);
     }
 
     public void clickAd() {
-        if (mMediaPlayer instanceof IAdPlayer)
+        if (mMediaPlayer != null && mMediaPlayer instanceof IAdPlayer)
             ((IAdPlayer) mMediaPlayer).clickAd();
-
     }
 
     public void setTimeShiftListener(ItimeShiftListener itimeShiftListener) {
-        if (mMediaPlayer instanceof IMediaDataLivePlayer)
+        if (mMediaPlayer != null && mMediaPlayer instanceof IMediaDataLivePlayer)
             ((IMediaDataLivePlayer) mMediaPlayer).setTimeShiftListener(itimeShiftListener);
     }
 
     public void setActionStatusListener(ActionStatusListener actionStatusListener) {
-        if (mMediaPlayer instanceof IMediaDataLivePlayer)
+        if (mMediaPlayer != null && mMediaPlayer instanceof IMediaDataLivePlayer)
             ((IMediaDataActionPlayer) mMediaPlayer).setActionStatusListener(actionStatusListener);
     }
 
     public void setOnlinePeopleListener(OnlinePeopleChangeListener onlinePeopleChangeListener) {
-        if (mMediaPlayer instanceof IMediaDataLivePlayer)
+        if (mMediaPlayer != null && mMediaPlayer instanceof IMediaDataLivePlayer)
             ((IMediaDataActionPlayer) mMediaPlayer).setOnlinePeopleListener(onlinePeopleChangeListener);
     }
 
 
     public void release() {
-        mMediaPlayer.reset();
-        mMediaPlayer.release();
+        if (mMediaPlayer != null) {
+            mMediaPlayer.reset();
+            mMediaPlayer.release();
+        }
     }
 
 }

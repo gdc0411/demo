@@ -470,7 +470,7 @@ class play extends Component {
                         <Text style={styles.controlOption} onPress={() => { this.setState({ seek: this.state.currentTime + 30 }); } } > + 30s </Text>
                         <Text style={styles.controlOption} onPress={() => { this.setState({ seek: this.state.currentTime - 30 }); } } > - 30s </Text>
                         <Text style={styles.controlOption} onPress={() => { this.setState({ repeat: this.state.repeat + 1 }); } } > 重 播 </Text>
-                        <Text style={styles.controlOption} onPress={() => { this.setState({ source: this.getFormatDatasource('2'), });} } > 切 换 </Text>
+                        <Text style={styles.controlOption} onPress={() => { this.setState({ source: this.getFormatDatasource('4'), });} } > 切 换 </Text>
                     </View>
                     <View style={styles.infoDisplays}>
                         <View style={styles.bufferDisplay}>
