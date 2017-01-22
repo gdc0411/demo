@@ -204,8 +204,8 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
     //重置所有状态
     [self initFieldParaStates];
     
-    [_playerViewController.view removeFromSuperview];
-    _playerViewController = nil;
+//    [_playerViewController.view removeFromSuperview];
+//    _playerViewController = nil;
     
     //根据必要参数创建播放器
     [self playerItemForSource:source];
@@ -443,7 +443,6 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
         [self addSubview:_lePlayer.videoView];
         [self sendSubviewToBack:_lePlayer.videoView];
         
-        
         NSString *uuid = [source objectForKey:@"uuid"];
         NSString *vuid = [source objectForKey:@"vuid"];
         NSString *buinessline = [source objectForKey:@"businessline"];
@@ -638,14 +637,25 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
 {
     if (_lePlayer) {
         [self stop];
+        
+        [_lePlayer.videoView removeFromSuperview];
+        
         [_lePlayer unregister];
+        
         _lePlayer.delegate = nil;
         _lePlayer = nil;
+        
     }
+    
     _option = nil;
+    
+    if(_playMode == LCPlayerActionLive){
+        [[LECActivityInfoManager sharedManager] releaseActivity];
+    }
     
     [_playerViewController.view removeFromSuperview];
     _playerViewController = nil;
+    
 }
 
 /*重置状态量*/
@@ -1207,24 +1217,9 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
 {
     NSLog(@"removeFromSuperview消息");
     
-    if( _lePlayer ){
-        [self stop];
-        
-        [_lePlayer unregister];
-        _lePlayer.delegate = nil;
-        _lePlayer = nil;
-    }
+    [self resetPlayerAndController];
     
     _brigtnessModule = nil;
-    _option = nil;
-    
-    [_playerViewController.view removeFromSuperview];
-    _playerViewController = nil;
-    
-    
-    if(_playMode == LCPlayerActionLive){
-        [[LECActivityInfoManager sharedManager] releaseActivity];
-    }
     
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     
