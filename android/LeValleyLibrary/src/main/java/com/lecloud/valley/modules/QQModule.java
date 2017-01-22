@@ -396,7 +396,6 @@ public class QQModule extends ReactContextBaseJavaModule implements IUiListener,
             resultMap.putString(EVENT_PROP_SOCIAL_TYPE, "QQAuthorizeResponse");
             try {
                 JSONObject obj = (JSONObject) (o);
-
                 if (obj.has("ret")) resultMap.putInt(EVENT_PROP_SOCIAL_CODE, obj.getInt("ret"));
                 if (obj.has("openid"))
                     resultMap.putString("openid", obj.getString(Constants.PARAM_OPEN_ID));
@@ -404,10 +403,8 @@ public class QQModule extends ReactContextBaseJavaModule implements IUiListener,
                     resultMap.putString("access_token", obj.getString(Constants.PARAM_ACCESS_TOKEN));
                 if (obj.has("pay_token"))
                     resultMap.putString("pay_token", obj.getString("pay_token"));
-
                 if (obj.has("expires_in"))
                     resultMap.putDouble("expires_in", System.currentTimeMillis() + obj.getLong(Constants.PARAM_EXPIRES_IN));
-
                 if (obj.has("pf")) resultMap.putString("pf", obj.getString("pf"));
                 if (obj.has("pfkey")) resultMap.putString("pfkey", obj.getString("pfkey"));
                 if (obj.has("msg")) resultMap.putString("msg", obj.getString("msg"));
@@ -416,6 +413,7 @@ public class QQModule extends ReactContextBaseJavaModule implements IUiListener,
                     resultMap.putInt("query_authority_cost", obj.getInt("query_authority_cost"));
                 if (obj.has("authority_cost"))
                     resultMap.putInt("authority_cost", obj.getInt("authority_cost"));
+                resultMap.putString("appid", appId);
 
                 resultMap.putString(EVENT_PROP_SOCIAL_MSG, AUTH_RESULT_MSG_SUCCESSFUL);
 
