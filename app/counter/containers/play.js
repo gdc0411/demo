@@ -24,6 +24,7 @@ import * as playActions from '../actions/playAction';
 import Orientation from '../componets/RCTOrientation';
 import Video from '../componets/RCTLeVideo';
 import SubVideo from '../componets/RCTLeSubVideo';
+import Download from '../componets/RCTDownload';
 
 //取得屏幕宽高
 const {height: SCREEN_HEIGHT, width: SCREEN_WIDTH} = Dimensions.get('window');
@@ -66,6 +67,8 @@ class play extends Component {
             buffPercent: 0,
             /* 是否点击广告 */
             clickAd: false,
+            /* 是否可下载 */
+            download: false,
 
             /* 播放源信息 */
             sourceInfo: '',
@@ -196,6 +199,7 @@ class play extends Component {
             width: data.naturalSize.width,
             height: data.naturalSize.height,
             ratesInfo: data.rateList,
+            download: data.isDownload || false,
             eventInfo: 'Player准备完毕',
             videoInfo: `片名：${data.title} 长度：${data.duration} 宽高:${data.naturalSize.width}，${data.naturalSize.height} \n`
             + `${ratesStr} ${defaultRate} ${isDownload} ${isPano} ${needFullView} ${needTimeShift} ${isNeedAd} ${ark} ${livesStr}\n${volume} ${brightness}`
@@ -355,8 +359,8 @@ class play extends Component {
             case '2': //点播 川台数据
                 source = { playMode: 10000, uuid: "841215", vuid: "300184109", businessline: "102", saas: true, pano: false };
                 break;
-            case '3': //点播  川台数据,艳秋提供带广告
-                source = { playMode: 10000, uuid: "819108", vuid: "200644549", businessline: "102", saas: true, pano: false };
+            case '3': //点播 可下载
+                source = { playMode: 10000, uuid: "841215", vuid: "301180368", businessline: "102", saas: true, pano: false };
                 break;
             case '4': //点播 Demo示例，有广告
                 source = { playMode: 10000, uuid: "838389", vuid: "200271100", businessline: "102", saas: true, pano: false };
@@ -411,6 +415,13 @@ class play extends Component {
                     <SubVideo style={{ width: 64, height: 34 }} source={source} />
                 </View>
                 : null
+        );
+    }
+
+    getDownloadButton = () => {
+
+        return (
+            <Text style={styles.controlOption} onPress={() => { Download.download({uuid: "841215", vuid: "301180368"}); } } > 下 载 </Text>
         );
     }
 
@@ -471,6 +482,9 @@ class play extends Component {
                         <Text style={styles.controlOption} onPress={() => { this.setState({ seek: this.state.currentTime - 30 }); } } > - 30s </Text>
                         <Text style={styles.controlOption} onPress={() => { this.setState({ repeat: this.state.repeat + 1 }); } } > 重 播 </Text>
                         <Text style={styles.controlOption} onPress={() => { this.setState({ source: this.getFormatDatasource('2'), });} } > 切 换 </Text>
+
+                        {(this.state.download)? this.getDownloadButton() : null}
+
                     </View>
                     <View style={styles.infoDisplays}>
                         <View style={styles.bufferDisplay}>

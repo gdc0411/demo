@@ -2,6 +2,7 @@ package com.lecloud.valley.demo;
 
 import com.lecloud.valley.leecoSdk.LeReactSubVideoViewManager;
 import com.lecloud.valley.leecoSdk.LeReactVideoViewManager;
+import com.lecloud.valley.modules.DownloadModule;
 import com.lecloud.valley.modules.OrientationModule;
 import com.lecloud.valley.demo.sample.CallbackModule;
 import com.lecloud.valley.demo.sample.CheckItemViewManager;
@@ -52,6 +53,7 @@ public class RJReactPackage implements ReactPackage {
         modules.add(new QQModule(reactContext));
         modules.add(new WeiboModule(reactContext));
         modules.add(new UmengPushModule(reactContext));
+        modules.add(new DownloadModule(reactContext));
         return modules;
     }
 

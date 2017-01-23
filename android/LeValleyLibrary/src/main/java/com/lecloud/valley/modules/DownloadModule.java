@@ -12,6 +12,7 @@ import com.facebook.react.modules.core.RCTNativeAppEventEmitter;
 import com.lecloud.sdk.download.control.DownloadCenter;
 import com.lecloud.sdk.download.info.LeDownloadInfo;
 import com.lecloud.sdk.download.observer.LeDownloadObserver;
+import com.lecloud.valley.utils.DownloadSaasCenter;
 import com.lecloud.valley.utils.LogUtils;
 
 import java.util.List;
@@ -32,7 +33,7 @@ public class DownloadModule extends ReactContextBaseJavaModule {
 
     private List<LeDownloadInfo> mDownloadInfos;
 
-    private DownloadCenter mDownloadCenter;
+    private DownloadSaasCenter mDownloadCenter;
 
     public DownloadModule(ReactApplicationContext reactContext) {
         super(reactContext);
@@ -51,7 +52,7 @@ public class DownloadModule extends ReactContextBaseJavaModule {
 
         mEventEmitter = mReactContext.getJSModule(RCTNativeAppEventEmitter.class);
 
-        mDownloadCenter = DownloadCenter.getInstances(mReactContext.getBaseContext().getApplicationContext());
+        mDownloadCenter = DownloadSaasCenter.getInstances(mReactContext.getBaseContext().getApplicationContext());
 
         mDownloadCenter.registerDownloadObserver(new LeDownloadObserver() {
             @Override

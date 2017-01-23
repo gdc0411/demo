@@ -27,6 +27,8 @@ public interface Constants {
 
     String REACT_CLASS_UMENG_PUSH_MODULE = "RCTUmengPushModule";
 
+    String REACT_CLASS_DOWNLOAD_MODULE = "RCTDownloadModule";
+
 //============== REACT_METHOD ======================
 
     //方法

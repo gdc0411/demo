@@ -157,6 +157,7 @@ class home extends Component {
                         </View>
                         <View style={{ flexDirection: 'row', justifyContent: 'space-around' }} >
                             <PlayItem source={7} imgUrl={img2} desc={'云直播-推流'} color={'red'} onPlay={this.skipToPlayer} />
+                            <PlayItem source={3} imgUrl={img2} desc={'云点播-可下载'} color={'blue'} onPlay={this.skipToPlayer} />
                         </View>
                     </View>
                     <Counter value={value} para={plusPara} oper={`加`} onChange={this.operatePlus} />
