@@ -31,6 +31,9 @@
 
 #define LCRect_PlayerHalfFrame    CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height);
 
+
+static const NSInteger *PlayerViewTag = 8888;
+
 @interface RCTLeVideo ()<LECPlayerDelegate, LCActivityManagerDelegate>
 {
     __block BOOL _isPlaying;
@@ -90,7 +93,8 @@
     //  BOOL _playerItemObserversSet;
     //  BOOL _playerBufferEmpty;
     
-    __weak LCBaseViewController *_playerViewController;
+    LCBaseViewController *_playerViewController;
+    
     NSURL *_videoURL;
     
     int _playMode; //当前播放模式
@@ -183,10 +187,19 @@
 RCT_NOT_IMPLEMENTED(- (instancetype)init)
 
 /*创建viewController*/
-- (LCBaseViewController*)createPlayerViewController:(LECPlayer*)player withPlayerOption:(LECPlayerOption*)playerOption {
+- (LCBaseViewController*)createPlayerViewController:(LECPlayer*)player {
+    self.frame                             = LCRect_PlayerHalfFrame;
     RCTLeVideoPlayerViewController* playerController= [[RCTLeVideoPlayerViewController alloc] init];
-    playerController.rctDelegate = self; //实现协议
-    playerController.view.frame = self.bounds;
+    playerController.rctDelegate           = self; //实现协议
+    playerController.view                  = player.videoView;
+    playerController.view.tag              = PlayerViewTag;
+    playerController.view.frame            = self.bounds;//CGRectMake(0, 0, 0, 0);
+    playerController.view.autoresizingMask = UIViewAutoresizingFlexibleHeight| UIViewAutoresizingFlexibleWidth;
+    playerController.view.contentMode      = UIViewContentModeScaleAspectFit;
+    
+    [self addSubview:playerController.view];
+    [self sendSubviewToBack:playerController.view];
+    
     return playerController;
 }
 
@@ -203,9 +216,6 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
     
     //重置所有状态
     [self initFieldParaStates];
-    
-//    [_playerViewController.view removeFromSuperview];
-//    _playerViewController = nil;
     
     //根据必要参数创建播放器
     [self playerItemForSource:source];
@@ -429,192 +439,175 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
     if(playMode == LCPlayerVod ){ //云点播
         NSLog(@"点播数据源");
         
-        _playMode = LCPlayerVod;
-        
-        // 创建播放器
-        _lePlayer = [[LECVODPlayer alloc] init];
-        _lePlayer.delegate = self;
-        
-        self.frame  = LCRect_PlayerHalfFrame;
-        _lePlayer.videoView.frame               = self.bounds;
-        _lePlayer.videoView.autoresizingMask    = UIViewAutoresizingFlexibleLeftMargin| UIViewAutoresizingFlexibleWidth| UIViewAutoresizingFlexibleHeight;
-        _lePlayer.videoView.contentMode         = UIViewContentModeScaleAspectFit;
-        
-        [self addSubview:_lePlayer.videoView];
-        [self sendSubviewToBack:_lePlayer.videoView];
-        
-        NSString *uuid = [source objectForKey:@"uuid"];
-        NSString *vuid = [source objectForKey:@"vuid"];
+        NSString *uuid        = [source objectForKey:@"uuid"];
+        NSString *vuid        = [source objectForKey:@"vuid"];
         NSString *buinessline = [source objectForKey:@"businessline"];
-        bool saas  = [RCTConvert BOOL:[source objectForKey:@"saas"]];
-        _repeat    = [RCTConvert BOOL:[source objectForKey:@"repeat"]];
+        bool saas             = [RCTConvert BOOL:[source objectForKey:@"saas"]];
+        _repeat               = [RCTConvert BOOL:[source objectForKey:@"repeat"]];
         
         if (uuid.length != 0 && vuid.length != 0 && buinessline.length != 0 ) {
-            [self usePlayerViewController]; // 创建controller
+            _playMode           = LCPlayerVod;
+            // 创建播放器
+            _lePlayer           = [[LECVODPlayer alloc] init];
+            _lePlayer.delegate  = self;
+            
+            _option             = [[LECPlayerOption alloc]init]; //创建选项
+            _option.p           = buinessline;
+            _option.businessLine= (saas)?LECBusinessLineSaas:LECBusinessLineCloud;
+            
+            [self usePlayerViewController:_lePlayer]; // 创建controller
             _playerViewController.uu = uuid;
             _playerViewController.vu = vuid;
-            _playerViewController.p = buinessline;
+            _playerViewController.p  = buinessline;
             
-            _option = [[LECPlayerOption alloc]init]; //创建选项
-            _option.p = buinessline;
-            _option.businessLine = (saas)?LECBusinessLineSaas:LECBusinessLineCloud;
+            __weak typeof(self) wSelf = self;
+            [(LECVODPlayer*)_lePlayer registerWithUu:uuid
+                                                  vu:vuid
+                                        payCheckCode:nil
+                                         payUserName:nil
+                                             options:_option
+                               onlyLocalVODAvaliable:NO
+                          resumeFromLastPlayPosition:NO
+                              resumeFromLastRateType:YES
+                                          completion:^(BOOL result) {
+                                              
+                                              //数据源回显
+                                              wSelf.onVideoSourceLoad?
+                                              wSelf.onVideoSourceLoad(@{@"src": [[wSelf class] returnJSONStringWithDictionary:source useSystem:YES]}):nil;
+                                              
+                                              if (result){
+                                                  NSLog(@"播放器注册成功");
+                                                  _title = ((LECVODPlayer*)(wSelf.lePlayer)).videoTitle;
+                                                  
+                                                  [wSelf play];//注册完成后自动播放
+                                                  
+                                              }else{
+                                                  //[_playerViewController showTips:@"播放器注册失败,请检查UU和VU"];
+                                                  wSelf.onVideoError?wSelf.onVideoError(@{@"errorCode":@"-1",@"errorMsg":@"播放器注册失败,请检查UU、VU和P"}):nil;
+                                              }
+                                          }];
+
+            
+        }else{
+            self.onVideoError?self.onVideoError(@{@"errorCode":@"-1",@"errorMsg":@"播放器注册失败,UU/VU/P不能为空"}):nil;
         }
-        
-        __weak typeof(self) wSelf = self;
-        [(LECVODPlayer*)_lePlayer registerWithUu:uuid
-                                              vu:vuid
-                                    payCheckCode:nil
-                                     payUserName:nil
-                                         options:_option
-                           onlyLocalVODAvaliable:NO
-                      resumeFromLastPlayPosition:NO
-                          resumeFromLastRateType:YES
-                                      completion:^(BOOL result) {
-                                          
-                                          //数据源回显
-                                          wSelf.onVideoSourceLoad?
-                                          wSelf.onVideoSourceLoad(@{@"src": [[wSelf class] returnJSONStringWithDictionary:source useSystem:YES]}):nil;
-                                          
-                                          if (result){
-                                              NSLog(@"播放器注册成功");
-                                              _title = ((LECVODPlayer*)(wSelf.lePlayer)).videoTitle;
-                                              
-                                              [wSelf play];//注册完成后自动播放
-                                              
-                                          }else{
-                                              //[_playerViewController showTips:@"播放器注册失败,请检查UU和VU"];
-                                              wSelf.onVideoError?wSelf.onVideoError(@{@"errorCode":@"-1",@"errorMsg":@"播放器注册失败,请检查UU和VU"}):nil;
-                                          }
-                                      }];
-        
         
     }else if( playMode == LCPlayerActionLive) { //活动直播
         NSLog(@"直播数据源");
         
-        _playMode = LCPlayerActionLive;
-        
-        LECActivityInfoManager * manager = [LECActivityInfoManager sharedManager];
-        manager.delegate = self;
-        [manager releaseActivity];
-        
-        //创建活动播放器
-        _lePlayer = [[LECActivityPlayer alloc] init];
-        _lePlayer.delegate = self;
-        
-        self.frame = LCRect_PlayerHalfFrame;
-        _lePlayer.videoView.frame = self.bounds;
-        _lePlayer.videoView.contentMode = UIViewContentModeScaleAspectFit;
-        _lePlayer.videoView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin| UIViewAutoresizingFlexibleWidth| UIViewAutoresizingFlexibleHeight;
-        [self addSubview:_lePlayer.videoView];
-        [self sendSubviewToBack:_lePlayer.videoView];
-        
-        
-        NSString *activityId = [source objectForKey:@"actionId"];
-        NSString *customId = [source objectForKey:@"customerId"];
-        NSString *buinessline = [source objectForKey:@"businessline"];
-        bool saas = [RCTConvert BOOL:[source objectForKey:@"saas"]];
+        NSString *activityId    = [source objectForKey:@"actionId"];
+        NSString *customId      = [source objectForKey:@"customerId"];
+        NSString *buinessline   = [source objectForKey:@"businessline"];
+        bool saas               = [RCTConvert BOOL:[source objectForKey:@"saas"]];
         
         if (activityId.length != 0 && customId.length != 0 && buinessline.length != 0 ) {
-            [self usePlayerViewController]; // 创建controller
+            _playMode = LCPlayerActionLive;
+            
+            LECActivityInfoManager * manager     = [LECActivityInfoManager sharedManager];
+            manager.delegate                     = self;
+            [manager releaseActivity];
+            
+            //创建活动播放器
+            _lePlayer           = [[LECActivityPlayer alloc] init];
+            _lePlayer.delegate  = self;
+            
+            _option             = [[LECPlayerOption alloc]init]; //创建选项
+            _option.p           = buinessline;
+            _option.customId    = customId;
+            _option.businessLine= (saas)?LECBusinessLineSaas:LECBusinessLineCloud;
+            
+            [self usePlayerViewController:_lePlayer]; // 创建controller
             _playerViewController.activityId = activityId;
-            _playerViewController.customId = customId;
-            _playerViewController.p = buinessline;
+            _playerViewController.customId   = customId;
+            _playerViewController.p          = buinessline;
             
-            _option = [[LECPlayerOption alloc]init]; //创建选项
-            _option.p = buinessline;
-            _option.customId = customId;
-            _option.businessLine = (saas)?LECBusinessLineSaas:LECBusinessLineCloud;
-        }
-        
-        __weak typeof(self) wSelf = self;
-        BOOL requestSuccess = [manager registerActivityWithActivityId:activityId option:_option completion:^(BOOL success) {
-            
-            if (success ) {
-                NSLog(@"活动事件Manager注册成功");
-                _title = manager.activityItem.activityName;
-                LECActivityItem *aItem = manager.activityItem;
-                BOOL isEnable = NO;
-                if (aItem.activityLiveItemList.count != 0) {
-                    for (LECActivityLiveItem * lItem in aItem.activityLiveItemList) {
-                        
-                        if (lItem.status == LCActivityLiveStatusUsing) {
-                            isEnable = [(LECActivityPlayer*)wSelf.lePlayer registerWithLiveId:lItem.liveId completion:^(BOOL result) {
-                                if (result) {
-                                    [wSelf play];//自动播放
-                                    //                  LECStreamRateItem * lItem = wSelf.lePlayer.selectedStreamRateItem;
-                                    //[weakSelf.playerRateBtn setTitle:lItem.name forState:(UIControlStateNormal)];
-                                    NSLog(@"活动机位数目:%lu",(unsigned long)aItem.activityLiveItemList.count);
+            __weak typeof(self) wSelf = self;
+            BOOL requestSuccess = [manager registerActivityWithActivityId:activityId option:_option completion:^(BOOL success) {
+                
+                if (success ) {
+                    NSLog(@"活动事件Manager注册成功");
+                    _title = manager.activityItem.activityName;
+                    LECActivityItem *aItem = manager.activityItem;
+                    BOOL isEnable = NO;
+                    if (aItem.activityLiveItemList.count != 0) {
+                        for (LECActivityLiveItem * lItem in aItem.activityLiveItemList) {
+                            
+                            if (lItem.status == LCActivityLiveStatusUsing) {
+                                isEnable = [(LECActivityPlayer*)wSelf.lePlayer registerWithLiveId:lItem.liveId completion:^(BOOL result) {
+                                    if (result) {
+                                        [wSelf play];//自动播放
+                                        //                  LECStreamRateItem * lItem = wSelf.lePlayer.selectedStreamRateItem;
+                                        //[weakSelf.playerRateBtn setTitle:lItem.name forState:(UIControlStateNormal)];
+                                        NSLog(@"活动机位数目:%lu",(unsigned long)aItem.activityLiveItemList.count);
+                                    }
+                                    else {
+                                        NSString * error = [NSString stringWithFormat:@"%@:%@",
+                                                            wSelf.lePlayer.errorCode,
+                                                            wSelf.lePlayer.errorDescription];
+                                        NSLog(@"%@",error);
+                                        wSelf.onVideoError?wSelf.onVideoError(@{@"errorCode":wSelf.lePlayer.errorCode,@"errorMsg":wSelf.lePlayer.errorDescription}):nil;
+                                    }
+                                }];
+                                if (isEnable) {
+                                    NSLog(@"播放机位可用");
+                                    break;
                                 }
-                                else {
-                                    NSString * error = [NSString stringWithFormat:@"%@:%@",
-                                                        wSelf.lePlayer.errorCode,
-                                                        wSelf.lePlayer.errorDescription];
-                                    NSLog(@"%@",error);
-                                    wSelf.onVideoError?wSelf.onVideoError(@{@"errorCode":wSelf.lePlayer.errorCode,@"errorMsg":wSelf.lePlayer.errorDescription}):nil;
-                                }
-                            }];
-                            if (isEnable) {
-                                NSLog(@"播放机位可用");
-                                break;
                             }
                         }
                     }
+                    if (!isEnable) {
+                        NSLog(@"没有可用的直播机位");
+                        wSelf.onVideoError?wSelf.onVideoError(@{@"errorCode":@"-1",@"errorMsg":@"没有可用的直播机位"}):nil;
+                    }
+                } else {
+                    NSLog(@"直播活动注册失败");
+                    wSelf.onVideoError?wSelf.onVideoError(@{@"errorCode":@"-1",@"errorMsg":@"直播活动注册失败"}):nil;
                 }
-                if (!isEnable) {
-                    NSLog(@"没有可用的直播机位");
-                    wSelf.onVideoError?wSelf.onVideoError(@{@"errorCode":@"-1",@"errorMsg":@"没有可用的直播机位"}):nil;
-                }
-            } else {
-                NSLog(@"直播活动注册失败");
-                wSelf.onVideoError?wSelf.onVideoError(@{@"errorCode":@"-1",@"errorMsg":@"直播活动注册失败"}):nil;
+            }];
+            
+            if (!requestSuccess) {
+                NSLog(@"活动事件Manager注册失败");
+                wSelf.onVideoError?wSelf.onVideoError(@{@"errorCode":@"-1",@"errorMsg":@"活动事件Manager注册失败"}):nil;
             }
-        }];
-        
-        if (!requestSuccess) {
-            NSLog(@"活动事件Manager注册失败");
-            wSelf.onVideoError?wSelf.onVideoError(@{@"errorCode":@"-1",@"errorMsg":@"活动事件Manager注册失败"}):nil;
+            
+        }else{
+            
+            NSLog(@"直播活动注册失败");
+            self.onVideoError?self.onVideoError(@{@"errorCode":@"-1",@"errorMsg":@"直播活动注册失败,activityId/customId/p不能为空"}):nil;
         }
         
-        
     }else{ //普通URL
-        
         NSLog(@"URL数据源");
-        
-        _playMode = LCPlayerVod;
-        
-        // 创建播放器
-        _lePlayer = [[LECPlayer alloc] init];
-        _lePlayer.delegate = self;
-        
-        self.frame = LCRect_PlayerHalfFrame;
-        _lePlayer.videoView.frame = self.bounds;
-        _lePlayer.videoView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin| UIViewAutoresizingFlexibleWidth| UIViewAutoresizingFlexibleHeight;
-        _lePlayer.videoView.contentMode = UIViewContentModeScaleAspectFit;
-        
-        [self addSubview:_lePlayer.videoView];
-        [self sendSubviewToBack:_lePlayer.videoView];
         
         NSString* url = [source objectForKey:@"uri"];
         _repeat  = [RCTConvert BOOL:[source objectForKey:@"repeat"]];
         
         if (url.length != 0 ) {
-            [self usePlayerViewController]; // 创建controller
-            _playerViewController.url = url;
-        }
-        
-        __weak typeof(self) wSelf = self;
-        [_lePlayer registerWithURLString:url completion:^(BOOL result) {
-            //数据源回显
-            wSelf.onVideoSourceLoad?wSelf.onVideoSourceLoad(@{@"src": [[wSelf class] returnJSONStringWithDictionary:source useSystem:YES]}):nil;
+            _playMode           = LCPlayerVod;
             
-            if (result){
-                NSLog(@"播放器注册成功");
-                [wSelf play];//注册完成后自动播放
+            // 创建播放器
+            _lePlayer           = [[LECPlayer alloc] init];
+            _lePlayer.delegate  = self;
+            
+            [self usePlayerViewController:_lePlayer]; // 创建controller
+            _playerViewController.url = url;
+            
+            __weak typeof(self) wSelf = self;
+            [_lePlayer registerWithURLString:url completion:^(BOOL result) {
+                //数据源回显
+                wSelf.onVideoSourceLoad?wSelf.onVideoSourceLoad(@{@"src": [[wSelf class] returnJSONStringWithDictionary:source useSystem:YES]}):nil;
                 
-            }else{
-                wSelf.onVideoError? wSelf.onVideoError(@{@"errorCode":@"-1",@"errorMsg":@"播放器注册失败,请检查URL"}):nil;
-            }
-        }];
+                if (result){
+                    NSLog(@"播放器注册成功");
+                    [wSelf play];//注册完成后自动播放
+                    
+                }else{
+                    wSelf.onVideoError? wSelf.onVideoError(@{@"errorCode":@"-1",@"errorMsg":@"播放器注册失败,请检查URL"}):nil;
+                }
+            }];
+        }else{
+            self.onVideoError? self.onVideoError(@{@"errorCode":@"-1",@"errorMsg":@"URL不能为空"}):nil;
+        }
     }
 }
 
@@ -638,24 +631,26 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
     if (_lePlayer) {
         [self stop];
         
-        [_lePlayer.videoView removeFromSuperview];
+//        [_lePlayer.videoView removeFromSuperview];
+        
+        UIView *subview = [self viewWithTag:PlayerViewTag];
+        subview?[subview removeFromSuperview]:nil;
         
         [_lePlayer unregister];
         
         _lePlayer.delegate = nil;
         _lePlayer = nil;
         
+        _option = nil;
+        
+        if(_playMode == LCPlayerActionLive){
+            [[LECActivityInfoManager sharedManager] releaseActivity];
+        }
+        
+//        [_playerViewController.view removeFromSuperview];
+        _playerViewController?_playerViewController = nil:nil;
+        
     }
-    
-    _option = nil;
-    
-    if(_playMode == LCPlayerActionLive){
-        [[LECActivityInfoManager sharedManager] releaseActivity];
-    }
-    
-    [_playerViewController.view removeFromSuperview];
-    _playerViewController = nil;
-    
 }
 
 /*重置状态量*/
@@ -757,6 +752,7 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
     [_lePlayer stopWithCompletion:^{
         _isPlaying = NO;
     }];
+    _isPlaying = NO;
 }
 
 - (void)pause
@@ -1119,10 +1115,10 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
     }
 }
 
-- (void)usePlayerViewController
+- (void)usePlayerViewController:(LECPlayer*)player
 {
-    if( _lePlayer ){
-        _playerViewController = [self createPlayerViewController:_lePlayer withPlayerOption:_option];
+    if( player ){
+        _playerViewController = [self createPlayerViewController:player];
         
         // to prevent video from being animated when resizeMode is 'cover'
         // resize mode must be set before subview is added

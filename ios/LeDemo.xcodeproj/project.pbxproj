@@ -1157,7 +1157,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.lecloud.valley.demo;
 				PRODUCT_NAME = LeDemo;
-				PROVISIONING_PROFILE = "3b40b986-eced-4de7-ad3d-55174cf78d41";
+				PROVISIONING_PROFILE = "18960990-8369-4ca1-b34c-756fe306cbc0";
 				PROVISIONING_PROFILE_SPECIFIER = LeValleyDemo;
 				TEST_HOST = "";
 				VALID_ARCHS = "arm64 armv7 armv7s";

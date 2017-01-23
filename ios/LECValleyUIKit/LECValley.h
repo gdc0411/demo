@@ -27,5 +27,4 @@
 
 #define PlayerImage(file)                 [UIImage imageNamed:PlayerSrcName(file)] ? :[UIImage imageNamed:PlayerFrameworkSrcName(file)]
 
-
 #endif /* LECValley_h */
