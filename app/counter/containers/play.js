@@ -423,8 +423,8 @@ class play extends Component {
         return (
             <View style={styles.container}>
                 <StatusBar barStyle='light-content' style={{ height: STATUS_BAR_HEIGHT }} />
-                <TouchableOpacity style={[styles.fullScreen, { bottom: this.state.bottom }]} onPress={() => { this.setState({ paused: !this.state.paused }); } }>
-                    <Video style={[styles.fullScreen, { bottom: this.state.bottom }]}
+                <TouchableOpacity style={[styles.fullScreen, { bottom: this.state.bottom}]} onPress={() => { this.setState({ paused: !this.state.paused }); } }>
+                    <Video style={[styles.fullScreen, { bottom: this.state.bottom, backgroundColor: 'red'}]}
                         source={this.state.source}
                         seek={this.state.seek}
                         rate={this.state.rate}

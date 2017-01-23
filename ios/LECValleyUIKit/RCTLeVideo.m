@@ -29,7 +29,7 @@
 #import <AVFoundation/AVFoundation.h>
 
 
-#define LCRect_PlayerHalfFrame    CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height);
+#define LCRect_PlayerFullFrame    CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height);
 
 
 static const NSInteger *PlayerViewTag = 8888;
@@ -188,13 +188,14 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
 
 /*创建viewController*/
 - (LCBaseViewController*)createPlayerViewController:(LECPlayer*)player {
-    self.frame                             = LCRect_PlayerHalfFrame;
+//    self.frame                             = LCRect_PlayerFullFrame;
     RCTLeVideoPlayerViewController* playerController= [[RCTLeVideoPlayerViewController alloc] init];
+    
     playerController.rctDelegate           = self; //实现协议
     playerController.view                  = player.videoView;
     playerController.view.tag              = PlayerViewTag;
-    playerController.view.frame            = self.bounds;//CGRectMake(0, 0, 0, 0);
-    playerController.view.autoresizingMask = UIViewAutoresizingFlexibleHeight| UIViewAutoresizingFlexibleWidth;
+    playerController.view.frame            = self.bounds; //CGRectMake(0, 0, 0, 0);
+//    playerController.view.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleWidth;
     playerController.view.contentMode      = UIViewContentModeScaleAspectFit;
     
     [self addSubview:playerController.view];
@@ -1157,7 +1158,7 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
     if (orientation == UIDeviceOrientationPortrait ||orientation == UIDeviceOrientationPortraitUpsideDown) {
         // 竖屏
         _isFullScreen = NO;
-        self.frame = LCRect_PlayerHalfFrame;
+        //self.frame = LCRect_PlayerFullFrame;
         
     }else {
         // 横屏
