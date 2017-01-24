@@ -372,7 +372,7 @@ class play extends Component {
                 source = { playMode: 10002, actionId: "A2016111100001zn", usehls: false, customerId: "865024", businessline: "102", cuid: "", utoken: "", pano: false};
                 break;
             case '7': //活动直播 自己推流
-                source = { playMode: 10002, actionId: "A2016122300000md", usehls: false, customerId: "", businessline: "", cuid: "", utoken: "", pano: false };
+                source = { playMode: 10002, actionId: "A20170124000008m", usehls: false, customerId: "", businessline: "", cuid: "", utoken: "", pano: false };
                 break;
             default: //网络或本地地址
                 source = { playMode: 0, uri: "http://cache.utovr.com/201601131107187320.mp4", pano: false };

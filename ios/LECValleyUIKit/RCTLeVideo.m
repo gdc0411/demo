@@ -501,7 +501,7 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
         NSString *buinessline   = [source objectForKey:@"businessline"];
         bool saas               = [RCTConvert BOOL:[source objectForKey:@"saas"]];
         
-        if (activityId.length != 0 && customId.length != 0 && buinessline.length != 0 ) {
+        if (activityId.length != 0 ) {
             _playMode = LCPlayerActionLive;
             
             LECActivityInfoManager * manager     = [LECActivityInfoManager sharedManager];

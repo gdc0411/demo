@@ -25,6 +25,8 @@
 
 #define LCRect_PlayerHalfFrame    CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height);
 
+static const NSInteger *PlayerViewTag = 6666;
+
 @interface RCTLeSubVideo ()<LECPlayerDelegate, LCActivityManagerDelegate>
 {
     __block BOOL _isPlaying;
@@ -47,12 +49,11 @@
 @end
 
 @implementation RCTLeSubVideo
-
 {
     /* Required to connect JS */
     __weak RCTBridge *_bridge;
     
-    __weak LCBaseViewController *_playerViewController;
+    LCBaseViewController *_playerViewController;
     NSURL *_videoURL;
     
     int _width; //视频宽度
@@ -98,13 +99,25 @@
 
 RCT_NOT_IMPLEMENTED(- (instancetype)init)
 
+
 /*创建viewController*/
-- (LCBaseViewController*)createPlayerViewController:(LECPlayer*)player withPlayerOption:(LECPlayerOption*)playerOption {
+- (LCBaseViewController*)createPlayerViewController:(LECPlayer*)player {
+    //    self.frame                             = LCRect_PlayerFullFrame;
     RCTLeVideoPlayerViewController* playerController= [[RCTLeVideoPlayerViewController alloc] init];
-    playerController.rctDelegate = self; //实现协议
-    playerController.view.frame = self.bounds;
+    
+    playerController.rctDelegate           = self; //实现协议
+    playerController.view                  = player.videoView;
+    playerController.view.tag              = PlayerViewTag;
+    playerController.view.frame            = self.bounds; //CGRectMake(0, 0, 0, 0);
+    //    playerController.view.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleWidth;
+    playerController.view.contentMode      = UIViewContentModeScaleAspectFit;
+    
+    [self addSubview:playerController.view];
+    [self sendSubviewToBack:playerController.view];
+    
     return playerController;
 }
+
 
 #pragma mark - 设置属性
 - (void)setSrc:(NSDictionary *)source
@@ -171,50 +184,57 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
 {
     NSLog(@"机位播放数据源");
     
-    //创建活动播放器
-    _lePlayer = [[LECActivityPlayer alloc] init];
-    _lePlayer.delegate = self;
-    
-    self.frame = LCRect_PlayerHalfFrame;
-    _lePlayer.videoView.frame = self.bounds;
-    _lePlayer.videoView.contentMode = UIViewContentModeScaleAspectFit;
-    _lePlayer.videoView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin| UIViewAutoresizingFlexibleWidth| UIViewAutoresizingFlexibleHeight;
-
-    [self addSubview:_lePlayer.videoView];
-    [self sendSubviewToBack:_lePlayer.videoView];
-    
-    
     NSString *liveId    = [source objectForKey:@"liveId"];
     NSString *streamId  = [source objectForKey:@"streamId"];
     NSString *streamUrl = [source objectForKey:@"streamUrl"];
     bool usehls         = [RCTConvert BOOL:[source objectForKey:@"usehls"]];
     
-    if (liveId.length != 0 && streamId.length != 0 && streamUrl.length != 0 ) {
-        [self usePlayerViewController]; // 创建controller
+    if (streamUrl.length != 0 ) {        
+        _lePlayer          = [[LECPlayer alloc] init];
+        _lePlayer.delegate = self;
+        
+        [self usePlayerViewController:_lePlayer]; // 创建controller
+        _playerViewController.url = streamUrl;
+        
+        __weak typeof(self) wSelf = self;
+        [_lePlayer registerWithURLString:streamUrl completion:^(BOOL result) {
+            //数据源回显
+            wSelf.onSubVideoSourceLoad?wSelf.onSubVideoSourceLoad(@{@"src": [[wSelf class] returnJSONStringWithDictionary:source useSystem:YES]}):nil;
+            
+            if (result){
+                NSLog(@"播放器注册成功");
+                [wSelf play];//注册完成后自动播放
+                [wSelf.lePlayer setVolume:0];
+                
+            }else{
+                wSelf.onSubVideoError? wSelf.onSubVideoError(@{@"errorCode":@"-1",@"errorMsg":@"播放器注册失败,请检查URL"}):nil;
+            }
+        }];
+        
+//        [(LECActivityPlayer*)_lePlayer registerWithLiveId: liveId
+//                                              isLetvMedia:YES
+//                                                mediaType:LECPlayerMediaTypeRTMP
+//                                                  options:nil
+//                                               completion:^(BOOL result) {
+//                                                   
+//                                                   //数据源回显
+//                                                   wSelf.onSubVideoSourceLoad?
+//                                                   wSelf.onSubVideoSourceLoad(@{@"src": [[wSelf class] returnJSONStringWithDictionary:source useSystem:YES]}):nil;
+//                                                   
+//                                                   if (result){
+//                                                       NSLog(@"播放器注册成功");
+//                                                       [wSelf play];//注册完成后自动播放
+//                                                       [wSelf.lePlayer setVolume:0];
+//                                                       
+//                                                   }else{
+//                                                       //[_playerViewController showTips:@"播放器注册失败,请检查UU和VU"];
+//                                                       wSelf.onSubVideoError?wSelf.onSubVideoError(@{@"errorCode":@"-1",@"errorMsg":@"播放器注册失败,请检查LiveId"}):nil;
+//                                                   }
+//                                               }];
+        
+    }else{
+        self.onSubVideoError? self.onSubVideoError(@{@"errorCode":@"-1",@"errorMsg":@"播放器注册失败,请检查URL"}):nil;
     }
-    
-    __weak typeof(self) wSelf = self;    
-    [(LECActivityPlayer*)_lePlayer registerWithLiveId: liveId
-                                          isLetvMedia:YES
-                                              mediaType:LECPlayerMediaTypeRTMP
-                                                options:nil
-                                             completion:^(BOOL result) {
-                                                 
-                                                 //数据源回显
-                                                 wSelf.onSubVideoSourceLoad?
-                                                 wSelf.onSubVideoSourceLoad(@{@"src": [[wSelf class] returnJSONStringWithDictionary:source useSystem:YES]}):nil;
-                                                 
-                                                 if (result){
-                                                     NSLog(@"播放器注册成功");
-                                                     [wSelf play];//注册完成后自动播放
-                                                     [wSelf.lePlayer setVolume:0];
-                                                     
-                                                 }else{
-                                                     //[_playerViewController showTips:@"播放器注册失败,请检查UU和VU"];
-                                                     wSelf.onSubVideoError?wSelf.onSubVideoError(@{@"errorCode":@"-1",@"errorMsg":@"播放器注册失败,请检查LiveId"}):nil;
-                                                 }
-                                             }];
-    
     
 }
 
@@ -229,15 +249,22 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
 {
     if (_lePlayer) {
         [self stop];
+        
+        UIView *subview = [self viewWithTag:PlayerViewTag];
+        subview?[subview removeFromSuperview]:nil;
+        
         [_lePlayer unregister];
+        
         _lePlayer.delegate = nil;
         _lePlayer = nil;
+        
+        _option = nil;
+        
+        _playerViewController?_playerViewController = nil:nil;
+        
     }
-    _option = nil;
-    
-    [_playerViewController.view removeFromSuperview];
-    _playerViewController = nil;
 }
+
 
 /*重置状态量*/
 - (void) initFieldParaStates
@@ -378,7 +405,7 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
             break;
             
             
-//        case LECPlayerPlayEventNoStream:  //无媒体信息
+            //        case LECPlayerPlayEventNoStream:  //无媒体信息
         case LECPlayerPlayEventPlayError: //播放错误
             [self processError:player playerEvent:playerEvent];
             break;
@@ -389,10 +416,10 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
 }
 
 
-- (void)usePlayerViewController
+- (void)usePlayerViewController:(LECPlayer*)player
 {
     if( _lePlayer ){
-        _playerViewController = [self createPlayerViewController:_lePlayer withPlayerOption:_option];
+        _playerViewController = [self createPlayerViewController:player];
         
         // to prevent video from being animated when resizeMode is 'cover'
         // resize mode must be set before subview is added
@@ -423,6 +450,25 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
     }
 }
 
+-(void)videoPlayerViewShouldRotateToOrientation:(LCBaseViewController *)playerViewController{
+    
+    //    UIDeviceOrientation orientation = (UIDeviceOrientation)[UIApplication sharedApplication].statusBarOrientation;
+    //    if (orientation == UIDeviceOrientationPortrait ||orientation == UIDeviceOrientationPortraitUpsideDown) {
+    //        // 竖屏
+    //
+    //    }else {
+    //        // 横屏
+    //        CGFloat width = [UIScreen mainScreen].bounds.size.width;
+    //        CGFloat height = [UIScreen mainScreen].bounds.size.height;
+    //
+    //        if (width < height){
+    //            CGFloat tmp = width;
+    //            width = height;
+    //            height = tmp;
+    //        }
+    //        self.frame = CGRectMake(0, 0, width, height);
+    //    }
+}
 
 
 #pragma mark - React View Management
@@ -462,21 +508,7 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
 {
     NSLog(@"removeFromSuperview消息");
     
-    //  [self setOrientation:1];
-    
-    if( _lePlayer ){
-        [self stop];
-        
-        [_lePlayer unregister];
-        _lePlayer.delegate = nil;
-        _lePlayer = nil;
-    }
-    
-    _option = nil;
-    
-    [_playerViewController.view removeFromSuperview];
-    _playerViewController = nil;
-    
+    [self resetPlayerAndController];
     
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     
