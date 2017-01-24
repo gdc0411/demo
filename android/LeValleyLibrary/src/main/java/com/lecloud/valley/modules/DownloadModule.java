@@ -9,14 +9,15 @@ import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.modules.core.RCTNativeAppEventEmitter;
-import com.lecloud.sdk.download.control.DownloadCenter;
+
 import com.lecloud.sdk.download.info.LeDownloadInfo;
 import com.lecloud.sdk.download.observer.LeDownloadObserver;
-import com.lecloud.valley.utils.DownloadSaasCenter;
+import com.lecloud.valley.utils.DowanloadValleyCenter;
 import com.lecloud.valley.utils.LogUtils;
 
 import java.util.List;
 
+import static com.lecloud.valley.common.Constants.PROP_SRC_VOD_BUSINESSLINE;
 import static com.lecloud.valley.common.Constants.PROP_SRC_VOD_UUID;
 import static com.lecloud.valley.common.Constants.PROP_SRC_VOD_VUID;
 import static com.lecloud.valley.common.Constants.REACT_CLASS_DOWNLOAD_MODULE;
@@ -33,7 +34,7 @@ public class DownloadModule extends ReactContextBaseJavaModule {
 
     private List<LeDownloadInfo> mDownloadInfos;
 
-    private DownloadSaasCenter mDownloadCenter;
+    private DowanloadValleyCenter mDownloadCenter;
 
     public DownloadModule(ReactApplicationContext reactContext) {
         super(reactContext);
@@ -52,7 +53,7 @@ public class DownloadModule extends ReactContextBaseJavaModule {
 
         mEventEmitter = mReactContext.getJSModule(RCTNativeAppEventEmitter.class);
 
-        mDownloadCenter = DownloadSaasCenter.getInstances(mReactContext.getBaseContext().getApplicationContext());
+        mDownloadCenter = DowanloadValleyCenter.getInstances(mReactContext.getBaseContext().getApplicationContext());
 
         mDownloadCenter.registerDownloadObserver(new LeDownloadObserver() {
             @Override
@@ -122,7 +123,8 @@ public class DownloadModule extends ReactContextBaseJavaModule {
     @ReactMethod
     public void download(final ReadableMap src) {
 
-        if (src == null || !src.hasKey(PROP_SRC_VOD_UUID) || !src.hasKey(PROP_SRC_VOD_VUID) ) {
+        if (src == null || !src.hasKey(PROP_SRC_VOD_UUID) || !src.hasKey(PROP_SRC_VOD_VUID)
+                || !src.hasKey(PROP_SRC_VOD_BUSINESSLINE) ) {
             return;
         }
 
@@ -131,6 +133,7 @@ public class DownloadModule extends ReactContextBaseJavaModule {
             LeDownloadInfo info = new LeDownloadInfo();
             info.setUu(src.getString(PROP_SRC_VOD_UUID)); // 必填,否则不能下载视频
             info.setVu(src.getString(PROP_SRC_VOD_VUID)); // 必填，否则不能下载视频
+            info.setP(src.getString(PROP_SRC_VOD_BUSINESSLINE)); // 必填，否则不能下载视频
             mDownloadCenter.downloadVideo(info);
         }
 
