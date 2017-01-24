@@ -421,9 +421,7 @@ class play extends Component {
     getDownloadButton = () => {
 
         return (
-            <Text style={styles.controlOption} onPress={() => {
-                Download.download({uuid: "841215", vuid: "301180368", businessline: "102"});
-            } } > 下 载 </Text>
+            <Text style={styles.controlOption} onPress={() => {Download.download(this.state.source);} } > 下 载 </Text>
         );
     }
 
