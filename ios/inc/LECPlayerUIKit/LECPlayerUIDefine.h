@@ -30,7 +30,8 @@ typedef NS_ENUM(NSInteger, LECPlayerUIActionEvent) {
     LECPlayerUIActionEventPlay = 106,// 播放
     LECPlayerUIActionEventPause = 107,// 暂停
     LECPlayerUIActionEventGyroscope = 108, //设置全景陀螺仪开关
-    LECPlayerUIActionEventVR = 109 //设置VR开关
+    LECPlayerUIActionEventVR = 109, //设置VR开关
+    LECPlayerUIActionEventCut = 110 // 截屏
 };
 
 

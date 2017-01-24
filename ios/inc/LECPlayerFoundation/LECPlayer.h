@@ -12,9 +12,6 @@
 #import "LECPlayerOption.h"
 
 
-
-
-
 @class LECPlayer;
 
 typedef NSInteger LECPlayerPlayOperation;
@@ -54,8 +51,8 @@ typedef NS_ENUM(int, LECPlayerPlayEvent) {
     LECPlayerPlayEventBufferStart,//开始缓冲
     LECPlayerPlayEventBufferEnd,//缓冲结束
     LECPlayerPlayEventSeekComplete,//seek结束
-    LECPlayerPlayEventNoStream = 100,//无码流
-    LECPlayerPlayEventPlayError,//播放出错
+    LECPlayerPlayEventPlayError = 100,//播放出错
+    LECPlayerPlayEventDisplayError,
     LECPlayerPlayEventSuspend,//直播结束
     LECPlayerPlayEventNotStarted//直播未开始
 };
@@ -107,6 +104,27 @@ typedef NS_ENUM(int, LECPanoramaType) {
      cacheDuration:(int64_t) cacheDuration
           duration:(int64_t) duration;
 
+/*Saas新增代理*/
+/*播放器广告倒计时回调*/
+- (void)lecPlayer:(LECPlayer *) player adRemainTimeLength:(NSInteger)timeLength;//单位秒
+
+ 
+/**
+ 返回试看信息
+
+ @param player 播放器
+ @param buy 是否是试看  YES：试看  NO：非试看
+ @param tryLookTime 试看时长
+ */
+- (void)lecPlayer:(LECPlayer *) player needbuy:(BOOL)buy tryLookTime:(int)tryLookTime;
+
+
+@end
+
+@protocol LECPlayerRecordDelegate <NSObject>
+
+- (void)lecPlayerRecordFinished:(LECPlayer *) player;           //异常打断时会返回
+
 @end
 
 @protocol LECPlayerDatasource <NSObject>
@@ -139,8 +157,6 @@ typedef NS_ENUM(int, LECPanoramaType) {
 //检测某操作是否可以进行
 - (BOOL) canDoOperation:(LECPlayerPlayOperation) playOperation;
 
-
-
 //completionblock代表操作结束，可继续别的操作；该返回并不代表操作结果成功，播放状态需要根据回调决定
 - (BOOL) prepareWithCompletion:(void (^)(BOOL))completion;
 //async
@@ -149,10 +165,17 @@ typedef NS_ENUM(int, LECPanoramaType) {
 - (BOOL) seekToPosition:(NSInteger) position completion:(void (^)())completion;
 //async
 - (BOOL) switchSelectStreamRateItem:(LECStreamRateItem *) selectStreamRateItem completion:(void (^)())completion;
-//async
+//async: stop为异步方法，如果stop后需要立即进行其他播放操作，可新建player示例
 - (BOOL) stopWithCompletion:(void (^)())completion;
 
-//async: stop为异步方法，如果stop后需要立即进行其他播放操作，可新建player示例
+- (BOOL) startRecordWithURL:(NSURL *) storageUrl;       //目前仅在基类支持，且仅支持rtmp
+- (void) stopRecord;
+
+/**
+ 截屏
+ @param callback callback(返回截取到的图片)
+ */
+- (void)snapShotWithCallback:(void(^)(UIImage *image))callback;
 
 @property (nonatomic, readonly) UIView *videoView;//承载视频的view，可通过contentMode设置视频拉抻方式
 @property (nonatomic, assign) float volume;//播放器音量
@@ -162,8 +185,10 @@ typedef NS_ENUM(int, LECPanoramaType) {
 @property (nonatomic, readonly) LECStreamRateItem *selectedStreamRateItem;//该变量标示当前使用码率，该变量只读，需要切换码率请调用switchSelectStreamRateItem方法实现
 @property (nonatomic, readonly) NSString *errorCode;//当播放失败时，可通过该属性获得错误码
 @property (nonatomic, readonly) __block NSString *errorDescription;//当播放失败时，可通过该属性获得错误描述
+
 @property (nonatomic, readonly) NSString *readableErrorDescription;
 @property (nonatomic, weak) id<LECPlayerDelegate> delegate;
+@property (nonatomic, weak) id<LECPlayerRecordDelegate> recordDelegate;
 @property (nonatomic, weak) id<LECPlayerDatasource> datasource;
 @property (nonatomic, readonly) int64_t position;//播放器当前播放时长
 @property (nonatomic, readonly) int64_t duration;//视频总时长，对于直播来说是0
@@ -181,5 +206,6 @@ typedef NS_ENUM(int, LECPanoramaType) {
 @property (nonatomic, assign) LECPlayerCodecCoreType codecCoreType;     //播放内核type，如果在注册前未指定(undefine)，则在注册完毕后自动选择；prepare前设置有效
 @property (nonatomic, assign) BOOL ifADFinished;//广告是否已经播放完
 @property (nonatomic, assign) BOOL autoPlayAfterInterrupt;
+@property (nonatomic, readonly) NSInteger speed;                //单位Byte/s
 
 @end

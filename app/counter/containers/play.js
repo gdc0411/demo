@@ -24,7 +24,7 @@ import * as playActions from '../actions/playAction';
 import Orientation from '../componets/RCTOrientation';
 import Video from '../componets/RCTLeVideo';
 import SubVideo from '../componets/RCTLeSubVideo';
-import Download from '../componets/RCTDownload';
+// import Download from '../componets/RCTDownload';
 
 //取得屏幕宽高
 const {height: SCREEN_HEIGHT, width: SCREEN_WIDTH} = Dimensions.get('window');
@@ -421,7 +421,9 @@ class play extends Component {
     getDownloadButton = () => {
 
         return (
-            <Text style={styles.controlOption} onPress={() => { Download.download({uuid: "841215", vuid: "301180368"}); } } > 下 载 </Text>
+            <Text style={styles.controlOption} onPress={() => {
+                // Download.download({uuid: "841215", vuid: "301180368"});
+            } } > 下 载 </Text>
         );
     }
 

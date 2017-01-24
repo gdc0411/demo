@@ -27,7 +27,7 @@
 
 - (BOOL) registerWithStreamId:(NSString *) streamId
                   isLetvMedia:(BOOL) isLetvMedia
-                    mediaType:(LECPlayerMediaType) mediaType
+                    mediaType:(LECPlayerMediaType)mediaType
                       options:(LECPlayerOption *)options//设置业务相关参数以及用户ID等,没有可以为nil
                    completion:(void (^)(BOOL result))completion;
 

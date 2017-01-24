@@ -41,6 +41,6 @@ resumeFromLastPlayPosition:(BOOL) resumeFromLastPlayPosition
 @property (nonatomic, readonly) BOOL resumeFromLastPlayPosition;//调用注册方法后该值可获取
 @property (nonatomic, readonly) BOOL resumeFromLastRateType;//是否采用上一次播放的码率
 @property (nonatomic, readonly) NSString *loadingIconUrl;//启动加载图片的URL地址
-@property (nonatomic, readonly) BOOL isPanorama;//是否是全景
+//@property (nonatomic, readonly) BOOL isPanorama;//是否是全景
 
 @end

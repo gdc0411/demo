@@ -378,7 +378,7 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
             break;
             
             
-        case LECPlayerPlayEventNoStream:  //无媒体信息
+//        case LECPlayerPlayEventNoStream:  //无媒体信息
         case LECPlayerPlayEventPlayError: //播放错误
             [self processError:player playerEvent:playerEvent];
             break;

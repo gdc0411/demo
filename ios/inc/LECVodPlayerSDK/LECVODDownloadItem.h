@@ -33,6 +33,7 @@ typedef NS_ENUM(NSInteger, LECVODDownloadItemStatus) {
 @property (nonatomic, strong) NSString * payUserName;
 @property (nonatomic, strong) NSString * videoName;
 @property (nonatomic, strong) NSDictionary * userInfo;
+@property (nonatomic) BOOL isPanorama;
 @property (nonatomic, readonly) NSString *errorCode;
 @property (nonatomic, readonly) NSString *errorDesc;
 @property (nonatomic, readonly) BOOL isInterrupted;

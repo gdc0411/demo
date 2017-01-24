@@ -21,10 +21,11 @@
 @property (nonatomic, assign) BOOL hiddenBackButton;//隐藏返回按钮,Default is NO;
 @property (nonatomic, assign) BOOL hiddenMediaTitle;//隐藏视频标题,Defaule is NO;
 @property (nonatomic, assign) BOOL autoPlay;//Default is YES;
-@property (nonatomic, assign) BOOL enableGravitySensor;//Default is NO;
+@property (nonatomic, assign) BOOL enableGravitySensor;//Default is YES;
 @property (nonatomic, strong) UIImage * loadingLogoImage;//播放器加载时候的Logo
 @property (nonatomic, assign) float playerVolume;//播放器音量,0.0-1.0,Default is 1.0;
 @property (nonatomic, assign, readonly) BOOL autoRotation;//是否自动转屏,在ViewController的- (BOOL)shouldAutorotate方法中return该属性
+@property (nonatomic, strong) NSString * mediaTitle;//媒体标题,播放器注册成功之后可以获取到
 
 //播放器视图初始化创建
 - (UIView *)createPlayerWithOwner:(id)owner frame:(CGRect)frame;
@@ -40,8 +41,6 @@
   
 //转屏相关
 - (CGRect)shouldRotateToOrientation:(UIDeviceOrientation)orientation;
-
-
 
 
 @end
