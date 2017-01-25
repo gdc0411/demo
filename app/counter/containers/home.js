@@ -36,69 +36,37 @@ const {height: SCREEN_HEIGHT, width: SCREEN_WIDTH} = Dimensions.get('window');
  */
 class home extends Component {
 
-    constructor() {
-        super();
-        this._recvNotify = this._recvNotify.bind(this);
-        this._openNotify = this._openNotify.bind(this);
+    componentWillMount() {
+        Orientation.setOrientation(1);
+        UmengPush.addReceiveMessageListener(this.handleRecvMessage);
+        UmengPush.addOpenMessageListener(this.handleOpenMessage);
     }
 
-    _recvNotify(message){
+    componentWillUnmount() {
+        Orientation.setOrientation(-1);
+        UmengPush.removeReceiveMessageListener(this.handleRecvMessage);
+        UmengPush.removeOpenMessageListener(this.handleOpenMessage);
+    }
+
+    handleRecvMessage = (message) => {
         console.log("onUmengReceiveMessage:", message);
         alert('onUmengReceiveMessage' + JSON.stringify(message));
     }
 
-    _openNotify(message){
+    handleOpenMessage = (message) => {
         console.log("onUmengOpenMessage:", message);
         // alert('onUmengOpenMessage' + JSON.stringify(message));
-
         if (message.extra && message.extra.uri) {
             const {navigator} = this.props;
             navigator.push({ location: message.extra.uri });
         }
     }
 
-    componentWillMount() {
-        Orientation.setOrientation(1);
-        UmengPush.addReceiveMessageListener(this._recvNotify);
-        UmengPush.addOpenMessageListener(this._openNotify);
-    }
-
-    componentWillUnmount() {
-        Orientation.setOrientation(-1);
-        UmengPush.removeReceiveMessageListener(this._recvNotify);
-        UmengPush.removeOpenMessageListener(this._openNotify);
-    }
-
-    //跳转到播放页
-    skipToPage = (page, source) => {
-        const {navigator} = this.props;
-        // this.props.actions.play(source);
-        navigator.push({ location: page + source ? `/${source}` : '' });
-    }
-
     //跳转到播放页
     skipToPlayer = (source) => {
         const {navigator} = this.props;
         // this.props.actions.play(source);
-        navigator.push({ location: '/play/' + source, });
-    }
-
-    //跳转到设备查看页
-    skipToViewDevice = () => {
-        const {navigator} = this.props;
-        navigator.push({ location: '/device' });
-    }
-
-    //跳转到转屏设置页
-    skipToTestOrientation = () => {
-        const {navigator} = this.props;
-        navigator.push({ location: '/orient' });
-    }
-
-    //跳转到分享
-    skipToShare = () => {
-        const {navigator} = this.props;
-        navigator.push({ location: '/social' });
+        this.props.navigator.push({ location: '/play/' + source, });
     }
 
     //加
@@ -119,7 +87,7 @@ class home extends Component {
     }
 
     render() {
-        const { value } = this.props;
+        const { value, navigator } = this.props;
 
         const img1 = "../asserts/images/lecloud.png";
         const img2 = "../asserts/images/rmb.jpg";
@@ -139,10 +107,10 @@ class home extends Component {
                 <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }} >
                     <View style={{ flexDirection: 'column', width: SCREEN_WIDTH }} >
                         <View style={{ flexDirection: 'row', justifyContent: 'space-around' }} >
-                            <InfoItem imgUrl={img1} desc={'设备信息'} color={'green'} onViewInfo={() => this.skipToViewDevice()} />
-                            <Text style={{ fontSize: 18, fontWeight: 'bold', color: `orange` }} onPress={() => this.skipToTestOrientation()} >转屏</Text>
-                            <Text style={{ fontSize: 18, fontWeight: 'bold', color: `orange` }} onPress={() => this.skipToShare()} >分享</Text>
-                            <Text style={{ fontSize: 18, fontWeight: 'bold', color: `black` }} onPress={ () =>{this.props.navigator.push({ location: '/download' }); } } >下载</Text>
+                            <InfoItem imgUrl={img1} desc={'设备信息'} color={'green'} onViewInfo={() => navigator.push({ location: '/device' })} />
+                            <Text style={{ fontSize: 18, fontWeight: 'bold', color: `orange` }} onPress={() => navigator.push({ location: '/orient' })} >转屏</Text>
+                            <Text style={{ fontSize: 18, fontWeight: 'bold', color: `orange` }} onPress={() => navigator.push({ location: '/social' })} >分享</Text>
+                            <Text style={{ fontSize: 18, fontWeight: 'bold', color: `black` }} onPress={() => navigator.push({ location: '/download' })} >下载</Text>
                         </View>
                         <View style={{ flexDirection: 'row', justifyContent: 'space-around' }} >
                             <PlayItem source={0} imgUrl={img1} desc={'第三方URL'} color={'black'} onPlay={this.skipToPlayer} />
@@ -159,7 +127,6 @@ class home extends Component {
                         <View style={{ flexDirection: 'row', justifyContent: 'space-around' }} >
                             <PlayItem source={7} imgUrl={img2} desc={'云直播-推流'} color={'red'} onPlay={this.skipToPlayer} />
                             <PlayItem source={3} imgUrl={img2} desc={'云点播-可下载'} color={'blue'} onPlay={this.skipToPlayer} />
-
                         </View>
                     </View>
                     <Counter value={value} para={plusPara} oper={`加`} onChange={this.operatePlus} />
@@ -168,11 +135,8 @@ class home extends Component {
                     <Counter value={value} para={dividePara} oper={`除`} onChange={this.operateDivide} />
                 </View >
         );
-
     }
 }
-
-
 
 //配置Map映射表，拿到自己关心的数据
 const mapStateToProps = state => ({

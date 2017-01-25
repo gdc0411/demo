@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import {
-  AppRegistry,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -20,21 +19,15 @@ class orient extends Component {
       or: init,
       // sor: init,
     };
-    this._updateOrientation = this._updateOrientation.bind(this);
-  }
-
-  _updateOrientation(or) {
-    this.setState({ or });
   }
 
   componentWillMount() {
-    Orientation.addOnOrientationListener(this._updateOrientation);
+    Orientation.addOnOrientationListener((or) => this.setState({ or }));
   }
 
   componentWillUnmount() {
-    Orientation.removeOnOrientationListener(this._updateOrientation);
+    Orientation.removeOnOrientationListener((or) => this.setState({ or }));
   }
-
 
   render() {
     const { init, or, sor} = this.state;
@@ -49,49 +42,41 @@ class orient extends Component {
         <Text style={styles.instructions}>
           {`当前方向: ${or}`}
         </Text>
-        <TouchableOpacity
-          onPress={(para) => Orientation.setOrientation(-1)}
-          style={styles.button}
-          >
+        <TouchableOpacity onPress={(para) => Orientation.setOrientation(-1)} style={styles.button} >
           <Text style={styles.instructions}>
             解锁
           </Text>
         </TouchableOpacity>
-        <TouchableOpacity
-          onPress={(para) => Orientation.setOrientation(1)}
-          style={styles.button}
-          >
+        <TouchableOpacity onPress={(para) => Orientation.setOrientation(1)} style={styles.button} >
           <Text style={styles.instructions}>
             锁定正竖屏
           </Text>
         </TouchableOpacity>
         <View style={styles.buttonContainer}>
-          <TouchableOpacity
-            onPress={(para) => Orientation.setOrientation(0)}
-            style={styles.button}
-            >
+          <TouchableOpacity onPress={(para) => Orientation.setOrientation(0)} style={styles.button} >
             <Text style={styles.instructions}>
               锁定正横屏
             </Text>
           </TouchableOpacity>
-          <TouchableOpacity
-            onPress={(para) => Orientation.setOrientation(8)}
-            style={styles.button}
-            >
+          <TouchableOpacity onPress={(para) => Orientation.setOrientation(8)} style={styles.button} >
             <Text style={styles.instructions}>
               锁定反横屏
             </Text>
           </TouchableOpacity>
-          <TouchableOpacity
-            onPress={(para) => Orientation.setOrientation(9)}
-            style={styles.button}
-            >
+          <TouchableOpacity onPress={(para) => Orientation.setOrientation(9)} style={styles.button} >
             <Text style={styles.instructions}>
               锁定反竖屏
             </Text>
           </TouchableOpacity>
         </View>
+
+        <TouchableOpacity onPress={(para) => this.props.navigator.pop()} style={styles.button}>
+          <Text style={styles.instructions}>
+            返 回
+            </Text>
+        </TouchableOpacity>
       </View>
+
     );
   }
 }

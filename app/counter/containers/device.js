@@ -37,12 +37,6 @@ class device extends Component {
         dispatch: PropTypes.func.isRequired
     }
 
-    //跳转到播放页
-    handleBack = () => {
-        const {navigator} = this.props;
-        navigator.pop();
-    }
-
     componentDidMount() {
         const { dispatch, selectedDevice } = this.props;
         dispatch(deviceActions.fetchPostsIfNeeded(selectedDevice));
@@ -85,7 +79,7 @@ class device extends Component {
                 }
                 <Text>{'\r\n\r\n'}</Text>
                 <Text style={{ alignSelf: 'center', fontSize: 14, color: "black", paddingLeft: 2, paddingRight: 2, lineHeight: 14 }}
-                    onPress={() => this.handleBack()} > 返 回 </Text>
+                    onPress={() => {this.props.navigator.pop();}} > 返 回 </Text>
             </View>
         );
     }

@@ -41,11 +41,6 @@ class social extends Component {
             callbackStr: '',
         };
     }
-    //跳转到上一页
-    handleBack = () => {
-        const {navigator} = this.props;
-        navigator.pop();
-    }
 
     async componentDidMount() {
         try {
@@ -302,17 +297,11 @@ class social extends Component {
         return (
             <View style={[styles.container]}>
 
-                <View style={{ top: 20, left: 10, position: 'absolute' }}>
-                    <Text>微博api版本：{this.state.wbApiVersion}</Text>
-                    <Text>微博已安装：{String(this.state.isWBInstalled)}</Text>
-                    <Text>微博支持api：{String(this.state.isWBSupportApi)}</Text>
-                    <Text>QQapi版本：{this.state.qqApiVersion}</Text>
-                    <Text>QQ已安装：{String(this.state.isQQInstalled)}</Text>
-                    <Text>QQ支持SSO：{String(this.state.isQQSupportApi)}</Text>
-                    <Text>微信api版本：{this.state.wxApiVersion}</Text>
-                    <Text>微信已安装：{String(this.state.isWXAppInstalled)}</Text>
-                    <Text>微信支持api：{String(this.state.isWXAppSupportApi)}</Text>
-                    {this.state.callbackStr ? <Text>回调结果：{String(this.state.callbackStr)}</Text> : null}
+                <View style={{ top: 20, left: 10, right: 10, position: 'absolute' }}>
+                    <Text>微博：SDK版本{this.state.wbApiVersion} |{String(this.state.isWBInstalled?'已安装':'未安装')} |{String(this.state.isWBSupportApi?'支持':'不支持')}</Text>
+                    <Text>QQ ：SDK版本{this.state.qqApiVersion} |{String(this.state.isQQInstalled?'已安装':'未安装')} |{String(this.state.isQQSupportApi?'支持':'不支持')}</Text>
+                    <Text>微信：SDK版本{this.state.wxApiVersion} |{String(this.state.isWXAppInstalled?'已安装':'未安装')} |{String(this.state.isWXAppSupportApi?'支持':'不支持')}</Text>
+                    {this.state.callbackStr ? <Text>回调结果：{'\r\n'}{String(this.state.callbackStr)}</Text> : null}
                 </View>
 
                 <View style={[styles.wbContainer]}>
@@ -429,6 +418,24 @@ const styles = StyleSheet.create({
         height: width / 6,
         marginBottom: 6
     },
+    instructions: {
+        textAlign: 'center',
+        color: '#333333',
+        marginBottom: 5,
+    },
+    buttonContainer: {
+        flex: 0,
+        flexDirection: 'row',
+        justifyContent: 'space-around'
+    },
+    button: {
+        padding: 5,
+        margin: 5,
+        borderWidth: 1,
+        borderColor: 'white',
+        borderRadius: 3,
+        backgroundColor: 'grey',
+    }
 });
 
 

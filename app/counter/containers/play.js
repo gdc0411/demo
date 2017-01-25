@@ -87,8 +87,8 @@ class play extends Component {
         };
 
         // this.onLoad = this.onLoad.bind(this);
-        this.updateOrientation = this.updateOrientation.bind(this);
-        Orientation.addOnOrientationListener(this.updateOrientation);
+        // this.updateOrientation = this.updateOrientation.bind(this);
+        // Orientation.addOnOrientationListener(this.updateOrientation);
     }
 
     componentWillMount() {
@@ -102,8 +102,8 @@ class play extends Component {
         this.setState({ source: newSource, });
 
         Orientation.setOrientation(1);
-
-        Download.addItemUpdateListener(this._recvNotify);
+        Orientation.addOnOrientationListener(this.updateOrientation);
+        Download.addItemUpdateListener(this.handleDownloadItem);
     }
 
     // componentWillUpdate(nextProps, nextState) {
@@ -115,13 +115,39 @@ class play extends Component {
     componentWillUnmount() {
         Orientation.setOrientation(1);
         Orientation.removeOnOrientationListener(this.updateOrientation);
-
-        Download.removeItemUpdateListener(this._recvNotify);
+        Download.removeItemUpdateListener(this.handleDownloadItem);
     }
 
-    _recvNotify(message) {
+    handleDownloadItem = (message) => {
         console.log("ItemUpdate:", message);
         alert('ItemUpdate' + JSON.stringify(message));
+    }
+
+    updateOrientation = (orientation) => {
+        let bottom = 0;
+        let needUpdate = false;
+        switch (orientation) {
+            case 0:
+                bottom = 0;
+                needUpdate = true;
+                break;
+            case 1:
+                bottom = 200;
+                needUpdate = true;
+                break;
+            case 8:
+                bottom = 0;
+                needUpdate = true;
+                break;
+            case 9:
+                // bottom = 200;
+                // needUpdate = true;
+                break;
+        }
+        if (needUpdate) {
+            this.setState({ orientation, bottom });
+            Orientation.setOrientation(orientation);
+        }
     }
 
     /**
@@ -213,33 +239,6 @@ class play extends Component {
             videoInfo: `片名：${data.title} 长度：${data.duration} 宽高:${data.naturalSize.width}，${data.naturalSize.height} \n`
             + `${ratesStr} ${defaultRate} ${isDownload} ${isPano} ${needFullView} ${needTimeShift} ${isNeedAd} ${ark} ${livesStr}\n${volume} ${brightness}`
         });
-    }
-
-    updateOrientation = (orientation) => {
-        let bottom = 0;
-        let needUpdate = false;
-        switch (orientation) {
-            case 0:
-                bottom = 0;
-                needUpdate = true;
-                break;
-            case 1:
-                bottom = 200;
-                needUpdate = true;
-                break;
-            case 8:
-                bottom = 0;
-                needUpdate = true;
-                break;
-            case 9:
-                // bottom = 200;
-                // needUpdate = true;
-                break;
-        }
-        if (needUpdate) {
-            this.setState({ orientation, bottom });
-            Orientation.setOrientation(orientation);
-        }
     }
 
     /**
