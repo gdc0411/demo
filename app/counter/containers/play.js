@@ -128,12 +128,12 @@ class play extends Component {
             case Download.START:
                 alert(`开始下载！fileName:${message.fileName}`);
                 break;
-            case Download.INIT:
-                alert(`初始化！fileName:${message.fileName}，消息：${message.msg}`);
-                break;
-            case Download.PROGRESS:
-                alert(`正在下载中！fileName:${message.fileName},进度：${message.progress}`);
-                break;
+            // case Download.INIT:
+            //     alert(`初始化！fileName:${message.fileName}，消息：${message.msg}`);
+            //     break;
+            // case Download.PROGRESS:
+            //     alert(`正在下载中！fileName:${message.fileName},进度：${message.progress}`);
+            //     break;
             case Download.SUCCESS:
                 alert(`下载成功！vu:${message.vuid},uu:${message.uuid},fileName:${message.fileName},存放路径：${message.fileSavePath}`);
                 break;
