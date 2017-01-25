@@ -83,6 +83,7 @@ public class QQModule extends ReactContextBaseJavaModule implements IUiListener,
         constants.put("SHARE_TYPE_VIDEO", SHARE_TYPE_VIDEO);
         constants.put("SHARE_TYPE_AUDIO", SHARE_TYPE_AUDIO);
         constants.put("SHARE_TYPE_APP", SHARE_TYPE_APP);
+        constants.put("EVENT_QQ_RESP", Events.EVENT_QQ_RESP.toString());
         return constants;
     }
 

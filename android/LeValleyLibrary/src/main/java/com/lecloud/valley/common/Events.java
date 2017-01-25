@@ -58,8 +58,12 @@ public enum Events {
     EVENT_WEIBO_RESP("Weibo_Resp"), //微博响应事件
 
     //第三方登录和分享事件
-    EVENT_UMENG_RECV_MESSAGE("onUmengReceiveMessage"), //收到友盟推送
-    EVENT_UMENG_OPEN_MESSAGE("onUmengOpenMessage"), //打开友盟推送
+    EVENT_UMENG_RECV_MESSAGE("onUmengReceiveMessage"),  //收到友盟推送
+    EVENT_UMENG_OPEN_MESSAGE("onUmengOpenMessage"),     //打开友盟推送
+
+    //离线缓存事件
+    EVENT_DOWNLOAD_ITEM_UPDATE("onDownloadItemUpdate"),   //下载对象更新事件
+    EVENT_DOWNLOAD_LIST_UPDATE("onDownloadListUpdate"),  //更新下载列表事件
 
     // 未命名的事件
     EVENT_OTHER_EVENT("onOtherEventInfo");  // 未知事件

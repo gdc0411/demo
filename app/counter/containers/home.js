@@ -59,14 +59,14 @@ class home extends Component {
 
     componentWillMount() {
         Orientation.setOrientation(1);
-        UmengPush.addUmengReceiveMessageListener(this._recvNotify);
-        UmengPush.addUmengOpenMessageListener(this._openNotify);
+        UmengPush.addReceiveMessageListener(this._recvNotify);
+        UmengPush.addOpenMessageListener(this._openNotify);
     }
 
     componentWillUnmount() {
         Orientation.setOrientation(-1);
-        UmengPush.removeUmengReceiveMessageListener(this._recvNotify);
-        UmengPush.removeUmengOpenMessageListener(this._openNotify);
+        UmengPush.removeReceiveMessageListener(this._recvNotify);
+        UmengPush.removeOpenMessageListener(this._openNotify);
     }
 
     //跳转到播放页
@@ -142,6 +142,7 @@ class home extends Component {
                             <InfoItem imgUrl={img1} desc={'设备信息'} color={'green'} onViewInfo={() => this.skipToViewDevice()} />
                             <Text style={{ fontSize: 18, fontWeight: 'bold', color: `orange` }} onPress={() => this.skipToTestOrientation()} >转屏</Text>
                             <Text style={{ fontSize: 18, fontWeight: 'bold', color: `orange` }} onPress={() => this.skipToShare()} >分享</Text>
+                            <Text style={{ fontSize: 18, fontWeight: 'bold', color: `black` }} onPress={ () =>{this.props.navigator.push({ location: '/download' }); } } >下载</Text>
                         </View>
                         <View style={{ flexDirection: 'row', justifyContent: 'space-around' }} >
                             <PlayItem source={0} imgUrl={img1} desc={'第三方URL'} color={'black'} onPlay={this.skipToPlayer} />
@@ -158,6 +159,7 @@ class home extends Component {
                         <View style={{ flexDirection: 'row', justifyContent: 'space-around' }} >
                             <PlayItem source={7} imgUrl={img2} desc={'云直播-推流'} color={'red'} onPlay={this.skipToPlayer} />
                             <PlayItem source={3} imgUrl={img2} desc={'云点播-可下载'} color={'blue'} onPlay={this.skipToPlayer} />
+
                         </View>
                     </View>
                     <Counter value={value} para={plusPara} oper={`加`} onChange={this.operatePlus} />

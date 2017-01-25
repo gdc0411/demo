@@ -8,6 +8,7 @@ import play from '../containers/play';
 import device from '../containers/device';
 import social from '../containers/social';
 import orient from '../containers/orient';
+import download from '../containers/download';
 
 export default module.exports = {
     path: '/',
@@ -26,6 +27,10 @@ export default module.exports = {
         {
             path: '/orient',
             component: orient
+        },
+        {
+            path: '/download',
+            component: download
         },
         {
             path: '/play/:src',

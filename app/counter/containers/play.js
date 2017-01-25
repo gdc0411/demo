@@ -102,6 +102,8 @@ class play extends Component {
         this.setState({ source: newSource, });
 
         Orientation.setOrientation(1);
+
+        Download.addItemUpdateListener(this._recvNotify);
     }
 
     // componentWillUpdate(nextProps, nextState) {
@@ -113,6 +115,13 @@ class play extends Component {
     componentWillUnmount() {
         Orientation.setOrientation(1);
         Orientation.removeOnOrientationListener(this.updateOrientation);
+
+        Download.removeItemUpdateListener(this._recvNotify);
+    }
+
+    _recvNotify(message) {
+        console.log("ItemUpdate:", message);
+        alert('ItemUpdate' + JSON.stringify(message));
     }
 
     /**
@@ -366,10 +375,10 @@ class play extends Component {
                 source = { playMode: 10000, uuid: "838389", vuid: "200271100", businessline: "102", saas: true, pano: false };
                 break;
             case '5': //活动直播 官方demo
-                source = { playMode: 10002, actionId: "A2016062700000gx", usehls: false, customerId: "838389", businessline: "102", cuid: "", utoken: "", pano: false};
+                source = { playMode: 10002, actionId: "A2016062700000gx", usehls: false, customerId: "838389", businessline: "102", cuid: "", utoken: "", pano: false };
                 break;
             case '6': //活动直播 泸州
-                source = { playMode: 10002, actionId: "A2016111100001zn", usehls: false, customerId: "865024", businessline: "102", cuid: "", utoken: "", pano: false};
+                source = { playMode: 10002, actionId: "A2016111100001zn", usehls: false, customerId: "865024", businessline: "102", cuid: "", utoken: "", pano: false };
                 break;
             case '7': //活动直播 自己推流
                 source = { playMode: 10002, actionId: "A20170124000008m", usehls: false, customerId: "", businessline: "", cuid: "", utoken: "", pano: false };
@@ -421,7 +430,7 @@ class play extends Component {
     getDownloadButton = () => {
 
         return (
-            <Text style={styles.controlOption} onPress={() => {Download.download(this.state.source);} } > 下 载 </Text>
+            <Text style={styles.controlOption} onPress={() => { Download.download(this.state.source); } } > 下 载 </Text>
         );
     }
 
@@ -434,8 +443,8 @@ class play extends Component {
         return (
             <View style={styles.container}>
                 <StatusBar barStyle='light-content' style={{ height: STATUS_BAR_HEIGHT }} />
-                <TouchableOpacity style={[styles.fullScreen, { bottom: this.state.bottom}]} onPress={() => { this.setState({ paused: !this.state.paused }); } }>
-                    <Video style={[styles.fullScreen, { bottom: this.state.bottom, backgroundColor: 'red'}]}
+                <TouchableOpacity style={[styles.fullScreen, { bottom: this.state.bottom }]} onPress={() => { this.setState({ paused: !this.state.paused }); } }>
+                    <Video style={[styles.fullScreen, { bottom: this.state.bottom, backgroundColor: 'red' }]}
                         source={this.state.source}
                         seek={this.state.seek}
                         rate={this.state.rate}
@@ -481,9 +490,9 @@ class play extends Component {
                         <Text style={styles.controlOption} onPress={() => { this.setState({ seek: this.state.currentTime + 30 }); } } > + 30s </Text>
                         <Text style={styles.controlOption} onPress={() => { this.setState({ seek: this.state.currentTime - 30 }); } } > - 30s </Text>
                         <Text style={styles.controlOption} onPress={() => { this.setState({ repeat: this.state.repeat + 1 }); } } > 重 播 </Text>
-                        <Text style={styles.controlOption} onPress={() => { this.setState({ source: this.getFormatDatasource('2'), });} } > 切 换 </Text>
+                        <Text style={styles.controlOption} onPress={() => { this.setState({ source: this.getFormatDatasource('2'), }); } } > 切 换 </Text>
 
-                        {(this.state.download)? this.getDownloadButton() : null}
+                        {(this.state.download) ? this.getDownloadButton() : null}
 
                     </View>
                     <View style={styles.infoDisplays}>

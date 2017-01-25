@@ -39,7 +39,7 @@ function getKey(listener, META) {
 
 module.exports = {
 
-    addUmengReceiveMessageListener(handler: Function) {
+    addReceiveMessageListener(handler: Function) {
         var key = getKey(handler, META_1);
         listeners[key] = myNativeEvt.addListener(UmengPush.EVENT_UMENG_RECV_MESSAGE, message => {
             //处于后台时，拦截收到的消息
@@ -50,7 +50,7 @@ module.exports = {
         });
     },
 
-    removeUmengReceiveMessageListener(handler: Function) {
+    removeReceiveMessageListener(handler: Function) {
         var key = getKey(handler, META_1);
         if (!listeners[key]) {
             return;
@@ -59,7 +59,7 @@ module.exports = {
         listeners[key] = null;
     },
 
-    addUmengOpenMessageListener(handler: Function) {
+    addOpenMessageListener(handler: Function) {
         var key = getKey(handler, META_2);
         listeners[key] = myNativeEvt.addListener(UmengPush.EVENT_UMENG_OPEN_MESSAGE,
             message => {
@@ -68,7 +68,7 @@ module.exports = {
         // openMessageSubscription = myNativeEvt.addListener(UmengPush.EVENT_UMENG_OPEN_MESSAGE, handler);
     },
 
-    removeUmengOpenMessageListener(handler: Function) {
+    removeOpenMessageListener(handler: Function) {
         var key = getKey(handler, META_2);
         if (!listeners[key]) {
             return;
