@@ -35,19 +35,21 @@ function getKey(listener, META) {
     return listener[META];
 };
 
-export const SUCCESS = DownloadAPI.SUCCESS;
-export const STOP = DownloadAPI.STOP;
-export const START = DownloadAPI.START;
-export const FAILED = DownloadAPI.FAILED;
-export const CANCEL = DownloadAPI.CANCEL;
-export const INIT = DownloadAPI.INIT;
-export const WAIT = DownloadAPI.WAIT;
-export const RATEINFO = DownloadAPI.RATEINFO;
-
 module.exports = {
+    SUCCESS: DownloadAPI.SUCCESS,
+    STOP: DownloadAPI.STOP,
+    START: DownloadAPI.START,
+    PROGRESS: DownloadAPI.PROGRESS,
+    FAILED: DownloadAPI.FAILED,
+    CANCEL: DownloadAPI.CANCEL,
+    INIT: DownloadAPI.INIT,
+    WAIT: DownloadAPI.WAIT,
+    RATEINFO: DownloadAPI.RATEINFO,
+
     download(src) {
         DownloadAPI.download(src);
     },
+
     addItemUpdateListener(handler: Function) {
         var key = getKey(handler, META_1);
         listeners[key] = myNativeEvt.addListener(DownloadAPI.EVENT_DOWNLOAD_ITEM_UPDATE, message => {
@@ -58,6 +60,7 @@ module.exports = {
             handler(message);
         });
     },
+
     removeItemUpdateListener(handler: Function) {
         var key = getKey(handler, META_1);
         if (!listeners[key]) {

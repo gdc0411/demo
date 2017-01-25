@@ -147,6 +147,7 @@ public class DownloadModule extends ReactContextBaseJavaModule implements Lifecy
                     Log.d(TAG, LogUtils.getTraceInfo() + "下载初始化" + info.getFileName() + ",消息:" + msg);
                     notifyItemEvent(INIT, info, msg);
                     notifyData();
+//                    mDownloadCenter.cancelDownload(info,true);
                 }
 
                 @Override
@@ -197,7 +198,7 @@ public class DownloadModule extends ReactContextBaseJavaModule implements Lifecy
             info.setUu(src.getString(PROP_SRC_VOD_UUID));
             info.setVu(src.getString(PROP_SRC_VOD_VUID));
             info.setP(src.getString(PROP_SRC_VOD_BUSINESSLINE));
-            if (src.hasKey(src.getString(PROP_RATE)))
+            if (src.hasKey(PROP_RATE))
                 info.setRateText(src.getString(PROP_RATE));
             mDownloadCenter.downloadVideo(info);
         }
@@ -219,7 +220,7 @@ public class DownloadModule extends ReactContextBaseJavaModule implements Lifecy
         eventPara.putString("rateText", info.getRateText());
         eventPara.putInt(PROP_SRC_IS_PANO, info.getIsPano());
         eventPara.putInt("downloadState", info.getDownloadState());
-        eventPara.putInt("state", info.getState().value());
+        eventPara.putInt("state", info.getState() != null ? info.getState().value() : -1);
         eventPara.putString(PROP_SRC_VOD_UUID, info.getUu());
         eventPara.putString(PROP_SRC_VOD_VUID, info.getVu());
         eventPara.putString(PROP_SRC_VOD_BUSINESSLINE, info.getP());

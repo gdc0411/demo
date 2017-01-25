@@ -123,10 +123,22 @@ class play extends Component {
         // alert(JSON.stringify(message));
         if (message == undefined) return;
 
-        alert(message.eventType);
+        // alert(Download.SUCCESS);
         switch (message.eventType) {
-            case 0:
+            case Download.START:
+                alert(`开始下载！fileName:${message.fileName}`);
+                break;
+            case Download.INIT:
+                alert(`初始化！fileName:${message.fileName}，消息：${message.msg}`);
+                break;
+            case Download.PROGRESS:
+                alert(`正在下载中！fileName:${message.fileName},进度：${message.progress}`);
+                break;
+            case Download.SUCCESS:
                 alert(`下载成功！vu:${message.vuid},uu:${message.uuid},fileName:${message.fileName},存放路径：${message.fileSavePath}`);
+                break;
+            case Download.FAILED:
+                alert(`下载失败！fileName:${message.fileName},原因：${message.msg}`);
                 break;
         }
     }
@@ -378,7 +390,7 @@ class play extends Component {
             case '3': //点播 可下载
                 source = { playMode: 10000, uuid: "841215", vuid: "301180368", businessline: "102", saas: true, pano: false, rate: "13" };
                 break;
-            case '4': //点播 Demo示例，有广告
+            case '4': //点播 Demo示例，有广告，可下载
                 source = { playMode: 10000, uuid: "838389", vuid: "200271100", businessline: "102", saas: true, pano: false };
                 break;
             case '5': //活动直播 官方demo
