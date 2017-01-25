@@ -94,6 +94,7 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
     * 视频状态信息
     */
     private String mCurrentRate;  // 当前视频码率
+    private String mSelectRate;   // 用户选择的码率
 
     private boolean mPaused = false;  // 暂停状态
     private boolean mRepeat = false;  // 重播状态
@@ -146,6 +147,7 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
     private ItimeShiftListener mTimeShiftListener;
     private OnlinePeopleChangeListener mOnlinePeopleChangeListener;
     private ActionStatusListener mActionStatusListener;
+
 
 /*============================= 播放器构造 ===================================*/
 
@@ -319,6 +321,7 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
         mPlayMode = newPlayMode;
         mPano = bundle.containsKey(PROP_SRC_IS_PANO) && bundle.getBoolean(PROP_SRC_IS_PANO);
         mRepeat = bundle.containsKey(PROP_SRC_IS_REPEAT) && bundle.getBoolean(PROP_SRC_IS_REPEAT);
+        mSelectRate = bundle.containsKey(PROP_RATE)? bundle.getString(PROP_RATE):"";
 
         //创建播放器
         initLePlayerIfNeeded();
@@ -606,9 +609,7 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
                     event.putInt(EVENT_PROP_SERVER_TIME, mServerTime);
                     mEventEmitter.receiveEvent(mViewId, Events.EVENT_PAUSE.toString(), event);
                 }
-
                 Log.d(TAG, LogUtils.getTraceInfo() + "外部控制——— 暂停播放 pause ");
-
             }
         } else {
             if (!isPlaying()) {

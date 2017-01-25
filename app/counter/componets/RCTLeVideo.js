@@ -61,7 +61,9 @@ export default class Video extends Component {
                 vuid: PropTypes.string,
                 businessline: PropTypes.string,
                 saas: PropTypes.bool,
-                pano: PropTypes.bool
+                pano: PropTypes.bool,
+                repeat: PropTypes.bool,
+                rate: PropTypes.string,
             }),
             //直播
             PropTypes.shape({
@@ -72,13 +74,16 @@ export default class Video extends Component {
                 businessline: PropTypes.string,
                 cuid: PropTypes.string,
                 utoken: PropTypes.string,
-                pano: PropTypes.bool
+                pano: PropTypes.bool,
+                rate: PropTypes.string,
             }),
             //uri
             PropTypes.shape({
                 playMode: PropTypes.number,
                 uri: PropTypes.string,
-                pano: PropTypes.bool
+                pano: PropTypes.bool,
+                repeat: PropTypes.bool,
+                rate: PropTypes.string,
             }),
         ]).isRequired,
 
@@ -177,6 +182,7 @@ export default class Video extends Component {
                 pano: source.pano || false,
                 uri: uri,
                 repeat: source.repeat || false,
+                rate: source.rate,
             },
             /*回调函数属性赋值*/
             onVideoSourceLoad: (event) => { this.props.onVideoSourceLoad && this.props.onVideoSourceLoad(event.nativeEvent); },

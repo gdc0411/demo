@@ -97,6 +97,7 @@ public class LeReactVideoViewManager extends SimpleViewManager<LeReactVideoView>
                 bundle.putBoolean("pano", src.hasKey(PROP_SRC_IS_PANO) && src.getBoolean(PROP_SRC_IS_PANO));
 //                bundle.putBoolean("hasSkin", src.hasKey(PROP_SRC_HAS_SKIN) && src.getBoolean(PROP_SRC_HAS_SKIN));
                 bundle.putBoolean("repeat", src.hasKey(PROP_SRC_IS_REPEAT) && src.getBoolean(PROP_SRC_IS_REPEAT));
+                bundle.putString("rate", src.hasKey(PROP_RATE) ? src.getString(PROP_RATE) : "");
                 videoView.setSrc(bundle);
                 break;
 
@@ -114,6 +115,7 @@ public class LeReactVideoViewManager extends SimpleViewManager<LeReactVideoView>
                 bundle.putString(PlayerParams.KEY_ACTION_UTOKEN, src.hasKey(PROP_SRC_ALIVE_UTIOKEN) ? src.getString(PROP_SRC_ALIVE_UTIOKEN) : "");
                 bundle.putBoolean("pano", src.hasKey(PROP_SRC_IS_PANO) && src.getBoolean(PROP_SRC_IS_PANO));
 //                bundle.putBoolean("hasSkin", src.hasKey(PROP_SRC_HAS_SKIN) && src.getBoolean(PROP_SRC_HAS_SKIN));
+                bundle.putString("rate", src.hasKey(PROP_RATE) ? src.getString(PROP_RATE) : "");
                 videoView.setSrc(bundle);
                 break;
 
@@ -128,6 +130,7 @@ public class LeReactVideoViewManager extends SimpleViewManager<LeReactVideoView>
                 bundle.putBoolean("pano", src.hasKey(PROP_SRC_IS_PANO) && src.getBoolean(PROP_SRC_IS_PANO));
 //                bundle.putBoolean("hasSkin", src.hasKey(PROP_SRC_HAS_SKIN) && src.getBoolean(PROP_SRC_HAS_SKIN));
                 bundle.putBoolean("repeat", src.hasKey(PROP_SRC_IS_REPEAT) && src.getBoolean(PROP_SRC_IS_REPEAT));
+                bundle.putString("rate", src.hasKey(PROP_RATE) ? src.getString(PROP_RATE) : "");
                 videoView.setSrc(bundle);
                 break;
         }

@@ -52,7 +52,6 @@ public class LeReactPlayerManager extends SimpleViewManager<LeReactPlayer> {
     }
 
 
-
     @Override
     @Nullable
     public Map getExportedCustomDirectEventTypeConstants() {
@@ -81,7 +80,7 @@ public class LeReactPlayerManager extends SimpleViewManager<LeReactPlayer> {
      */
     @ReactProp(name = PROP_SRC)
     public void setDataSource(final LeReactPlayer videoView, final ReadableMap src) {
-        if (src == null || !src.hasKey(PROP_SRC_PLAY_MODE) || src.getInt(PROP_SRC_PLAY_MODE) == -1 ) {
+        if (src == null || !src.hasKey(PROP_SRC_PLAY_MODE) || src.getInt(PROP_SRC_PLAY_MODE) == -1) {
             return;
         }
         int playMode = src.getInt(PROP_SRC_PLAY_MODE);
@@ -96,6 +95,7 @@ public class LeReactPlayerManager extends SimpleViewManager<LeReactPlayer> {
                 bundle.putBoolean("saas", !src.hasKey(PROP_SRC_VOD_SAAS) || src.getBoolean(PROP_SRC_VOD_SAAS));
                 bundle.putBoolean("pano", src.hasKey(PROP_SRC_IS_PANO) && src.getBoolean(PROP_SRC_IS_PANO));
                 bundle.putBoolean("repeat", src.hasKey(PROP_SRC_IS_REPEAT) && src.getBoolean(PROP_SRC_IS_REPEAT));
+                bundle.putString("rate", src.hasKey(PROP_RATE) ? src.getString(PROP_RATE) : "");
                 videoView.setSrc(bundle);
                 break;
 
@@ -112,6 +112,7 @@ public class LeReactPlayerManager extends SimpleViewManager<LeReactPlayer> {
                 bundle.putString(PlayerParams.KEY_ACTION_CUID, src.hasKey(PROP_SRC_ALIVE_CUID) ? src.getString(PROP_SRC_ALIVE_CUID) : "");
                 bundle.putString(PlayerParams.KEY_ACTION_UTOKEN, src.hasKey(PROP_SRC_ALIVE_UTIOKEN) ? src.getString(PROP_SRC_ALIVE_UTIOKEN) : "");
                 bundle.putBoolean("pano", src.hasKey(PROP_SRC_IS_PANO) && src.getBoolean(PROP_SRC_IS_PANO));
+                bundle.putString("rate", src.hasKey(PROP_RATE) ? src.getString(PROP_RATE) : "");
                 videoView.setSrc(bundle);
                 break;
 
@@ -122,8 +123,9 @@ public class LeReactPlayerManager extends SimpleViewManager<LeReactPlayer> {
                 //未知播放类型则为URI
                 bundle = new Bundle();
                 bundle.putInt(PlayerParams.KEY_PLAY_MODE, PlayerParams.VALUE_PLAYER_VOD);
-                bundle.putString("path", src.hasKey(PROP_SRC_URI) ? src.getString(PROP_SRC_URI) :"");
+                bundle.putString("path", src.hasKey(PROP_SRC_URI) ? src.getString(PROP_SRC_URI) : "");
                 bundle.putBoolean("pano", src.hasKey(PROP_SRC_IS_PANO) && src.getBoolean(PROP_SRC_IS_PANO));
+                bundle.putBoolean("repeat", src.hasKey(PROP_SRC_IS_REPEAT) && src.getBoolean(PROP_SRC_IS_REPEAT));
                 videoView.setSrc(bundle);
                 break;
         }
@@ -187,7 +189,7 @@ public class LeReactPlayerManager extends SimpleViewManager<LeReactPlayer> {
     /**
      * 音量控制（VOD、LIVE）
      *
-     * @param volume  音量控制 0-100
+     * @param volume 音量控制 0-100
      */
     @ReactProp(name = PROP_VOLUME)
     public void setVolume(final LeReactPlayer videoView, final int volume) {
@@ -195,14 +197,14 @@ public class LeReactPlayerManager extends SimpleViewManager<LeReactPlayer> {
     }
 
     /**
-     /**
+     * /**
      * 设置亮度（VOD、LIVE）
      *
      * @param brightness 取值0-1
      */
     @ReactProp(name = PROP_BRIGHTNESS)
     public void setBrightness(final LeReactPlayer videoView, final int brightness) {
-        videoView.setScreenBrightness( brightness);
+        videoView.setScreenBrightness(brightness);
     }
 
 //    /**
@@ -217,8 +219,8 @@ public class LeReactPlayerManager extends SimpleViewManager<LeReactPlayer> {
 //    }
 
 
-     /**
-     /**
+    /**
+     * /**
      * 设置是否后台播放（VOD、LIVE）
      *
      * @param playInBackground 是否支持

@@ -21,6 +21,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.lecloud.valley.common.Constants.PROP_RATE;
 import static com.lecloud.valley.common.Constants.PROP_SRC_IS_PANO;
 import static com.lecloud.valley.common.Constants.PROP_SRC_VOD_BUSINESSLINE;
 import static com.lecloud.valley.common.Constants.PROP_SRC_VOD_UUID;
@@ -196,6 +197,8 @@ public class DownloadModule extends ReactContextBaseJavaModule implements Lifecy
             info.setUu(src.getString(PROP_SRC_VOD_UUID));
             info.setVu(src.getString(PROP_SRC_VOD_VUID));
             info.setP(src.getString(PROP_SRC_VOD_BUSINESSLINE));
+            if (src.hasKey(src.getString(PROP_RATE)))
+                info.setRateText(src.getString(PROP_RATE));
             mDownloadCenter.downloadVideo(info);
         }
 

@@ -102,7 +102,7 @@ class play extends Component {
         this.setState({ source: newSource, });
 
         Orientation.setOrientation(1);
-        Orientation.addOnOrientationListener(this.updateOrientation);
+        Orientation.addOnOrientationListener(this.handleOrientation);
         Download.addItemUpdateListener(this.handleDownloadItem);
     }
 
@@ -114,16 +114,24 @@ class play extends Component {
 
     componentWillUnmount() {
         Orientation.setOrientation(1);
-        Orientation.removeOnOrientationListener(this.updateOrientation);
+        Orientation.removeOnOrientationListener(this.handleOrientation);
         Download.removeItemUpdateListener(this.handleDownloadItem);
     }
 
     handleDownloadItem = (message) => {
         console.log("ItemUpdate:", message);
-        alert('ItemUpdate' + JSON.stringify(message));
+        // alert(JSON.stringify(message));
+        if (message == undefined) return;
+
+        alert(message.eventType);
+        switch (message.eventType) {
+            case 0:
+                alert(`下载成功！vu:${message.vuid},uu:${message.uuid},fileName:${message.fileName},存放路径：${message.fileSavePath}`);
+                break;
+        }
     }
 
-    updateOrientation = (orientation) => {
+    handleOrientation = (orientation) => {
         let bottom = 0;
         let needUpdate = false;
         switch (orientation) {
@@ -368,7 +376,7 @@ class play extends Component {
                 source = { playMode: 10000, uuid: "841215", vuid: "300184109", businessline: "102", saas: true, pano: false };
                 break;
             case '3': //点播 可下载
-                source = { playMode: 10000, uuid: "841215", vuid: "301180368", businessline: "102", saas: true, pano: false };
+                source = { playMode: 10000, uuid: "841215", vuid: "301180368", businessline: "102", saas: true, pano: false, rate: "13" };
                 break;
             case '4': //点播 Demo示例，有广告
                 source = { playMode: 10000, uuid: "838389", vuid: "200271100", businessline: "102", saas: true, pano: false };
@@ -397,7 +405,7 @@ class play extends Component {
         navigator.pop();
 
         Orientation.setOrientation(1);
-        Orientation.removeOnOrientationListener(this.updateOrientation);
+        Orientation.removeOnOrientationListener(this.handleOrientation);
     }
 
     getLocalTime = (timestamp) => {
@@ -427,7 +435,6 @@ class play extends Component {
     }
 
     getDownloadButton = () => {
-
         return (
             <Text style={styles.controlOption} onPress={() => { Download.download(this.state.source); } } > 下 载 </Text>
         );

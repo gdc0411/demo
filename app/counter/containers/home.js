@@ -57,8 +57,7 @@ class home extends Component {
         console.log("onUmengOpenMessage:", message);
         // alert('onUmengOpenMessage' + JSON.stringify(message));
         if (message.extra && message.extra.uri) {
-            const {navigator} = this.props;
-            navigator.push({ location: message.extra.uri });
+            this.props.navigator.push({ location: message.extra.uri });
         }
     }
 
