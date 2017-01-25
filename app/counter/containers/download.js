@@ -1,8 +1,8 @@
 /*************************************************************************
- * Description: 下载组件示例
+ * Description: 下载列表DEMO
  * Author: raojia
  * Mail: raojia@le.com
- * Created Time: 2017-01-25
+ * Created Time: 2017-01-26
  ************************************************************************/
 'use strict';
 
@@ -29,24 +29,27 @@ class download extends Component {
     this.state = {
       progress: 0,
       indeterminate: true,
+      downloadList: [],
     };
   }
 
   componentWillMount() {
-    Download.addItemUpdateListener(this.handleDownloadList);
+    Download.addListUpdateListener(this.handleDownloadList);
   }
 
   componentDidMount() {
-    this.animate();
+    // this.animate();
+    Download.list();
   }
 
   componentWillUnmount() {
-    Download.removeItemUpdateListener(this.handleDownloadList);
+    Download.removeListUpdateListener(this.handleDownloadList);
   }
 
-  handleDownloadList(message) {
-    console.log("ItemUpdate:", message);
-    alert('ItemUpdate' + JSON.stringify(message));
+  handleDownloadList = (message) => {
+    console.log("ListUpdate:", message);
+    //alert('ListUpdate' + JSON.stringify(message));
+    this.setState({ downloadList: message });
   }
 
   animate() {
@@ -65,44 +68,110 @@ class download extends Component {
   }
 
   render() {
+
+    let downloadList = this.state.downloadList;
+    let pages = [];
+
+    for (let i = 0; i < downloadList.length; i++) {
+
+      let downloadState = downloadList[i].downloadState;
+
+      let showProgress = false;
+      let showPause = false;
+      let showResume = false;
+      let showRetry = false;
+      let showPlay = false;
+      let showDelete = true;
+
+      let indeterminate = true;
+      let showTips = '';
+
+      switch (downloadState) {
+        case Download.DOWLOAD_STATE_WAITING:
+          indeterminate = true;
+          showTips = '等待中';
+          break;
+        case Download.DOWLOAD_STATE_DOWNLOADING:
+          indeterminate = false;
+          showTips = '下载中';
+          showPause = true;
+          break;
+        case Download.DOWLOAD_STATE_STOP:
+          indeterminate = false;
+          showTips = '下载暂停';          
+          showResume = true;
+          break;
+        case Download.DOWLOAD_STATE_SUCCESS:
+          indeterminate = false;
+          showTips = '下载成功';
+          showPlay = true;
+          break;
+        case Download.DOWLOAD_STATE_FAILED:
+          indeterminate = false;
+          showTips = '下载失败';
+          showRetry = true;
+          break;
+        case Download.DOWLOAD_STATE_NO_DISPATCH:
+          indeterminate = false;
+          showTips = '排队中';
+          showRetry = true;
+          break;
+        case Download.DOWLOAD_STATE_NO_PERMISSION:
+          indeterminate = false;
+          showTips = '没有权限下载';
+          showRetry = true;
+          break;
+        case Download.DOWLOAD_STATE_URL_REQUEST_FAILED:
+          indeterminate = false;
+          showTips = '视频url请求失败';
+          showRetry = true;
+          break;
+        case Download.DOWLOAD_STATE_DISPATCHING:
+          indeterminate = true;
+          showTips = '正在调度中';
+          break;
+        default:
+          break;
+      }
+
+      let progress = downloadList[i].progress / downloadList[i].fileLength;
+
+      pages.push(
+        <View>
+          <Text key={i}>{downloadList[i].id + `|` + downloadList[i].fileName}</Text>
+          <Progress.Bar style={styles.progress} progress={progress} indeterminate={indeterminate} />
+          <View style={{ flexDirection: 'row', justifyContent: 'center' }} >
+            <Text style={styles.instructions}> {showTips}     </Text>
+            {showPause ?
+              <TouchableOpacity onPress={(id) => Download.pause({ id: downloadList[i].id })}>
+                <Text style={styles.instructions}> 暂停 </Text>
+              </TouchableOpacity> : null
+            }
+            {showResume ?
+              <TouchableOpacity onPress={(id) => Download.resume({ id: downloadList[i].id })}>
+                <Text style={styles.instructions}> 恢复 </Text>
+              </TouchableOpacity> : null
+            }
+            {showRetry ?
+              <TouchableOpacity onPress={(id) => Download.retry({ id: downloadList[i].id })}>
+                <Text style={styles.instructions}> 重试 </Text>
+              </TouchableOpacity> : null
+            }
+            {showDelete ?
+              <TouchableOpacity onPress={(id) => Download.delete({ id: downloadList[i].id })}>
+                <Text style={styles.instructions}> 删除 </Text>
+              </TouchableOpacity> : null
+            }
+          </View>
+        </View>
+      );
+    }
+
     return (
       <View style={styles.container}>
-        <Text style={styles.welcome}>Progress Example</Text>
-        <Progress.Bar
-          style={styles.progress}
-          progress={this.state.progress}
-          indeterminate={this.state.indeterminate}
-          />
-        <View style={styles.circles}>
-          <Progress.Circle
-            style={styles.progress}
-            progress={this.state.progress}
-            indeterminate={this.state.indeterminate}
-            />
-          <Progress.Pie
-            style={styles.progress}
-            progress={this.state.progress}
-            indeterminate={this.state.indeterminate}
-            />
-          <Progress.Circle
-            style={styles.progress}
-            progress={this.state.progress}
-            indeterminate={this.state.indeterminate}
-            direction="counter-clockwise"
-            />
-        </View>
-        <View style={styles.circles}>
-          <Progress.CircleSnail
-            style={styles.progress}
-            />
-          <Progress.CircleSnail
-            style={styles.progress}
-            color={[
-              '#F44336',
-              '#2196F3',
-              '#009688',
-            ]}
-            />
+        <Text style={styles.welcome}>下载视频列表</Text>
+        <View>
+          {pages.map((elem, index) => { return elem; })}
         </View>
         <TouchableOpacity onPress={(para) => this.props.navigator.pop()} style={styles.button}>
           <Text style={styles.instructions}>

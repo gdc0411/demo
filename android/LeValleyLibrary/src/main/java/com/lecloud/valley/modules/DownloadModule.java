@@ -8,6 +8,7 @@ import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableMap;
+import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.modules.core.RCTNativeAppEventEmitter;
 
@@ -37,15 +38,15 @@ public class DownloadModule extends ReactContextBaseJavaModule implements Lifecy
 
     private static int maxThreadCount = 5;
 
-    private final static int SUCCESS = 0; //下载完成
-    private final static int STOP = 1; //下载停止
-    private final static int START = 3; //下载开始
-    private final static int PROGRESS = 4; //下载进行中
-    private final static int FAILED = 5; //下载失败
-    private final static int CANCEL = 6; //下载取消
-    private final static int INIT = 7; //初始化完成
-    private final static int WAIT = 8; //已获得url，等待下载
-    private final static int RATEINFO = 9; //得到码率
+    private final static int EVENT_TYPE_SUCCESS = 0; //下载完成
+    private final static int EVENT_TYPE_STOP = 1; //下载停止
+    private final static int EVENT_TYPE_START = 3; //下载开始
+    private final static int EVENT_TYPE_PROGRESS = 4; //下载进行中
+    private final static int EVENT_TYPE_FAILED = 5; //下载失败
+    private final static int EVENT_TYPE_CANCEL = 6; //下载取消
+    private final static int EVENT_TYPE_INIT = 7; //初始化完成
+    private final static int EVENT_TYPE_WAIT = 8; //已获得url，等待下载
+    private final static int EVENT_TYPE_RATEINFO = 9; //得到码率
 
 
     private RCTNativeAppEventEmitter mEventEmitter;
@@ -69,16 +70,20 @@ public class DownloadModule extends ReactContextBaseJavaModule implements Lifecy
     public Map<String, Object> getConstants() {
         final Map<String, Object> constants = new HashMap<>();
         constants.put("EVENT_DOWNLOAD_ITEM_UPDATE", Events.EVENT_DOWNLOAD_ITEM_UPDATE.toString());
-        constants.put("SUCCESS", SUCCESS);
-        constants.put("STOP", STOP);
-        constants.put("START", START);
-        constants.put("PROGRESS", PROGRESS);
-        constants.put("FAILED", FAILED);
-        constants.put("CANCEL", CANCEL);
-        constants.put("INIT", INIT);
-        constants.put("WAIT", WAIT);
-        constants.put("RATEINFO", RATEINFO);
+        constants.put("EVENT_TYPE_SUCCESS", EVENT_TYPE_SUCCESS);
+        constants.put("EVENT_TYPE_START", EVENT_TYPE_START);
+        constants.put("EVENT_TYPE_FAILED", EVENT_TYPE_FAILED);
+
         constants.put("EVENT_DOWNLOAD_LIST_UPDATE", Events.EVENT_DOWNLOAD_LIST_UPDATE.toString());
+        constants.put("DOWLOAD_STATE_WAITING", LeDownloadObserver.DOWLOAD_STATE_WAITING);
+        constants.put("DOWLOAD_STATE_DOWNLOADING", LeDownloadObserver.DOWLOAD_STATE_DOWNLOADING);
+        constants.put("DOWLOAD_STATE_STOP", LeDownloadObserver.DOWLOAD_STATE_STOP);
+        constants.put("DOWLOAD_STATE_SUCCESS", LeDownloadObserver.DOWLOAD_STATE_SUCCESS);
+        constants.put("DOWLOAD_STATE_FAILED", LeDownloadObserver.DOWLOAD_STATE_FAILED);
+        constants.put("DOWLOAD_STATE_NO_DISPATCH", LeDownloadObserver.DOWLOAD_STATE_NO_DISPATCH);
+        constants.put("DOWLOAD_STATE_NO_PERMISSION", LeDownloadObserver.DOWLOAD_STATE_NO_PERMISSION);
+        constants.put("DOWLOAD_STATE_URL_REQUEST_FAILED", LeDownloadObserver.DOWLOAD_STATE_URL_REQUEST_FAILED);
+        constants.put("DOWLOAD_STATE_DISPATCHING", LeDownloadObserver.DOWLOAD_STATE_DISPATCHING);
         return constants;
     }
 
@@ -101,52 +106,52 @@ public class DownloadModule extends ReactContextBaseJavaModule implements Lifecy
                 @Override
                 public void onDownloadSuccess(LeDownloadInfo info) {
                     Log.d(TAG, LogUtils.getTraceInfo() + "下载完成" + info.getFileName());
-                    notifyItemEvent(SUCCESS, info, null);
-                    notifyData();
+                    notifyItemEvent(EVENT_TYPE_SUCCESS, info, null);
+                    notifyListEvent();
 //                    mDownloadCenter.cancelDownload(info,true);
                 }
 
                 @Override
                 public void onDownloadStop(LeDownloadInfo info) {
                     Log.d(TAG, LogUtils.getTraceInfo() + "停止下载" + info.getFileName());
-                    notifyItemEvent(STOP, info, null);
-                    notifyData();
+                    notifyItemEvent(EVENT_TYPE_STOP, info, null);
+                    notifyListEvent();
                 }
 
                 @Override
                 public void onDownloadStart(LeDownloadInfo info) {
                     Log.d(TAG, LogUtils.getTraceInfo() + "开始下载" + info.getFileName());
-                    notifyItemEvent(START, info, null);
-                    notifyData();
+                    notifyItemEvent(EVENT_TYPE_START, info, null);
+                    notifyListEvent();
                 }
 
                 @Override
                 public void onDownloadProgress(LeDownloadInfo info) {
                     Log.d(TAG, LogUtils.getTraceInfo() + "下载进度更新" + info.getFileName() + ",进度:" + info.getProgress());
-                    notifyItemEvent(PROGRESS, info, null);
-                    notifyData();
+                    notifyItemEvent(EVENT_TYPE_PROGRESS, info, null);
+                    notifyListEvent();
                 }
 
                 @Override
                 public void onDownloadFailed(LeDownloadInfo info, String msg) {
                     // Toast.makeText(ctx,""+msg,Toast.LENGTH_SHORT).show();
                     Log.d(TAG, LogUtils.getTraceInfo() + "下载失败" + info.getFileName() + ",错误:" + msg);
-                    notifyItemEvent(FAILED, info, msg);
-                    notifyData();
+                    notifyItemEvent(EVENT_TYPE_FAILED, info, msg);
+                    notifyListEvent();
                 }
 
                 @Override
                 public void onDownloadCancel(LeDownloadInfo info) {
                     Log.d(TAG, LogUtils.getTraceInfo() + "删除下载" + info.getFileName());
-                    notifyItemEvent(CANCEL, info, null);
-                    notifyData();
+                    notifyItemEvent(EVENT_TYPE_CANCEL, info, null);
+                    notifyListEvent();
                 }
 
                 @Override
                 public void onDownloadInit(LeDownloadInfo info, String msg) {
                     Log.d(TAG, LogUtils.getTraceInfo() + "下载初始化" + info.getFileName() + ",消息:" + msg);
-                    notifyItemEvent(INIT, info, msg);
-                    notifyData();
+                    notifyItemEvent(EVENT_TYPE_INIT, info, msg);
+                    notifyListEvent();
 //                    mDownloadCenter.cancelDownload(info,true);
                 }
 
@@ -154,13 +159,14 @@ public class DownloadModule extends ReactContextBaseJavaModule implements Lifecy
                 public void onDownloadWait(LeDownloadInfo info) {
                     Log.d(TAG, LogUtils.getTraceInfo() + "等待下载" + info.getFileName());
                     //glh 当请求url成功时，回调这个方法，表示开始等待下载
-                    notifyItemEvent(WAIT, info, null);
+                    notifyItemEvent(EVENT_TYPE_WAIT, info, null);
+                    notifyListEvent();
                 }
 
                 @Override
                 public void onGetVideoInfoRate(LeDownloadInfo info, List<String> rates) {
                     Log.d(TAG, LogUtils.getTraceInfo() + "获取你当前下载视频的码率(比如标清、高清、原画等等)" + info.getFileName());
-                    notifyItemEvent(RATEINFO, info, null);
+                    notifyItemEvent(EVENT_TYPE_RATEINFO, info, null);
                 }
             };
             mDownloadCenter.registerDownloadObserver(mDownloadObserver);
@@ -169,26 +175,18 @@ public class DownloadModule extends ReactContextBaseJavaModule implements Lifecy
 
     @Override
     public void onCatalystInstanceDestroy() {
-        if (mDownloadInfos != null) {
+        if (mDownloadCenter != null) {
             mDownloadCenter.unregisterDownloadObserver(mDownloadObserver);
-            mDownloadInfos = null;
+            mDownloadObserver = null;
+//            mDownloadInfos = null;
         }
         mEventEmitter = null;
         mReactContext.removeLifecycleEventListener(this);
         super.onCatalystInstanceDestroy();
     }
 
-    private void notifyData() {
-        mDownloadInfos = mDownloadCenter.getDownloadInfoList();
-//        mAdapter.setData(mDownloadInfos);
-//        mAdapter.notifyDataSetChanged();
-
-        Log.d(TAG, LogUtils.getTraceInfo() + "下载消息——— :" + mDownloadInfos.toString());
-    }
-
     @ReactMethod
     public void download(final ReadableMap src) {
-
         if (src == null || !src.hasKey(PROP_SRC_VOD_UUID) || !src.hasKey(PROP_SRC_VOD_VUID) || !src.hasKey(PROP_SRC_VOD_BUSINESSLINE)) {
             return;
         }
@@ -202,8 +200,75 @@ public class DownloadModule extends ReactContextBaseJavaModule implements Lifecy
                 info.setRateText(src.getString(PROP_RATE));
             mDownloadCenter.downloadVideo(info);
         }
-
         Log.d(TAG, LogUtils.getTraceInfo() + "外部控制——— 下载视频:" + src.toString());
+    }
+
+    @ReactMethod
+    public void list() {
+        if (mDownloadCenter != null)
+            notifyListEvent();
+
+        Log.d(TAG, LogUtils.getTraceInfo() + "外部控制——— 获取下载列表！");
+    }
+
+    @ReactMethod
+    public void pause(final ReadableMap src) {
+        if (src == null || mDownloadCenter == null || mDownloadInfos == null || !src.hasKey("id"))
+            return;
+
+        for (LeDownloadInfo info : mDownloadInfos)
+            if (info.getId() == src.getInt("id"))
+                mDownloadCenter.stopDownload(info);
+
+        Log.d(TAG, LogUtils.getTraceInfo() + "外部控制——— 暂停下载:" + src.toString());
+    }
+
+    @ReactMethod
+    public void resume(final ReadableMap src) {
+        if (src == null || mDownloadCenter == null || mDownloadInfos == null || !src.hasKey("id"))
+            return;
+
+        for (LeDownloadInfo info : mDownloadInfos)
+            if (info.getId() == src.getInt("id"))
+                mDownloadCenter.resumeDownload(info);
+
+        Log.d(TAG, LogUtils.getTraceInfo() + "外部控制——— 恢复下载:" + src.toString());
+    }
+
+
+    @ReactMethod
+    public void retry(final ReadableMap src) {
+        if (src == null || mDownloadCenter == null || mDownloadInfos == null || !src.hasKey("id"))
+            return;
+
+        for (LeDownloadInfo info : mDownloadInfos)
+            if (info.getId() == src.getInt("id"))
+                mDownloadCenter.retryDownload(info);
+
+        Log.d(TAG, LogUtils.getTraceInfo() + "外部控制——— 重试下载:" + src.toString());
+    }
+
+    @ReactMethod
+    public void delete(final ReadableMap src) {
+        if (src == null || mDownloadCenter == null || mDownloadInfos == null || !src.hasKey("id"))
+            return;
+
+        for (LeDownloadInfo info : mDownloadInfos)
+            if (info.getId() == src.getInt("id"))
+                mDownloadCenter.cancelDownload(info, true);
+
+        Log.d(TAG, LogUtils.getTraceInfo() + "外部控制——— 删除视频:" + src.toString());
+    }
+
+    @ReactMethod
+    public void clear() {
+        if (mDownloadCenter == null || mDownloadInfos == null)
+            return;
+
+        for (LeDownloadInfo info : mDownloadInfos)
+            mDownloadCenter.cancelDownload(info, true);
+
+        Log.d(TAG, LogUtils.getTraceInfo() + "外部控制——— 删除全部视频:");
     }
 
 
@@ -226,17 +291,51 @@ public class DownloadModule extends ReactContextBaseJavaModule implements Lifecy
         eventPara.putString(PROP_SRC_VOD_BUSINESSLINE, info.getP());
         eventPara.putString("msg", msg);
 
-        //此处需要添加hasActiveCatalystInstance，否则可能造成崩溃
-        //问题解决参考: https://github.com/walmartreact/react-native-orientation-listener/issues/8
         if (mReactContext.hasActiveCatalystInstance()) {
-            Log.i(TAG, "hasActiveCatalystInstance");
             if (mEventEmitter != null)
                 mEventEmitter.emit(Events.EVENT_DOWNLOAD_ITEM_UPDATE.toString(), eventPara);
         } else {
             Log.i(TAG, "not hasActiveCatalystInstance");
         }
+
+        Log.d(TAG, LogUtils.getTraceInfo() + "下载事件——— Item更新事件 event:" + eventType + " info:" + info.getFileName());
+
     }
 
+    private void notifyListEvent() {
+
+        mDownloadInfos = mDownloadCenter.getDownloadInfoList();
+
+        WritableArray eventList = Arguments.createArray();
+
+        if (mDownloadInfos != null ) {
+            for (LeDownloadInfo info : mDownloadInfos) {
+                WritableMap eventPara = Arguments.createMap();
+                eventPara.putInt("id", (int) info.getId());
+                eventPara.putString("fileName", info.getFileName());
+                eventPara.putString("fileSavePath", info.getFileSavePath());
+                eventPara.putDouble("progress", info.getProgress());
+                eventPara.putDouble("fileLength", info.getFileLength());
+                eventPara.putString("rateText", info.getRateText());
+                eventPara.putInt(PROP_SRC_IS_PANO, info.getIsPano());
+                eventPara.putInt("downloadState", info.getDownloadState());
+                eventPara.putInt("state", info.getState() != null ? info.getState().value() : -1);
+                eventPara.putString(PROP_SRC_VOD_UUID, info.getUu());
+                eventPara.putString(PROP_SRC_VOD_VUID, info.getVu());
+                eventPara.putString(PROP_SRC_VOD_BUSINESSLINE, info.getP());
+
+                eventList.pushMap(eventPara);
+            }
+        }
+
+        if (mReactContext.hasActiveCatalystInstance()) {
+            if (mEventEmitter != null)
+                mEventEmitter.emit(Events.EVENT_DOWNLOAD_LIST_UPDATE.toString(), eventList);
+        } else {
+            Log.i(TAG, "not hasActiveCatalystInstance");
+        }
+        Log.d(TAG, LogUtils.getTraceInfo() + "下载事件——— List更新事件 :" + mDownloadInfos.size());
+    }
 
     @Override
     public void onHostResume() {

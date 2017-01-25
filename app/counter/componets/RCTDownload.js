@@ -36,20 +36,37 @@ function getKey(listener, META) {
 };
 
 module.exports = {
-    SUCCESS: DownloadAPI.SUCCESS,
-    STOP: DownloadAPI.STOP,
-    START: DownloadAPI.START,
-    PROGRESS: DownloadAPI.PROGRESS,
-    FAILED: DownloadAPI.FAILED,
-    CANCEL: DownloadAPI.CANCEL,
-    INIT: DownloadAPI.INIT,
-    WAIT: DownloadAPI.WAIT,
-    RATEINFO: DownloadAPI.RATEINFO,
+    EVENT_TYPE_SUCCESS: DownloadAPI.EVENT_TYPE_SUCCESS,
+    EVENT_TYPE_START: DownloadAPI.EVENT_TYPE_START,
+    EVENT_TYPE_FAILED: DownloadAPI.EVENT_TYPE_FAILED,
+    DOWLOAD_STATE_WAITING: DownloadAPI.DOWLOAD_STATE_WAITING,
+    DOWLOAD_STATE_DOWNLOADING: DownloadAPI.DOWLOAD_STATE_DOWNLOADING,
+    DOWLOAD_STATE_STOP: DownloadAPI.DOWLOAD_STATE_STOP,
+    DOWLOAD_STATE_SUCCESS: DownloadAPI.DOWLOAD_STATE_SUCCESS,
+    DOWLOAD_STATE_FAILED: DownloadAPI.DOWLOAD_STATE_FAILED,
+    DOWLOAD_STATE_NO_DISPATCH: DownloadAPI.DOWLOAD_STATE_NO_DISPATCH,
+    DOWLOAD_STATE_NO_PERMISSION: DownloadAPI.DOWLOAD_STATE_NO_PERMISSION,
+    DOWLOAD_STATE_URL_REQUEST_FAILED: DownloadAPI.DOWLOAD_STATE_URL_REQUEST_FAILED,
+    DOWLOAD_STATE_DISPATCHING: DownloadAPI.DOWLOAD_STATE_DISPATCHING,
 
     download(src) {
         DownloadAPI.download(src);
     },
-
+    list(src) {
+        DownloadAPI.list();
+    },
+    pause(src) {
+        DownloadAPI.pause(src);
+    },
+    resume(src) {
+        DownloadAPI.resume(src);
+    },
+    retry(src) {
+        DownloadAPI.retry(src);
+    },
+    delete(src) {
+        DownloadAPI.delete(src);
+    },
     addItemUpdateListener(handler: Function) {
         var key = getKey(handler, META_1);
         listeners[key] = myNativeEvt.addListener(DownloadAPI.EVENT_DOWNLOAD_ITEM_UPDATE, message => {
@@ -63,6 +80,25 @@ module.exports = {
 
     removeItemUpdateListener(handler: Function) {
         var key = getKey(handler, META_1);
+        if (!listeners[key]) {
+            return;
+        }
+        listeners[key].remove();
+        listeners[key] = null;
+    },
+
+    addListUpdateListener(handler: Function) {
+        var key = getKey(handler, META_2);
+        listeners[key] = myNativeEvt.addListener(DownloadAPI.EVENT_DOWNLOAD_LIST_UPDATE, message => {
+            //处于后台时，拦截收到的消息
+            if (AppState.currentState === 'background') {
+                return;
+            }
+            handler(message);
+        });
+    },
+    removeListUpdateListener(handler: Function) {
+        var key = getKey(handler, META_2);
         if (!listeners[key]) {
             return;
         }

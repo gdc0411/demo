@@ -162,7 +162,7 @@ export default class Video extends Component {
         const source = resolveAssetSource(this.props.source) || {};
         let uri = source.uri;
         if (uri && uri.match(/^\//)) {
-            uri = `file://${uri}`;
+            //uri = `file://${uri}`;
         }
         /* 组件属性赋值 */
         const nativeProps = Object.assign({}, this.props);

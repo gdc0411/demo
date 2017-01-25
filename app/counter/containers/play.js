@@ -125,7 +125,7 @@ class play extends Component {
 
         // alert(Download.SUCCESS);
         switch (message.eventType) {
-            case Download.START:
+            case Download.EVENT_TYPE_START:
                 alert(`开始下载！fileName:${message.fileName}`);
                 break;
             // case Download.INIT:
@@ -134,10 +134,10 @@ class play extends Component {
             // case Download.PROGRESS:
             //     alert(`正在下载中！fileName:${message.fileName},进度：${message.progress}`);
             //     break;
-            case Download.SUCCESS:
+            case Download.EVENT_TYPE_SUCCESS:
                 alert(`下载成功！vu:${message.vuid},uu:${message.uuid},fileName:${message.fileName},存放路径：${message.fileSavePath}`);
                 break;
-            case Download.FAILED:
+            case Download.EVENT_TYPE_FAILED:
                 alert(`下载失败！fileName:${message.fileName},原因：${message.msg}`);
                 break;
         }
@@ -404,6 +404,7 @@ class play extends Component {
                 break;
             default: //网络或本地地址
                 source = { playMode: 0, uri: "http://cache.utovr.com/201601131107187320.mp4", pano: false };
+                // source = { playMode: 0, uri: "/sdcard/Android/data/com.lecloud.valley.demo/levideo/%E7%94%B5%E5%BD%B1%E6%B5%8B%E8%AF%95627", pano: false };                
                 break;
         }
         // alert(source);
