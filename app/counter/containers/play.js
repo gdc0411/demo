@@ -402,9 +402,12 @@ class play extends Component {
             case '7': //活动直播 自己推流
                 source = { playMode: 10002, actionId: "A20170124000008m", usehls: false, customerId: "", businessline: "", cuid: "", utoken: "", pano: false };
                 break;
-            default: //网络或本地地址
+            case '0': //第三方URL
                 source = { playMode: 0, uri: "http://cache.utovr.com/201601131107187320.mp4", pano: false };
-                // source = { playMode: 0, uri: "/sdcard/Android/data/com.lecloud.valley.demo/levideo/%E7%94%B5%E5%BD%B1%E6%B5%8B%E8%AF%95627", pano: false };                
+                break;
+            default: //本地地址
+                source = { playMode: 0, uri: key, pano: false };                
+                //source = { playMode: 0, uri: "/sdcard/Android/data/com.lecloud.valley.demo/levideo/%E7%94%B5%E5%BD%B1%E6%B5%8B%E8%AF%95627", pano: false };                
                 break;
         }
         // alert(source);

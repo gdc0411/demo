@@ -82,7 +82,6 @@ class download extends Component {
       let showRetry = false;
       let showPlay = false;
       let showDelete = true;
-
       let indeterminate = true;
       let showTips = '';
 
@@ -98,7 +97,7 @@ class download extends Component {
           break;
         case Download.DOWLOAD_STATE_STOP:
           indeterminate = false;
-          showTips = '下载暂停';          
+          showTips = '下载暂停';
           showResume = true;
           break;
         case Download.DOWLOAD_STATE_SUCCESS:
@@ -112,7 +111,6 @@ class download extends Component {
           showRetry = true;
           break;
         case Download.DOWLOAD_STATE_NO_DISPATCH:
-          indeterminate = false;
           showTips = '排队中';
           showRetry = true;
           break;
@@ -127,7 +125,6 @@ class download extends Component {
           showRetry = true;
           break;
         case Download.DOWLOAD_STATE_DISPATCHING:
-          indeterminate = true;
           showTips = '正在调度中';
           break;
         default:
@@ -155,6 +152,11 @@ class download extends Component {
             {showRetry ?
               <TouchableOpacity onPress={(id) => Download.retry({ id: downloadList[i].id })}>
                 <Text style={styles.instructions}> 重试 </Text>
+              </TouchableOpacity> : null
+            }
+            {showPlay ?
+              <TouchableOpacity onPress={(id) => this.props.navigator.push({ location: '/play/' + encodeURIComponent(downloadList[i].fileSavePath), }) }>
+                <Text style={styles.instructions}> 播放 </Text>
               </TouchableOpacity> : null
             }
             {showDelete ?
