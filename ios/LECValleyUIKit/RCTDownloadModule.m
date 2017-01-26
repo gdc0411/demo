@@ -18,6 +18,7 @@
 #define EVENT_TYPE_START                    3
 #define EVENT_TYPE_PROGRESS                 4
 #define EVENT_TYPE_FAILED                   5
+#define EVENT_TYPE_EXIST                    10
 
 #define EVENT_DOWNLOAD_LIST_UPDATE          @"onDownloadListUpdate"
 #define DOWLOAD_STATE_WAITING               1
@@ -50,6 +51,7 @@ RCT_EXPORT_MODULE();
               @"EVENT_TYPE_SUCCESS"             : @(EVENT_TYPE_SUCCESS),
               @"EVENT_TYPE_START"               : @(EVENT_TYPE_START),
               @"EVENT_TYPE_FAILED"              : @(EVENT_TYPE_FAILED),
+              @"EVENT_TYPE_EXIST"               : @(EVENT_TYPE_EXIST),
               @"EVENT_DOWNLOAD_LIST_UPDATE"     : EVENT_DOWNLOAD_LIST_UPDATE,
               @"DOWLOAD_STATE_WAITING"          : @(DOWLOAD_STATE_WAITING),
               @"DOWLOAD_STATE_DOWNLOADING"      : @(DOWLOAD_STATE_DOWNLOADING),
@@ -91,13 +93,23 @@ RCT_EXPORT_METHOD(download:(NSDictionary *)source
 {
     NSLog(@"外部控制——— 下载视频: %@", source);
     
-    NSString *uuid        = [source objectForKey:@"uuid"];
-    NSString *vuid        = [source objectForKey:@"vuid"];
-    NSString *buinessline = [source objectForKey:@"businessline"];
-    bool saas             = [RCTConvert BOOL:[source objectForKey:@"saas"]];
-    NSString *rate        = [source objectForKey:@"rate"];
+    NSString *uuid          = [source objectForKey:@"uuid"];
+    NSString *vuid          = [source objectForKey:@"vuid"];
+    NSString *buinessline   = [source objectForKey:@"businessline"];
+    bool saas               = [RCTConvert BOOL:[source objectForKey:@"saas"]];
+    NSString *rate          = [source objectForKey:@"rate"];
+    NSDictionary *videoInfo = [source objectForKey:@"videoInfo"];
     
     if (uuid.length != 0 && vuid.length != 0 && buinessline.length != 0 && _sharedManager!= nil ) {
+        
+        self.downloadList = _sharedManager.vodItemsList;
+        if(self.downloadList && self.downloadList.count > 0){
+            for (LECVODDownloadItem *info in _downloadList)
+                if([info.vu isEqualToString:[source objectForKey:@"vuid"]]){
+                    [self notifyItemEvent:EVENT_TYPE_EXIST withDownloadItem:info andMsg:nil];
+                    return;
+                }
+        }
         
         LECPlayerOption *option= [[LECPlayerOption alloc]init]; //创建选项
         option.p               = buinessline;
@@ -105,14 +117,13 @@ RCT_EXPORT_METHOD(download:(NSDictionary *)source
         
         LECVODDownloadItem *downloadItem = [_sharedManager createVODDownloadItemWithUu:uuid
                                                                                     vu:vuid
-                                                                              userInfo:nil
+                                                                              userInfo:videoInfo
                                                                    expectVideoCodeType:rate
                                                                           payCheckCode:nil
                                                                            payUserName:nil
                                                                                options:option];
         [_sharedManager startDownloadWithVODItem:downloadItem];
         
-        self.downloadList = _sharedManager.vodItemsList;
     }
 }
 
@@ -218,6 +229,7 @@ RCT_EXPORT_METHOD(clear:(RCTPromiseResolveBlock)resolve
     [eventPara setValue:vodDownloadItem.errorCode forKey:@"errorCode"];
     [eventPara setValue:vodDownloadItem.errorDesc forKey:@"errorDesc"];
     [eventPara setValue:[NSNumber numberWithInt:vodDownloadItem.status] forKey:@"downloadState"];
+    [eventPara setValue:vodDownloadItem.userInfo forKey:@"videoInfo"];
     [eventPara setValue:vodDownloadItem.errorDesc forKey:@"msg"];
     
     [self sendEventWithName:EVENT_DOWNLOAD_ITEM_UPDATE body:eventPara];
@@ -252,6 +264,7 @@ RCT_EXPORT_METHOD(clear:(RCTPromiseResolveBlock)resolve
             [eventPara setValue:vodDownloadItem.errorCode forKey:@"errorCode"];
             [eventPara setValue:vodDownloadItem.errorDesc forKey:@"errorDesc"];
             [eventPara setValue:[NSNumber numberWithInt:vodDownloadItem.status] forKey:@"downloadState"];
+            [eventPara setValue:vodDownloadItem.userInfo forKey:@"videoInfo"];
             [eventPara setValue:vodDownloadItem.errorDesc forKey:@"msg"];
             
             [eventList addObject:eventPara];

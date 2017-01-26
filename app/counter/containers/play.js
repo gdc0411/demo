@@ -137,6 +137,9 @@ class play extends Component {
             case Download.EVENT_TYPE_SUCCESS:
                 alert(`下载成功！vu:${message.vuid},uu:${message.uuid},fileName:${message.fileName},videoInfo：${JSON.stringify(message.videoInfo)}`);
                 break;
+            case Download.EVENT_TYPE_EXIST:
+                alert(`已存在下载！vu:${message.vuid},uu:${message.uuid},fileName:${message.fileName},videoInfo：${JSON.stringify(message.videoInfo)}`);
+                break;
             case Download.EVENT_TYPE_FAILED:
                 alert(`下载失败！fileName:${message.fileName},原因：${message.msg}`);
                 break;
