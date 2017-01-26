@@ -40,6 +40,7 @@ public interface Constants {
     String PROP_SRC_VOD_VUID = "vuid";
     String PROP_SRC_VOD_BUSINESSLINE = "businessline";
     String PROP_SRC_VOD_SAAS = "saas";
+    String PROP_SRC_VOD_EXTRA = "videoInfo";
     //活动直播模式参数
     String PROP_SRC_ALIVE_ACTIONID = "actionId";
     String PROP_SRC_ALIVE_CUSTOMERID = "customerId";

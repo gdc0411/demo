@@ -17,6 +17,7 @@ import com.lecloud.sdk.download.observer.LeDownloadObserver;
 import com.lecloud.valley.common.Events;
 import com.lecloud.valley.utils.DowanloadValleyCenter;
 import com.lecloud.valley.utils.LogUtils;
+import com.lecloud.valley.utils.StringUtils;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -26,6 +27,7 @@ import java.util.Map;
 import static com.lecloud.valley.common.Constants.PROP_RATE;
 import static com.lecloud.valley.common.Constants.PROP_SRC_IS_PANO;
 import static com.lecloud.valley.common.Constants.PROP_SRC_VOD_BUSINESSLINE;
+import static com.lecloud.valley.common.Constants.PROP_SRC_VOD_EXTRA;
 import static com.lecloud.valley.common.Constants.PROP_SRC_VOD_UUID;
 import static com.lecloud.valley.common.Constants.PROP_SRC_VOD_VUID;
 import static com.lecloud.valley.common.Constants.REACT_CLASS_DOWNLOAD_MODULE;
@@ -200,6 +202,8 @@ public class DownloadModule extends ReactContextBaseJavaModule implements Lifecy
             info.setUu(src.getString(PROP_SRC_VOD_UUID));
             info.setVu(src.getString(PROP_SRC_VOD_VUID));
             info.setP(src.getString(PROP_SRC_VOD_BUSINESSLINE));
+            if (src.hasKey(PROP_SRC_VOD_EXTRA))
+                info.setString1(StringUtils.convertReadMapToJsonStr(src.getMap(PROP_SRC_VOD_EXTRA)));
             if (src.hasKey(PROP_RATE))
                 info.setRateText(src.getString(PROP_RATE));
             mDownloadCenter.downloadVideo(info);
@@ -300,6 +304,7 @@ public class DownloadModule extends ReactContextBaseJavaModule implements Lifecy
         eventPara.putString(PROP_SRC_VOD_BUSINESSLINE, info.getP());
         eventPara.putString("payCheckCode", info.getCheckCode());
         eventPara.putString("payUserName", info.getPayerName());
+        eventPara.putMap(PROP_SRC_VOD_EXTRA, StringUtils.convertJsonStrToWriteMap(info.getString1()));
         eventPara.putString("msg", msg);
 
         if (mReactContext.hasActiveCatalystInstance()) {
@@ -336,6 +341,7 @@ public class DownloadModule extends ReactContextBaseJavaModule implements Lifecy
                 eventPara.putString(PROP_SRC_VOD_BUSINESSLINE, info.getP());
                 eventPara.putString("payCheckCode", info.getCheckCode());
                 eventPara.putString("payUserName", info.getPayerName());
+                eventPara.putMap(PROP_SRC_VOD_EXTRA, StringUtils.convertJsonStrToWriteMap(info.getString1()));
 
                 eventList.pushMap(eventPara);
             }

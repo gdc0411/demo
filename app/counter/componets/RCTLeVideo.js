@@ -64,6 +64,7 @@ export default class Video extends Component {
                 pano: PropTypes.bool,
                 repeat: PropTypes.bool,
                 rate: PropTypes.string,
+                videoInfo: PropTypes.object
             }),
             //直播
             PropTypes.shape({
@@ -183,6 +184,7 @@ export default class Video extends Component {
                 uri: uri,
                 repeat: source.repeat || false,
                 rate: source.rate,
+                videoInfo: source.videoInfo || {}
             },
             /*回调函数属性赋值*/
             onVideoSourceLoad: (event) => { this.props.onVideoSourceLoad && this.props.onVideoSourceLoad(event.nativeEvent); },

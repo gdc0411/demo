@@ -135,7 +135,7 @@ class play extends Component {
             //     alert(`正在下载中！fileName:${message.fileName},进度：${message.progress}`);
             //     break;
             case Download.EVENT_TYPE_SUCCESS:
-                alert(`下载成功！vu:${message.vuid},uu:${message.uuid},fileName:${message.fileName},存放路径：${message.fileSavePath}`);
+                alert(`下载成功！vu:${message.vuid},uu:${message.uuid},fileName:${message.fileName},videoInfo：${JSON.stringify(message.videoInfo)}`);
                 break;
             case Download.EVENT_TYPE_FAILED:
                 alert(`下载失败！fileName:${message.fileName},原因：${message.msg}`);
@@ -388,7 +388,7 @@ class play extends Component {
                 source = { playMode: 10000, uuid: "841215", vuid: "300184109", businessline: "102", saas: true, pano: false };
                 break;
             case '3': //点播 可下载
-                source = { playMode: 10000, uuid: "841215", vuid: "301180368", businessline: "102", saas: true, pano: false, rate: "13" };
+                source = { playMode: 10000, uuid: "841215", vuid: "301180368", businessline: "102", saas: true, pano: false, rate: "13", videoInfo: { img: '/aaab', aluId: 2 } };
                 break;
             case '4': //点播 Demo示例，有广告，可下载
                 source = { playMode: 10000, uuid: "838389", vuid: "200271100", businessline: "102", saas: true, pano: false };
