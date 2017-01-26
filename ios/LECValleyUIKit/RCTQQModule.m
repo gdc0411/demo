@@ -19,9 +19,9 @@
 #import <React/RCTEventDispatcher.h>
 
 
-@interface RCTQQModule()<QQApiInterfaceDelegate, TencentSessionDelegate> {
-    TencentOAuth* _qqapi;
-}
+@interface RCTQQModule()<QQApiInterfaceDelegate, TencentSessionDelegate>
+
+@property (nonatomic, strong) TencentOAuth* qqapi;
 
 @end
 

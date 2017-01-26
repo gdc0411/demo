@@ -75,6 +75,7 @@ public class DownloadModule extends ReactContextBaseJavaModule implements Lifecy
         constants.put("EVENT_DOWNLOAD_ITEM_UPDATE", Events.EVENT_DOWNLOAD_ITEM_UPDATE.toString());
         constants.put("EVENT_TYPE_SUCCESS", EVENT_TYPE_SUCCESS);
         constants.put("EVENT_TYPE_START", EVENT_TYPE_START);
+        constants.put("EVENT_TYPE_PROGRESS", EVENT_TYPE_PROGRESS);
         constants.put("EVENT_TYPE_FAILED", EVENT_TYPE_FAILED);
 
         constants.put("EVENT_DOWNLOAD_LIST_UPDATE", Events.EVENT_DOWNLOAD_LIST_UPDATE.toString());
@@ -297,6 +298,8 @@ public class DownloadModule extends ReactContextBaseJavaModule implements Lifecy
         eventPara.putString(PROP_SRC_VOD_UUID, info.getUu());
         eventPara.putString(PROP_SRC_VOD_VUID, info.getVu());
         eventPara.putString(PROP_SRC_VOD_BUSINESSLINE, info.getP());
+        eventPara.putString("payCheckCode", info.getCheckCode());
+        eventPara.putString("payUserName", info.getPayerName());
         eventPara.putString("msg", msg);
 
         if (mReactContext.hasActiveCatalystInstance()) {
@@ -331,6 +334,8 @@ public class DownloadModule extends ReactContextBaseJavaModule implements Lifecy
                 eventPara.putString(PROP_SRC_VOD_UUID, info.getUu());
                 eventPara.putString(PROP_SRC_VOD_VUID, info.getVu());
                 eventPara.putString(PROP_SRC_VOD_BUSINESSLINE, info.getP());
+                eventPara.putString("payCheckCode", info.getCheckCode());
+                eventPara.putString("payUserName", info.getPayerName());
 
                 eventList.pushMap(eventPara);
             }

@@ -140,27 +140,27 @@ class download extends Component {
           <View style={{ flexDirection: 'row', justifyContent: 'center' }} >
             <Text style={styles.instructions}> {showTips}     </Text>
             {showPause ?
-              <TouchableOpacity onPress={(id) => Download.pause({ id: downloadList[i].id })}>
+              <TouchableOpacity onPress={() => Download.pause({ id: downloadList[i].id, vuid: downloadList[i].vuid })}>
                 <Text style={styles.instructions}> 暂停 </Text>
               </TouchableOpacity> : null
             }
             {showResume ?
-              <TouchableOpacity onPress={(id) => Download.resume({ id: downloadList[i].id })}>
+              <TouchableOpacity onPress={() => Download.resume({ id: downloadList[i].id, vuid: downloadList[i].vuid })}>
                 <Text style={styles.instructions}> 恢复 </Text>
               </TouchableOpacity> : null
             }
             {showRetry ?
-              <TouchableOpacity onPress={(id) => Download.retry({ id: downloadList[i].id })}>
+              <TouchableOpacity onPress={() => Download.retry({ id: downloadList[i].id, vuid: downloadList[i].vuid })}>
                 <Text style={styles.instructions}> 重试 </Text>
               </TouchableOpacity> : null
             }
             {showPlay ?
-              <TouchableOpacity onPress={(id) => this.props.navigator.push({ location: '/play/' + encodeURIComponent(downloadList[i].fileSavePath), }) }>
+              <TouchableOpacity onPress={() => this.props.navigator.push({ location: '/play/' + encodeURIComponent(downloadList[i].fileSavePath), }) }>
                 <Text style={styles.instructions}> 播放 </Text>
               </TouchableOpacity> : null
             }
             {showDelete ?
-              <TouchableOpacity onPress={(id) => Download.delete({ id: downloadList[i].id })}>
+              <TouchableOpacity onPress={() => Download.delete({ id: downloadList[i].id, vuid: downloadList[i].vuid })}>
                 <Text style={styles.instructions}> 删除 </Text>
               </TouchableOpacity> : null
             }

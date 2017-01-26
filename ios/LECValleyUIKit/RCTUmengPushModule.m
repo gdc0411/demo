@@ -19,14 +19,12 @@
 //static NSString * const EVENT_UMENG_RECV_MESSAGE   = @"onUmengReceiveMessage";
 //static NSString * const EVENT_UMENG_OPEN_MESSAGE   = @"onUmengOpenMessage";
 
-
-static RCTUmengPushModule *_instance  = nil;
-static NSString *gAppKey = nil;
-
 @interface RCTUmengPushModule ()
 @property (nonatomic, copy) NSString *deviceToken;
 @end
 
+static RCTUmengPushModule *_instance  = nil;
+static NSString *gAppKey = nil;
 
 @implementation RCTUmengPushModule
 
