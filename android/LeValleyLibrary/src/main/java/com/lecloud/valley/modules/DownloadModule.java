@@ -19,6 +19,7 @@ import com.lecloud.valley.utils.DowanloadValleyCenter;
 import com.lecloud.valley.utils.LogUtils;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -55,6 +56,8 @@ public class DownloadModule extends ReactContextBaseJavaModule implements Lifecy
     private DowanloadValleyCenter mDownloadCenter;
     private LeDownloadObserver mDownloadObserver;
     private List<LeDownloadInfo> mDownloadInfos;
+
+    private static final Object syncObject = new Object();
 
     public DownloadModule(ReactApplicationContext reactContext) {
         super(reactContext);
@@ -216,9 +219,13 @@ public class DownloadModule extends ReactContextBaseJavaModule implements Lifecy
         if (src == null || mDownloadCenter == null || mDownloadInfos == null || !src.hasKey("id"))
             return;
 
-        for (LeDownloadInfo info : mDownloadInfos)
+//        LeDownloadInfo[] infoArray = (LeDownloadInfo[]) mDownloadInfos.toArray();
+//        synchronized (syncObject) {
+        for (LeDownloadInfo info : mDownloadInfos.toArray(new LeDownloadInfo[0]))
             if (info.getId() == src.getInt("id"))
                 mDownloadCenter.stopDownload(info);
+//        }
+
 
         Log.d(TAG, LogUtils.getTraceInfo() + "外部控制——— 暂停下载:" + src.toString());
     }
@@ -228,7 +235,7 @@ public class DownloadModule extends ReactContextBaseJavaModule implements Lifecy
         if (src == null || mDownloadCenter == null || mDownloadInfos == null || !src.hasKey("id"))
             return;
 
-        for (LeDownloadInfo info : mDownloadInfos)
+        for (LeDownloadInfo info : mDownloadInfos.toArray(new LeDownloadInfo[0]))
             if (info.getId() == src.getInt("id"))
                 mDownloadCenter.resumeDownload(info);
 
@@ -241,7 +248,7 @@ public class DownloadModule extends ReactContextBaseJavaModule implements Lifecy
         if (src == null || mDownloadCenter == null || mDownloadInfos == null || !src.hasKey("id"))
             return;
 
-        for (LeDownloadInfo info : mDownloadInfos)
+        for (LeDownloadInfo info : mDownloadInfos.toArray(new LeDownloadInfo[0]))
             if (info.getId() == src.getInt("id"))
                 mDownloadCenter.retryDownload(info);
 
@@ -253,7 +260,7 @@ public class DownloadModule extends ReactContextBaseJavaModule implements Lifecy
         if (src == null || mDownloadCenter == null || mDownloadInfos == null || !src.hasKey("id"))
             return;
 
-        for (LeDownloadInfo info : mDownloadInfos)
+        for (LeDownloadInfo info : mDownloadInfos.toArray(new LeDownloadInfo[0]))
             if (info.getId() == src.getInt("id"))
                 mDownloadCenter.cancelDownload(info, true);
 
@@ -265,7 +272,8 @@ public class DownloadModule extends ReactContextBaseJavaModule implements Lifecy
         if (mDownloadCenter == null || mDownloadInfos == null)
             return;
 
-        for (LeDownloadInfo info : mDownloadInfos)
+
+        for (LeDownloadInfo info : mDownloadInfos.toArray(new LeDownloadInfo[0]))
             mDownloadCenter.cancelDownload(info, true);
 
         Log.d(TAG, LogUtils.getTraceInfo() + "外部控制——— 删除全部视频:");
@@ -308,7 +316,7 @@ public class DownloadModule extends ReactContextBaseJavaModule implements Lifecy
 
         WritableArray eventList = Arguments.createArray();
 
-        if (mDownloadInfos != null ) {
+        if (mDownloadInfos != null) {
             for (LeDownloadInfo info : mDownloadInfos) {
                 WritableMap eventPara = Arguments.createMap();
                 eventPara.putInt("id", (int) info.getId());
@@ -336,6 +344,7 @@ public class DownloadModule extends ReactContextBaseJavaModule implements Lifecy
         }
         Log.d(TAG, LogUtils.getTraceInfo() + "下载事件——— List更新事件 :" + mDownloadInfos.size());
     }
+
 
     @Override
     public void onHostResume() {
