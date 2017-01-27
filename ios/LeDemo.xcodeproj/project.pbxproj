@@ -23,7 +23,6 @@
 		146834051AC3E58100842450 /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 146834041AC3E56700842450 /* libReact.a */; };
 		2D0E62AC1E0B0101005A68AA /* libc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D0E62AB1E0B0101005A68AA /* libc++.tbd */; };
 		2D0E62AE1E0B0112005A68AA /* libsqlite3.0.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D0E62AD1E0B0112005A68AA /* libsqlite3.0.tbd */; };
-		2D0E62B01E0B0183005A68AA /* libWeChatSDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D0E62AF1E0B0183005A68AA /* libWeChatSDK.a */; };
 		2D19AC981DF3DCF100D21BDC /* libRCTAnimation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D19AC861DF3DBA600D21BDC /* libRCTAnimation.a */; };
 		2D19AD6B1DF6AE6B00D21BDC /* libCodePush.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D1C9A441DC1EAB60020E496 /* libCodePush.a */; };
 		2D2AFC391E17C5BF00D0231B /* index.ios.jsbundle in Resources */ = {isa = PBXBuildFile; fileRef = 2D2AFC381E17C5BF00D0231B /* index.ios.jsbundle */; };
@@ -50,6 +49,7 @@
 		2DA2070E1DE8BA8C0004CE1D /* libstdc++.6.0.9.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 2DA2070D1DE8BA8C0004CE1D /* libstdc++.6.0.9.tbd */; };
 		2DA207101DE8BA990004CE1D /* libxml2.2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 2DA2070F1DE8BA990004CE1D /* libxml2.2.tbd */; };
 		2DA207121DE8BAAC0004CE1D /* libz.1.2.5.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 2DA207111DE8BAAC0004CE1D /* libz.1.2.5.tbd */; };
+		2DDA3F871E3BB61F00BAF4AE /* libWeChatSDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2DDA3F861E3BB61F00BAF4AE /* libWeChatSDK.a */; };
 		2DE3D3651E11A45B00C39FB9 /* WeiboSDK.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 2DE3D3641E11A45B00C39FB9 /* WeiboSDK.bundle */; };
 		2DE3D3671E11A48E00C39FB9 /* libWeiboSDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2DE3D3661E11A48E00C39FB9 /* libWeiboSDK.a */; };
 		2DE7FE171E16544C008F0CA1 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
@@ -290,7 +290,6 @@
 		17750468756A4148AF35D158 /* CodePush.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = CodePush.xcodeproj; path = "../node_modules/react-native-code-push/ios/CodePush.xcodeproj"; sourceTree = "<group>"; };
 		2D0E62AB1E0B0101005A68AA /* libc++.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libc++.tbd"; path = "usr/lib/libc++.tbd"; sourceTree = SDKROOT; };
 		2D0E62AD1E0B0112005A68AA /* libsqlite3.0.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.0.tbd; path = usr/lib/libsqlite3.0.tbd; sourceTree = SDKROOT; };
-		2D0E62AF1E0B0183005A68AA /* libWeChatSDK.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libWeChatSDK.a; path = ../../openappdev/ios/Libs/libWeChatSDK.a; sourceTree = "<group>"; };
 		2D19AC801DF3DBA600D21BDC /* RCTAnimation.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTAnimation.xcodeproj; path = "../node_modules/react-native/Libraries/NativeAnimation/RCTAnimation.xcodeproj"; sourceTree = "<group>"; };
 		2D2AFC381E17C5BF00D0231B /* index.ios.jsbundle */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = index.ios.jsbundle; path = bundle/index.ios.jsbundle; sourceTree = "<group>"; };
 		2D62FED01E169206002EED8E /* LeDemo.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = LeDemo.entitlements; path = LeDemo/LeDemo.entitlements; sourceTree = "<group>"; };
@@ -317,6 +316,7 @@
 		2DA2070D1DE8BA8C0004CE1D /* libstdc++.6.0.9.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libstdc++.6.0.9.tbd"; path = "usr/lib/libstdc++.6.0.9.tbd"; sourceTree = SDKROOT; };
 		2DA2070F1DE8BA990004CE1D /* libxml2.2.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libxml2.2.tbd; path = usr/lib/libxml2.2.tbd; sourceTree = SDKROOT; };
 		2DA207111DE8BAAC0004CE1D /* libz.1.2.5.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.1.2.5.tbd; path = usr/lib/libz.1.2.5.tbd; sourceTree = SDKROOT; };
+		2DDA3F861E3BB61F00BAF4AE /* libWeChatSDK.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libWeChatSDK.a; path = Libs/libWeChatSDK.a; sourceTree = "<group>"; };
 		2DE3D3641E11A45B00C39FB9 /* WeiboSDK.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = WeiboSDK.bundle; sourceTree = "<group>"; };
 		2DE3D3661E11A48E00C39FB9 /* libWeiboSDK.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libWeiboSDK.a; path = Libs/libWeiboSDK.a; sourceTree = "<group>"; };
 		2DEF765A1E17BAA1004D4BE8 /* libUMessage_Sdk_1.4.0.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libUMessage_Sdk_1.4.0.a; path = Libs/libUMessage_Sdk_1.4.0.a; sourceTree = "<group>"; };
@@ -363,7 +363,6 @@
 				2D8D20A41E031A80004EC569 /* libLECVodPlayerUISDK.a in Frameworks */,
 				2D8D20A11E031A80004EC569 /* libLECPlayerFoundation.a in Frameworks */,
 				2D8D20A51E031A80004EC569 /* libReachbility.a in Frameworks */,
-				2D0E62B01E0B0183005A68AA /* libWeChatSDK.a in Frameworks */,
 				2D8D209F1E031A80004EC569 /* libLECLivePlayerSDK.a in Frameworks */,
 				2DE3D3671E11A48E00C39FB9 /* libWeiboSDK.a in Frameworks */,
 				2DA207011DE8B9950004CE1D /* AudioToolbox.framework in Frameworks */,
@@ -386,6 +385,7 @@
 				00C302E71ABCBA2D00DB3ED1 /* libRCTGeolocation.a in Frameworks */,
 				00C302E81ABCBA2D00DB3ED1 /* libRCTImage.a in Frameworks */,
 				133E29F31AD74F7200F7D852 /* libRCTLinking.a in Frameworks */,
+				2DDA3F871E3BB61F00BAF4AE /* libWeChatSDK.a in Frameworks */,
 				00C302E91ABCBA2D00DB3ED1 /* libRCTNetwork.a in Frameworks */,
 				139105C61AF99C1200B5F7CC /* libRCTSettings.a in Frameworks */,
 				832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */,
@@ -529,9 +529,9 @@
 		2D8D20941E031A00004EC569 /* Libs */ = {
 			isa = PBXGroup;
 			children = (
+				2DDA3F861E3BB61F00BAF4AE /* libWeChatSDK.a */,
 				2DEF765A1E17BAA1004D4BE8 /* libUMessage_Sdk_1.4.0.a */,
 				2DE3D3661E11A48E00C39FB9 /* libWeiboSDK.a */,
-				2D0E62AF1E0B0183005A68AA /* libWeChatSDK.a */,
 				2D8D20971E031A80004EC569 /* libLECLivePlayerSDK.a */,
 				2D8D20981E031A80004EC569 /* libLECLivePlayerUISDK.a */,
 				2D8D20991E031A80004EC569 /* libLECPlayerFoundation.a */,

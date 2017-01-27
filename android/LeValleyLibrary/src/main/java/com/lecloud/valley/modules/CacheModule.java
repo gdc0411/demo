@@ -31,9 +31,9 @@ public class CacheModule extends ReactContextBaseJavaModule {
     private final static int EVENT_CALC_PROGRESS = 0; //计算缓存中
     private final static int EVENT_CALC_SUCCESS = 1; //计算缓存成功
     private final static int EVENT_CALC_FAILED = 2; //计算缓存失败
-    private final static int EVENT_CLEAR_PROGRESS = 0; //清除缓存中
-    private final static int EVENT_CLEAR_SUCCESS = 1; //清除缓存成功
-    private final static int EVENT_CLEAR_FAILED = 2; //清除缓存失败
+    private final static int EVENT_CLEAR_PROGRESS = 3; //清除缓存中
+    private final static int EVENT_CLEAR_SUCCESS = 4; //清除缓存成功
+    private final static int EVENT_CLEAR_FAILED = 5; //清除缓存失败
 
     private final ReactApplicationContext mReactContext;
     private RCTNativeAppEventEmitter mEventEmitter;
@@ -70,7 +70,7 @@ public class CacheModule extends ReactContextBaseJavaModule {
         public void run() {
 
             WritableMap event = Arguments.createMap();
-            String cacheStr = "清除缓存失败";
+            String cacheStr = "清理缓存失败";
             CacheUtils.clearAllCache(mReactContext);
             long cacheSize = CacheUtils.getTotalCacheSize(mReactContext);
             if (cacheSize == 0) {
@@ -132,6 +132,8 @@ public class CacheModule extends ReactContextBaseJavaModule {
      */
     @ReactMethod
     public void calc() {
+        Log.d(TAG, LogUtils.getTraceInfo() + "外部控制——— 计算缓存大小！");
+
         WritableMap event = Arguments.createMap();
         event.putInt("eventType", EVENT_CALC_PROGRESS);
         event.putString("cacheSize", "正在计算");
@@ -152,9 +154,11 @@ public class CacheModule extends ReactContextBaseJavaModule {
      */
     @ReactMethod
     public void clear() {
+        Log.d(TAG, LogUtils.getTraceInfo() + "外部控制——— 清理缓存！");
+
         WritableMap event = Arguments.createMap();
         event.putInt("eventType", EVENT_CALC_PROGRESS);
-        event.putString("cacheSize", "正在清除缓存");
+        event.putString("cacheSize", "正在清理缓存");
 
         if (mReactContext.hasActiveCatalystInstance()) {
             if (mEventEmitter != null)
