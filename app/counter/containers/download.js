@@ -187,7 +187,7 @@ class download extends Component {
         <Text style={styles.welcome}>缓存大小</Text>
         <TouchableOpacity onPress={(para) => Cache.clear() } style={styles.button}>
           <Text style={styles.instructions}>
-            计 算
+            清 除 缓 存
             </Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={(para) => this.props.navigator.pop()} style={styles.button}>
