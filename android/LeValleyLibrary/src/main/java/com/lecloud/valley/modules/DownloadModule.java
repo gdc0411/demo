@@ -15,12 +15,11 @@ import com.facebook.react.modules.core.RCTNativeAppEventEmitter;
 import com.lecloud.sdk.download.info.LeDownloadInfo;
 import com.lecloud.sdk.download.observer.LeDownloadObserver;
 import com.lecloud.valley.common.Events;
-import com.lecloud.valley.utils.DowanloadValleyCenter;
+import com.lecloud.valley.utils.DowanloadCenterUtils;
 import com.lecloud.valley.utils.LogUtils;
 import com.lecloud.valley.utils.StringUtils;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -53,10 +52,10 @@ public class DownloadModule extends ReactContextBaseJavaModule implements Lifecy
     private final static int EVENT_TYPE_EXIST = 10; //已下载
 
 
-    private RCTNativeAppEventEmitter mEventEmitter;
     private ReactApplicationContext mReactContext;
+    private RCTNativeAppEventEmitter mEventEmitter;
 
-    private DowanloadValleyCenter mDownloadCenter;
+    private DowanloadCenterUtils mDownloadCenter;
     private LeDownloadObserver mDownloadObserver;
     private List<LeDownloadInfo> mDownloadInfos;
 
@@ -99,13 +98,13 @@ public class DownloadModule extends ReactContextBaseJavaModule implements Lifecy
     @Override
     public void initialize() {
         super.initialize();
-        Log.i(TAG, "DOWNLOAD模块初始化");
+        Log.d(TAG, LogUtils.getTraceInfo() + "DOWNLOAD模块初始化");
 
         mReactContext.addLifecycleEventListener(this);
         mEventEmitter = mReactContext.getJSModule(RCTNativeAppEventEmitter.class);
 
         if (mDownloadCenter == null) {
-            mDownloadCenter = DowanloadValleyCenter.getInstances(mReactContext.getBaseContext().getApplicationContext());
+            mDownloadCenter = DowanloadCenterUtils.getInstances(mReactContext.getBaseContext().getApplicationContext());
 
             mDownloadCenter.allowShowMsg(false);
             mDownloadCenter.setDownloadSavePath("/sdcard/Android/data/" + mReactContext.getPackageName() + "/levideo/");
@@ -330,7 +329,7 @@ public class DownloadModule extends ReactContextBaseJavaModule implements Lifecy
             if (mEventEmitter != null)
                 mEventEmitter.emit(Events.EVENT_DOWNLOAD_ITEM_UPDATE.toString(), eventPara);
         } else {
-            Log.i(TAG, "not hasActiveCatalystInstance");
+            Log.e(TAG, LogUtils.getTraceInfo() + "not hasActiveCatalystInstance");
         }
 
         Log.d(TAG, LogUtils.getTraceInfo() + "下载事件——— Item更新事件 event:" + eventType + " info:" + info.getFileName());
@@ -366,7 +365,7 @@ public class DownloadModule extends ReactContextBaseJavaModule implements Lifecy
             if (mEventEmitter != null)
                 mEventEmitter.emit(Events.EVENT_DOWNLOAD_LIST_UPDATE.toString(), eventList);
         } else {
-            Log.i(TAG, "not hasActiveCatalystInstance");
+            Log.e(TAG, LogUtils.getTraceInfo() + "not hasActiveCatalystInstance");
         }
         Log.d(TAG, LogUtils.getTraceInfo() + "下载事件——— List更新事件 :" + mDownloadInfos.size());
     }

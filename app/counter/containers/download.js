@@ -21,6 +21,7 @@ import { connect } from 'react-redux';
 
 import Orientation from '../componets/RCTOrientation';
 import Download from '../componets/RCTDownload';
+import Cache from '../componets/RCTCache';
 
 class download extends Component {
   constructor(props) {
@@ -35,21 +36,29 @@ class download extends Component {
 
   componentWillMount() {
     Download.addListUpdateListener(this.handleDownloadList);
+    Cache.addCacheUpdateListener(this.handleCacheUpdate);
   }
 
   componentDidMount() {
     // this.animate();
     Download.list();
+    Cache.calc();
   }
 
   componentWillUnmount() {
     Download.removeListUpdateListener(this.handleDownloadList);
+    Cache.removeCacheUpdateListener(this.handleCacheUpdate);
   }
 
   handleDownloadList = (message) => {
     console.log("ListUpdate:", message);
     //alert('ListUpdate' + JSON.stringify(message));
     this.setState({ downloadList: message });
+  }
+
+  handleCacheUpdate = (message) => {
+    console.log("CacheUpdate:", message);
+    alert('CacheUpdate' + JSON.stringify(message));
   }
 
   animate() {
@@ -155,7 +164,7 @@ class download extends Component {
               </TouchableOpacity> : null
             }
             {showPlay ?
-              <TouchableOpacity onPress={() => this.props.navigator.push({ location: '/play/' + encodeURIComponent(downloadList[i].fileSavePath), }) }>
+              <TouchableOpacity onPress={() => this.props.navigator.push({ location: '/play/' + encodeURIComponent(downloadList[i].fileSavePath), })}>
                 <Text style={styles.instructions}> 播放 </Text>
               </TouchableOpacity> : null
             }
@@ -175,6 +184,12 @@ class download extends Component {
         <View>
           {pages.map((elem, index) => { return elem; })}
         </View>
+        <Text style={styles.welcome}>缓存大小</Text>
+        <TouchableOpacity onPress={(para) => Cache.clear() } style={styles.button}>
+          <Text style={styles.instructions}>
+            计 算
+            </Text>
+        </TouchableOpacity>
         <TouchableOpacity onPress={(para) => this.props.navigator.pop()} style={styles.button}>
           <Text style={styles.instructions}>
             返 回

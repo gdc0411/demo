@@ -65,6 +65,8 @@ public enum Events {
     EVENT_DOWNLOAD_ITEM_UPDATE("onDownloadItemUpdate"),   //下载对象更新事件
     EVENT_DOWNLOAD_LIST_UPDATE("onDownloadListUpdate"),  //更新下载列表事件
 
+    EVENT_CACHE_UPDATE_MESSAGE("onCacheUpdateMessage"),   //缓存操作事件
+
     // 未命名的事件
     EVENT_OTHER_EVENT("onOtherEventInfo");  // 未知事件
 

@@ -30,7 +30,8 @@ public class StringUtils {
                 map.putString(key, jsonObject.get(key).toString());
             }
         } catch (Exception e) {
-            Log.e(TAG, "putString fail");
+            e.printStackTrace();
+            Log.e(TAG, LogUtils.getTraceInfo() + "JsonStr转换Map失败：" + e);
         }
         return map;
     }
@@ -45,7 +46,8 @@ public class StringUtils {
             jsonStr = json.toString();
 
         } catch (Exception e) {
-            Log.e(TAG, "putString fail");
+            e.printStackTrace();
+            Log.e(TAG, LogUtils.getTraceInfo() + "Map转换JsonStr失败：" + e);
         }
         return jsonStr;
     }

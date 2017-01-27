@@ -17,6 +17,8 @@ public interface Constants {
 
     String REACT_CLASS_DEVICE_MODULE = "RCTDeviceModule";
 
+    String REACT_CLASS_CACHE_MODULE = "RCTCacheModule";
+
     String REACT_CLASS_ORIENTATION_MODULE = "RCTOrientationModule";
 
     String REACT_CLASS_WECHAT_MODULE = "RCTWeChatModule";
