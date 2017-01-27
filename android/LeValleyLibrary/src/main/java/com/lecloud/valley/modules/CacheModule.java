@@ -19,7 +19,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static com.lecloud.valley.common.Constants.REACT_CLASS_CACHE_MODULE;
-import static com.sina.weibo.sdk.statistic.WBAgent.TAG;
+import static com.lecloud.valley.utils.LogUtils.TAG;
+
 
 
 /**
