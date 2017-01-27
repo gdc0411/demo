@@ -384,6 +384,9 @@ class play extends Component {
     getFormatDatasource = (key) => {
         let source;
         switch (key) {
+            case '0': //第三方URL
+                source = { playMode: 0, uri: "http://cache.utovr.com/201601131107187320.mp4", pano: false };
+                break;            
             case '1': //点播 乐视云测试数据
                 source = { playMode: 10000, uuid: "847695", vuid: "200323369", businessline: "102", saas: true, pano: false };
                 break;
@@ -404,9 +407,6 @@ class play extends Component {
                 break;
             case '7': //活动直播 自己推流
                 source = { playMode: 10002, actionId: "A20170124000008m", usehls: false, customerId: "", businessline: "", cuid: "", utoken: "", pano: false };
-                break;
-            case '0': //第三方URL
-                source = { playMode: 0, uri: "http://cache.utovr.com/201601131107187320.mp4", pano: false };
                 break;
             default: //本地地址
                 source = { playMode: 0, uri: key, pano: false };                
