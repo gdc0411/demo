@@ -50,6 +50,7 @@ public class DownloadModule extends ReactContextBaseJavaModule implements Lifecy
     private final static int EVENT_TYPE_INIT = 7; //初始化完成
     private final static int EVENT_TYPE_WAIT = 8; //已获得url，等待下载
     private final static int EVENT_TYPE_RATEINFO = 9; //得到码率
+    private final static int EVENT_TYPE_EXIST = 10; //已下载
 
 
     private RCTNativeAppEventEmitter mEventEmitter;
@@ -79,6 +80,7 @@ public class DownloadModule extends ReactContextBaseJavaModule implements Lifecy
         constants.put("EVENT_TYPE_START", EVENT_TYPE_START);
         constants.put("EVENT_TYPE_PROGRESS", EVENT_TYPE_PROGRESS);
         constants.put("EVENT_TYPE_FAILED", EVENT_TYPE_FAILED);
+        constants.put("EVENT_TYPE_EXIST", EVENT_TYPE_EXIST);
 
         constants.put("EVENT_DOWNLOAD_LIST_UPDATE", Events.EVENT_DOWNLOAD_LIST_UPDATE.toString());
         constants.put("DOWLOAD_STATE_WAITING", LeDownloadObserver.DOWLOAD_STATE_WAITING);
@@ -90,6 +92,7 @@ public class DownloadModule extends ReactContextBaseJavaModule implements Lifecy
         constants.put("DOWLOAD_STATE_NO_PERMISSION", LeDownloadObserver.DOWLOAD_STATE_NO_PERMISSION);
         constants.put("DOWLOAD_STATE_URL_REQUEST_FAILED", LeDownloadObserver.DOWLOAD_STATE_URL_REQUEST_FAILED);
         constants.put("DOWLOAD_STATE_DISPATCHING", LeDownloadObserver.DOWLOAD_STATE_DISPATCHING);
+
         return constants;
     }
 
@@ -193,10 +196,24 @@ public class DownloadModule extends ReactContextBaseJavaModule implements Lifecy
 
     @ReactMethod
     public void download(final ReadableMap src) {
+
         if (src == null || !src.hasKey(PROP_SRC_VOD_UUID) || !src.hasKey(PROP_SRC_VOD_VUID) || !src.hasKey(PROP_SRC_VOD_BUSINESSLINE)) {
             return;
         }
+
+        Log.d(TAG, LogUtils.getTraceInfo() + "外部控制——— 下载视频:" + src.toString());
+
         if (mDownloadCenter != null) {
+            mDownloadInfos = mDownloadCenter.getDownloadInfoList();
+            if (mDownloadInfos != null && mDownloadInfos.size() > 0) {
+                for (LeDownloadInfo info : mDownloadInfos)
+                    if (info.getVu().equals(src.getString(PROP_SRC_VOD_VUID)) && info.getUu().equals(src.getString(PROP_SRC_VOD_UUID))) {
+                        notifyItemEvent(EVENT_TYPE_EXIST, info, null);
+                        return;
+                    }
+
+            }
+
 //            mDownloadCenter.downloadVideo("", src.getString(PROP_SRC_VOD_UUID), src.getString(PROP_SRC_VOD_VUID));
             LeDownloadInfo info = new LeDownloadInfo();
             info.setUu(src.getString(PROP_SRC_VOD_UUID));
@@ -208,13 +225,15 @@ public class DownloadModule extends ReactContextBaseJavaModule implements Lifecy
                 info.setRateText(src.getString(PROP_RATE));
             mDownloadCenter.downloadVideo(info);
         }
-        Log.d(TAG, LogUtils.getTraceInfo() + "外部控制——— 下载视频:" + src.toString());
+
     }
 
     @ReactMethod
     public void list() {
-        if (mDownloadCenter != null)
+        if (mDownloadCenter != null) {
+            mDownloadInfos = mDownloadCenter.getDownloadInfoList();
             notifyListEvent();
+        }
 
         Log.d(TAG, LogUtils.getTraceInfo() + "外部控制——— 获取下载列表！");
     }
@@ -319,11 +338,7 @@ public class DownloadModule extends ReactContextBaseJavaModule implements Lifecy
     }
 
     private void notifyListEvent() {
-
-        mDownloadInfos = mDownloadCenter.getDownloadInfoList();
-
         WritableArray eventList = Arguments.createArray();
-
         if (mDownloadInfos != null) {
             for (LeDownloadInfo info : mDownloadInfos) {
                 WritableMap eventPara = Arguments.createMap();
