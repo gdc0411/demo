@@ -8,25 +8,24 @@ import com.lecloud.sdk.download.control.BaseDownloadCenter;
 import com.lecloud.sdk.download.control.LeDownloadService;
 import com.lecloud.sdk.download.info.LeDownloadInfo;
 import com.letv.android.client.cp.sdk.api.md.impl.CPVodMediaData;
-import com.letv.android.client.cp.sdk.download.control.DownloadSaasCenter;
 
 /**
  * Created by raojia on 2017/1/24.
  */
 
-public class DowanloadValleyCenter extends BaseDownloadCenter {
+public class DowanloadCenterUtils extends BaseDownloadCenter {
 
-    private static DowanloadValleyCenter sInstance;
+    private static DowanloadCenterUtils sInstance;
 
-    private DowanloadValleyCenter(Context context) {
+    private DowanloadCenterUtils(Context context) {
         this.mContext = context;
         this.mDownloadMgr = LeDownloadService.getDownloadManager(context);
         this.allowShowMsg(true);
     }
 
-    public static synchronized DowanloadValleyCenter getInstances(Context context) {
+    public static synchronized DowanloadCenterUtils getInstances(Context context) {
         if(sInstance == null) {
-            sInstance = new DowanloadValleyCenter(context);
+            sInstance = new DowanloadCenterUtils(context);
         }
 
         return sInstance;
