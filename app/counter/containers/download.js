@@ -29,7 +29,7 @@ class download extends Component {
 
     this.state = {
       progress: 0,
-      indeterminate: true,
+      cacheText: '',
       downloadList: [],
     };
   }
@@ -58,7 +58,30 @@ class download extends Component {
 
   handleCacheUpdate = (message) => {
     console.log("CacheUpdate:", message);
-    alert('CacheUpdate' + JSON.stringify(message));
+    // alert('CacheUpdate' + JSON.stringify(message));
+    let cacheText;
+    switch (message.eventType) {
+      case Cache.EVENT_CALC_PROGRESS:
+        cacheText = '正在计算';
+        break;
+      case Cache.EVENT_CALC_SUCCESS:
+        cacheText = '计算成功';
+        break;
+      case Cache.EVENT_CALC_FAILED:
+        cacheText = '计算失败';
+        break;
+      case Cache.EVENT_CLEAR_PROGRESS:
+        cacheText = '正在清除';
+        break;
+      case Cache.EVENT_CLEAR_SUCCESS:
+        cacheText = '清除成功';
+        break;
+      case Cache.EVENT_CLEAR_FAILED:
+        cacheText = '清除失败';
+        break;
+    }
+    this.setState({ cacheText });
+    this.setState({ cacheText: message.cacheSize });
   }
 
   animate() {
@@ -184,12 +207,14 @@ class download extends Component {
         <View>
           {pages.map((elem, index) => { return elem; })}
         </View>
-        <Text style={styles.welcome}>缓存大小</Text>
-        <TouchableOpacity onPress={(para) => Cache.clear() } style={styles.button}>
+        <Text >{'\r\n\r\n'}</Text>
+        <Text style={styles.welcome}>缓存大小:{this.state.cacheText}</Text>
+        <TouchableOpacity onPress={(para) => Cache.clear()} >
           <Text style={styles.instructions}>
-            清 除 缓 存
+            清除缓存
             </Text>
         </TouchableOpacity>
+        <Text >{'\r\n\r\n'}</Text>
         <TouchableOpacity onPress={(para) => this.props.navigator.pop()} style={styles.button}>
           <Text style={styles.instructions}>
             返 回
