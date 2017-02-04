@@ -68,6 +68,13 @@ class home extends Component {
         this.props.navigator.push({ location: '/play/' + source, });
     }
 
+    //跳转到推流页面
+    skipToPush = (source) => {
+        const {navigator} = this.props;
+        // this.props.actions.play(source);
+        this.props.navigator.push({ location: '/push/' + source, });
+    }
+
     //加
     operatePlus = (data) => {
         this.props.actions.plus(data);
@@ -127,11 +134,18 @@ class home extends Component {
                             <PlayItem source={7} imgUrl={img2} desc={'云直播-推流'} color={'red'} onPlay={this.skipToPlayer} />
                             <PlayItem source={3} imgUrl={img2} desc={'云点播-可下载'} color={'blue'} onPlay={this.skipToPlayer} />
                         </View>
+                        <View style={{ flexDirection: 'row', justifyContent: 'space-around' }} >
+                            <PlayItem source={1} imgUrl={img2} desc={'推流-有地址'} color={'green'} onPlay={this.skipToPush} />
+                            <PlayItem source={2} imgUrl={img2} desc={'推流-无地址'} color={'green'} onPlay={this.skipToPush} />
+                            <PlayItem source={3} imgUrl={img2} desc={'推流-乐视云'} color={'green'} onPlay={this.skipToPush} />
+                        </View>
                     </View>
+                    {/*
                     <Counter value={value} para={plusPara} oper={`加`} onChange={this.operatePlus} />
                     <Counter value={value} para={minusPara} oper={`减`} onChange={this.operateMinus} />
                     <Counter value={value} para={timesPara} oper={`乘`} onChange={this.operateTimes} />
                     <Counter value={value} para={dividePara} oper={`除`} onChange={this.operateDivide} />
+                    */}
                 </View >
         );
     }

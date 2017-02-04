@@ -13,6 +13,8 @@ public interface Constants {
 
     String REACT_CLASS_SUB_VIDEO_VIEW = "RCTLeSubVideo";
 
+    String REACT_CLASS_PUSH_VIEW = "RCTLePush";
+
     String REACT_CLASS_LINEAR_GRADIENT_VIEW = "RCTLinearGradient";
 
     String REACT_CLASS_DEVICE_MODULE = "RCTDeviceModule";
@@ -79,6 +81,20 @@ public interface Constants {
     String PROP_ORIENTATION = "orientation";
     // 是否后台播放
     String PROP_PLAY_IN_BACKGROUND = "playInBackground";
+
+
+//================= REACT_PUSH ====================
+
+    //推流端参数
+    String PROP_PUSH_PARA = "para";  //推流参数，包含移动直播（无/有地址）、乐视云直播
+    //推流类型
+    String PROP_PUSH_TYPE = "type"; // 推流类型
+
+
+    // 定义分享类型常量
+    int PUSH_TYPE_MOBILE_URI = 0;
+    int PUSH_TYPE_MOBILE = 1;
+    int PUSH_TYPE_LECLOUD = 2;
 
 
 //============== REACT_EVENT_PROP ======================

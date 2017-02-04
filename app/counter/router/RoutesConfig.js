@@ -5,6 +5,7 @@ import React, { Component } from 'react';
 import { Route } from 'react-router';
 import home from '../containers/home';
 import play from '../containers/play';
+import push from '../containers/push';
 import device from '../containers/device';
 import social from '../containers/social';
 import orient from '../containers/orient';
@@ -35,6 +36,10 @@ export default module.exports = {
         {
             path: '/play/:src',
             component: play
+        },
+        {
+            path: '/push/:para',
+            component: push
         },
     ],
 };
