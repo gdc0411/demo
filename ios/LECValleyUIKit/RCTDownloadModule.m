@@ -13,6 +13,8 @@
 
 #import "LECVODDownloadManager.h"
 
+#define maxThreadCount                      5
+
 #define EVENT_DOWNLOAD_ITEM_UPDATE          @"onDownloadItemUpdate"
 #define EVENT_TYPE_SUCCESS                  0
 #define EVENT_TYPE_START                    3
@@ -79,9 +81,10 @@ RCT_EXPORT_MODULE();
 {
     self = [super init];
     if (self) {
-        _sharedManager = [LECVODDownloadManager sharedManager];
-        _sharedManager.delegate = self;
-        _sharedManager.defaultCodeSelectType = LECVODDownloadManagerDefaultCodeSelectTypeHighest;
+        _sharedManager                           = [LECVODDownloadManager sharedManager];
+        _sharedManager.delegate                  = self;
+        _sharedManager.defaultCodeSelectType     = LECVODDownloadManagerDefaultCodeSelectTypeHighest;
+        _sharedManager.maxParallelDownloadNumber = maxThreadCount;
     }
     return self;
 }
