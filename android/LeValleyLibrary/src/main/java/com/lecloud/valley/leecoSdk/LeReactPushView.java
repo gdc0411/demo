@@ -7,18 +7,23 @@
 package com.lecloud.valley.leecoSdk;
 
 import android.app.Activity;
-import android.content.Context;
+import android.graphics.PixelFormat;
 import android.hardware.Camera;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.react.bridge.Arguments;
+import com.facebook.react.bridge.LifecycleEventListener;
+import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.uimanager.ThemedReactContext;
 import com.facebook.react.uimanager.events.RCTEventEmitter;
+import com.lecloud.valley.common.Events;
 import com.lecloud.valley.utils.LogUtils;
 import com.letv.recorder.bean.AudioParams;
 import com.letv.recorder.bean.CameraParams;
@@ -28,7 +33,12 @@ import com.letv.recorder.callback.PublishListener;
 import com.letv.recorder.controller.CameraSurfaceView;
 import com.letv.recorder.controller.Publisher;
 import com.letv.recorder.ui.logic.RecorderConstance;
+import com.letv.recorder.util.MD5Utls;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import static com.lecloud.valley.common.Constants.PROP_PUSH_PARA;
 import static com.lecloud.valley.common.Constants.PROP_PUSH_TYPE;
 import static com.lecloud.valley.common.Constants.PUSH_TYPE_LECLOUD;
 import static com.lecloud.valley.common.Constants.PUSH_TYPE_MOBILE;
@@ -44,11 +54,27 @@ public class LeReactPushView extends CameraSurfaceView implements ISurfaceCreate
     private ThemedReactContext mThemedReactContext;
     private RCTEventEmitter mEventEmitter;
 
-    private Context mContext;
+    // 移动直播推流域名，在官网移动直播创建应用后可拿到
+    private static final String DEFAULT_DOMAINNAME = "216.mpush.live.lecloud.com";
+    // 移动直播推流签名密钥，在官网移动直播创建应用后可拿到
+    private static final String DEFAULT_APPKEY = "KIVK8X67PSPU9518B1WA";
+    // 移动直播推流地址， 当用户知道自己需要推流的地址后可以使用
+    private static final String DEFAULT_PUSHSTREAM = "rtmp://216.mpush.live.lecloud.com/live/demo";
+    // 乐视云直播推流用户userID,用户可以在官网用户中心拿到
+    private static final String DEFAULT_LETV_USERID = "800053";
+    //乐视云直播推流用户私钥，用户可以在官网用户中心拿到
+    private static final String DEFAULT_LETV_APPKEY = "60ca65970dc1a15ad421d46f524b99b7";
+    //乐视云直播推流ID，用户开通云直播功能，可以在创建活动后拿到
+    private static final String DEFAULT_LETV_STREAMID = "A2016120500000gx";
 
-    private Publisher publisher;
+    private String default_streamid = "test1";
+
+    private Publisher mPublisher;
     private CameraParams cameraParams;
     private AudioParams audioParams;
+
+    private boolean mLePushValid; //是否初始化成功
+    private boolean mPushed = false;  //是否开始推流
 
     //    private final static String TAG = "CameraView";
     private boolean isBack = false;//后台标志,在进入后台之前正在推流设置为true。判断是否在后台回来时继续推流
@@ -61,28 +87,37 @@ public class LeReactPushView extends CameraSurfaceView implements ISurfaceCreate
     private boolean timeFlag = false;
 
 
+
+
 /*============================= 推流View构造 ===================================*/
 
     public LeReactPushView(ThemedReactContext context) {
         super(context);
         mThemedReactContext = context;
+//        mThemedReactContext.addLifecycleEventListener(this);
 
-        init(mThemedReactContext, false);
+        mEventEmitter = mThemedReactContext.getJSModule(RCTEventEmitter.class);
+
+        ((Activity) mThemedReactContext.getBaseContext()).getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+//        ((Activity) mThemedReactContext.getBaseContext()).getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
     }
 
     public void init(ThemedReactContext context, boolean isLandscape) {
 
-        publisher = Publisher.getInstance();
-        publisher.initPublisher((Activity) context.getBaseContext());
-        publisher.getRecorderContext().setUseLanscape(isLandscape);//告诉推流器使用横屏推流还是竖屏推流
-        cameraParams = publisher.getCameraParams();
-        audioParams = publisher.getAudioParams();
+        mPublisher = Publisher.getInstance();
+        mPublisher.initPublisher((Activity) (context.getBaseContext()));
+        mPublisher.getRecorderContext().setUseLanscape(isLandscape);//告诉推流器使用横屏推流还是竖屏推流
+        cameraParams = mPublisher.getCameraParams();
+        audioParams = mPublisher.getAudioParams();
 
-        publisher.setPublishListener(listener);//设置推流状态监听器
+        //设置推流状态监听器
+        mPublisher.setPublishListener(listener);
+
         //绑定Camera显示View,要求必须是CameraSurfaceView
-        publisher.getVideoRecordDevice().bindingGLView(this);
+        mPublisher.getVideoRecordDevice().bindingGLView(this);
+
         //设置CameraSurfaceView 监听器,当CameraSurfaceView 创建成功的时候回回调onGLSurfaceCreatedListener,这个时候才能开启摄像头
-        publisher.getVideoRecordDevice().setSurfaceCreatedListener(this);
+        mPublisher.getVideoRecordDevice().setSurfaceCreatedListener(this);
 
         //////////////////以下设置必须在在推流之前设置,也可以不设置////////////////////////////////////////
         if (isLandscape) {//设置流分辨率。要求宽度必须是16的整倍数,高度没有要求
@@ -100,20 +135,21 @@ public class LeReactPushView extends CameraSurfaceView implements ISurfaceCreate
         cameraParams.setFocusOnAnimation(false);//关闭对焦动画
         cameraParams.setOpenGestureZoom(true);//开启拉近拉远手势
         cameraParams.setFrontCameraMirror(true);//开启镜像
-        publisher.getVideoRecordDevice().setFocusView(new View(getContext()));//设置对焦图片。如果需要对焦功能和对焦动画,请打开上边两个设置,并且在这里传入一个合适的View
-        publisher.getRecorderContext().setAutoUpdateLogFile(false); //是否开启日志文件自动上报
+        mPublisher.getVideoRecordDevice().setFocusView(new View(getContext()));//设置对焦图片。如果需要对焦功能和对焦动画,请打开上边两个设置,并且在这里传入一个合适的View
+        mPublisher.getRecorderContext().setAutoUpdateLogFile(false); //是否开启日志文件自动上报
 
         /////////////////////////////////////////////////////////////////////////////////////////////
     }
 
 /*============================= 外部接口 ===================================*/
 
+
     /**
-     * 开始推流
+     * 设置推流参数
      *
      * @param bundle 推流参数
      */
-    public void publish(Bundle bundle) {
+    protected void setTarget(final Bundle bundle) {
         Log.d(TAG, LogUtils.getTraceInfo() + "外部控制——— 推流参数 bundle:" + bundle);
         if (bundle == null) return;
 
@@ -122,17 +158,67 @@ public class LeReactPushView extends CameraSurfaceView implements ISurfaceCreate
         // 推流类型切换
         int newPushType = mPushPara.containsKey(PROP_PUSH_TYPE) ? mPushPara.getInt(PROP_PUSH_TYPE) : -1;
 
+        boolean isLandscape = mPushPara.containsKey("landscape") && mPushPara.getBoolean("landscape");
+
+        //初始化状态变量
+        initFieldParaStates();
+
+        switch (newPushType) {
+            case PUSH_TYPE_MOBILE_URI:
+
+                //初始化推流参数
+                init(mThemedReactContext, isLandscape);
+
+                break;
+
+            case PUSH_TYPE_MOBILE:
+                break;
+
+            case PUSH_TYPE_LECLOUD:
+                break;
+        }
+
+        WritableMap event = Arguments.createMap();
+        event.putString(PROP_PUSH_PARA, bundle.toString());
+        mEventEmitter.receiveEvent(getId(), Events.EVENT_PUSH_LOAD_TARGET.toString(), event);
+    }
+
+
+    private void initFieldParaStates() {
+        mLePushValid = false;
+
+        time = 0;
+    }
+
+
+    /**
+     * 开始/停止推流
+     *
+     * @param pushed 是否推流
+     */
+    public void setPushed(final boolean pushed) {
+        Log.d(TAG, LogUtils.getTraceInfo() + "外部控制——— 开始/停止推流:" + pushed);
+
+        if (!mLePushValid || mPushed == pushed || mPushPara == null) {
+            return;
+        }
+
+        mPushed = pushed;
+
+        // 推流类型切换
+        int newPushType = mPushPara.containsKey(PROP_PUSH_TYPE) ? mPushPara.getInt(PROP_PUSH_TYPE) : -1;
+
         switch (newPushType) {
             case PUSH_TYPE_MOBILE_URI:
                 time = 0;
-                String url = bundle.containsKey("url") ? bundle.getString("url") : "";
-                if (!publisher.isRecording() && mPushPara != null) {
+                String url = mPushPara.containsKey("url") ? mPushPara.getString("url") : "";
+                if (!mPublisher.isRecording() && mPushPara != null) {
 //                    timeView.setText("请求推流");
-                    publisher.setUrl(url);//设置推流地址
-                    publisher.publish();//在摄像头打开以后才能开始推流
+                    mPublisher.setUrl(url);//设置推流地址
+                    mPublisher.publish();//在摄像头打开以后才能开始推流
                 } else {
 //                    timeView.setText("关闭推流");
-                    publisher.stopPublish(); //结束推流
+                    mPublisher.stopPublish(); //结束推流
                 }
                 break;
 
@@ -169,7 +255,7 @@ public class LeReactPushView extends CameraSurfaceView implements ISurfaceCreate
             cameraID = Camera.CameraInfo.CAMERA_FACING_FRONT;
             if (flag) flag = !flag;//切换前置摄像头会自动关闭闪光灯
         }
-        publisher.getVideoRecordDevice().switchCamera(cameraID);//切换摄像头
+        mPublisher.getVideoRecordDevice().switchCamera(cameraID);//切换摄像头
     }
 
     /**
@@ -180,7 +266,7 @@ public class LeReactPushView extends CameraSurfaceView implements ISurfaceCreate
     public void changeFlash() {
         if (cameraParams.getCameraId() != Camera.CameraInfo.CAMERA_FACING_FRONT) {
             flag = !flag;
-            publisher.getVideoRecordDevice().setFlashFlag(flag);//切换闪关灯
+            mPublisher.getVideoRecordDevice().setFlashFlag(flag);//切换闪关灯
         } else {
             Toast.makeText(getContext(), "前置摄像头不能打开闪关灯", Toast.LENGTH_LONG).show();
         }
@@ -197,7 +283,7 @@ public class LeReactPushView extends CameraSurfaceView implements ISurfaceCreate
         } else {
             model = CameraParams.FILTER_VIDEO_NONE;//无效果
         }
-        publisher.getVideoRecordDevice().setFilterModel(model);//切换滤镜
+        mPublisher.getVideoRecordDevice().setFilterModel(model);//切换滤镜
     }
 
     /**
@@ -213,7 +299,7 @@ public class LeReactPushView extends CameraSurfaceView implements ISurfaceCreate
         } else {
             volume = 1;
         }
-        publisher.setVolumeGain(volume);//设置声音大小
+        mPublisher.setVolumeGain(volume);//设置声音大小
     }
 
 //    /**
@@ -221,16 +307,16 @@ public class LeReactPushView extends CameraSurfaceView implements ISurfaceCreate
 //     * @return
 //     */
 //    private void getZoom(){
-//         publisher.getVideoRecordDevice().getZoom();
-//        publisher.getVideoRecordDevice().setZoom(1);
-//        publisher.getVideoRecordDevice().getMaxZoom();
+//         mPublisher.getVideoRecordDevice().getZoom();
+//        mPublisher.getVideoRecordDevice().setZoom(1);
+//        mPublisher.getVideoRecordDevice().getMaxZoom();
 //    }
 
     /**
      * 出现问题了,主动上报日志文件
      */
     public void sendErrorLogFile() {
-        publisher.sendLogFile(new LetvRecorderCallback() {
+        mPublisher.sendLogFile(new LetvRecorderCallback() {
             @Override
             public void onFailed(int code, String msg) {
 
@@ -241,6 +327,45 @@ public class LeReactPushView extends CameraSurfaceView implements ISurfaceCreate
 
             }
         });
+    }
+
+    /**
+     * **移动直播 **
+     * 生成一个 推流地址/播放地址 。这两个地址生成规则特别像
+     *
+     * @param isPush 当前需要生成的是推流地址还是播放地址，true 推流地址 ，false 播放地址
+     * @return 返回生成的地址
+     */
+    private String createStreamUrl(boolean isPush) {
+        // 格式化，获取时间参数 。注意，当你在创建移动直播应用时，如果开启推流防盗链或播放防盗链 。那么你必须保证这个时间和中国网络时间一致
+        String tm = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
+        // 获取无推流地址时 流名称，推流域名，签名密钥 三个参数
+        String streamName = "";//etStreamId.getText().toString().trim();
+        String domainName = "";//etDomainName.getText().toString().trim();
+        String appkey = "";//etAppKey.getText().toString().trim();
+
+        if (domainName == null || domainName.equals("")) {
+            domainName = DEFAULT_DOMAINNAME;
+        }
+        if (streamName == null || streamName.equals("")) {
+            streamName = default_streamid;
+        }
+        if (appkey == null || appkey.equals("")) {
+            appkey = DEFAULT_APPKEY;
+        }
+        // 生成 sign值,在播放和推流时生成的sign值不一样
+        String sign;
+        if (isPush) {
+            // 生成推流的 sign 值 。把流名称 ，时间，签名密钥 通过MD5 算法加密
+            sign = MD5Utls.stringToMD5(streamName + tm + appkey);
+        } else {
+            // 生成播放 的sign 值，把流名称，时间，签名密钥，和"lecloud" 通过MD5 算法加密
+            sign = MD5Utls.stringToMD5(streamName + tm + appkey + "lecloud");
+            // 获取到播放域名。现在播放域名的获取规则是 把推流域名中的 push 替换为pull
+            domainName = domainName.replaceAll("push", "pull");
+        }
+        // 拼接出一个rtmp 的地址
+        return "rtmp://" + domainName + "/live/" + streamName + "?tm=" + tm + "&sign=" + sign;
     }
 
 /*============================= 事件回调处理 ===================================*/
@@ -301,7 +426,7 @@ public class LeReactPushView extends CameraSurfaceView implements ISurfaceCreate
     private Runnable timerRunnable = new Runnable() {
         @Override
         public void run() {
-            if (publisher.isRecording()) {
+            if (mPublisher.isRecording()) {
                 time++;
 //                timeView.setText("时间:" + time);
                 timerHandler.postDelayed(timerRunnable, 1000);
@@ -319,12 +444,14 @@ public class LeReactPushView extends CameraSurfaceView implements ISurfaceCreate
     @Override
     public void onPause() {
         super.onPause();
-        if (publisher.isRecording()) { //正在推流
-            isBack = true;
-            publisher.stopPublish();//停止推流
+        if (mLePushValid) {
+            if (mPublisher.isRecording()) { //正在推流
+                isBack = true;
+                mPublisher.stopPublish();//停止推流
+            }
+            //关闭摄像头
+            mPublisher.getVideoRecordDevice().stop();
         }
-        //关闭摄像头
-        publisher.getVideoRecordDevice().stop();
     }
 
     @Override
@@ -335,16 +462,37 @@ public class LeReactPushView extends CameraSurfaceView implements ISurfaceCreate
     @Override
     public void onDestroy() {
         super.onDestroy();
-        publisher.release();//销毁推流器
+        if (mLePushValid) {
+            mPublisher.release();//销毁推流器
+            mLePushValid = false;
+        }
+
+        ((Activity) mThemedReactContext.getBaseContext()).getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+//        ((Activity) mThemedReactContext.getBaseContext()).getWindow().setFlags(0, WindowManager.LayoutParams.FLAG_FULLSCREEN);
     }
 
     @Override
     public void onGLSurfaceCreatedListener() {
-        publisher.getVideoRecordDevice().start();//打开摄像头
+        mPublisher.getVideoRecordDevice().start();//打开摄像头
+        mLePushValid = true;
         if (isBack) {
             isBack = false;
-            publish(mPushPara);
+            setPushed(false);
         }
+    }
+
+    @Override
+    protected void onAttachedToWindow() {
+        Log.d(TAG, LogUtils.getTraceInfo() + "生命周期事件 onAttachedToWindow 调起！");
+        super.onAttachedToWindow();
+        onResume();
+    }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        Log.d(TAG, LogUtils.getTraceInfo() + "生命周期事件 onDetachedFromWindow 调起！");
+        super.onDetachedFromWindow();
+        onDestroy();
     }
 
     @Override
@@ -352,4 +500,24 @@ public class LeReactPushView extends CameraSurfaceView implements ISurfaceCreate
 
     }
 
+//    @Override
+//    public void onHostResume() {
+//        Log.d(TAG, LogUtils.getTraceInfo() + "生命周期事件 onHostResume 调起！");
+//        if (mLePushValid)
+//            onResume();
+//    }
+//
+//    @Override
+//    public void onHostPause() {
+//        Log.d(TAG, LogUtils.getTraceInfo() + "生命周期事件 onHostPause 调起！");
+//        if (mLePushValid)
+//            onPause();
+//    }
+//
+//    @Override
+//    public void onHostDestroy() {
+//        Log.d(TAG, LogUtils.getTraceInfo() + "生命周期事件 onHostDestroy 调起！");
+//        if (mLePushValid)
+//            onDestroy();
+//    }
 }

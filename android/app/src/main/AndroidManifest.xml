@@ -70,7 +70,6 @@
             android:value="${UMENG_CHANNEL}"
             tools:replace="android:value" />
 
-
     </application>
 
 </manifest>

@@ -131,13 +131,15 @@ class home extends Component {
                             <PlayItem source={6} imgUrl={img2} desc={'云直播-泸州'} color={'red'} onPlay={this.skipToPlayer} />
                         </View>
                         <View style={{ flexDirection: 'row', justifyContent: 'space-around' }} >
-                            <PlayItem source={7} imgUrl={img2} desc={'云直播-推流'} color={'red'} onPlay={this.skipToPlayer} />
+                            <PlayItem source={7} imgUrl={img2} desc={'云直播-流'} color={'red'} onPlay={this.skipToPlayer} />
                             <PlayItem source={3} imgUrl={img2} desc={'云点播-可下载'} color={'blue'} onPlay={this.skipToPlayer} />
                         </View>
                         <View style={{ flexDirection: 'row', justifyContent: 'space-around' }} >
-                            <PlayItem source={1} imgUrl={img2} desc={'推流-有地址'} color={'green'} onPlay={this.skipToPush} />
-                            <PlayItem source={2} imgUrl={img2} desc={'推流-无地址'} color={'green'} onPlay={this.skipToPush} />
-                            <PlayItem source={3} imgUrl={img2} desc={'推流-乐视云'} color={'green'} onPlay={this.skipToPush} />
+                            <PlayItem source={1} imgUrl={img2} desc={'移动推流-地址'} color={'green'} onPlay={this.skipToPush} />
+                            <PlayItem source={2} imgUrl={img2} desc={'移动推流-账号'} color={'green'} onPlay={this.skipToPush} />
+                        </View>
+                        <View style={{ flexDirection: 'row', justifyContent: 'space-around' }} >
+                            <PlayItem source={3} imgUrl={img2} desc={'云直播-推流'} color={'green'} onPlay={this.skipToPush} />
                         </View>
                     </View>
                     {/*

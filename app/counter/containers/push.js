@@ -33,10 +33,14 @@ class push extends Component {
         this.state = {
             /** 推流参数 */
             target: -1,
+            /* 开始/停止推流 */
+            pushed: false,
             /* 窗口尺寸 */
             bottom: 0,
             /* 屏幕方向 */
             orientation: -1,
+            /* 推流目标 */
+            targetInfo: '',
         };
     }
 
@@ -45,9 +49,9 @@ class push extends Component {
         let newTarget = '';
         switch (para) {
             case '1': //推流-有地址
-                newTarget = { type: 0, url: "rtmp://216.mpush.live.lecloud.com/live/camerView" };
+                newTarget = { type: 0, url: "rtmp://216.mpush.live.lecloud.com/live/camerView", landscape: false };
                 break;
-            case '2': //推流-无地址                
+            case '2': //推流-无地址
                 break;
             case '3': //推流-乐视云
                 break;
@@ -92,7 +96,7 @@ class push extends Component {
 
     //跳转到播放页
     handleBack = () => {
-        const {navigator} = this.props;        
+        const {navigator} = this.props;
         navigator.pop();
 
         Orientation.setOrientation(1);
@@ -100,13 +104,24 @@ class push extends Component {
     }
 
     render() {
-
         return (
             <View style={styles.container}>
                 <StatusBar barStyle='light-content' style={{ height: STATUS_BAR_HEIGHT }} />
-                <Push style={[styles.fullScreen, { bottom: this.state.bottom, backgroundColor: 'red' }]}
+                <Push style={styles.preview}
                     target={this.state.target}
+                    pushed={this.state.pushed}
+                    onPushTargetLoad={(data) => { this.setState({ targetInfo: `参数: ${data.para}` }); }}
                 />
+                <View style={styles.infoDisplays}>
+                    <View style={styles.bufferDisplay}>
+                        <Text style={styles.DisplayOption}>
+                            {this.state.targetInfo}
+                        </Text>
+                    </View>
+                </View>
+                <View style={styles.control}>
+                    <Text style={styles.controlOption} onPress={() => { this.setState({ pushed: !this.state.pushed }); }} >开始推流</Text>
+                </View>
             </View >
         );
     }
@@ -115,16 +130,54 @@ class push extends Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: 'black',
+        backgroundColor: 'blue',
     },
-    fullScreen: {
+    preview: {
         position: 'absolute',
         top: STATUS_BAR_HEIGHT,
         left: 0,
         bottom: 0,
         right: 0,
+        backgroundColor: 'red',
+    },
+    control: {
+        backgroundColor: "transparent",
+        borderRadius: 5,
+        position: 'absolute',
+        bottom: 50,
+        left: 20,
+        right: 20,
+    },
+    controlOption: {
+        alignSelf: 'center',
+        fontSize: 15,
+        color: "white",
+        paddingLeft: 2,
+        paddingRight: 2,
+        lineHeight: 15,
+    },
+    infoDisplays: {
+        flexDirection: 'column',
+        borderRadius: 4,
+        overflow: 'hidden',
+        position: 'absolute',
+        top: STATUS_BAR_HEIGHT,
+        left: 5,
+        right: 5,
+    },
+    bufferDisplay: {
+        flex: 1,
+        flexDirection: 'row',
+        justifyContent: 'center',
+    },
+    DisplayOption: {
+        alignSelf: 'center',
+        fontSize: 11,
+        color: "white",
+        paddingLeft: 2,
+        paddingRight: 2,
+        paddingBottom: 20,
+        lineHeight: 12,
     },
 });
 

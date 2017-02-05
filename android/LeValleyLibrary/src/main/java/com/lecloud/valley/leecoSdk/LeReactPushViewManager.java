@@ -14,7 +14,6 @@ import com.facebook.react.common.MapBuilder;
 import com.facebook.react.uimanager.SimpleViewManager;
 import com.facebook.react.uimanager.ThemedReactContext;
 import com.facebook.react.uimanager.annotations.ReactProp;
-import com.lecloud.sdk.constant.PlayerParams;
 import com.lecloud.valley.common.Events;
 import com.lecloud.valley.utils.LogUtils;
 
@@ -22,6 +21,8 @@ import java.util.Map;
 
 import javax.annotation.Nullable;
 
+import static com.lecloud.valley.common.Constants.PROP_PAUSED;
+import static com.lecloud.valley.common.Constants.PROP_PUSHED;
 import static com.lecloud.valley.common.Constants.PROP_PUSH_PARA;
 import static com.lecloud.valley.common.Constants.PROP_PUSH_TYPE;
 import static com.lecloud.valley.common.Constants.PUSH_TYPE_LECLOUD;
@@ -81,7 +82,7 @@ public class LeReactPushViewManager extends SimpleViewManager<LeReactPushView> {
      * @param para 数据源包
      */
     @ReactProp(name = PROP_PUSH_PARA)
-    public void setPushPara(final LeReactPushView videoView, final ReadableMap para) {
+    public void setPushPara(final LeReactPushView pushView, final ReadableMap para) {
         if (para == null || !para.hasKey(PROP_PUSH_TYPE) || para.getInt(PROP_PUSH_TYPE) == -1) {
             return;
         }
@@ -92,7 +93,8 @@ public class LeReactPushViewManager extends SimpleViewManager<LeReactPushView> {
                 bundle = new Bundle();
                 bundle.putInt(PROP_PUSH_TYPE, PUSH_TYPE_MOBILE_URI);
                 bundle.putString("url", para.hasKey("url") ? para.getString("url") : "");
-                videoView.publish(bundle);
+                bundle.putBoolean("landscape", para.hasKey("landscape") && para.getBoolean("landscape"));
+                pushView.setTarget(bundle);
                 break;
 
             case PUSH_TYPE_MOBILE:
@@ -107,6 +109,12 @@ public class LeReactPushViewManager extends SimpleViewManager<LeReactPushView> {
 
         }
 
+    }
+
+
+    @ReactProp(name = PROP_PUSHED, defaultBoolean = false)
+    public void setPushed(final LeReactPushView pushView, final boolean pushed) {
+        pushView.setPushed(pushed);
     }
 
 }

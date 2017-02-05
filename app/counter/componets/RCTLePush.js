@@ -56,15 +56,23 @@ export default class Push extends Component {
         target: PropTypes.oneOfType([
             //移动直播（有地址）
             PropTypes.shape({
-                type: PropTypes.number,
-                url: PropTypes.string
+                type: PropTypes.number.isRequired,
+                url: PropTypes.string,
+                landscape: PropTypes.bool,
             }),
         ]).isRequired,
+
+        /* 开始/停止推流 */
+        pushed: PropTypes.bool,
+
+        /* 推流端事件相关 */
+        onPushTargetLoad: PropTypes.func,
+
         ...View.propTypes,
     };
 
     render() {
-        const target = resolveAssetSource(this.props.target) || {};       
+        const target = resolveAssetSource(this.props.target) || {};
         /* 组件属性赋值 */
         const nativeProps = Object.assign({}, this.props);
         Object.assign(nativeProps, {
@@ -72,7 +80,10 @@ export default class Push extends Component {
             para: {
                 type: target.type,
                 url: target.url,
-            },            
+                landscape: target.landscape,
+            },
+            /*回调函数属性赋值*/
+            onPushTargetLoad: (event) => { this.props.onPushTargetLoad && this.props.onPushTargetLoad(event.nativeEvent); },
         });
 
         // console.log(nativeProps);
@@ -80,7 +91,7 @@ export default class Push extends Component {
             <RCTLePush
                 ref={this._assignRoot}
                 {...nativeProps}
-                />
+            />
         );
     }
 }

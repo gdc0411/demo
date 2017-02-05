@@ -1,7 +1,11 @@
 package com.lecloud.valley.demo;
 
+import android.*;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 
 import com.facebook.react.ReactActivity;
 import com.facebook.react.ReactInstanceManager;
@@ -30,12 +34,25 @@ public class MainActivity extends ReactActivity implements DefaultHardwareBackBt
         super.onCreate(savedInstanceState);
 
         PushAgent.getInstance(context).onAppStart();
+
+        //动态申请权限
+//        checkSelfPermission();
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         /** attention to this below ,must add this**/
+    }
+
+    /**
+     * 检查权限,获取所有需要的权限
+     * 当targetSdkVersion大于23并且打算在6.0手机上运行时,请动态申请SDK所需要的权限
+     */
+    public void checkSelfPermission() {
+        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED || ContextCompat.checkSelfPermission(this, android.Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED || ContextCompat.checkSelfPermission(this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.CAMERA, android.Manifest.permission.RECORD_AUDIO, android.Manifest.permission.WRITE_EXTERNAL_STORAGE, android.Manifest.permission.READ_PHONE_STATE}, 0);
+        }
     }
 
 //    @Override

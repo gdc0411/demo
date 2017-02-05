@@ -90,6 +90,7 @@ public interface Constants {
     //推流类型
     String PROP_PUSH_TYPE = "type"; // 推流类型
 
+    String PROP_PUSHED = "pushed";  //是否开始推流
 
     // 定义分享类型常量
     int PUSH_TYPE_MOBILE_URI = 0;

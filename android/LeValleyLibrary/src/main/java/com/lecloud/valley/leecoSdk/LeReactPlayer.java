@@ -1558,6 +1558,8 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
         super.onAttachedToWindow();
     }
 
+
+
     @Override
     protected void onDetachedFromWindow() {
         Log.d(TAG, LogUtils.getTraceInfo() + "生命周期事件 onDetachedFromWindow 调起！");
