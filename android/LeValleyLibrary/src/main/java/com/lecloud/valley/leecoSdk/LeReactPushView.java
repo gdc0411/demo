@@ -741,34 +741,19 @@ public class LeReactPushView extends CameraSurfaceView implements ISurfaceCreate
     private Runnable timerRunnable = new Runnable() {
         @Override
         public void run() {
-            if (mPushType == PUSH_TYPE_MOBILE_URI || mPushType == PUSH_TYPE_MOBILE) { //移动直播
-                if (mPublisher.isRecording()) {
-                    mTime++;
-//                timeView.setText("时间:" + mTime);
-                    WritableMap event = Arguments.createMap();
-                    event.putBoolean(EVENT_PROP_PUSH_TIME_FLAG, mTimeFlag);
-                    event.putInt(EVENT_PROP_PUSH_TIME, mTime);
-                    mEventEmitter.receiveEvent(getId(), Events.EVENT_PUSH_TIME_UPDATE.toString(), event);
-                    timerHandler.postDelayed(timerRunnable, 1000);
-                }
-            } else if (mPushType == PUSH_TYPE_LECLOUD) { //云直播
-                if (mLECPublisher.isRecording()) {
-                    mTime++;
-//                timeView.setText("时间:" + mTime);
-                    WritableMap event = Arguments.createMap();
-                    event.putBoolean(EVENT_PROP_PUSH_TIME_FLAG, mTimeFlag);
-                    event.putInt(EVENT_PROP_PUSH_TIME, mTime);
-                    mEventEmitter.receiveEvent(getId(), Events.EVENT_PUSH_TIME_UPDATE.toString(), event);
-                    timerHandler.postDelayed(timerRunnable, 1000);
-                }
+            if (((mPushType == PUSH_TYPE_MOBILE_URI || mPushType == PUSH_TYPE_MOBILE) && mPublisher.isRecording()) ||
+                    (mPushType == PUSH_TYPE_LECLOUD && mLECPublisher.isRecording())) {
+                mTime++;
+                WritableMap event = Arguments.createMap();
+                event.putBoolean(EVENT_PROP_PUSH_TIME_FLAG, mTimeFlag);
+                event.putInt(EVENT_PROP_PUSH_TIME, mTime);
+                mEventEmitter.receiveEvent(getId(), Events.EVENT_PUSH_TIME_UPDATE.toString(), event);
+                timerHandler.postDelayed(timerRunnable, 1000);
             }
 
         }
     };
 
-    void setmTime(TextView mTime) {
-//        this.timeView = mTime;
-    }
 
 
 /*============================= 周期方法 ===================================*/
@@ -806,8 +791,10 @@ public class LeReactPushView extends CameraSurfaceView implements ISurfaceCreate
         if (mLePushValid) {
             if (mPushType == PUSH_TYPE_MOBILE_URI || mPushType == PUSH_TYPE_MOBILE) { //移动直播
                 mPublisher.release();//销毁推流器
+                mPublisher = null;
             } else if (mPushType == PUSH_TYPE_LECLOUD) { //云直播
                 mLECPublisher.release();//销毁推流器
+                mLECPublisher = null;
             }
             mLePushValid = false;
         }
@@ -841,6 +828,7 @@ public class LeReactPushView extends CameraSurfaceView implements ISurfaceCreate
     protected void onDetachedFromWindow() {
         Log.d(TAG, LogUtils.getTraceInfo() + "生命周期事件 onDetachedFromWindow 调起！");
         super.onDetachedFromWindow();
+        onPause();
         onDestroy();
     }
 
