@@ -85,21 +85,28 @@ public interface Constants {
 
 //================= REACT_PUSH ====================
 
-    //推流端参数
-    String PROP_PUSH_PARA = "para";  //推流参数，包含移动直播（无/有地址）、乐视云直播
-    //推流类型
-    String PROP_PUSH_TYPE = "type"; // 推流类型
 
-    String PROP_PUSHED = "pushed";  //是否开始推流
-
-    String EVENT_PROP_PUSH_STATE = "pushed";  //推流状态
-    String EVENT_PROP_PUSH_TIME = "time"; //推流时间
+    String PROP_PUSH_PARA = "para"; //推流参数，包含移动直播（无/有地址）、乐视云直播
+    String PROP_PUSH_TYPE = "type"; //推流类型
+    String PROP_PUSH = "push"; //开始/停止推流
+    String PROP_CAMERA = "camera"; //切换摄像头
+    String PROP_FLASH = "flash"; //打开/关闭闪光灯
 
     // 定义分享类型常量
     int PUSH_TYPE_MOBILE_URI = 0;
     int PUSH_TYPE_MOBILE = 1;
     int PUSH_TYPE_LECLOUD = 2;
+    int PUSH_TYPE_NONE = -1;
 
+    String EVENT_PROP_PUSH_PUSH_URL = "pushUrl";  //推流地址
+    String EVENT_PROP_PUSH_PLAY_URL = "playUrl";  //播放地址
+
+    String EVENT_PROP_PUSH_STATE = "state";  //推流操作状态
+    String EVENT_PROP_PUSH_TIME = "time"; //推流计时
+    String EVENT_PROP_PUSH_TIME_FLAG = "timeFlag"; //推流计时标识,为true正在计时
+    String EVENT_PROP_PUSH_CAMERA_FLAG = "cameraFlag";  //摄像头切换标识，为true表示正在切换，不可以切换
+    String EVENT_PROP_PUSH_CAMERA_DIRECTION = "cameraDirection";  //摄像头方向，1为前置，0为后置
+    String EVENT_PROP_PUSH_FLASH_FLAG = "flashFlag"; //闪光灯标识，为true表示打开
 
 //============== REACT_EVENT_PROP ======================
 

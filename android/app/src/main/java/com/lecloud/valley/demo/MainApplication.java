@@ -153,7 +153,7 @@ public class MainApplication extends Application implements ReactApplication {
 
                         try {
                             LeCloudPlayerConfig.init(getApplicationContext());
-                            Log.d(TAG, LogUtils.getTraceInfo() + "LeCloudPlayerConfig init -------");
+                            Log.d(TAG, LogUtils.getTraceInfo() + "LeCloudPlayerConfig initMobilePush -------");
                         } catch (Exception e) {
                             Log.e(TAG, LogUtils.getTraceInfo() + "LeCloudPlayerConfig exceptiong -------" + e);
                             e.printStackTrace();

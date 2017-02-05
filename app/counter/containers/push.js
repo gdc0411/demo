@@ -21,7 +21,12 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
 import Orientation from '../componets/RCTOrientation';
-import Push from '../componets/RCTLePush';
+import Push, {
+    PUSH_TYPE_MOBILE_URI,
+    PUSH_TYPE_MOBILE,
+    PUSH_TYPE_LECLOUD,
+    PUSH_TYPE_NONE,
+} from '../componets/RCTLePush';
 
 //取得屏幕宽高
 const {height: SCREEN_HEIGHT, width: SCREEN_WIDTH} = Dimensions.get('window');
@@ -34,7 +39,7 @@ class push extends Component {
             /** 推流参数 */
             target: -1,
             /* 开始/停止推流 */
-            pushed: false,
+            push: false,
             /* 窗口尺寸 */
             bottom: 0,
             /* 屏幕方向 */
@@ -42,9 +47,25 @@ class push extends Component {
             /* 推流目标 */
             targetInfo: '',
             /* 推流操作 */
-            pushState: '开始推流',
+            state: 0,
             /* 推流计时*/
             time: -1,
+            /* 推流计时标识*/
+            timeFlag: false,
+            /* 摄像头操作 */
+            camera: 0,
+            /* 摄像头切换标识*/
+            cameraFlag: false,
+            /* 摄像头方向：0为后置，1为前置*/
+            cameraDirection: 1,
+            /* 闪光灯操作 */
+            flash: false,
+            /* 闪光灯打开标识*/
+            flashFlag: false,
+            /* 滤镜操作 */
+            filter: '滤镜',
+            /* 摄像头操作 */
+            volume: '音量',
         };
     }
 
@@ -53,22 +74,26 @@ class push extends Component {
         let newTarget = '';
         switch (para) {
             case '1': //推流-有地址
-                newTarget = { type: 0, url: "rtmp://216.mpush.live.lecloud.com/live/camerView", landscape: false };
+                newTarget = { type: PUSH_TYPE_MOBILE_URI, url: "rtmp://216.mpush.live.lecloud.com/live/camerView", landscape: false };
                 break;
             case '2': //推流-无地址
+                newTarget = { type: PUSH_TYPE_MOBILE, domainName: "216.mpush.live.lecloud.com", streamName: '358239059415259', appkey: 'KIVK8X67PSPU9518B1WA', landscape: false };
                 break;
             case '3': //推流-乐视云
+                newTarget = { type: PUSH_TYPE_LECLOUD, activityId: "A2016120500000gx", userId: '800053', secretKey: '60ca65970dc1a15ad421d46f524b99b7', landscape: false };
                 break;
+            default:
+                newTarget = { type: PUSH_TYPE_NONE };
         }
         this.setState({ target: newTarget, });
 
         Orientation.setOrientation(1);
-        Orientation.addOnOrientationListener(this.handleOrientation);
+        // Orientation.addOnOrientationListener(this.handleOrientation);
     }
 
     componentWillUnmount() {
         Orientation.setOrientation(1);
-        Orientation.removeOnOrientationListener(this.handleOrientation);
+        // Orientation.removeOnOrientationListener(this.handleOrientation);
     }
 
     handleOrientation = (orientation) => {
@@ -107,16 +132,51 @@ class push extends Component {
         Orientation.removeOnOrientationListener(this.handleOrientation);
     }
 
+
+    displayPushState = () => {
+        let {state} = this.state;
+        console.log("displayPushState:", state);
+        let dispControl;
+        switch (state) {
+            case 0: //CLOSED
+                dispControl = '开始推流';
+                break;
+            case 1: //CONNECTING
+                dispControl = '连接中…';
+                break;
+            case 2: //CONNECTED
+                dispControl = '已连接';
+                break;
+            case 3: //OPENED
+                dispControl = '关闭推流';
+                break;
+            case 4: //DISCONNECTING
+                dispControl = '断开中…';
+                break;
+            case 5: //ERROR
+                dispControl = '推流出错';
+                break;
+            case 6: //WARNING
+                dispControl = '关闭推流';
+                break;
+        }
+        return dispControl;
+    }
+
     render() {
         return (
             <View style={styles.container}>
                 <StatusBar barStyle='light-content' style={{ height: STATUS_BAR_HEIGHT }} />
                 <Push style={styles.preview}
                     target={this.state.target}
-                    pushed={this.state.pushed}
-                    onPushTargetLoad={(data) => { this.setState({ targetInfo: `参数: ${data.para}` }); }}
-                    onPushOperate={(data) => { this.setState({ pushed: data.pushed, pushState: data.pushed ? '停止推流' : '开始推流' }); }}
-                    onPushTimeUpdate={(data) => { this.setState({ time: data.time }); }}
+                    push={this.state.push}
+                    camera={this.state.camera}
+                    flash={this.state.flash}
+                    onPushTargetLoad={(data) => { this.setState({ targetInfo: `参数: ${data.para}\r\n推流地址: ${data.pushUrl}\r\n播放地址: ${data.playUrl}` }); }}
+                    onPushStateUpdate={(data) => { this.setState({ state: data.state, timeFlag: data.timeFlag }); }}
+                    onPushTimeUpdate={(data) => { this.setState({ time: data.time, timeFlag: data.timeFlag }); }}
+                    onPushCameraUpdate={(data) => { this.setState({ cameraFlag: data.cameraFlag, cameraDirection: data.cameraDirection }); }}
+                    onPushFlashUpdate={(data) => { this.setState({ flashFlag: data.flashFlag }); }}
                 />
                 <View style={styles.infoDisplays}>
                     <View style={styles.bufferDisplay}>
@@ -124,14 +184,25 @@ class push extends Component {
                             {this.state.targetInfo}
                         </Text>
                     </View>
-                    <View style={styles.bufferDisplay}>
-                        <Text style={styles.DisplayOption}>
-                           计时：{this.state.time}
-                        </Text>
-                    </View>
+                    {this.state.timeFlag ?
+                        <View style={styles.bufferDisplay}>
+                            <Text style={[styles.DisplayOption, { fontSize: 15, }]}>
+                                计时：{this.state.time}
+                            </Text>
+                        </View> : null}
                 </View>
                 <View style={styles.control}>
-                    <Text style={styles.controlOption} onPress={() => { this.setState({ pushed: !this.state.pushed }); }} >{this.state.pushState}</Text>
+                    <TouchableOpacity disabled={this.state.state === 0 || this.state.state === 3 ? false : true} onPress={() => { this.setState({ push: !this.state.push }); }}>
+                        <Text style={[styles.controlOption, { color: this.state.state === 0 ? 'green' : this.state.state === 3 ? 'red' : 'gray' }]} >{this.displayPushState()}</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity disabled={this.state.cameraFlag} onPress={() => { this.setState({ camera: this.state.camera + 1 }); }}>
+                        <Text style={styles.controlOption} >{this.state.cameraFlag ? '请稍后' : '切换镜头'}</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity disabled={this.state.cameraDirection === 1 ? true : false} onPress={() => { this.setState({ flash: !this.state.flash }); }}>
+                        <Text style={styles.controlOption} >{this.state.cameraDirection === 1 ? '无闪光' : this.state.flashFlag ? '关闪光' : '开闪光'}</Text>
+                    </TouchableOpacity>
+                    <Text style={styles.controlOption} >{this.state.filter}</Text>
+                    <Text style={styles.controlOption} >{this.state.volume}</Text>
                 </View>
             </View >
         );
@@ -152,6 +223,8 @@ const styles = StyleSheet.create({
         backgroundColor: 'red',
     },
     control: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
         backgroundColor: "transparent",
         borderRadius: 5,
         position: 'absolute',
@@ -168,7 +241,6 @@ const styles = StyleSheet.create({
         lineHeight: 15,
     },
     infoDisplays: {
-        flexDirection: 'column',
         borderRadius: 4,
         overflow: 'hidden',
         position: 'absolute',
@@ -183,7 +255,7 @@ const styles = StyleSheet.create({
     DisplayOption: {
         alignSelf: 'center',
         fontSize: 11,
-        color: "blue",
+        color: "white",
         paddingLeft: 2,
         paddingRight: 2,
         paddingBottom: 20,
