@@ -741,8 +741,8 @@ public class LeReactPushView extends CameraSurfaceView implements ISurfaceCreate
     private Runnable timerRunnable = new Runnable() {
         @Override
         public void run() {
-            if (((mPushType == PUSH_TYPE_MOBILE_URI || mPushType == PUSH_TYPE_MOBILE) && mPublisher.isRecording()) ||
-                    (mPushType == PUSH_TYPE_LECLOUD && mLECPublisher.isRecording())) {
+            if (((mPushType == PUSH_TYPE_MOBILE_URI || mPushType == PUSH_TYPE_MOBILE) && mPublisher!= null && mPublisher.isRecording()) ||
+                    (mPushType == PUSH_TYPE_LECLOUD && mLECPublisher!= null && mLECPublisher.isRecording())) {
                 mTime++;
                 WritableMap event = Arguments.createMap();
                 event.putBoolean(EVENT_PROP_PUSH_TIME_FLAG, mTimeFlag);
@@ -750,7 +750,6 @@ public class LeReactPushView extends CameraSurfaceView implements ISurfaceCreate
                 mEventEmitter.receiveEvent(getId(), Events.EVENT_PUSH_TIME_UPDATE.toString(), event);
                 timerHandler.postDelayed(timerRunnable, 1000);
             }
-
         }
     };
 
@@ -790,9 +789,17 @@ public class LeReactPushView extends CameraSurfaceView implements ISurfaceCreate
         super.onDestroy();
         if (mLePushValid) {
             if (mPushType == PUSH_TYPE_MOBILE_URI || mPushType == PUSH_TYPE_MOBILE) { //移动直播
+                if (mPublisher.isRecording()) { //正在推流
+                    isBack = true;
+                    mPublisher.stopPublish();//停止推流
+                }
                 mPublisher.release();//销毁推流器
                 mPublisher = null;
             } else if (mPushType == PUSH_TYPE_LECLOUD) { //云直播
+                if (mLECPublisher.isRecording()) { //正在推流
+                    isBack = true;
+                    mLECPublisher.stopPublish();//停止推流
+                }
                 mLECPublisher.release();//销毁推流器
                 mLECPublisher = null;
             }
@@ -828,7 +835,6 @@ public class LeReactPushView extends CameraSurfaceView implements ISurfaceCreate
     protected void onDetachedFromWindow() {
         Log.d(TAG, LogUtils.getTraceInfo() + "生命周期事件 onDetachedFromWindow 调起！");
         super.onDetachedFromWindow();
-        onPause();
         onDestroy();
     }
 
