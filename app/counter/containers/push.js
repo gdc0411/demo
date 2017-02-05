@@ -41,6 +41,10 @@ class push extends Component {
             orientation: -1,
             /* 推流目标 */
             targetInfo: '',
+            /* 推流操作 */
+            pushState: '开始推流',
+            /* 推流计时*/
+            time: -1,
         };
     }
 
@@ -111,6 +115,8 @@ class push extends Component {
                     target={this.state.target}
                     pushed={this.state.pushed}
                     onPushTargetLoad={(data) => { this.setState({ targetInfo: `参数: ${data.para}` }); }}
+                    onPushOperate={(data) => { this.setState({ pushed: data.pushed, pushState: data.pushed ? '停止推流' : '开始推流' }); }}
+                    onPushTimeUpdate={(data) => { this.setState({ time: data.time }); }}
                 />
                 <View style={styles.infoDisplays}>
                     <View style={styles.bufferDisplay}>
@@ -118,9 +124,14 @@ class push extends Component {
                             {this.state.targetInfo}
                         </Text>
                     </View>
+                    <View style={styles.bufferDisplay}>
+                        <Text style={styles.DisplayOption}>
+                           计时：{this.state.time}
+                        </Text>
+                    </View>
                 </View>
                 <View style={styles.control}>
-                    <Text style={styles.controlOption} onPress={() => { this.setState({ pushed: !this.state.pushed }); }} >开始推流</Text>
+                    <Text style={styles.controlOption} onPress={() => { this.setState({ pushed: !this.state.pushed }); }} >{this.state.pushState}</Text>
                 </View>
             </View >
         );
@@ -166,14 +177,13 @@ const styles = StyleSheet.create({
         right: 5,
     },
     bufferDisplay: {
-        flex: 1,
         flexDirection: 'row',
         justifyContent: 'center',
     },
     DisplayOption: {
         alignSelf: 'center',
         fontSize: 11,
-        color: "white",
+        color: "blue",
         paddingLeft: 2,
         paddingRight: 2,
         paddingBottom: 20,

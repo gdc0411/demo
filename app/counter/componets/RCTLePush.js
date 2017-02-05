@@ -67,6 +67,8 @@ export default class Push extends Component {
 
         /* 推流端事件相关 */
         onPushTargetLoad: PropTypes.func,
+        onPushOperate: PropTypes.func,
+        onPushTimeUpdate: PropTypes.func,
 
         ...View.propTypes,
     };
@@ -84,6 +86,10 @@ export default class Push extends Component {
             },
             /*回调函数属性赋值*/
             onPushTargetLoad: (event) => { this.props.onPushTargetLoad && this.props.onPushTargetLoad(event.nativeEvent); },
+            /* 推流操作 */
+            onPushOperate: (event) => { this.props.onPushOperate && this.props.onPushOperate(event.nativeEvent); },
+            onPushTimeUpdate: (event) => { this.props.onPushTimeUpdate && this.props.onPushTimeUpdate(event.nativeEvent); },
+
         });
 
         // console.log(nativeProps);

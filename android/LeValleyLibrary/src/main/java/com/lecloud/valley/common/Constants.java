@@ -92,6 +92,9 @@ public interface Constants {
 
     String PROP_PUSHED = "pushed";  //是否开始推流
 
+    String EVENT_PROP_PUSH_STATE = "pushed";  //推流状态
+    String EVENT_PROP_PUSH_TIME = "time"; //推流时间
+
     // 定义分享类型常量
     int PUSH_TYPE_MOBILE_URI = 0;
     int PUSH_TYPE_MOBILE = 1;

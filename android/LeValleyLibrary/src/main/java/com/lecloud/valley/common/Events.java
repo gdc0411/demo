@@ -51,6 +51,8 @@ public enum Events {
 
     //乐视直播推流端事件
     EVENT_PUSH_LOAD_TARGET("onPushTargetLoad"), // 传入推流设置参数
+    EVENT_PUSH_OPERATE("onPushOperate"), // 推流控制事件反馈
+    EVENT_PUSH_TIME_UPDATE("onPushTimeUpdate"), // 推流时间更新
 
     //翻转模块事件
     EVENT_ORIENTATION_CHANG("onOrientationDidChange"), //屏幕方向切换

@@ -38,12 +38,17 @@ import com.letv.recorder.util.MD5Utls;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import static com.lecloud.valley.common.Constants.EVENT_PROP_ERROR_CODE;
+import static com.lecloud.valley.common.Constants.EVENT_PROP_ERROR_MSG;
+import static com.lecloud.valley.common.Constants.EVENT_PROP_PUSH_STATE;
+import static com.lecloud.valley.common.Constants.EVENT_PROP_PUSH_TIME;
 import static com.lecloud.valley.common.Constants.PROP_PUSH_PARA;
 import static com.lecloud.valley.common.Constants.PROP_PUSH_TYPE;
 import static com.lecloud.valley.common.Constants.PUSH_TYPE_LECLOUD;
 import static com.lecloud.valley.common.Constants.PUSH_TYPE_MOBILE;
 import static com.lecloud.valley.common.Constants.PUSH_TYPE_MOBILE_URI;
 import static com.lecloud.valley.utils.LogUtils.TAG;
+import static com.lecloud.valley.utils.LogUtils.getTraceInfo;
 
 /**
  * Created by RaoJia on 2017/2/5.
@@ -73,6 +78,7 @@ public class LeReactPushView extends CameraSurfaceView implements ISurfaceCreate
     private CameraParams cameraParams;
     private AudioParams audioParams;
 
+    private int mPushType;  //当前推流类型
     private boolean mLePushValid; //是否初始化成功
     private boolean mPushed = false;  //是否开始推流
 
@@ -85,6 +91,7 @@ public class LeReactPushView extends CameraSurfaceView implements ISurfaceCreate
 
     private int time = 0;
     private boolean timeFlag = false;
+
 
 
 
@@ -158,12 +165,14 @@ public class LeReactPushView extends CameraSurfaceView implements ISurfaceCreate
         // 推流类型切换
         int newPushType = mPushPara.containsKey(PROP_PUSH_TYPE) ? mPushPara.getInt(PROP_PUSH_TYPE) : -1;
 
+        mPushType = newPushType;
+
         boolean isLandscape = mPushPara.containsKey("landscape") && mPushPara.getBoolean("landscape");
 
         //初始化状态变量
         initFieldParaStates();
 
-        switch (newPushType) {
+        switch (mPushType) {
             case PUSH_TYPE_MOBILE_URI:
 
                 //初始化推流参数
@@ -203,30 +212,89 @@ public class LeReactPushView extends CameraSurfaceView implements ISurfaceCreate
             return;
         }
 
+        setPushedModifier(pushed);
+    }
+
+    /**
+     * 设置推送开始或停止
+     *
+     * @param pushed pushed
+     */
+    private void setPushedModifier(final boolean pushed) {
         mPushed = pushed;
 
-        // 推流类型切换
-        int newPushType = mPushPara.containsKey(PROP_PUSH_TYPE) ? mPushPara.getInt(PROP_PUSH_TYPE) : -1;
+        if (!mLePushValid) {
+            return;
+        }
 
-        switch (newPushType) {
-            case PUSH_TYPE_MOBILE_URI:
-                time = 0;
-                String url = mPushPara.containsKey("url") ? mPushPara.getString("url") : "";
-                if (!mPublisher.isRecording() && mPushPara != null) {
-//                    timeView.setText("请求推流");
+        if (mPushed) { //启动推流
+
+            if (mPushType == PUSH_TYPE_MOBILE_URI || mPushType == PUSH_TYPE_MOBILE) { //移动直播
+
+                if (!mPublisher.isRecording() && mLePushValid) { //未初始化完毕，未推送状态，开启推送
+                    Log.d(TAG, getTraceInfo() + "初始化完毕，开始推流！");
+                    time = 0;
+                    String url = mPushPara.containsKey("url") ? mPushPara.getString("url") : "";
                     mPublisher.setUrl(url);//设置推流地址
                     mPublisher.publish();//在摄像头打开以后才能开始推流
-                } else {
-//                    timeView.setText("关闭推流");
-                    mPublisher.stopPublish(); //结束推流
+
+                    WritableMap event = Arguments.createMap();
+                    event.putBoolean(EVENT_PROP_PUSH_STATE, mPushed);
+                    event.putInt(EVENT_PROP_ERROR_CODE, 0);
+                    event.putString(EVENT_PROP_ERROR_MSG, "初始化完毕，开始推流");
+                    mEventEmitter.receiveEvent(getId(), Events.EVENT_PUSH_OPERATE.toString(), event);
+
+                } else if (mPublisher.isRecording()) { //正在推送，不做处理
+                    Log.d(TAG, getTraceInfo() + "无需重复推流！");
+
+                    WritableMap event = Arguments.createMap();
+                    event.putBoolean(EVENT_PROP_PUSH_STATE, mPushed);
+                    event.putInt(EVENT_PROP_ERROR_CODE, 0);
+                    event.putString(EVENT_PROP_ERROR_MSG, "无需重复推流");
+                    mEventEmitter.receiveEvent(getId(), Events.EVENT_PUSH_OPERATE.toString(), event);
+
+                } else if (!mLePushValid) {
+                    Log.d(TAG, getTraceInfo() + "初始化未完成，无法推流！");
+
+                    WritableMap event = Arguments.createMap();
+                    event.putBoolean(EVENT_PROP_PUSH_STATE, false);
+                    event.putInt(EVENT_PROP_ERROR_CODE, -1);
+                    event.putString(EVENT_PROP_ERROR_MSG, "初始化未完成，无法推流");
+                    mEventEmitter.receiveEvent(getId(), Events.EVENT_PUSH_OPERATE.toString(), event);
+                    //todo 增加处理
                 }
-                break;
 
-            case PUSH_TYPE_MOBILE:
-                break;
+            } else if (mPushType == PUSH_TYPE_LECLOUD) {
 
-            case PUSH_TYPE_LECLOUD:
-                break;
+            }
+
+        } else { //关闭推流
+
+            if (mPushType == PUSH_TYPE_MOBILE_URI || mPushType == PUSH_TYPE_MOBILE) { //移动直播
+
+                if (mPublisher.isRecording()) { //正在推流，停止推流
+                    Log.d(TAG, getTraceInfo() + "结束当前推流！");
+                    mPublisher.stopPublish();//结束推流
+
+                    WritableMap event = Arguments.createMap();
+                    event.putBoolean(EVENT_PROP_PUSH_STATE, mPushed);
+                    event.putInt(EVENT_PROP_ERROR_CODE, 0);
+                    event.putString(EVENT_PROP_ERROR_MSG, "结束当前推流");
+                    mEventEmitter.receiveEvent(getId(), Events.EVENT_PUSH_OPERATE.toString(), event);
+
+                } else { //未推送，不做处理
+                    Log.d(TAG, getTraceInfo() + "无推流，无需关闭！");
+
+                    WritableMap event = Arguments.createMap();
+                    event.putBoolean(EVENT_PROP_PUSH_STATE, mPushed);
+                    event.putInt(EVENT_PROP_ERROR_CODE, 0);
+                    event.putString(EVENT_PROP_ERROR_MSG, "无需重复推流");
+                    mEventEmitter.receiveEvent(getId(), Events.EVENT_PUSH_OPERATE.toString(), event);
+                }
+
+            } else if (mPushType == PUSH_TYPE_LECLOUD) {
+
+            }
         }
     }
 
@@ -234,6 +302,7 @@ public class LeReactPushView extends CameraSurfaceView implements ISurfaceCreate
      * 切换摄像头,需要注意,切换摄像头不能太频繁,如果太频繁会导致应用程序崩溃。建议最快10秒一次
      */
     boolean isSwitch = false;
+    private Handler tenHandler = new Handler();
 
     public void switchCamera() {
         if (isSwitch) {
@@ -395,7 +464,7 @@ public class LeReactPushView extends CameraSurfaceView implements ISurfaceCreate
                     break;
                 case RecorderConstance.RECORDER_PUSH_FIRST_SIZE:
                     Log.d(TAG, "第一针画面推流成功,代表成功的开始推流了:推流成功的标志回调");
-                    Toast.makeText(getContext(), "第一针画面推流成功,代表成功的开始推流了:推流成功的标志回调", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(getContext(), "第一针画面推流成功,代表成功的开始推流了:推流成功的标志回调", Toast.LENGTH_SHORT).show();
                     if (!timeFlag) {
                         timerHandler.postDelayed(timerRunnable, 1000);
                     }
@@ -416,12 +485,13 @@ public class LeReactPushView extends CameraSurfaceView implements ISurfaceCreate
                     Log.d(TAG, "成功的关闭了底层推流,可以进行下次推流了:保证推流成功关闭");
                     Toast.makeText(getContext(), "成功的关闭了底层推流,可以进行下次推流了:保证推流成功关闭", Toast.LENGTH_SHORT).show();
 //                    timeView.setText("成功关闭推流服务");
+                    timeFlag = false;
                     break;
             }
         }
     };
 
-    private Handler tenHandler = new Handler();
+
     private Handler timerHandler = new Handler();
     private Runnable timerRunnable = new Runnable() {
         @Override
@@ -429,6 +499,9 @@ public class LeReactPushView extends CameraSurfaceView implements ISurfaceCreate
             if (mPublisher.isRecording()) {
                 time++;
 //                timeView.setText("时间:" + time);
+                WritableMap event = Arguments.createMap();
+                event.putInt(EVENT_PROP_PUSH_TIME, time);
+                mEventEmitter.receiveEvent(getId(), Events.EVENT_PUSH_TIME_UPDATE.toString(), event);
                 timerHandler.postDelayed(timerRunnable, 1000);
             }
         }
