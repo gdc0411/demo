@@ -3,11 +3,11 @@
 //  LECValleyUIKit
 //
 //  Created by RaoJia on 2017/2/6.
-//  Copyright © 2017年 Facebook. All rights reserved.
+//  Copyright © 2017年 LeCloud. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
+#import <React/RCTViewManager.h>
 
-@interface RCTLePushManager : NSObject
+@interface RCTLePushManager : RCTViewManager
 
 @end

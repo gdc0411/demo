@@ -62,6 +62,7 @@ export default class Video extends Component {
                 businessline: PropTypes.string,
                 saas: PropTypes.bool,
                 pano: PropTypes.bool,
+                localOnly: PropTypes.bool,
                 repeat: PropTypes.bool,
                 rate: PropTypes.string,
                 videoInfo: PropTypes.object
@@ -183,6 +184,7 @@ export default class Video extends Component {
                 pano: source.pano || false,
                 uri: uri,
                 repeat: source.repeat || false,
+                localOnly: source.localOnly || false,
                 rate: source.rate,
                 videoInfo: source.videoInfo || {}
             },

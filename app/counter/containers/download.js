@@ -100,7 +100,6 @@ class download extends Component {
   }
 
   render() {
-
     let downloadList = this.state.downloadList;
     let pages = [];
 
@@ -187,7 +186,7 @@ class download extends Component {
               </TouchableOpacity> : null
             }
             {showPlay ?
-              <TouchableOpacity onPress={() => this.props.navigator.push({ location: '/play/' + encodeURIComponent(downloadList[i].fileSavePath), })}>
+              <TouchableOpacity onPress={() => this.props.navigator.push({ location: '/play/' + encodeURIComponent(JSON.stringify(downloadList[i])), })}>
                 <Text style={styles.instructions}> 播放 </Text>
               </TouchableOpacity> : null
             }

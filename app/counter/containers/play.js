@@ -288,7 +288,7 @@ class play extends Component {
         }
         // if( this.state.ratesInfo.length > 0 ) alert(this.state.ratesInfo );
         return (
-            <TouchableOpacity onPress={() => { this.setState({ rate: rate }); } }>
+            <TouchableOpacity onPress={() => { this.setState({ rate: rate }); }}>
                 <Text style={[styles.controlOption, { fontWeight: isSelected ? "bold" : "normal" }]}>
                     {rateName}
                 </Text>
@@ -306,7 +306,7 @@ class play extends Component {
         let liveName = '机位1';
         // if( this.state.ratesInfo.length > 0 ) alert(this.state.ratesInfo );
         return (
-            <TouchableOpacity onPress={() => { this.setState({ live: live }); } }>
+            <TouchableOpacity onPress={() => { this.setState({ live: live }); }}>
                 <Text style={[styles.controlOption, { fontWeight: isSelected ? "bold" : "normal" }]}>
                     {liveName}
                 </Text>
@@ -338,7 +338,7 @@ class play extends Component {
         }
         // if( this.state.ratesInfo.length > 0 ) alert(this.state.ratesInfo );
         return (
-            <TouchableOpacity onPress={() => { this.setState({ orientation, bottom }); Orientation.setOrientation(orientation); } }>
+            <TouchableOpacity onPress={() => { this.setState({ orientation, bottom }); Orientation.setOrientation(orientation); }}>
                 <Text style={[styles.controlOption, { fontWeight: isSelected ? "bold" : "normal" }]}>
                     {dispName}
                 </Text>
@@ -349,7 +349,7 @@ class play extends Component {
     renderVolumeControl = (volume) => {
         const isSelected = (this.state.volume == volume);
         return (
-            <TouchableOpacity onPress={() => { this.setState({ volume: volume }); } }>
+            <TouchableOpacity onPress={() => { this.setState({ volume: volume }); }}>
                 <Text style={[styles.controlOption, { fontWeight: isSelected ? "bold" : "normal" }]}>
                     {volume}%
                 </Text>
@@ -360,7 +360,7 @@ class play extends Component {
     renderBrightnessControl = (brightness) => {
         const isSelected = (this.state.brightness == brightness);
         return (
-            <TouchableOpacity onPress={() => { this.setState({ brightness: brightness }); } }>
+            <TouchableOpacity onPress={() => { this.setState({ brightness: brightness }); }}>
                 <Text style={[styles.controlOption, { fontWeight: isSelected ? "bold" : "normal" }]}>
                     {brightness}%
                 </Text>
@@ -386,7 +386,7 @@ class play extends Component {
         switch (key) {
             case '0': //第三方URL
                 source = { playMode: 0, uri: "http://cache.utovr.com/201601131107187320.mp4", pano: false };
-                break;            
+                break;
             case '1': //点播 乐视云测试数据
                 source = { playMode: 10000, uuid: "847695", vuid: "200323369", businessline: "102", saas: true, pano: false };
                 break;
@@ -409,8 +409,16 @@ class play extends Component {
                 source = { playMode: 10002, actionId: "A20170124000008m", usehls: false, customerId: "", businessline: "", cuid: "", utoken: "", pano: false };
                 break;
             default: //本地地址
-                source = { playMode: 0, uri: key, pano: false };                
-                //source = { playMode: 0, uri: "/sdcard/Android/data/com.lecloud.valley.demo/levideo/%E7%94%B5%E5%BD%B1%E6%B5%8B%E8%AF%95627", pano: false };                
+                if (Platform.OS === 'ios') {
+                    let download = JSON.parse(key);
+                    if (download)
+                        source = { playMode: 10000, uuid: "" + download.uuid, vuid: "" + download.vuid, businessline: "" + download.businessline, saas: true, pano: false, localOnly: true };
+                } else {
+                    let download = JSON.parse(key);
+                    if (download)
+                        source = { playMode: 0, uri: download.fileSavePath, pano: false };
+                    //source = { playMode: 0, uri: "/sdcard/Android/data/com.lecloud.valley.demo/levideo/%E7%94%B5%E5%BD%B1%E6%B5%8B%E8%AF%95627", pano: false };
+                }
                 break;
         }
         // alert(source);
@@ -455,7 +463,7 @@ class play extends Component {
 
     getDownloadButton = () => {
         return (
-            <Text style={styles.controlOption} onPress={() => { Download.download(this.state.source); } } > 下 载 </Text>
+            <Text style={styles.controlOption} onPress={() => { Download.download(this.state.source); }} > 下 载 </Text>
         );
     }
 
@@ -468,7 +476,7 @@ class play extends Component {
         return (
             <View style={styles.container}>
                 <StatusBar barStyle='light-content' style={{ height: STATUS_BAR_HEIGHT }} />
-                <TouchableOpacity style={[styles.fullScreen, { bottom: this.state.bottom }]} onPress={() => { this.setState({ paused: !this.state.paused }); } }>
+                <TouchableOpacity style={[styles.fullScreen, { bottom: this.state.bottom }]} onPress={() => { this.setState({ paused: !this.state.paused }); }}>
                     <Video style={[styles.fullScreen, { bottom: this.state.bottom, backgroundColor: 'red' }]}
                         source={this.state.source}
                         seek={this.state.seek}
@@ -479,30 +487,30 @@ class play extends Component {
                         repeat={this.state.repeat}
                         live={this.state.live}
                         clickAd={this.state.clickAd}
-                        onVideoSourceLoad={(data) => { this.setState({ sourceInfo: `视频源: ${data.src}` }); } }
+                        onVideoSourceLoad={(data) => { this.setState({ sourceInfo: `视频源: ${data.src}` }); }}
                         onVideoLoad={(data) => this.onLoad(data)}
-                        onVideoProgress={(data) => { this.setState({ currentTime: data.currentTime, duration: data.duration, eventInfo: `播放中…… ${data.currentTime}/${data.duration}` }); } }
-                        onVideoBufferPercent={(data) => { this.setState({ buffPercent: data.bufferpercent }); } }
-                        onBufferStart={() => { this.setState({ eventInfo: '缓冲开始！' }); } }
-                        onBufferPercent={(data) => { this.setState({ eventInfo: `${(data.videobuff) ? '缓冲中……' + data.videobuff + '%' : ''}` }); } }
-                        onBufferEnd={() => { this.setState({ eventInfo: '缓冲完毕！' }); } }
-                        onVideoRendingStart={() => { this.setState({ eventInfo: '渲染第一帧……' }); } }
-                        onVideoSeek={(data) => { this.setState({ eventInfo: `跳转到……${data.currentTime}+${data.seekTime}` }); } }
-                        onVideoSeekComplete={(data) => { this.setState({ eventInfo: `跳转完毕！` }); } }
-                        onVideoPause={(data) => { this.setState({ paused: true, eventInfo: `暂停…… ${(data.beginTime) ? this.getLocalTime(data.beginTime) + '/' + this.getLocalTime(data.currentTime) + '/' + this.getLocalTime(data.serverTime) : data.currentTime + '/' + data.duration}` }); } }
-                        onVideoResume={(data) => { this.setState({ paused: false, eventInfo: `恢复播放……  ${(data.beginTime) ? this.getLocalTime(data.beginTime) + '/' + this.getLocalTime(data.currentTime) + '/' + this.getLocalTime(data.serverTime) : data.currentTime + '/' + data.duration}` }); } }
-                        onVideoEnd={() => { this.setState({ eventInfo: '播放完毕！' }); } }
-                        onAdvertStart={() => { this.setState({ advertInfo: '广告开始！' }); } }
-                        onAdvertProgress={(data) => { this.setState({ advertInfo: `广告播放中……倒计时${data.AdTime}` }); } }
-                        onAdvertComplete={() => { this.setState({ advertInfo: `广告结束！` }); } }
-                        onAdvertClick={() => { this.setState({ advertInfo: `广告点击了！！` }); } }
-                        onVideoRateLoad={(data) => { this.setState({ eventInfo: `码率切换:${data.currentRate} 到 ${data.nextRate}` }); } }
-                        onActionLiveChange={(data) => { this.setState({ eventInfo: `机位切换:${data.currentLive} 到 ${data.nextLive}` }); } }
-                        onActionTimeShift={(data) => { this.setState({ currentTime: data.currentTime, eventInfo: `播放中…… ${this.getLocalTime(data.beginTime)}/${this.getLocalTime(data.currentTime)}/${this.getLocalTime(data.serverTime)}` }); } }
-                        onActionStatusChange={(data) => { this.setState({ eventInfo: `活动状态变化…… ${data.actionState}/${data.actionId}/${data.beginTime}/${data.endTime}` }); } }
-                        onActionOnlineNumChange={(data) => { this.setState({ eventInfo: `在线人数变化…… ${data.onlineNum}` }); } }
-                        onVideoError={(data) => { this.setState({ errorInfo: `出错啦！状态码：${data.statusCode} 错误码：${data.errorCode} 错误：${data.errorMsg} 事件：${data.what}` }); } }
-                        />
+                        onVideoProgress={(data) => { this.setState({ currentTime: data.currentTime, duration: data.duration, eventInfo: `播放中…… ${data.currentTime}/${data.duration}` }); }}
+                        onVideoBufferPercent={(data) => { this.setState({ buffPercent: data.bufferpercent }); }}
+                        onBufferStart={() => { this.setState({ eventInfo: '缓冲开始！' }); }}
+                        onBufferPercent={(data) => { this.setState({ eventInfo: `${(data.videobuff) ? '缓冲中……' + data.videobuff + '%' : ''}` }); }}
+                        onBufferEnd={() => { this.setState({ eventInfo: '缓冲完毕！' }); }}
+                        onVideoRendingStart={() => { this.setState({ eventInfo: '渲染第一帧……' }); }}
+                        onVideoSeek={(data) => { this.setState({ eventInfo: `跳转到……${data.currentTime}+${data.seekTime}` }); }}
+                        onVideoSeekComplete={(data) => { this.setState({ eventInfo: `跳转完毕！` }); }}
+                        onVideoPause={(data) => { this.setState({ paused: true, eventInfo: `暂停…… ${(data.beginTime) ? this.getLocalTime(data.beginTime) + '/' + this.getLocalTime(data.currentTime) + '/' + this.getLocalTime(data.serverTime) : data.currentTime + '/' + data.duration}` }); }}
+                        onVideoResume={(data) => { this.setState({ paused: false, eventInfo: `恢复播放……  ${(data.beginTime) ? this.getLocalTime(data.beginTime) + '/' + this.getLocalTime(data.currentTime) + '/' + this.getLocalTime(data.serverTime) : data.currentTime + '/' + data.duration}` }); }}
+                        onVideoEnd={() => { this.setState({ eventInfo: '播放完毕！' }); }}
+                        onAdvertStart={() => { this.setState({ advertInfo: '广告开始！' }); }}
+                        onAdvertProgress={(data) => { this.setState({ advertInfo: `广告播放中……倒计时${data.AdTime}` }); }}
+                        onAdvertComplete={() => { this.setState({ advertInfo: `广告结束！` }); }}
+                        onAdvertClick={() => { this.setState({ advertInfo: `广告点击了！！` }); }}
+                        onVideoRateLoad={(data) => { this.setState({ eventInfo: `码率切换:${data.currentRate} 到 ${data.nextRate}` }); }}
+                        onActionLiveChange={(data) => { this.setState({ eventInfo: `机位切换:${data.currentLive} 到 ${data.nextLive}` }); }}
+                        onActionTimeShift={(data) => { this.setState({ currentTime: data.currentTime, eventInfo: `播放中…… ${this.getLocalTime(data.beginTime)}/${this.getLocalTime(data.currentTime)}/${this.getLocalTime(data.serverTime)}` }); }}
+                        onActionStatusChange={(data) => { this.setState({ eventInfo: `活动状态变化…… ${data.actionState}/${data.actionId}/${data.beginTime}/${data.endTime}` }); }}
+                        onActionOnlineNumChange={(data) => { this.setState({ eventInfo: `在线人数变化…… ${data.onlineNum}` }); }}
+                        onVideoError={(data) => { this.setState({ errorInfo: `出错啦！状态码：${data.statusCode} 错误码：${data.errorCode} 错误：${data.errorMsg} 事件：${data.what}` }); }}
+                    />
                 </TouchableOpacity>
                 {/*onOrientationChange={(data) => { this.setState({ orientation: data.orientation }); }}*/}
 
@@ -512,10 +520,10 @@ class play extends Component {
 
                     <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'center', paddingBottom: 20 }}>
                         <Text style={styles.controlOption} onPress={this.handleBack} > 返 回 </Text>
-                        <Text style={styles.controlOption} onPress={() => { this.setState({ seek: this.state.currentTime + 30 }); } } > + 30s </Text>
-                        <Text style={styles.controlOption} onPress={() => { this.setState({ seek: this.state.currentTime - 30 }); } } > - 30s </Text>
-                        <Text style={styles.controlOption} onPress={() => { this.setState({ repeat: this.state.repeat + 1 }); } } > 重 播 </Text>
-                        <Text style={styles.controlOption} onPress={() => { this.setState({ source: this.getFormatDatasource('2'), }); } } > 切 换 </Text>
+                        <Text style={styles.controlOption} onPress={() => { this.setState({ seek: this.state.currentTime + 30 }); }} > + 30s </Text>
+                        <Text style={styles.controlOption} onPress={() => { this.setState({ seek: this.state.currentTime - 30 }); }} > - 30s </Text>
+                        <Text style={styles.controlOption} onPress={() => { this.setState({ repeat: this.state.repeat + 1 }); }} > 重 播 </Text>
+                        <Text style={styles.controlOption} onPress={() => { this.setState({ source: this.getFormatDatasource('2'), }); }} > 切 换 </Text>
 
                         {(this.state.download) ? this.getDownloadButton() : null}
 
@@ -537,7 +545,7 @@ class play extends Component {
                             </Text>
                         </View>
                         <View style={styles.bufferDisplay}>
-                            <TouchableOpacity onPress={() => { this.setState({ clickAd: true }); } }>
+                            <TouchableOpacity onPress={() => { this.setState({ clickAd: true }); }}>
                                 <Text style={[styles.DisplayOption, { color: 'green' }]}>
                                     {this.state.advertInfo}
                                 </Text>

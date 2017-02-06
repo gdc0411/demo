@@ -113,7 +113,7 @@ RCT_EXPORT_METHOD(clear:(RCTPromiseResolveBlock)resolve
 {
     long long totalSize = 0;
     
-    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSPicturesDirectory, NSUserDomainMask, YES);
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
     for(NSString *path in paths){
         NSLog(@"path: %@",path);
         totalSize += [RCTCacheModule folderSizeAtPath:path];
@@ -131,7 +131,7 @@ RCT_EXPORT_METHOD(clear:(RCTPromiseResolveBlock)resolve
 {
     long long totalSize = 0;
     
-    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSPicturesDirectory, NSUserDomainMask, YES);
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
     for(NSString *path in paths){
         NSLog(@"path: %@",path);
         [RCTCacheModule clearCache:path];

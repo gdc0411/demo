@@ -11,6 +11,8 @@
 		2D0C97991E07056500FB5279 /* BrightnessModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D0C97981E07056500FB5279 /* BrightnessModule.m */; };
 		2D0E62AA1E0AFF75005A68AA /* RCTWeChatModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D0E62A91E0AFF75005A68AA /* RCTWeChatModule.m */; };
 		2D124EFE1E262EE90041DFD0 /* RCTUmengPushModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D124EFD1E262EE90041DFD0 /* RCTUmengPushModule.m */; };
+		2D2FC82E1E48380E004D0462 /* RCTLePush.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D2FC82D1E48380E004D0462 /* RCTLePush.m */; };
+		2D2FC8311E48382A004D0462 /* RCTLePushManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D2FC8301E48382A004D0462 /* RCTLePushManager.m */; };
 		2D8D22271E032DB1004EC569 /* RCTLinearGradient.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D8D22241E032DB1004EC569 /* RCTLinearGradient.m */; };
 		2D8D22281E032DB1004EC569 /* RCTLinearGradientManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D8D22261E032DB1004EC569 /* RCTLinearGradientManager.m */; };
 		2D8D22311E032DC9004EC569 /* RCTDeviceModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D8D222A1E032DC9004EC569 /* RCTDeviceModule.m */; };
@@ -67,6 +69,10 @@
 		2D124EFC1E262EE90041DFD0 /* RCTUmengPushModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCTUmengPushModule.h; sourceTree = "<group>"; };
 		2D124EFD1E262EE90041DFD0 /* RCTUmengPushModule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCTUmengPushModule.m; sourceTree = "<group>"; };
 		2D124F001E28EA3E0041DFD0 /* Social.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Social.h; sourceTree = "<group>"; };
+		2D2FC82C1E48380E004D0462 /* RCTLePush.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCTLePush.h; sourceTree = "<group>"; };
+		2D2FC82D1E48380E004D0462 /* RCTLePush.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCTLePush.m; sourceTree = "<group>"; };
+		2D2FC82F1E48382A004D0462 /* RCTLePushManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCTLePushManager.h; sourceTree = "<group>"; };
+		2D2FC8301E48382A004D0462 /* RCTLePushManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCTLePushManager.m; sourceTree = "<group>"; };
 		2D8D219D1E032386004EC569 /* pchFile.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pchFile.pch; sourceTree = "<group>"; };
 		2D8D21E51E0324FE004EC569 /* libLECValleyUIKit.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libLECValleyUIKit.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		2D8D22231E032DB1004EC569 /* RCTLinearGradient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCTLinearGradient.h; sourceTree = "<group>"; };
@@ -151,6 +157,17 @@
 			children = (
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		2D2FC82B1E4837CB004D0462 /* RCTLePush */ = {
+			isa = PBXGroup;
+			children = (
+				2D2FC82C1E48380E004D0462 /* RCTLePush.h */,
+				2D2FC82D1E48380E004D0462 /* RCTLePush.m */,
+				2D2FC82F1E48382A004D0462 /* RCTLePushManager.h */,
+				2D2FC8301E48382A004D0462 /* RCTLePushManager.m */,
+			);
+			name = RCTLePush;
 			sourceTree = "<group>";
 		};
 		2D8D21991E032331004EC569 /* pch */ = {
@@ -268,6 +285,7 @@
 				2D0C978B1E06DC6200FB5279 /* LECValley.h */,
 				2D8D21991E032331004EC569 /* pch */,
 				2D8D219A1E032338004EC569 /* RCTLeVideo */,
+				2D2FC82B1E4837CB004D0462 /* RCTLePush */,
 				2D8D219B1E032341004EC569 /* Modules */,
 				2D8D219C1E03234C004EC569 /* Views */,
 				2DDA3FCB1E3BB88600BAF4AE /* SDWebImage */,
@@ -337,6 +355,7 @@
 				2DDA3FF41E3BB8A300BAF4AE /* UIImageView+HighlightedWebCache.m in Sources */,
 				2D8D22311E032DC9004EC569 /* RCTDeviceModule.m in Sources */,
 				2DDA3FF11E3BB8A300BAF4AE /* UIButton+WebCache.m in Sources */,
+				2D2FC8311E48382A004D0462 /* RCTLePushManager.m in Sources */,
 				2D8D22341E032DC9004EC569 /* VolumeModule.m in Sources */,
 				2D8D22461E032DD3004EC569 /* RCTLeVideoPlayerViewController.m in Sources */,
 				2D8D22281E032DB1004EC569 /* RCTLinearGradientManager.m in Sources */,
@@ -347,6 +366,7 @@
 				2DDA3FF61E3BB8A300BAF4AE /* UIView+WebCacheOperation.m in Sources */,
 				2DA294981E39453C0006B391 /* RCTDownloadModule.m in Sources */,
 				2DDA3FF31E3BB8A300BAF4AE /* UIImage+MultiFormat.m in Sources */,
+				2D2FC82E1E48380E004D0462 /* RCTLePush.m in Sources */,
 				2DDA3FEC1E3BB8A300BAF4AE /* SDWebImageDecoder.m in Sources */,
 				2DDA3FE91E3BB8A300BAF4AE /* NSData+ImageContentType.m in Sources */,
 				2DDBF75A1E0674A500C9C1BF /* RCTLeSubVideo.m in Sources */,

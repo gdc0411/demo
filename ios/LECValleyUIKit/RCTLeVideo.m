@@ -445,6 +445,7 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
         NSString *buinessline = [source objectForKey:@"businessline"];
         bool saas             = [RCTConvert BOOL:[source objectForKey:@"saas"]];
         _repeat               = [RCTConvert BOOL:[source objectForKey:@"repeat"]];
+        bool localOnly        = [RCTConvert BOOL:[source objectForKey:@"localOnly"]];
         
         if (uuid.length != 0 && vuid.length != 0 && buinessline.length != 0 ) {
             _playMode           = LCPlayerVod;
@@ -467,7 +468,7 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
                                         payCheckCode:nil
                                          payUserName:nil
                                              options:_option
-                               onlyLocalVODAvaliable:NO
+                               onlyLocalVODAvaliable:localOnly
                           resumeFromLastPlayPosition:NO
                               resumeFromLastRateType:YES
                                           completion:^(BOOL result) {
@@ -814,7 +815,8 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
         NSMutableArray *ratesList = [NSMutableArray arrayWithCapacity: [_ratesList count]];
         for(LECStreamRateItem *element in _ratesList){
             if((NSNull *)element != [NSNull null] && element.isEnabled){
-                [ratesList addObject: @{@"rateKey": element.code, @"rateValue": element.name }];
+                [ratesList addObject: @{@"rateKey": element.code?element.code?:[NSNull null],
+                                        @"rateValue": element.name?element.name:[NSNull null] }];
             }
         }
         [event setValue:ratesList forKey:@"rateList"]; //可用码率

@@ -14,7 +14,6 @@ import android.os.Message;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.react.bridge.Arguments;
@@ -96,6 +95,8 @@ public class LeReactPushView extends CameraSurfaceView implements ISurfaceCreate
 
     boolean mFlashFlag = false; //是否打开闪光灯
     boolean mSwitchFlag = false; //是否正在切换摄像
+
+    private int mFilterModel = CameraParams.FILTER_VIDEO_NONE;//滤镜
 
     private boolean isBack = false;//后台标志,在进入后台之前正在推流设置为true。判断是否在后台回来时继续推流
 
@@ -528,18 +529,18 @@ public class LeReactPushView extends CameraSurfaceView implements ISurfaceCreate
     /**
      * 切换滤镜,设置为0为关闭滤镜
      */
-    int model = CameraParams.FILTER_VIDEO_NONE;//无效果
+
 
     public void switchFilter() {
-        if (model == CameraParams.FILTER_VIDEO_NONE) {
-            model = CameraParams.FILTER_VIDEO_DEFAULT; //默认的美颜效果
+        if (mFilterModel == CameraParams.FILTER_VIDEO_NONE) {
+            mFilterModel = CameraParams.FILTER_VIDEO_DEFAULT; //默认的美颜效果
         } else {
-            model = CameraParams.FILTER_VIDEO_NONE;//无效果
+            mFilterModel = CameraParams.FILTER_VIDEO_NONE;//无效果
         }
         if (mPushType == PUSH_TYPE_MOBILE_URI || mPushType == PUSH_TYPE_MOBILE) { //移动直播
-            mPublisher.getVideoRecordDevice().setFilterModel(model);//切换滤镜
+            mPublisher.getVideoRecordDevice().setFilterModel(mFilterModel);//切换滤镜
         } else if (mPushType == PUSH_TYPE_LECLOUD) { //云直播
-            mLECPublisher.getVideoRecordDevice().setFilterModel(model);//切换滤镜
+            mLECPublisher.getVideoRecordDevice().setFilterModel(mFilterModel);//切换滤镜
         }
 
     }
