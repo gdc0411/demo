@@ -29,12 +29,16 @@ RCT_EXPORT_VIEW_PROPERTY(para, NSDictionary); // 推流目标
 RCT_EXPORT_VIEW_PROPERTY(push, BOOL);  // 推流打开/关闭
 RCT_EXPORT_VIEW_PROPERTY(camera, int);  // 摄像头切换
 RCT_EXPORT_VIEW_PROPERTY(flash, BOOL);  // 闪光灯打开/关闭
+RCT_EXPORT_VIEW_PROPERTY(filter, int);  // 滤镜选择
+RCT_EXPORT_VIEW_PROPERTY(volume, int);  // 声音开关
 
 RCT_EXPORT_VIEW_PROPERTY(onPushTargetLoad, RCTDirectEventBlock);  // 传入推流设置参数
 RCT_EXPORT_VIEW_PROPERTY(onPushStateUpdate, RCTDirectEventBlock);  // 推流操作状态
 RCT_EXPORT_VIEW_PROPERTY(onPushTimeUpdate, RCTDirectEventBlock);  // 推流时间更新
 RCT_EXPORT_VIEW_PROPERTY(onPushCameraUpdate, RCTDirectEventBlock);  // 切换摄像头操作回调
 RCT_EXPORT_VIEW_PROPERTY(onPushFlashUpdate, RCTDirectEventBlock);  // 闪光灯操作回调
+RCT_EXPORT_VIEW_PROPERTY(onPushFilterUpdate, RCTDirectEventBlock);  // 滤镜操作回调
+RCT_EXPORT_VIEW_PROPERTY(onPushVolumeUpdate, RCTDirectEventBlock);  // 音量操作回调
 
 - (NSDictionary *)constantsToExport
 {
