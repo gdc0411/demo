@@ -412,7 +412,7 @@ class play extends Component {
                 let download = JSON.parse(key);
                 if (download)
                     if (Platform.OS === 'ios') {
-                        alert(key);
+                        // alert(key);
                         source = { playMode: Video.PLAYER_MODE_VOD, uuid: "" + download.uuid, vuid: "" + download.vuid, businessline: "" + download.businessline, saas: true, pano: false, localOnly: true };
                     } else if (Platform.OS === 'android') {
                         source = { playMode: Video.PLAYER_MODE_URI, uri: download.fileSavePath, pano: false };

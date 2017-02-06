@@ -586,7 +586,6 @@
 			isa = PBXGroup;
 			children = (
 				2D2FC8BA1E48A640004D0462 /* libiconv.2.4.0.tbd */,
-				2D2FC8B81E48A616004D0462 /* AVFoundation.framework */,
 				2DFDF5BA1E0FF1F700B58523 /* libstdc++.tbd */,
 				2D0E62AD1E0B0112005A68AA /* libsqlite3.0.tbd */,
 				2D0E62AB1E0B0101005A68AA /* libc++.tbd */,
@@ -595,6 +594,7 @@
 				2DA2070D1DE8BA8C0004CE1D /* libstdc++.6.0.9.tbd */,
 				2DA207091DE8BA510004CE1D /* libiconv.tbd */,
 				930FF21BCF8F403D8916C7DE /* libz.tbd */,
+				2D2FC8B81E48A616004D0462 /* AVFoundation.framework */,
 				2DA206F51DE8B89B0004CE1D /* AdSupport.framework */,
 				2DA206F91DE8B9950004CE1D /* AudioToolbox.framework */,
 				2DA206FA1DE8B9950004CE1D /* CoreData.framework */,
