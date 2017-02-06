@@ -55,6 +55,8 @@ public enum Events {
     EVENT_PUSH_TIME_UPDATE("onPushTimeUpdate"), // 推流时间更新
     EVENT_PUSH_CAMERA_UPDATE("onPushCameraUpdate"), // 切换摄像头操作回调
     EVENT_PUSH_FLASH_UPDATE("onPushFlashUpdate"), // 闪光灯操作回调
+    EVENT_PUSH_FILTER_UPDATE("onPushFilterUpdate"), // 滤镜操作回调
+    EVENT_PUSH_VOLUME_UPDATE("onPushVolumeUpdate"), // 音量操作回调
 
 
     //翻转模块事件

@@ -27,6 +27,7 @@ import static com.lecloud.valley.common.Constants.PROP_FLASH;
 import static com.lecloud.valley.common.Constants.PROP_PUSH;
 import static com.lecloud.valley.common.Constants.PROP_PUSH_PARA;
 import static com.lecloud.valley.common.Constants.PROP_PUSH_TYPE;
+import static com.lecloud.valley.common.Constants.PROP_VOLUME;
 import static com.lecloud.valley.common.Constants.PUSH_TYPE_LECLOUD;
 import static com.lecloud.valley.common.Constants.PUSH_TYPE_MOBILE;
 import static com.lecloud.valley.common.Constants.PUSH_TYPE_MOBILE_URI;
@@ -143,6 +144,11 @@ public class LeReactPushViewManager extends SimpleViewManager<LeReactPushView> {
     @ReactProp(name = PROP_FILTER)
     public void setFilter(final LeReactPushView pushView, final int filter) {
         pushView.setFilter(filter);
+    }
+
+    @ReactProp(name = PROP_VOLUME)
+    public void setVolume(final LeReactPushView pushView, final int volume) {
+        pushView.setVolume(volume);
     }
 
 }

@@ -109,6 +109,7 @@ public interface Constants {
     String EVENT_PROP_PUSH_CAMERA_DIRECTION = "cameraDirection";  //摄像头方向，1为前置，0为后置
     String EVENT_PROP_PUSH_FLASH_FLAG = "flashFlag"; //闪光灯标识，为true表示打开
     String EVENT_PROP_PUSH_FILTER = "filter"; //滤镜
+    String EVENT_PROP_PUSH_VOLUME = "volume"; //音量
 
 //============== REACT_EVENT_PROP ======================
 

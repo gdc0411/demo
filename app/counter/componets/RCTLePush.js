@@ -64,6 +64,16 @@ export default class Push extends Component {
     static FILTER_VIDEO_CALM = 3;
     static FILTER_VIDEO_ROMANCE = 4;
 
+    /**
+     * 推流状态
+     */
+    static PUSH_STATE_CLOSED = 0;
+    static PUSH_STATE_CONNECTING = 1;
+    static PUSH_STATE_CONNECTED = 2;
+    static PUSH_STATE_OPENED = 3;
+    static PUSH_STATE_DISCONNECTING = 4;
+    static PUSH_STATE_ERROR = 5;
+    static PUSH_STATE_WARNING = 6;
 
     static propTypes = {
         /* 原生属性 */
@@ -104,6 +114,8 @@ export default class Push extends Component {
         flash: PropTypes.bool,
         /* 选取滤镜 */
         filter: PropTypes.number,
+        /* 设置音量 */
+        volume: PropTypes.number,
 
         /* 推流端事件相关 */
         onPushTargetLoad: PropTypes.func,
@@ -111,6 +123,8 @@ export default class Push extends Component {
         onPushTimeUpdate: PropTypes.func,
         onPushCameraUpdate: PropTypes.func,
         onPushFlashUpdate: PropTypes.func,
+        onPushFilterUpdate: PropTypes.func,
+        onPushVolumeUpdate: PropTypes.func,
 
         ...View.propTypes,
     };
@@ -139,7 +153,8 @@ export default class Push extends Component {
             onPushTimeUpdate: (event) => { this.props.onPushTimeUpdate && this.props.onPushTimeUpdate(event.nativeEvent); },
             onPushCameraUpdate: (event) => { this.props.onPushCameraUpdate && this.props.onPushCameraUpdate(event.nativeEvent); },
             onPushFlashUpdate: (event) => { this.props.onPushFlashUpdate && this.props.onPushFlashUpdate(event.nativeEvent); },
-
+            onPushFilterUpdate: (event) => { this.props.onPushFilterUpdate && this.props.onPushFilterUpdate(event.nativeEvent); },
+            onPushVolumeUpdate: (event) => { this.props.onPushVolumeUpdate && this.props.onPushVolumeUpdate(event.nativeEvent); },
         });
 
         // alert(NativeModules.UIManager.RCTLePush.Constants.PUSH_TYPE_MOBILE);

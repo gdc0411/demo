@@ -16,6 +16,7 @@ import {
     StatusBar,
     Dimensions,
     Platform,
+    Picker,
 } from 'react-native';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -60,7 +61,11 @@ class push extends Component {
             /* 滤镜操作 */
             filter: 0,
             /* 摄像头操作 */
-            volume: '音量',
+            volume: 1,
+            /* 错误码 */
+            errorCode: 0,
+            /* 错误描述 */
+            errorMsg: '',
         };
     }
 
@@ -95,19 +100,19 @@ class push extends Component {
         let bottom = 0;
         let needUpdate = false;
         switch (orientation) {
-            case 0:
+            case Orientation.ORIENTATION_LANDSCAPE:
                 bottom = 0;
                 needUpdate = true;
                 break;
-            case 1:
+            case Orientation.ORIENTATION_PORTRAIT:
                 bottom = 0;
                 needUpdate = true;
                 break;
-            case 8:
+            case Orientation.ORIENTATION_REVERSE_LANDSCAPE:
                 bottom = 0;
                 needUpdate = true;
                 break;
-            case 9:
+            case Orientation.ORIENTATION_REVERSE_PORTRAIT:
                 // bottom = 200;
                 // needUpdate = true;
                 break;
@@ -133,25 +138,25 @@ class push extends Component {
         console.log("displayPushState:", state);
         let dispControl;
         switch (state) {
-            case 0: //CLOSED
+            case Push.PUSH_STATE_CLOSED:
                 dispControl = '开始推流';
                 break;
-            case 1: //CONNECTING
+            case Push.PUSH_STATE_CONNECTING:
                 dispControl = '连接中…';
                 break;
-            case 2: //CONNECTED
+            case Push.PUSH_STATE_CONNECTED:
                 dispControl = '已连接';
                 break;
-            case 3: //OPENED
+            case Push.PUSH_STATE_OPENED:
                 dispControl = '关闭推流';
                 break;
-            case 4: //DISCONNECTING
+            case Push.PUSH_STATE_DISCONNECTING:
                 dispControl = '断开中…';
                 break;
-            case 5: //ERROR
+            case Push.PUSH_STATE_ERROR:
                 dispControl = '推流出错';
                 break;
-            case 6: //WARNING
+            case Push.PUSH_STATE_WARNING:
                 dispControl = '关闭推流';
                 break;
         }
@@ -167,11 +172,15 @@ class push extends Component {
                     push={this.state.push}
                     camera={this.state.camera}
                     flash={this.state.flash}
+                    filter={this.state.filter}
+                    volume={this.state.volume}
                     onPushTargetLoad={(data) => { this.setState({ targetInfo: `参数: ${data.para}\r\n推流地址: ${data.pushUrl}\r\n播放地址: ${data.playUrl}` }); }}
-                    onPushStateUpdate={(data) => { this.setState({ state: data.state, timeFlag: data.timeFlag }); }}
-                    onPushTimeUpdate={(data) => { this.setState({ time: data.time, timeFlag: data.timeFlag }); }}
-                    onPushCameraUpdate={(data) => { this.setState({ cameraFlag: data.cameraFlag, cameraDirection: data.cameraDirection }); }}
-                    onPushFlashUpdate={(data) => { this.setState({ flashFlag: data.flashFlag }); }}
+                    onPushStateUpdate={(data) => { this.setState({ state: data.state, timeFlag: data.timeFlag, errorCode: data.errorCode, errorMsg: data.errorMsg }); }}
+                    onPushTimeUpdate={(data) => { this.setState({ time: data.time, timeFlag: data.timeFlag, errorCode: data.errorCode, errorMsg: data.errorMsg }); }}
+                    onPushCameraUpdate={(data) => { this.setState({ cameraFlag: data.cameraFlag, cameraDirection: data.cameraDirection, errorCode: data.errorCode, errorMsg: data.errorMsg }); }}
+                    onPushFlashUpdate={(data) => { this.setState({ flashFlag: data.flashFlag, errorCode: data.errorCode, errorMsg: data.errorMsg }); }}
+                    onPushFilterUpdate={(data) => { this.setState({ errorCode: data.errorCode, errorMsg: data.errorMsg }); }}
+                    onPushVolumeUpdate={(data) => { this.setState({ errorCode: data.errorCode, errorMsg: data.errorMsg }); }}
                 />
                 <View style={styles.infoDisplays}>
                     <View style={styles.bufferDisplay}>
@@ -181,8 +190,14 @@ class push extends Component {
                     </View>
                     {this.state.timeFlag ?
                         <View style={styles.bufferDisplay}>
-                            <Text style={[styles.DisplayOption, { fontSize: 16, color: 'red' }]}>
+                            <Text style={[styles.DisplayOption, { fontSize: 18, color: 'black' }]}>
                                 计时：{this.state.time}
+                            </Text>
+                        </View> : null}
+                    {this.state.errorMsg ?
+                        <View style={styles.bufferDisplay}>
+                            <Text style={[styles.DisplayOption, { fontSize: 16, color: this.state.errorCode === 0 ? 'blue' : 'red' }]}>
+                                {this.state.errorMsg}
                             </Text>
                         </View> : null}
                 </View>
@@ -196,8 +211,21 @@ class push extends Component {
                     <TouchableOpacity disabled={this.state.cameraDirection === 1 ? true : false} onPress={() => { this.setState({ flash: !this.state.flash }); }}>
                         <Text style={styles.controlOption} >{this.state.cameraDirection === 1 ? '无闪光' : this.state.flashFlag ? '关闪光' : '开闪光'}</Text>
                     </TouchableOpacity>
-                    <Text style={styles.controlOption} >{this.state.filter}</Text>
-                    <Text style={styles.controlOption} >{this.state.volume}</Text>
+                    <View style={styles.controlOption}>
+                        <Picker style={[{ width: 35, height: 10, backgroundColor: 'red', }]}
+                            selectedValue={this.state.filter}
+                            onValueChange={(filter) => this.setState({ filter: filter })}>
+                            <Picker.Item label="原图" value={Push.FILTER_VIDEO_NONE} />
+                            <Picker.Item label="美肤" value={Push.FILTER_VIDEO_DEFAULT} />
+                            <Picker.Item label="平静" value={Push.FILTER_VIDEO_CALM} />
+                            <Picker.Item label="浪漫" value={Push.FILTER_VIDEO_ROMANCE} />
+                            <Picker.Item label="温暖" value={Push.FILTER_VIDEO_WARM} />
+                        </Picker>
+                        <Text style={styles.controlOption} >滤镜</Text>
+                    </View>
+                    <TouchableOpacity onPress={() => { this.setState({ volume: this.state.volume === 1 ? 0 : 1 }); }}>
+                        <Text style={styles.controlOption} >{this.state.volume?'静音':'开启声音'}</Text>
+                    </TouchableOpacity>
                 </View>
             </View >
         );
@@ -220,6 +248,7 @@ const styles = StyleSheet.create({
     control: {
         flexDirection: 'row',
         justifyContent: 'space-between',
+        alignItems: 'flex-end',
         backgroundColor: "transparent",
         borderRadius: 5,
         position: 'absolute',
@@ -254,7 +283,6 @@ const styles = StyleSheet.create({
         paddingLeft: 2,
         paddingRight: 2,
         paddingBottom: 20,
-        lineHeight: 12,
     },
 });
 

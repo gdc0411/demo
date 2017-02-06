@@ -49,6 +49,7 @@ import static com.lecloud.valley.common.Constants.EVENT_PROP_PUSH_PUSH_URL;
 import static com.lecloud.valley.common.Constants.EVENT_PROP_PUSH_STATE;
 import static com.lecloud.valley.common.Constants.EVENT_PROP_PUSH_TIME;
 import static com.lecloud.valley.common.Constants.EVENT_PROP_PUSH_TIME_FLAG;
+import static com.lecloud.valley.common.Constants.EVENT_PROP_PUSH_VOLUME;
 import static com.lecloud.valley.common.Constants.PROP_PUSH_PARA;
 import static com.lecloud.valley.common.Constants.PROP_PUSH_TYPE;
 import static com.lecloud.valley.common.Constants.PUSH_TYPE_LECLOUD;
@@ -98,6 +99,8 @@ public class LeReactPushView extends CameraSurfaceView implements ISurfaceCreate
     boolean mSwitchFlag = false; //是否正在切换摄像
 
     private int mFilterModel = CameraParams.FILTER_VIDEO_NONE;//滤镜
+
+    private int mVolume = 1; //音量
 
     private boolean isBack = false;//后台标志,在进入后台之前正在推流设置为true。判断是否在后台回来时继续推流
 
@@ -199,9 +202,7 @@ public class LeReactPushView extends CameraSurfaceView implements ISurfaceCreate
 
         // 推流类型切换
         int newPushType = mPushPara.getInt(PROP_PUSH_TYPE);
-
         mPushType = newPushType;
-
         boolean isLandscape = mPushPara.containsKey("landscape") && mPushPara.getBoolean("landscape");
 
         //初始化状态变量
@@ -210,7 +211,8 @@ public class LeReactPushView extends CameraSurfaceView implements ISurfaceCreate
         switch (mPushType) {
             case PUSH_TYPE_MOBILE_URI:
                 initMobilePush(mThemedReactContext, isLandscape);
-                mPushUrl = mPlayUrl = mPushPara.containsKey("url") ? mPushPara.getString("url") : "";
+                mPushUrl = mPushPara.containsKey("url") ? mPushPara.getString("url") : "";
+                mPlayUrl = mPushUrl.replaceAll("push", "pull");
                 break;
 
             case PUSH_TYPE_MOBILE:
@@ -233,6 +235,7 @@ public class LeReactPushView extends CameraSurfaceView implements ISurfaceCreate
 
         event.putString(EVENT_PROP_PUSH_PUSH_URL, mPushUrl);
         event.putString(EVENT_PROP_PUSH_PLAY_URL, mPlayUrl);
+        Log.d(TAG, getTraceInfo() + "播放地址：" + mPlayUrl);
 
         mEventEmitter.receiveEvent(getId(), Events.EVENT_PUSH_LOAD_TARGET.toString(), event);
     }
@@ -277,6 +280,8 @@ public class LeReactPushView extends CameraSurfaceView implements ISurfaceCreate
         mPushState = PUSH_STATE_CLOSED;
         mFlashFlag = false;
         mSwitchFlag = false;
+        mFilterModel = CameraParams.FILTER_VIDEO_NONE;
+        mVolume = 1;
     }
 
 
@@ -561,12 +566,12 @@ public class LeReactPushView extends CameraSurfaceView implements ISurfaceCreate
             event.putInt(EVENT_PROP_ERROR_CODE, 0);
             event.putString(EVENT_PROP_ERROR_MSG, "切换滤镜成功");
 
-        }else{
+        } else {
             event.putInt(EVENT_PROP_ERROR_CODE, -1);
             event.putString(EVENT_PROP_ERROR_MSG, "滤镜参数错误！");
         }
         event.putInt(EVENT_PROP_PUSH_FILTER, mFilterModel);
-        mEventEmitter.receiveEvent(getId(), Events.EVENT_PUSH_CAMERA_UPDATE.toString(), event);
+        mEventEmitter.receiveEvent(getId(), Events.EVENT_PUSH_FILTER_UPDATE.toString(), event);
 
     }
 
@@ -575,19 +580,27 @@ public class LeReactPushView extends CameraSurfaceView implements ISurfaceCreate
      *
      * @param volume 0-1为缩小音量,1为正常音量,大于1为放大音量
      */
-    int volume = 1;
 
-    public void setVolume() {
-        if (volume == 1) {
-            volume = 0;
-        } else {
-            volume = 1;
+    public void setVolume(final int volume) {
+        if (!mLePushValid || mVolume == volume || mPushPara == null) {
+            return;
         }
+        Log.d(TAG, LogUtils.getTraceInfo() + "外部控制——— 设置音量:" + volume);
+
+        mVolume = volume;
+
+        WritableMap event = Arguments.createMap();
+
         if (mPushType == PUSH_TYPE_MOBILE_URI || mPushType == PUSH_TYPE_MOBILE) { //移动直播
-            mPublisher.setVolumeGain(volume);//设置声音大小
+            mPublisher.setVolumeGain(mVolume);//设置声音大小
         } else if (mPushType == PUSH_TYPE_LECLOUD) { //云直播
-            mLECPublisher.setVolumeGain(volume);//设置声音大小
+            mLECPublisher.setVolumeGain(mVolume);//设置声音大小
         }
+
+        event.putInt(EVENT_PROP_ERROR_CODE, 0);
+        event.putString(EVENT_PROP_ERROR_MSG, "设置音量成功");
+        event.putInt(EVENT_PROP_PUSH_VOLUME, mVolume);
+        mEventEmitter.receiveEvent(getId(), Events.EVENT_PUSH_VOLUME_UPDATE.toString(), event);
     }
 
 //    /**
@@ -643,7 +656,7 @@ public class LeReactPushView extends CameraSurfaceView implements ISurfaceCreate
 
                     event.putInt(EVENT_PROP_PUSH_STATE, PUSH_STATE_CONNECTED);
                     event.putInt(EVENT_PROP_ERROR_CODE, 0);
-                    event.putString(EVENT_PROP_ERROR_MSG, "推流连接成功:只有当连接成功以后才能开始推流");
+                    event.putString(EVENT_PROP_ERROR_MSG, "推流连接成功，可以开始推流");
                     mEventEmitter.receiveEvent(getId(), Events.EVENT_PUSH_STATE_UPDATE.toString(), event);
 
                     break;
@@ -653,8 +666,8 @@ public class LeReactPushView extends CameraSurfaceView implements ISurfaceCreate
 //                    timeView.setText("连接失败");
 
                     event.putInt(EVENT_PROP_PUSH_STATE, PUSH_STATE_ERROR);
-                    event.putInt(EVENT_PROP_ERROR_CODE, 0);
-                    event.putString(EVENT_PROP_ERROR_MSG, "推流连接失败:如果失败,大多是推流地址不可用或者网络问题");
+                    event.putInt(EVENT_PROP_ERROR_CODE, -1);
+                    event.putString(EVENT_PROP_ERROR_MSG, "推流连接失败:推流地址不可用或网络问题");
                     mEventEmitter.receiveEvent(getId(), Events.EVENT_PUSH_STATE_UPDATE.toString(), event);
 
                     break;
@@ -668,7 +681,7 @@ public class LeReactPushView extends CameraSurfaceView implements ISurfaceCreate
 
                     event.putInt(EVENT_PROP_PUSH_STATE, PUSH_STATE_OPENED);
                     event.putInt(EVENT_PROP_ERROR_CODE, 0);
-                    event.putString(EVENT_PROP_ERROR_MSG, "第一针画面推流成功,代表成功的开始推流了:推流成功的标志回调");
+                    event.putString(EVENT_PROP_ERROR_MSG, "第一帧画面出现，推流成功");
                     mEventEmitter.receiveEvent(getId(), Events.EVENT_PUSH_STATE_UPDATE.toString(), event);
                     break;
 
@@ -676,8 +689,8 @@ public class LeReactPushView extends CameraSurfaceView implements ISurfaceCreate
                     Log.d(TAG, "音频出现丢帧现象。如果一分钟丢帧次数大于5次,导致声音跳动:可以对网络进行判定");
 
                     event.putInt(EVENT_PROP_PUSH_STATE, PUSH_STATE_WARNING);
-                    event.putInt(EVENT_PROP_ERROR_CODE, 0);
-                    event.putString(EVENT_PROP_ERROR_MSG, "音频出现丢帧现象。如果一分钟丢帧次数大于5次,导致声音跳动:可以对网络进行判定");
+                    event.putInt(EVENT_PROP_ERROR_CODE, -1);
+                    event.putString(EVENT_PROP_ERROR_MSG, "音频丢帧，1分钟内5次以上，请对网络进行判定");
                     mEventEmitter.receiveEvent(getId(), Events.EVENT_PUSH_STATE_UPDATE.toString(), event);
                     break;
 
@@ -685,8 +698,8 @@ public class LeReactPushView extends CameraSurfaceView implements ISurfaceCreate
                     Log.d(TAG, "视频出现丢帧现象,如果一分钟丢帧次数大于5次,导致画面跳动:可以对网络进行判定");
 
                     event.putInt(EVENT_PROP_PUSH_STATE, PUSH_STATE_WARNING);
-                    event.putInt(EVENT_PROP_ERROR_CODE, 0);
-                    event.putString(EVENT_PROP_ERROR_MSG, "视频出现丢帧现象,如果一分钟丢帧次数大于5次,导致画面跳动:可以对网络进行判定");
+                    event.putInt(EVENT_PROP_ERROR_CODE, -1);
+                    event.putString(EVENT_PROP_ERROR_MSG, "视频丢帧，1分钟内5次以上，请对网络进行判定");
                     mEventEmitter.receiveEvent(getId(), Events.EVENT_PUSH_STATE_UPDATE.toString(), event);
                     break;
 
@@ -695,8 +708,8 @@ public class LeReactPushView extends CameraSurfaceView implements ISurfaceCreate
 //                    Toast.makeText(getContext(), "推流失败,原因:网络较差,编码出错,推流崩溃,第一针数据发送失败...等等各种原因导致", Toast.LENGTH_SHORT).show();
 //                    timeView.setText("推流出错");
                     event.putInt(EVENT_PROP_PUSH_STATE, PUSH_STATE_ERROR);
-                    event.putInt(EVENT_PROP_ERROR_CODE, 0);
-                    event.putString(EVENT_PROP_ERROR_MSG, "推流失败,原因:网络较差,编码出错,推流崩溃,第一针数据发送失败...等等各种原因导致");
+                    event.putInt(EVENT_PROP_ERROR_CODE, -1);
+                    event.putString(EVENT_PROP_ERROR_MSG, "推流失败,原因:网络较差,编码出错,推流崩溃,第一针数据发送失败...等");
                     mEventEmitter.receiveEvent(getId(), Events.EVENT_PUSH_STATE_UPDATE.toString(), event);
 
                     break;
@@ -708,38 +721,66 @@ public class LeReactPushView extends CameraSurfaceView implements ISurfaceCreate
 
                     event.putInt(EVENT_PROP_PUSH_STATE, PUSH_STATE_CLOSED);
                     event.putInt(EVENT_PROP_ERROR_CODE, 0);
-                    event.putString(EVENT_PROP_ERROR_MSG, "成功的关闭了底层推流,可以进行下次推流了:保证推流成功关闭");
+                    event.putString(EVENT_PROP_ERROR_MSG, "底层推流成功关闭");
                     mEventEmitter.receiveEvent(getId(), Events.EVENT_PUSH_STATE_UPDATE.toString(), event);
                     break;
 
                 //*********************乐视云直播有一部分属于自己的回调事件*****************
                 case RecorderConstance.LIVE_STATE_END_ERROR:
                     Log.d(TAG, "直播已结束");
-                    Toast.makeText(getContext(), "直播已结束", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(getContext(), "直播已结束", Toast.LENGTH_SHORT).show();
+                    event.putInt(EVENT_PROP_PUSH_STATE, RecorderConstance.LIVE_STATE_END_ERROR);
+                    event.putInt(EVENT_PROP_ERROR_CODE, -1);
+                    event.putString(EVENT_PROP_ERROR_MSG, "直播已结束");
+                    mEventEmitter.receiveEvent(getId(), Events.EVENT_PUSH_STATE_UPDATE.toString(), event);
                     break;
                 case RecorderConstance.LIVE_STATE_CANCEL_ERROR:
                     Log.d(TAG, "直播已取消");
-                    Toast.makeText(getContext(), "直播已取消", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(getContext(), "直播已取消", Toast.LENGTH_SHORT).show();
+                    event.putInt(EVENT_PROP_PUSH_STATE, RecorderConstance.LIVE_STATE_CANCEL_ERROR);
+                    event.putInt(EVENT_PROP_ERROR_CODE, -1);
+                    event.putString(EVENT_PROP_ERROR_MSG, "直播已取消");
+                    mEventEmitter.receiveEvent(getId(), Events.EVENT_PUSH_STATE_UPDATE.toString(), event);
                     break;
                 case RecorderConstance.LIVE_STATE_NEED_RECORD:
                     Log.d(TAG, "直播开启转点播功能");
-                    Toast.makeText(getContext(), "直播开启转点播功能", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(getContext(), "直播开启转点播功能", Toast.LENGTH_SHORT).show();
+                    event.putInt(EVENT_PROP_PUSH_STATE, RecorderConstance.LIVE_STATE_NEED_RECORD);
+                    event.putInt(EVENT_PROP_ERROR_CODE, 0);
+                    event.putString(EVENT_PROP_ERROR_MSG, "直播开启转点播功能");
+                    mEventEmitter.receiveEvent(getId(), Events.EVENT_PUSH_STATE_UPDATE.toString(), event);
                     break;
                 case RecorderConstance.LIVE_STATE_NOT_STARTED_ERROR:
                     Log.d(TAG, "直播时间未到");
-                    Toast.makeText(getContext(), "直播时间未到", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(getContext(), "直播时间未到", Toast.LENGTH_SHORT).show();
+                    event.putInt(EVENT_PROP_PUSH_STATE, RecorderConstance.LIVE_STATE_NOT_STARTED_ERROR);
+                    event.putInt(EVENT_PROP_ERROR_CODE, -1);
+                    event.putString(EVENT_PROP_ERROR_MSG, "直播时间未到");
+                    mEventEmitter.receiveEvent(getId(), Events.EVENT_PUSH_STATE_UPDATE.toString(), event);
                     break;
                 case RecorderConstance.LIVE_STATE_OTHER_ERROR:
                     Log.d(TAG, "其他直播错误");
-                    Toast.makeText(getContext(), "其他直播错误", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(getContext(), "其他直播错误", Toast.LENGTH_SHORT).show();
+                    event.putInt(EVENT_PROP_PUSH_STATE, RecorderConstance.LIVE_STATE_OTHER_ERROR);
+                    event.putInt(EVENT_PROP_ERROR_CODE, -1);
+                    event.putString(EVENT_PROP_ERROR_MSG, "其他直播错误");
+                    mEventEmitter.receiveEvent(getId(), Events.EVENT_PUSH_STATE_UPDATE.toString(), event);
                     break;
                 case RecorderConstance.LIVE_STATE_PUSH_COMPLETE:
                     Log.d(TAG, "推流完成");
-                    Toast.makeText(getContext(), "推流完成", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(getContext(), "推流完成", Toast.LENGTH_SHORT).show();
+                    event.putInt(EVENT_PROP_PUSH_STATE, RecorderConstance.LIVE_STATE_PUSH_COMPLETE);
+                    event.putInt(EVENT_PROP_ERROR_CODE, 0);
+                    event.putString(EVENT_PROP_ERROR_MSG, "推流完成");
+                    mEventEmitter.receiveEvent(getId(), Events.EVENT_PUSH_STATE_UPDATE.toString(), event);
                     break;
                 case RecorderConstance.LIVE_STATE_TIME_REMAINING:
                     Log.d(TAG, "直播剩余时间:在剩余5分钟和30分钟时都会回调");
-                    Toast.makeText(getContext(), "直播剩余时间:在剩余5分钟和30分钟时都会回调", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(getContext(), "直播剩余时间:在剩余5分钟和30分钟时都会回调", Toast.LENGTH_SHORT).show();
+                    event.putInt(EVENT_PROP_PUSH_STATE, RecorderConstance.LIVE_STATE_TIME_REMAINING);
+                    event.putInt(EVENT_PROP_ERROR_CODE, 0);
+                    event.putString(EVENT_PROP_ERROR_MSG, "直播剩余时间:在剩余5分钟和30分钟时都会回调");
+                    mEventEmitter.receiveEvent(getId(), Events.EVENT_PUSH_STATE_UPDATE.toString(), event);
                     break;
             }
         }
