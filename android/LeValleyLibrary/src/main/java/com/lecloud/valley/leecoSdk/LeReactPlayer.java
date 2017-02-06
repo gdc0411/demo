@@ -23,6 +23,7 @@ import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.uimanager.ThemedReactContext;
 import com.facebook.react.uimanager.events.RCTEventEmitter;
+import com.lecloud.sdk.player.live.MobileLivePlayer;
 import com.lecloud.valley.common.Events;
 import com.lecloud.valley.utils.LogUtils;
 import com.lecloud.valley.utils.ScreenBrightnessManager;
@@ -280,7 +281,7 @@ public class LeReactPlayer extends LeTextureView implements LifecycleEventListen
                     break;
 
                 case PlayerParams.VALUE_PLAYER_MOBILE_LIVE: //移动直播
-                    /* 暂不支持 */
+                    mMediaPlayer = new MobileLivePlayer(ctx);
                     break;
 
             }

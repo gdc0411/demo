@@ -20,6 +20,7 @@ import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.uimanager.ThemedReactContext;
 import com.facebook.react.uimanager.events.RCTEventEmitter;
+import com.lecloud.valley.R;
 import com.lecloud.valley.common.Events;
 import com.lecloud.valley.utils.LogUtils;
 import com.letv.recorder.bean.AudioParams;
@@ -145,11 +146,13 @@ public class LeReactPushView extends CameraSurfaceView implements ISurfaceCreate
         cameraParams.setCameraId(Camera.CameraInfo.CAMERA_FACING_FRONT); //开启默认前置摄像头
         cameraParams.setVideoBitrate(1000 * 1000); //设置码率
         audioParams.setEnableVolumeGain(true);//开启音量调节,注意,这一点会影响性能,如果没有必要,设置为false
-        cameraParams.setFocusOnTouch(false);//关闭对焦功能
-        cameraParams.setFocusOnAnimation(false);//关闭对焦动画
+        cameraParams.setFocusOnTouch(true);//开启对焦功能
+        cameraParams.setFocusOnAnimation(true);//开启对焦动画
         cameraParams.setOpenGestureZoom(true);//开启拉近拉远手势
         cameraParams.setFrontCameraMirror(true);//开启镜像
-        mPublisher.getVideoRecordDevice().setFocusView(new View(getContext()));//设置对焦图片。如果需要对焦功能和对焦动画,请打开上边两个设置,并且在这里传入一个合适的View
+        View fouceView = new View(getContext());
+        fouceView.setBackgroundResource(R.drawable.letv_focus_auto);
+        mPublisher.getVideoRecordDevice().setFocusView(fouceView);//设置对焦图片。如果需要对焦功能和对焦动画,请打开上边两个设置,并且在这里传入一个合适的View
         mPublisher.getRecorderContext().setAutoUpdateLogFile(false); //是否开启日志文件自动上报
 
         /////////////////////////////////////////////////////////////////////////////////////////////
@@ -180,11 +183,13 @@ public class LeReactPushView extends CameraSurfaceView implements ISurfaceCreate
         cameraParams.setCameraId(Camera.CameraInfo.CAMERA_FACING_FRONT); //开启默认前置摄像头
         cameraParams.setVideoBitrate(1000 * 1000); //设置码率
         audioParams.setEnableVolumeGain(true);//开启音量调节,注意,这一点会影响性能,如果没有必要,设置为false
-        cameraParams.setFocusOnTouch(false);//关闭对焦功能
-        cameraParams.setFocusOnAnimation(false);//关闭对焦动画
+        cameraParams.setFocusOnTouch(true);//开启对焦功能
+        cameraParams.setFocusOnAnimation(true);//开启对焦动画
         cameraParams.setOpenGestureZoom(true);//开启拉近拉远手势
         cameraParams.setFrontCameraMirror(true);//开启镜像
-        mLECPublisher.getVideoRecordDevice().setFocusView(new View(getContext()));//设置对焦图片。如果需要对焦功能和对焦动画,请打开上边两个设置,并且在这里传入一个合适的View
+        View fouceView = new View(getContext());
+        fouceView.setBackgroundResource(R.drawable.letv_focus_auto);
+        mLECPublisher.getVideoRecordDevice().setFocusView(fouceView);//设置对焦图片。如果需要对焦功能和对焦动画,请打开上边两个设置,并且在这里传入一个合适的View
         /////////////////////////////////////////////////////////////////////////////////////////////
     }
 
