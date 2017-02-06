@@ -409,16 +409,14 @@ class play extends Component {
                 source = { playMode: 10002, actionId: "A20170124000008m", usehls: false, customerId: "", businessline: "", cuid: "", utoken: "", pano: false };
                 break;
             default: //本地地址
-                if (Platform.OS === 'ios') {
-                    let download = JSON.parse(key);
-                    if (download)
+                let download = JSON.parse(key);
+                if (download)
+                    if (Platform.OS === 'ios') {
+                        alert(key);
                         source = { playMode: 10000, uuid: "" + download.uuid, vuid: "" + download.vuid, businessline: "" + download.businessline, saas: true, pano: false, localOnly: true };
-                } else {
-                    let download = JSON.parse(key);
-                    if (download)
+                    } else if (Platform.OS === 'android') {
                         source = { playMode: 0, uri: download.fileSavePath, pano: false };
-                    //source = { playMode: 0, uri: "/sdcard/Android/data/com.lecloud.valley.demo/levideo/%E7%94%B5%E5%BD%B1%E6%B5%8B%E8%AF%95627", pano: false };
-                }
+                    }
                 break;
         }
         // alert(source);

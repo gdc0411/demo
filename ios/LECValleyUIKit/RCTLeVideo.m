@@ -460,7 +460,7 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
             [self usePlayerViewController:_lePlayer]; // 创建controller
             _playerViewController.uu = uuid;
             _playerViewController.vu = vuid;
-            _playerViewController.p  = buinessline;
+            _playerViewController.p  = buinessline;            
             
             __weak typeof(self) wSelf = self;
             [(LECVODPlayer*)_lePlayer registerWithUu:uuid
