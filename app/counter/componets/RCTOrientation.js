@@ -13,7 +13,7 @@ const Orientation = NativeModules.OrientationModule;
 const myNativeEvt = new NativeEventEmitter(Orientation);  //创建自定义事件接口
 
 var listeners = {};
-const onOrientationDidChangeEvent = "onOrientationDidChange";
+// const onOrientationDidChangeEvent = "onOrientationDidChange";
 
 var id = 0;
 var META = '__orient_listener_id';
@@ -31,6 +31,13 @@ function getKey(listener) {
 };
 
 module.exports = {
+
+    ORIENTATION_LANDSCAPE: Orientation.ORIENTATION_LANDSCAPE,
+    ORIENTATION_PORTRAIT: Orientation.ORIENTATION_PORTRAIT,
+    ORIENTATION_REVERSE_LANDSCAPE: Orientation.ORIENTATION_REVERSE_LANDSCAPE,
+    ORIENTATION_REVERSE_PORTRAIT: Orientation.ORIENTATION_REVERSE_PORTRAIT,
+    ORIENTATION_UNSPECIFIED:Orientation.ORIENTATION_UNSPECIFIED,
+
     getOrientation(cb) {
         Orientation.getOrientation((error, orientation) => {
             cb(error, orientation);
@@ -41,7 +48,7 @@ module.exports = {
     },
     addOnOrientationListener(cb) {
         var key = getKey(cb);
-        listeners[key] = myNativeEvt.addListener(onOrientationDidChangeEvent,
+        listeners[key] = myNativeEvt.addListener(Orientation.EVENT_ORIENTATION_CHANG,
             (body) => {
                 cb(body.orientation);
             });

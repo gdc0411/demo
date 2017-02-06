@@ -22,6 +22,7 @@ import java.util.Map;
 import javax.annotation.Nullable;
 
 import static com.lecloud.valley.common.Constants.PROP_CAMERA;
+import static com.lecloud.valley.common.Constants.PROP_FILTER;
 import static com.lecloud.valley.common.Constants.PROP_FLASH;
 import static com.lecloud.valley.common.Constants.PROP_PUSH;
 import static com.lecloud.valley.common.Constants.PROP_PUSH_PARA;
@@ -137,6 +138,11 @@ public class LeReactPushViewManager extends SimpleViewManager<LeReactPushView> {
     @ReactProp(name = PROP_FLASH, defaultBoolean = false)
     public void setFlash(final LeReactPushView pushView, final boolean flash) {
         pushView.setFlash(flash);
+    }
+
+    @ReactProp(name = PROP_FILTER)
+    public void setFilter(final LeReactPushView pushView, final int filter) {
+        pushView.setFilter(filter);
     }
 
 }

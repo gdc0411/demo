@@ -42,28 +42,28 @@ class orient extends Component {
         <Text style={styles.instructions}>
           {`当前方向: ${or}`}
         </Text>
-        <TouchableOpacity onPress={(para) => Orientation.setOrientation(-1)} style={styles.button} >
+        <TouchableOpacity onPress={(para) => Orientation.setOrientation(Orientation.ORIENTATION_UNSPECIFIED)} style={styles.button} >
           <Text style={styles.instructions}>
             解锁
           </Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={(para) => Orientation.setOrientation(1)} style={styles.button} >
+        <TouchableOpacity onPress={(para) => Orientation.setOrientation(Orientation.ORIENTATION_PORTRAIT)} style={styles.button} >
           <Text style={styles.instructions}>
             锁定正竖屏
           </Text>
         </TouchableOpacity>
         <View style={styles.buttonContainer}>
-          <TouchableOpacity onPress={(para) => Orientation.setOrientation(0)} style={styles.button} >
+          <TouchableOpacity onPress={(para) => Orientation.setOrientation(Orientation.ORIENTATION_LANDSCAPE)} style={styles.button} >
             <Text style={styles.instructions}>
               锁定正横屏
             </Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={(para) => Orientation.setOrientation(8)} style={styles.button} >
+          <TouchableOpacity onPress={(para) => Orientation.setOrientation(Orientation.ORIENTATION_REVERSE_LANDSCAPE)} style={styles.button} >
             <Text style={styles.instructions}>
               锁定反横屏
             </Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={(para) => Orientation.setOrientation(9)} style={styles.button} >
+          <TouchableOpacity onPress={(para) => Orientation.setOrientation(Orientation.ORIENTATION_REVERSE_PORTRAIT)} style={styles.button} >
             <Text style={styles.instructions}>
               锁定反竖屏
             </Text>

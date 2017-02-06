@@ -91,6 +91,7 @@ public interface Constants {
     String PROP_PUSH = "push"; //开始/停止推流
     String PROP_CAMERA = "camera"; //切换摄像头
     String PROP_FLASH = "flash"; //打开/关闭闪光灯
+    String PROP_FILTER = "filter"; //选取滤镜
 
     // 定义分享类型常量
     int PUSH_TYPE_MOBILE_URI = 0;
@@ -107,6 +108,7 @@ public interface Constants {
     String EVENT_PROP_PUSH_CAMERA_FLAG = "cameraFlag";  //摄像头切换标识，为true表示正在切换，不可以切换
     String EVENT_PROP_PUSH_CAMERA_DIRECTION = "cameraDirection";  //摄像头方向，1为前置，0为后置
     String EVENT_PROP_PUSH_FLASH_FLAG = "flashFlag"; //闪光灯标识，为true表示打开
+    String EVENT_PROP_PUSH_FILTER = "filter"; //滤镜
 
 //============== REACT_EVENT_PROP ======================
 

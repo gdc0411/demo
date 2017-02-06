@@ -37,13 +37,13 @@ const {height: SCREEN_HEIGHT, width: SCREEN_WIDTH} = Dimensions.get('window');
 class home extends Component {
 
     componentWillMount() {
-        Orientation.setOrientation(1);
+        Orientation.setOrientation(Orientation.ORIENTATION_PORTRAIT);
         UmengPush.addReceiveMessageListener(this.handleRecvMessage);
         UmengPush.addOpenMessageListener(this.handleOpenMessage);
     }
 
     componentWillUnmount() {
-        Orientation.setOrientation(-1);
+        Orientation.setOrientation(Orientation.ORIENTATION_UNSPECIFIED);
         UmengPush.removeReceiveMessageListener(this.handleRecvMessage);
         UmengPush.removeOpenMessageListener(this.handleOpenMessage);
     }

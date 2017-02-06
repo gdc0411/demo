@@ -45,6 +45,34 @@ public class OrientationModule extends ReactContextBaseJavaModule implements Lif
         return REACT_CLASS_ORIENTATION_MODULE;
     }
 
+
+    @Override
+    public
+    @Nullable
+    Map<String, Object> getConstants() {
+        HashMap<String, Object> constants = new HashMap<String, Object>();
+        final Activity activity = getCurrentActivity();
+        int orientationInt = getReactApplicationContext().getResources().getConfiguration().orientation;
+//        int orientationInt = ScreenUtils.getOrientation(activity);
+
+        String orientation = this.getOrientationString(orientationInt);
+        if (orientation.equals("null")) {
+            constants.put("initialOrientation", null);
+        } else {
+            constants.put("initialOrientation", orientation);
+        }
+
+        constants.put("EVENT_ORIENTATION_CHANG", Events.EVENT_ORIENTATION_CHANG.toString());
+        constants.put("ORIENTATION_LANDSCAPE", ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        constants.put("ORIENTATION_PORTRAIT", ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        constants.put("ORIENTATION_REVERSE_LANDSCAPE", ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE);
+        constants.put("ORIENTATION_REVERSE_PORTRAIT", ActivityInfo.SCREEN_ORIENTATION_REVERSE_PORTRAIT);
+        constants.put("ORIENTATION_UNSPECIFIED", ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+
+
+        return constants;
+    }
+
     public OrientationModule(ReactApplicationContext reactContext) {
         super(reactContext);
         final ReactApplicationContext context = reactContext;
@@ -55,16 +83,16 @@ public class OrientationModule extends ReactContextBaseJavaModule implements Lif
                 int orient = -1;
                 switch (msg.what) {
                     case OrientationSensorUtils.ORIENTATION_0:// 正横屏
-                        orient = 0;
+                        orient = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
                         break;
                     case OrientationSensorUtils.ORIENTATION_1:// 正竖屏
-                        orient = 1;
+                        orient = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
                         break;
                     case OrientationSensorUtils.ORIENTATION_8:// 反横屏
-                        orient = 8;
+                        orient = ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE;
                         break;
                     case OrientationSensorUtils.ORIENTATION_9:// 反竖屏
-                        orient = 9;
+                        orient = ActivityInfo.SCREEN_ORIENTATION_REVERSE_PORTRAIT;
                         break;
                 }
 
@@ -139,24 +167,6 @@ public class OrientationModule extends ReactContextBaseJavaModule implements Lif
         Log.d(TAG, LogUtils.getTraceInfo() + "外部控制——— 设置方向 orientation:" + requestedOrientation);
     }
 
-    @Override
-    public
-    @Nullable
-    Map<String, Object> getConstants() {
-        HashMap<String, Object> constants = new HashMap<String, Object>();
-        final Activity activity = getCurrentActivity();
-        int orientationInt = getReactApplicationContext().getResources().getConfiguration().orientation;
-//        int orientationInt = ScreenUtils.getOrientation(activity);
-
-        String orientation = this.getOrientationString(orientationInt);
-        if (orientation.equals("null")) {
-            constants.put("initialOrientation", null);
-        } else {
-            constants.put("initialOrientation", orientation);
-        }
-
-        return constants;
-    }
 
     private String getOrientationString(int orientation) {
         if (orientation == OrientationSensorUtils.ORIENTATION_0) {

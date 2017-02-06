@@ -21,12 +21,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
 import Orientation from '../componets/RCTOrientation';
-import Push, {
-    PUSH_TYPE_MOBILE_URI,
-    PUSH_TYPE_MOBILE,
-    PUSH_TYPE_LECLOUD,
-    PUSH_TYPE_NONE,
-} from '../componets/RCTLePush';
+import Push from '../componets/RCTLePush';
 
 //取得屏幕宽高
 const {height: SCREEN_HEIGHT, width: SCREEN_WIDTH} = Dimensions.get('window');
@@ -63,7 +58,7 @@ class push extends Component {
             /* 闪光灯打开标识*/
             flashFlag: false,
             /* 滤镜操作 */
-            filter: '滤镜',
+            filter: 0,
             /* 摄像头操作 */
             volume: '音量',
         };
@@ -74,16 +69,16 @@ class push extends Component {
         let newTarget = '';
         switch (para) {
             case '1': //推流-有地址
-                newTarget = { type: PUSH_TYPE_MOBILE_URI, url: "rtmp://216.mpush.live.lecloud.com/live/camerView", landscape: false };
+                newTarget = { type: Push.PUSH_TYPE_MOBILE_URI, url: "rtmp://216.mpush.live.lecloud.com/live/camerView", landscape: false };
                 break;
             case '2': //推流-无地址
-                newTarget = { type: PUSH_TYPE_MOBILE, domainName: "216.mpush.live.lecloud.com", streamName: '358239059415259', appkey: 'KIVK8X67PSPU9518B1WA', landscape: false };
+                newTarget = { type: Push.PUSH_TYPE_MOBILE, domainName: "216.mpush.live.lecloud.com", streamName: '358239059415259', appkey: 'KIVK8X67PSPU9518B1WA', landscape: false };
                 break;
             case '3': //推流-乐视云
-                newTarget = { type: PUSH_TYPE_LECLOUD, activityId: "A2016120500000gx", userId: '800053', secretKey: '60ca65970dc1a15ad421d46f524b99b7', landscape: false };
+                newTarget = { type: Push.PUSH_TYPE_LECLOUD, activityId: "A2016120500000gx", userId: '800053', secretKey: '60ca65970dc1a15ad421d46f524b99b7', landscape: false };
                 break;
             default:
-                newTarget = { type: PUSH_TYPE_NONE };
+                newTarget = { type: Push.PUSH_TYPE_NONE };
         }
         this.setState({ target: newTarget, });
 
@@ -128,7 +123,7 @@ class push extends Component {
         const {navigator} = this.props;
         navigator.pop();
 
-        Orientation.setOrientation(1);
+        Orientation.setOrientation(Orientation.ORIENTATION_PORTRAIT);
         Orientation.removeOnOrientationListener(this.handleOrientation);
     }
 
@@ -186,7 +181,7 @@ class push extends Component {
                     </View>
                     {this.state.timeFlag ?
                         <View style={styles.bufferDisplay}>
-                            <Text style={[styles.DisplayOption, { fontSize: 15, }]}>
+                            <Text style={[styles.DisplayOption, { fontSize: 16, color: 'red' }]}>
                                 计时：{this.state.time}
                             </Text>
                         </View> : null}

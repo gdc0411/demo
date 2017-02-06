@@ -42,6 +42,7 @@ import static com.lecloud.valley.common.Constants.EVENT_PROP_ERROR_CODE;
 import static com.lecloud.valley.common.Constants.EVENT_PROP_ERROR_MSG;
 import static com.lecloud.valley.common.Constants.EVENT_PROP_PUSH_CAMERA_DIRECTION;
 import static com.lecloud.valley.common.Constants.EVENT_PROP_PUSH_CAMERA_FLAG;
+import static com.lecloud.valley.common.Constants.EVENT_PROP_PUSH_FILTER;
 import static com.lecloud.valley.common.Constants.EVENT_PROP_PUSH_FLASH_FLAG;
 import static com.lecloud.valley.common.Constants.EVENT_PROP_PUSH_PLAY_URL;
 import static com.lecloud.valley.common.Constants.EVENT_PROP_PUSH_PUSH_URL;
@@ -528,20 +529,44 @@ public class LeReactPushView extends CameraSurfaceView implements ISurfaceCreate
 
     /**
      * 切换滤镜,设置为0为关闭滤镜
+     * <p>
+     * FILTER_VIDEO_NONE = 0;
+     * FILTER_VIDEO_DEFAULT = 1;
+     * FILTER_VIDEO_WARM = 2;
+     * FILTER_VIDEO_CALM = 3;
+     * FILTER_VIDEO_ROMANCE = 4;
      */
-
-
-    public void switchFilter() {
-        if (mFilterModel == CameraParams.FILTER_VIDEO_NONE) {
-            mFilterModel = CameraParams.FILTER_VIDEO_DEFAULT; //默认的美颜效果
-        } else {
-            mFilterModel = CameraParams.FILTER_VIDEO_NONE;//无效果
+    public void setFilter(final int filterModel) {
+        if (!mLePushValid || mFilterModel == filterModel || mPushPara == null) {
+            return;
         }
-        if (mPushType == PUSH_TYPE_MOBILE_URI || mPushType == PUSH_TYPE_MOBILE) { //移动直播
-            mPublisher.getVideoRecordDevice().setFilterModel(mFilterModel);//切换滤镜
-        } else if (mPushType == PUSH_TYPE_LECLOUD) { //云直播
-            mLECPublisher.getVideoRecordDevice().setFilterModel(mFilterModel);//切换滤镜
+        Log.d(TAG, LogUtils.getTraceInfo() + "外部控制——— 设置滤镜:" + filterModel);
+
+        WritableMap event = Arguments.createMap();
+
+        if (filterModel == CameraParams.FILTER_VIDEO_NONE
+                || filterModel == CameraParams.FILTER_VIDEO_DEFAULT
+                || filterModel == CameraParams.FILTER_VIDEO_WARM
+                || filterModel == CameraParams.FILTER_VIDEO_CALM
+                || filterModel == CameraParams.FILTER_VIDEO_ROMANCE) {
+
+            mFilterModel = filterModel;
+
+            if (mPushType == PUSH_TYPE_MOBILE_URI || mPushType == PUSH_TYPE_MOBILE) { //移动直播
+                mPublisher.getVideoRecordDevice().setFilterModel(mFilterModel);//切换滤镜
+            } else if (mPushType == PUSH_TYPE_LECLOUD) { //云直播
+                mLECPublisher.getVideoRecordDevice().setFilterModel(mFilterModel);//切换滤镜
+            }
+
+            event.putInt(EVENT_PROP_ERROR_CODE, 0);
+            event.putString(EVENT_PROP_ERROR_MSG, "切换滤镜成功");
+
+        }else{
+            event.putInt(EVENT_PROP_ERROR_CODE, -1);
+            event.putString(EVENT_PROP_ERROR_MSG, "滤镜参数错误！");
         }
+        event.putInt(EVENT_PROP_PUSH_FILTER, mFilterModel);
+        mEventEmitter.receiveEvent(getId(), Events.EVENT_PUSH_CAMERA_UPDATE.toString(), event);
 
     }
 
@@ -742,8 +767,8 @@ public class LeReactPushView extends CameraSurfaceView implements ISurfaceCreate
     private Runnable timerRunnable = new Runnable() {
         @Override
         public void run() {
-            if (((mPushType == PUSH_TYPE_MOBILE_URI || mPushType == PUSH_TYPE_MOBILE) && mPublisher!= null && mPublisher.isRecording()) ||
-                    (mPushType == PUSH_TYPE_LECLOUD && mLECPublisher!= null && mLECPublisher.isRecording())) {
+            if (((mPushType == PUSH_TYPE_MOBILE_URI || mPushType == PUSH_TYPE_MOBILE) && mPublisher != null && mPublisher.isRecording()) ||
+                    (mPushType == PUSH_TYPE_LECLOUD && mLECPublisher != null && mLECPublisher.isRecording())) {
                 mTime++;
                 WritableMap event = Arguments.createMap();
                 event.putBoolean(EVENT_PROP_PUSH_TIME_FLAG, mTimeFlag);

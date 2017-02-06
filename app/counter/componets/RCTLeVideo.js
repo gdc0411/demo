@@ -47,6 +47,15 @@ export default class Video extends Component {
         this._root.setNativeProps(nativeProps);
     }
 
+    /**
+    * 播放类型
+    */
+    static PLAYER_MODE_VOD = 10000;
+    static PLAYER_MODE_LIVE = 10001;
+    static PLAYER_MODE_ACTION_LIVE = 10002;
+    static PLAYER_MODE_MOBILE_LIVE = 10003;
+    static PLAYER_MODE_URI = 0;
+
     static propTypes = {
         /* 原生属性 */
         //src: PropTypes.object,
@@ -235,7 +244,7 @@ export default class Video extends Component {
             <RCTLeVideo
                 ref={this._assignRoot}
                 {...nativeProps}
-                />
+            />
         );
     }
 }

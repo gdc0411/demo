@@ -101,7 +101,7 @@ class play extends Component {
         const newSource = this.getFormatDatasource(src);
         this.setState({ source: newSource, });
 
-        Orientation.setOrientation(1);
+        Orientation.setOrientation(Orientation.ORIENTATION_UNSPECIFIED);
         Orientation.addOnOrientationListener(this.handleOrientation);
         Download.addItemUpdateListener(this.handleDownloadItem);
     }
@@ -113,7 +113,7 @@ class play extends Component {
     // }
 
     componentWillUnmount() {
-        Orientation.setOrientation(1);
+        Orientation.setOrientation(Orientation.ORIENTATION_PORTRAIT);
         Orientation.removeOnOrientationListener(this.handleOrientation);
         Download.removeItemUpdateListener(this.handleDownloadItem);
     }
@@ -150,19 +150,19 @@ class play extends Component {
         let bottom = 0;
         let needUpdate = false;
         switch (orientation) {
-            case 0:
+            case Orientation.ORIENTATION_LANDSCAPE:
                 bottom = 0;
                 needUpdate = true;
                 break;
-            case 1:
+            case Orientation.ORIENTATION_PORTRAIT:
                 bottom = 200;
                 needUpdate = true;
                 break;
-            case 8:
+            case Orientation.ORIENTATION_REVERSE_LANDSCAPE:
                 bottom = 0;
                 needUpdate = true;
                 break;
-            case 9:
+            case Orientation.ORIENTATION_REVERSE_PORTRAIT:
                 // bottom = 200;
                 // needUpdate = true;
                 break;
@@ -385,37 +385,37 @@ class play extends Component {
         let source;
         switch (key) {
             case '0': //第三方URL
-                source = { playMode: 0, uri: "http://cache.utovr.com/201601131107187320.mp4", pano: false };
+                source = { playMode: Video.PLAYER_MODE_URI, uri: "http://cache.utovr.com/201601131107187320.mp4", pano: false };
                 break;
             case '1': //点播 乐视云测试数据
-                source = { playMode: 10000, uuid: "847695", vuid: "200323369", businessline: "102", saas: true, pano: false };
+                source = { playMode: Video.PLAYER_MODE_VOD, uuid: "847695", vuid: "200323369", businessline: "102", saas: true, pano: false };
                 break;
             case '2': //点播 川台数据
-                source = { playMode: 10000, uuid: "841215", vuid: "300184109", businessline: "102", saas: true, pano: false };
+                source = { playMode: Video.PLAYER_MODE_VOD, uuid: "841215", vuid: "300184109", businessline: "102", saas: true, pano: false };
                 break;
             case '3': //点播 可下载
-                source = { playMode: 10000, uuid: "841215", vuid: "301180368", businessline: "102", saas: true, pano: false, rate: "13", videoInfo: { img: '/aaab', aluId: 2 } };
+                source = { playMode: Video.PLAYER_MODE_VOD, uuid: "841215", vuid: "301180368", businessline: "102", saas: true, pano: false, rate: "13", videoInfo: { img: '/aaab', aluId: 2 } };
                 break;
             case '4': //点播 Demo示例，有广告，可下载
-                source = { playMode: 10000, uuid: "838389", vuid: "200271100", businessline: "102", saas: true, pano: false };
+                source = { playMode: Video.PLAYER_MODE_VOD, uuid: "838389", vuid: "200271100", businessline: "102", saas: true, pano: false };
                 break;
             case '5': //活动直播 官方demo
-                source = { playMode: 10002, actionId: "A2016062700000gx", usehls: false, customerId: "838389", businessline: "102", cuid: "", utoken: "", pano: false };
+                source = { playMode: Video.PLAYER_MODE_ACTION_LIVE, actionId: "A2016062700000gx", usehls: false, customerId: "838389", businessline: "102", cuid: "", utoken: "", pano: false };
                 break;
             case '6': //活动直播 泸州
-                source = { playMode: 10002, actionId: "A2016111100001zn", usehls: false, customerId: "865024", businessline: "102", cuid: "", utoken: "", pano: false };
+                source = { playMode: Video.PLAYER_MODE_ACTION_LIVE, actionId: "A2016111100001zn", usehls: false, customerId: "865024", businessline: "102", cuid: "", utoken: "", pano: false };
                 break;
             case '7': //活动直播 自己推流
-                source = { playMode: 10002, actionId: "A20170124000008m", usehls: false, customerId: "", businessline: "", cuid: "", utoken: "", pano: false };
+                source = { playMode: Video.PLAYER_MODE_ACTION_LIVE, actionId: "A20170124000008m", usehls: false, customerId: "", businessline: "", cuid: "", utoken: "", pano: false };
                 break;
             default: //本地地址
                 let download = JSON.parse(key);
                 if (download)
                     if (Platform.OS === 'ios') {
                         alert(key);
-                        source = { playMode: 10000, uuid: "" + download.uuid, vuid: "" + download.vuid, businessline: "" + download.businessline, saas: true, pano: false, localOnly: true };
+                        source = { playMode: Video.PLAYER_MODE_VOD, uuid: "" + download.uuid, vuid: "" + download.vuid, businessline: "" + download.businessline, saas: true, pano: false, localOnly: true };
                     } else if (Platform.OS === 'android') {
-                        source = { playMode: 0, uri: download.fileSavePath, pano: false };
+                        source = { playMode: Video.PLAYER_MODE_URI, uri: download.fileSavePath, pano: false };
                     }
                 break;
         }

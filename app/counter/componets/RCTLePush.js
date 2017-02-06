@@ -22,16 +22,6 @@ const styles = StyleSheet.create({
     },
 });
 
-
-/**
- * 推流类型
- */
-export const PUSH_TYPE_MOBILE_URI = NativeModules.UIManager.RCTLePush.Constants.PUSH_TYPE_MOBILE_URI;
-export const PUSH_TYPE_MOBILE = NativeModules.UIManager.RCTLePush.Constants.PUSH_TYPE_MOBILE;
-export const PUSH_TYPE_LECLOUD = NativeModules.UIManager.RCTLePush.Constants.PUSH_TYPE_LECLOUD;
-export const PUSH_TYPE_NONE = NativeModules.UIManager.RCTLePush.Constants.PUSH_TYPE_NONE;
-// alert(NativeModules.UIManager.RCTLePush.Constants.PUSH_TYPE_MOBILE);
-
 /**
  * 封装LeSDK推流组件
  * @export
@@ -56,6 +46,24 @@ export default class Push extends Component {
     setNativeProps(nativeProps) {
         this._root.setNativeProps(nativeProps);
     };
+
+    /**
+     * 推流类型
+     */
+    static PUSH_TYPE_MOBILE_URI = NativeModules.UIManager.RCTLePush.Constants.PUSH_TYPE_MOBILE_URI;
+    static PUSH_TYPE_MOBILE = NativeModules.UIManager.RCTLePush.Constants.PUSH_TYPE_MOBILE;
+    static PUSH_TYPE_LECLOUD = NativeModules.UIManager.RCTLePush.Constants.PUSH_TYPE_LECLOUD;
+    static PUSH_TYPE_NONE = NativeModules.UIManager.RCTLePush.Constants.PUSH_TYPE_NONE;
+
+    /**
+     * 滤镜类型
+     */
+    static FILTER_VIDEO_NONE = 0;
+    static FILTER_VIDEO_DEFAULT = 1;
+    static FILTER_VIDEO_WARM = 2;
+    static FILTER_VIDEO_CALM = 3;
+    static FILTER_VIDEO_ROMANCE = 4;
+
 
     static propTypes = {
         /* 原生属性 */
@@ -94,6 +102,8 @@ export default class Push extends Component {
         camera: PropTypes.number,
         /* 开始/停止闪光灯 */
         flash: PropTypes.bool,
+        /* 选取滤镜 */
+        filter: PropTypes.number,
 
         /* 推流端事件相关 */
         onPushTargetLoad: PropTypes.func,
@@ -116,7 +126,7 @@ export default class Push extends Component {
                 url: target.url || null,
                 streamName: target.streamName || null,
                 domainName: target.domainName || null,
-                appkey: target.appkey || null,                
+                appkey: target.appkey || null,
                 activityId: target.activityId || null,
                 userId: target.userId || null,
                 secretKey: target.secretKey || null,

@@ -10,6 +10,12 @@
 
 #import <UIKit/UIKit.h>
 
+#define EVENT_ORIENTATION_CHANG          @"onOrientationDidChange"
+#define ORIENTATION_LANDSCAPE            0
+#define ORIENTATION_PORTRAIT             1
+#define ORIENTATION_REVERSE_LANDSCAPE    8
+#define ORIENTATION_REVERSE_PORTRAIT     9
+#define ORIENTATION_UNSPECIFIED          -1
 
 @interface RCTOrientationModule()
 {
@@ -19,7 +25,26 @@
 @end
 
 @implementation RCTOrientationModule
+
 @synthesize bridge = _bridge;
+
+RCT_EXPORT_MODULE();
+
+
+- (NSDictionary *)constantsToExport
+{
+    
+    UIDeviceOrientation orientation = [[UIDevice currentDevice] orientation];
+    NSString *orientationStr = [self getOrientationStr:orientation];
+    
+    return @{@"initialOrientation"             : orientationStr,
+             @"EVENT_ORIENTATION_CHANG"        : EVENT_ORIENTATION_CHANG,
+             @"ORIENTATION_LANDSCAPE"          : @(ORIENTATION_LANDSCAPE),
+             @"ORIENTATION_PORTRAIT"           : @(ORIENTATION_PORTRAIT),
+             @"ORIENTATION_REVERSE_LANDSCAPE"  : @(ORIENTATION_REVERSE_LANDSCAPE),
+             @"ORIENTATION_REVERSE_PORTRAIT"   : @(ORIENTATION_REVERSE_PORTRAIT),
+             @"ORIENTATION_UNSPECIFIED"        : @(ORIENTATION_UNSPECIFIED)};
+}
 
 static UIInterfaceOrientationMask _orientation = UIInterfaceOrientationMaskAllButUpsideDown;
 
@@ -29,6 +54,7 @@ static UIInterfaceOrientationMask _orientation = UIInterfaceOrientationMaskAllBu
 + (UIInterfaceOrientationMask)getOrientation {
   return _orientation;
 }
+
 
 - (instancetype)init
 {
@@ -50,7 +76,7 @@ static UIInterfaceOrientationMask _orientation = UIInterfaceOrientationMaskAllBu
 
 - (NSArray<NSString *> *)supportedEvents
 {
-  return @[@"onOrientationDidChange"];
+  return @[EVENT_ORIENTATION_CHANG];
 }
 
 - (void)deviceOrientationDidChange:(NSNotification *)notification
@@ -66,7 +92,7 @@ static UIInterfaceOrientationMask _orientation = UIInterfaceOrientationMaskAllBu
   int orientationInt = [self getOrientationInt:orientation];
   NSString* orientationStr = [self getOrientationStr:orientation];
   
-  [self sendEventWithName:@"onOrientationDidChange"
+  [self sendEventWithName:EVENT_ORIENTATION_CHANG
                      body:@{@"orientation": [NSNumber numberWithInt:orientationInt],
                             @"orientationStr": orientationStr}];
   
@@ -126,8 +152,6 @@ static UIInterfaceOrientationMask _orientation = UIInterfaceOrientationMaskAllBu
   return orientationInt;
 }
 
-
-RCT_EXPORT_MODULE();
 
 RCT_EXPORT_METHOD(getOrientation:(RCTPromiseResolveBlock)resolve
                   reject:(RCTPromiseRejectBlock)reject)
@@ -205,14 +229,6 @@ RCT_EXPORT_METHOD(setOrientation:(int)requestedOrientation)
   [invocation invoke];
 }
 
-- (NSDictionary *)constantsToExport
-{
-  
-  UIDeviceOrientation orientation = [[UIDevice currentDevice] orientation];
-  NSString *orientationStr = [self getOrientationStr:orientation];
-  
-  return @{@"initialOrientation": orientationStr};
-}
 
 
 @end
