@@ -49,6 +49,7 @@ npm-debug.log.*
 .buckconfig
 .flowconfig
 ios/bundle/*
+!*.bundle
 !index.ios.jsbundle
 ios/bundle/assets/*
 !.empty
