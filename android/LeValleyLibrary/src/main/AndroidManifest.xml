@@ -54,6 +54,7 @@
     <uses-feature android:name="android.hardware.camera.autofocus" />
 
     <permission android:name="android.permission.INTERACT_ACROSS_USERS_FULL" />
+    <permission android:name="android.permission.WRITE_APN_SETTINGS" />
 
     <application
         android:allowBackup="true"

@@ -1,5 +1,10 @@
 apply plugin: 'com.android.library'
 
+/**
+ * Run Proguard to shrink the Java bytecode in release builds.
+ */
+def enableProguardInReleaseBuilds = true
+
 android {
     compileSdkVersion 23
     buildToolsVersion "23.0.1"
@@ -29,12 +34,8 @@ android {
         ]
     }
     buildTypes {
-        debug {
-            minifyEnabled true
-            proguardFiles "proguard-rules.pro"
-        }
         release {
-            minifyEnabled true
+            minifyEnabled enableProguardInReleaseBuilds
             proguardFiles "proguard-rules.pro"
         }
     }

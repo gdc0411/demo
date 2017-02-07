@@ -17,6 +17,7 @@
 #}
 
 # LePlaySDK
+
 -optimizationpasses 5
 -dontusemixedcaseclassnames
 -dontskipnonpubliclibraryclasses
@@ -77,7 +78,6 @@
 #    public static *** w(...);
 #    public static *** v(...);
 #}
-
 
 -assumenosideeffects class android.util.Log {
     public static boolean isLoggable(java.lang.String, int);
@@ -281,49 +281,49 @@
   public <methods>;
 }
 
-# PUSHSTREAM 使⽤用2.1及以上版本请⽤用以下混淆规则
+
+# LePushStream SDK 2.1+
+
 -keep class com.letv.recorder.** { *; }
 -keep class com.le.utils.gles.** { *; }
--keep class com.le.filter.gles.**{ *; }
--keep class com.le.utils.common.**{ *;}
--keep class com.le.utils.format.**{*;}
--keep class com.le.share.streaming.**{*;}
+-keep class com.le.filter.gles.** { *; }
+-keep class com.le.utils.common.** { *;}
+-keep class com.le.utils.format.** {*;}
+-keep class com.le.share.streaming.** {*;}
 -dontwarn com.le.utils.format.**
 
+
+# WeChat+QQ
+
+-keep class com.tencent.** {*;}
+# Wechat
+#-keep class com.tencent.mm.sdk.** {*;}
 # QQ
--keep class com.tencent.mm.sdk.** {*;}
+#-keep class com.tencent.open.TDialog$*
+#-keep class com.tencent.open.TDialog$* {*;}
+#-keep class com.tencent.open.PKDialog
+#-keep class com.tencent.open.PKDialog {*;}
+#-keep class com.tencent.open.PKDialog$*
+#-keep class com.tencent.open.PKDialog$* {*;}
+
 
 
 # Weibo
--dontwarn com.weibo.sdk.android.WeiboDialog
--dontwarn android.net.http.SslError
--dontwarn android.webkit.WebViewClient
--keep public class android.net.http.SslError{*;}
--keep public class android.webkit.WebViewClient{*;}
--keep public class android.webkit.WebChromeClient{*;}
+
+-keep class com.sina.** { *; }
+-keep interface com.sina.** { *; }
+#-keep class com.sina.weibo.sdk.** {*;}
+-keep class android.net.http.** {*;}
+-keep class org.apache.http.** {*;} #坑死我了！！！
+-keep class android.webkit.** {*;}
+-keep class * implements android.webkit.WebChromeClient {*;}
 -keep public interface android.webkit.WebChromeClient$CustomViewCallback {*;}
 -keep public interface android.webkit.ValueCallback {*;}
--keep class * implements android.webkit.WebChromeClient {*;}
 
-# 微信
--keepclassmembers class * implements java.io.Serializable {
-    static final long serialVersionUID;
-    private static final java.io.ObjectStreamField[] serialPersistentFields;
-    private void writeObject(java.io.ObjectOutputStream);
-    private void readObject(java.io.ObjectInputStream);
-    java.lang.Object writeReplace();
-    java.lang.Object readResolve();
-}
-
--keep class android.net.http.** {*; }
--keep class android.webkit.** {*; }
--keep class com.weibo.net.** {*; }
-
--keep class com.tencent.mm.sdk.openapi.WXMediaMessage {*; }
--keep class com.tencent.mm.sdk.openapi.** implements com.tencent.mm.sdk.openapi.WXMediaMessage$IMediaObject {*; }
 
 
 # 友盟PUSH
+
 -dontwarn com.taobao.**
 -dontwarn anet.channel.**
 -dontwarn anetwork.channel.**
@@ -334,32 +334,80 @@
 
 -keepattributes *Annotation*
 
--keep class com.taobao.** {*;}
--keep class org.android.** {*;}
--keep class anet.channel.** {*;}
--keep class com.umeng.** {*;}
--keep class com.xiaomi.** {*;}
--keep class com.huawei.** {*;}
--keep class org.apache.thrift.** {*;}
--keep class com.alibaba.sdk.android.**{*;}
--keep class com.ut.**{*;}
--keep class com.ta.**{*;}
+-keep class com.taobao.** { *;}
+-keep class org.android.** { *;}
+-keep class anet.channel.** { *;}
+-keep class com.umeng.** { *;}
+-keep class com.xiaomi.** { *;}
+-keep class com.huawei.** { *;}
+-keep class org.apache.thrift.** { *;}
+-keep class com.alibaba.sdk.android.** { *;}
+-keep class com.ut.** { *;}
+-keep class com.ta.** { *;}
 
 -keep public class com.umeng.message.example.example.R$*{
    public static final int *;
 }
 
--keep public class **.R$*{
-   public static final int *;
+
+
+# Disabling obfuscation is useful if you collect stack traces from production crashes
+# (unless you are using a system that supports de-obfuscate the stack traces).
+#-dontobfuscate
+
+# React Native
+
+# Keep our interfaces so they can be used by other ProGuard rules.
+# See http://sourceforge.net/p/proguard/bugs/466/
+-keep,allowobfuscation @interface com.facebook.proguard.annotations.DoNotStrip
+-keep,allowobfuscation @interface com.facebook.proguard.annotations.KeepGettersAndSetters
+-keep,allowobfuscation @interface com.facebook.common.internal.DoNotStrip
+
+# Do not strip any method/class that is annotated with @DoNotStrip
+-keep @com.facebook.proguard.annotations.DoNotStrip class *
+-keep @com.facebook.common.internal.DoNotStrip class *
+-keepclassmembers class * {
+    @com.facebook.proguard.annotations.DoNotStrip *;
+    @com.facebook.common.internal.DoNotStrip *;
 }
 
+-keepclassmembers @com.facebook.proguard.annotations.KeepGettersAndSetters class * {
+  void set*(***);
+  *** get*();
+}
+
+-keep class * extends com.facebook.react.bridge.JavaScriptModule { *; }
+-keep class * extends com.facebook.react.bridge.NativeModule { *; }
+-keepclassmembers,includedescriptorclasses class * { native <methods>; }
+-keepclassmembers class *  { @com.facebook.react.uimanager.UIProp <fields>; }
+-keepclassmembers class *  { @com.facebook.react.uimanager.annotations.ReactProp <methods>; }
+-keepclassmembers class *  { @com.facebook.react.uimanager.annotations.ReactPropGroup <methods>; }
+
+-dontwarn com.facebook.react.**
+
+# okhttp
+
+-keepattributes Signature
+-keepattributes *Annotation*
+-keep class okhttp3.** { *; }
+-keep interface okhttp3.** { *; }
+-dontwarn okhttp3.**
+
+# okio
+
+-keep class sun.misc.Unsafe { *; }
+-dontwarn java.nio.file.*
+-dontwarn org.codehaus.mojo.animal_sniffer.IgnoreJRERequirement
+-dontwarn okio.**
 
 
 # LEVALLEY
--keep class com.lecloud.valley.handler.** {*;}
--keep class com.lecloud.valley.modules.** {*;}
+-keep class com.lecloud.valley.handler.CrashHandler {*;}
 -keep class com.lecloud.valley.utils.LogUtils {*;}
--keep class com.lecloud.valley.leecoSdk.LeReactPushViewManager {*;}
--keep class com.lecloud.valley.leecoSdk.LeReactSubVideoViewManager {*;}
--keep class com.lecloud.valley.leecoSdk.LeReactVideoViewManager {*;}
--keep class com.lecloud.valley.views.LinearGradientManager {*;}
+#-keep class com.lecloud.valley.modules.** {*;}
+#-keep class com.lecloud.valley.leecoSdk.LeReactPushViewManager {*;}
+#-keep class com.lecloud.valley.leecoSdk.LeReactSubVideoViewManager {*;}
+#-keep class com.lecloud.valley.leecoSdk.LeReactVideoViewManager {*;}
+#-keep class com.lecloud.valley.views.LinearGradientManager {*;}
+
+-keep public class **.R$*{*;}
