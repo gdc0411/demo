@@ -16,7 +16,7 @@ import com.facebook.react.uimanager.events.RCTEventEmitter;
 /**
  * Created by JiaRao on 2016/12/07.
  */
-public class LeReactVideoView extends RelativeLayout {
+class LeReactVideoView extends RelativeLayout {
 
     private ThemedReactContext mThemedReactContext;
     private LeReactPlayer mLePlayer;

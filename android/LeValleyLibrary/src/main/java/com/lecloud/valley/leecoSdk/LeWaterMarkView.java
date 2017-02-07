@@ -24,7 +24,7 @@ import java.util.List;
 /**
  * Created by LizaRao on 2016/12/9.
  */
-public class LeWaterMarkView extends SurfaceView {
+class LeWaterMarkView extends SurfaceView {
 
     private static final int FIX_WATER_MARK_WIDTH = 48;
     private static final int FIX_WATER_MARK_HEIGHT = 32;

@@ -61,6 +61,7 @@ public class OrientationModule extends ReactContextBaseJavaModule {
     public void onCatalystInstanceDestroy() {
         if (mOrientationFunc != null) {
             mOrientationFunc.destroy();
+            mOrientationFunc = null;
         }
         mEventEmitter = null;
         super.onCatalystInstanceDestroy();

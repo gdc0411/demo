@@ -37,7 +37,7 @@ import static com.lecloud.valley.utils.LogUtils.TAG;
  * Created by RaoJia on 2016/12/18.
  */
 
-public class LeReactSubVideoView extends BaseVideoView implements LifecycleEventListener, VideoViewListener {
+class LeReactSubVideoView extends BaseVideoView implements LifecycleEventListener, VideoViewListener {
 
     private ThemedReactContext mThemedReactContext;
     private RCTEventEmitter mEventEmitter;

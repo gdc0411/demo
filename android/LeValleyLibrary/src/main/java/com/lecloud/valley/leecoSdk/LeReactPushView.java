@@ -63,7 +63,7 @@ import static com.lecloud.valley.utils.LogUtils.getTraceInfo;
  * Created by RaoJia on 2017/2/5.
  */
 
-public class LeReactPushView extends CameraSurfaceView implements ISurfaceCreatedListener {
+class LeReactPushView extends CameraSurfaceView implements ISurfaceCreatedListener {
 
     private ThemedReactContext mThemedReactContext;
     private RCTEventEmitter mEventEmitter;

@@ -36,12 +36,11 @@ import static com.lecloud.valley.utils.LogUtils.TAG;
  * Created by raojia on 2017/1/23.
  */
 
-public class DownloadModule extends ReactContextBaseJavaModule implements LifecycleEventListener {
+public class DownloadModule extends ReactContextBaseJavaModule {
 
     private final ReactApplicationContext mReactContext;
     private RCTNativeAppEventEmitter mEventEmitter;
     private DownloadFunc mDownloadFunc;
-
 
     public DownloadModule(ReactApplicationContext reactContext) {
         super(reactContext);
@@ -62,11 +61,9 @@ public class DownloadModule extends ReactContextBaseJavaModule implements Lifecy
     public void initialize() {
         super.initialize();
         Log.d(TAG, LogUtils.getTraceInfo() + "DOWNLOAD模块初始化");
-
-        mReactContext.addLifecycleEventListener(this);
         mEventEmitter = mReactContext.getJSModule(RCTNativeAppEventEmitter.class);
 
-        if(mDownloadFunc == null)
+        if (mDownloadFunc == null)
             mDownloadFunc = new DownloadFunc(mReactContext, mEventEmitter);
     }
 
@@ -74,9 +71,9 @@ public class DownloadModule extends ReactContextBaseJavaModule implements Lifecy
     public void onCatalystInstanceDestroy() {
         if (mDownloadFunc != null) {
             mDownloadFunc.destroy();
+            mDownloadFunc = null;
         }
         mEventEmitter = null;
-        mReactContext.removeLifecycleEventListener(this);
         super.onCatalystInstanceDestroy();
     }
 
@@ -116,19 +113,4 @@ public class DownloadModule extends ReactContextBaseJavaModule implements Lifecy
         mDownloadFunc.clear();
     }
 
-
-    @Override
-    public void onHostResume() {
-
-    }
-
-    @Override
-    public void onHostPause() {
-
-    }
-
-    @Override
-    public void onHostDestroy() {
-
-    }
 }

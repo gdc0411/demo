@@ -53,16 +53,51 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-import static com.lecloud.valley.common.Constants.*;
+import static com.lecloud.valley.common.Constants.AUTH_RESULT_CODE_CANCEL;
+import static com.lecloud.valley.common.Constants.AUTH_RESULT_CODE_FAILED;
+import static com.lecloud.valley.common.Constants.AUTH_RESULT_CODE_SUCCESSFUL;
+import static com.lecloud.valley.common.Constants.AUTH_RESULT_MSG_CANCEL;
+import static com.lecloud.valley.common.Constants.AUTH_RESULT_MSG_FAILED;
+import static com.lecloud.valley.common.Constants.AUTH_RESULT_MSG_SUCCESSFUL;
+import static com.lecloud.valley.common.Constants.CODE_INVALID_ARGUMENT;
+import static com.lecloud.valley.common.Constants.CODE_INVOKE_FAILED;
+import static com.lecloud.valley.common.Constants.CODE_NOT_REGISTERED;
+import static com.lecloud.valley.common.Constants.EVENT_PROP_SOCIAL_CODE;
+import static com.lecloud.valley.common.Constants.EVENT_PROP_SOCIAL_MSG;
+import static com.lecloud.valley.common.Constants.EVENT_PROP_SOCIAL_TYPE;
+import static com.lecloud.valley.common.Constants.MSG_INVALID_ARGUMENT;
+import static com.lecloud.valley.common.Constants.MSG_INVOKE_FAILED;
+import static com.lecloud.valley.common.Constants.MSG_NOT_REGISTERED;
+import static com.lecloud.valley.common.Constants.REACT_CLASS_WECHAT_MODULE;
+import static com.lecloud.valley.common.Constants.SHARE_PROP_AUDIO;
+import static com.lecloud.valley.common.Constants.SHARE_PROP_DESP;
+import static com.lecloud.valley.common.Constants.SHARE_PROP_TARGET;
+import static com.lecloud.valley.common.Constants.SHARE_PROP_THUMB_IMAGE;
+import static com.lecloud.valley.common.Constants.SHARE_PROP_TITLE;
+import static com.lecloud.valley.common.Constants.SHARE_PROP_TYPE;
+import static com.lecloud.valley.common.Constants.SHARE_PROP_VIDEO;
+import static com.lecloud.valley.common.Constants.SHARE_RESULT_CODE_CANCEL;
+import static com.lecloud.valley.common.Constants.SHARE_RESULT_CODE_FAILED;
+import static com.lecloud.valley.common.Constants.SHARE_RESULT_CODE_SUCCESSFUL;
+import static com.lecloud.valley.common.Constants.SHARE_RESULT_MSG_CANCEL;
+import static com.lecloud.valley.common.Constants.SHARE_RESULT_MSG_FAILED;
+import static com.lecloud.valley.common.Constants.SHARE_RESULT_MSG_SUCCESSFUL;
+import static com.lecloud.valley.common.Constants.SHARE_TYPE_AUDIO;
+import static com.lecloud.valley.common.Constants.SHARE_TYPE_FILE;
+import static com.lecloud.valley.common.Constants.SHARE_TYPE_IMAGE;
+import static com.lecloud.valley.common.Constants.SHARE_TYPE_IMAGE_FILE;
+import static com.lecloud.valley.common.Constants.SHARE_TYPE_NEWS;
+import static com.lecloud.valley.common.Constants.SHARE_TYPE_TEXT;
+import static com.lecloud.valley.common.Constants.SHARE_TYPE_VIDEO;
 import static com.lecloud.valley.utils.LogUtils.TAG;
 
 /**
- * Created by raojia on 2016/12/20.
+ * Created by raojia on 2017/2/8.
  */
-public class WeChatFunc extends ReactContextBaseJavaModule implements IWXAPIEventHandler {
+class WeChatFunc implements IWXAPIEventHandler {
 
     private final ReactApplicationContext mReactContext;
-    private RCTNativeAppEventEmitter mEventEmitter;
+    private final RCTNativeAppEventEmitter mEventEmitter;
 
     private static String appId = null;
     private static String secret = null;
@@ -73,10 +108,14 @@ public class WeChatFunc extends ReactContextBaseJavaModule implements IWXAPIEven
     private static final int TIMELINE_SUPPORTED_VERSION = 0x21020001;
 
 
-    public WeChatFunc(ReactApplicationContext reactContext) {
-
-        super(reactContext);
+    public WeChatFunc(ReactApplicationContext reactContext, RCTNativeAppEventEmitter eventEmitter) {
         mReactContext = reactContext;
+        mEventEmitter = eventEmitter;
+
+        initialize();
+    }
+
+    private void initialize() {
 
         if (appId == null) {
             ApplicationInfo appInfo;
@@ -97,9 +136,15 @@ public class WeChatFunc extends ReactContextBaseJavaModule implements IWXAPIEven
 
         }
 
+        if (!gIsAppRegistered) {
+            // 通过WXAPIFactory工厂，获取IWXAPI的实例
+            api = WXAPIFactory.createWXAPI(mReactContext, appId, false);
+            // 将该app注册到微信
+            gIsAppRegistered = api.registerApp(appId);
+        }
+        gModule = this;
     }
 
-    @Override
     public Map<String, Object> getConstants() {
         final Map<String, Object> constants = new HashMap<>();
         constants.put("isAppRegistered", gIsAppRegistered);
@@ -116,40 +161,18 @@ public class WeChatFunc extends ReactContextBaseJavaModule implements IWXAPIEven
     }
 
 
-    @Override
-    public void initialize() {
-        super.initialize();
-
-        if (!gIsAppRegistered) {
-            // 通过WXAPIFactory工厂，获取IWXAPI的实例
-            api = WXAPIFactory.createWXAPI(getReactApplicationContext(), appId, false);
-            // 将该app注册到微信
-            gIsAppRegistered = api.registerApp(appId);
-        }
-        gModule = this;
-        mEventEmitter = mReactContext.getJSModule(RCTNativeAppEventEmitter.class);
-    }
-
-    @Override
-    public void onCatalystInstanceDestroy() {
+    public void destroy() {
 //        if (api != null) {
 //            api = null;  //加了重新加载会崩溃
 //        }
-        mEventEmitter = null;
         gModule = null;
-        super.onCatalystInstanceDestroy();
     }
 
-    @Override
-    public String getName() {
-        return REACT_CLASS_WECHAT_MODULE;
-    }
 
     /**
      * 微信是否安装
      */
-    @ReactMethod
-    public void isAppInstalled(Promise promise) {
+    void isAppInstalled(Promise promise) {
         if (api == null) {
             promise.reject(CODE_NOT_REGISTERED, MSG_NOT_REGISTERED);
             return;
@@ -160,8 +183,7 @@ public class WeChatFunc extends ReactContextBaseJavaModule implements IWXAPIEven
     /**
      * 微信版本是否支持API
      */
-    @ReactMethod
-    public void isAppSupportApi(Promise promise) {
+    void isAppSupportApi(Promise promise) {
         if (api == null) {
             promise.reject(CODE_NOT_REGISTERED, MSG_NOT_REGISTERED);
             return;
@@ -172,8 +194,7 @@ public class WeChatFunc extends ReactContextBaseJavaModule implements IWXAPIEven
     /**
      * 获得微信版本
      */
-    @ReactMethod
-    public void getApiVersion(Promise promise) {
+    void getApiVersion(Promise promise) {
         if (api == null) {
             promise.reject(CODE_NOT_REGISTERED, MSG_NOT_REGISTERED);
             return;
@@ -191,8 +212,7 @@ public class WeChatFunc extends ReactContextBaseJavaModule implements IWXAPIEven
     /**
      * 调起微信APP
      */
-    @ReactMethod
-    public void openApp(Promise promise) {
+    void openApp(Promise promise) {
         if (api == null) {
             promise.reject(CODE_NOT_REGISTERED, MSG_NOT_REGISTERED);
             return;
@@ -203,8 +223,7 @@ public class WeChatFunc extends ReactContextBaseJavaModule implements IWXAPIEven
     /**
      * 微信登陆
      */
-    @ReactMethod
-    public void sendAuth(ReadableMap config, Promise promise) {
+    void sendAuth(ReadableMap config, Promise promise) {
         Log.d(TAG, LogUtils.getTraceInfo() + "微信登陆——— config：" + config.toString());
         if (api == null) {
             promise.reject(CODE_NOT_REGISTERED, MSG_NOT_REGISTERED);
@@ -231,8 +250,7 @@ public class WeChatFunc extends ReactContextBaseJavaModule implements IWXAPIEven
     /**
      * 微信分享朋友圈
      */
-    @ReactMethod
-    public void shareToTimeline(ReadableMap data, Promise promise) {
+    void shareToTimeline(ReadableMap data, Promise promise) {
         Log.d(TAG, LogUtils.getTraceInfo() + "微信分享朋友圈——— data：" + data.toString());
         if (api == null) {
             promise.reject(CODE_NOT_REGISTERED, MSG_NOT_REGISTERED);
@@ -244,8 +262,7 @@ public class WeChatFunc extends ReactContextBaseJavaModule implements IWXAPIEven
     /**
      * 微信分享好友
      */
-    @ReactMethod
-    public void shareToSession(ReadableMap data, Promise promise) {
+    void shareToSession(ReadableMap data, Promise promise) {
         Log.d(TAG, LogUtils.getTraceInfo() + "微信分享好友——— data：" + data.toString());
         if (api == null) {
             promise.reject(CODE_NOT_REGISTERED, MSG_NOT_REGISTERED);
@@ -257,8 +274,7 @@ public class WeChatFunc extends ReactContextBaseJavaModule implements IWXAPIEven
     /**
      * 微信支付
      */
-    @ReactMethod
-    public void pay(ReadableMap data, Promise promise) {
+    void pay(ReadableMap data, Promise promise) {
         Log.d(TAG, LogUtils.getTraceInfo() + "微信支付——— data：" + data.toString());
 
         if (api == null) {
@@ -587,7 +603,7 @@ public class WeChatFunc extends ReactContextBaseJavaModule implements IWXAPIEven
             imageUri = Uri.parse(imageUrl);
             // Verify scheme is set, so that relative uri (used by static resources) are not handled.
             if (imageUri.getScheme() == null) {
-                imageUri = getResourceDrawableUri(getReactApplicationContext(), imageUrl);
+                imageUri = getResourceDrawableUri(mReactContext, imageUrl);
             }
         } catch (Exception e) {
             imageUri = null;

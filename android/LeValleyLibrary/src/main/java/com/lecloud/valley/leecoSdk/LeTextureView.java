@@ -30,7 +30,7 @@ import static com.facebook.react.common.ReactConstants.TAG;
 /**
  * Created by raojia on 2016/11/10.
  */
-public class LeTextureView extends TextureView implements TextureView.SurfaceTextureListener {
+class LeTextureView extends TextureView implements TextureView.SurfaceTextureListener {
 
     protected IPlayer mMediaPlayer;
 

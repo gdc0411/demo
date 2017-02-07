@@ -68,17 +68,44 @@ import java.util.Map;
 
 import javax.annotation.Nullable;
 
-import static com.lecloud.valley.common.Constants.*;
+import static com.lecloud.valley.common.Constants.CODE_NOT_REGISTERED;
+import static com.lecloud.valley.common.Constants.CODE_NULL_ACTIVITY;
+import static com.lecloud.valley.common.Constants.EVENT_PROP_SOCIAL_CODE;
+import static com.lecloud.valley.common.Constants.EVENT_PROP_SOCIAL_MSG;
+import static com.lecloud.valley.common.Constants.EVENT_PROP_SOCIAL_TYPE;
+import static com.lecloud.valley.common.Constants.MSG_NOT_REGISTERED;
+import static com.lecloud.valley.common.Constants.MSG_NULL_ACTIVITY;
+import static com.lecloud.valley.common.Constants.REACT_CLASS_WEIBO_MODULE;
+import static com.lecloud.valley.common.Constants.SHARE_PROP_AUDIO;
+import static com.lecloud.valley.common.Constants.SHARE_PROP_DESP;
+import static com.lecloud.valley.common.Constants.SHARE_PROP_TARGET;
+import static com.lecloud.valley.common.Constants.SHARE_PROP_TEXT;
+import static com.lecloud.valley.common.Constants.SHARE_PROP_THUMB_IMAGE;
+import static com.lecloud.valley.common.Constants.SHARE_PROP_TITLE;
+import static com.lecloud.valley.common.Constants.SHARE_PROP_TYPE;
+import static com.lecloud.valley.common.Constants.SHARE_PROP_VIDEO;
+import static com.lecloud.valley.common.Constants.SHARE_RESULT_CODE_CANCEL;
+import static com.lecloud.valley.common.Constants.SHARE_RESULT_CODE_FAILED;
+import static com.lecloud.valley.common.Constants.SHARE_RESULT_CODE_SUCCESSFUL;
+import static com.lecloud.valley.common.Constants.SHARE_RESULT_MSG_CANCEL;
+import static com.lecloud.valley.common.Constants.SHARE_RESULT_MSG_FAILED;
+import static com.lecloud.valley.common.Constants.SHARE_RESULT_MSG_SUCCESSFUL;
+import static com.lecloud.valley.common.Constants.SHARE_TYPE_AUDIO;
+import static com.lecloud.valley.common.Constants.SHARE_TYPE_IMAGE;
+import static com.lecloud.valley.common.Constants.SHARE_TYPE_NEWS;
+import static com.lecloud.valley.common.Constants.SHARE_TYPE_TEXT;
+import static com.lecloud.valley.common.Constants.SHARE_TYPE_VIDEO;
+import static com.lecloud.valley.common.Constants.SHARE_TYPE_VOICE;
 import static com.lecloud.valley.utils.LogUtils.TAG;
 
 
 /**
- * Created by raojia on 2016/12/26.
+ * Created by raojia on 2017/2/8.
  */
-public class WeiboFunc extends ReactContextBaseJavaModule implements ActivityEventListener {
+class WeiboFunc implements ActivityEventListener {
 
     private final ReactApplicationContext mReactContext;
-    private RCTNativeAppEventEmitter mEventEmitter;
+    private final RCTNativeAppEventEmitter mEventEmitter;
 
     private SsoHandler mWeiboSsoHandler;
     private IWeiboShareAPI mWeiboShareAPI;
@@ -86,13 +113,18 @@ public class WeiboFunc extends ReactContextBaseJavaModule implements ActivityEve
 
     private static WeiboFunc gModule = null;
 
-    public WeiboFunc(ReactApplicationContext reactContext) {
-        super(reactContext);
+    WeiboFunc(ReactApplicationContext reactContext, RCTNativeAppEventEmitter eventEmitter) {
         mReactContext = reactContext;
+        mEventEmitter = eventEmitter;
+
+        initialize();
+    }
+
+    private void initialize() {
 
         ApplicationInfo appInfo;
         try {
-            appInfo = reactContext.getPackageManager().getApplicationInfo(reactContext.getPackageName(), PackageManager.GET_META_DATA);
+            appInfo = mReactContext.getPackageManager().getApplicationInfo(mReactContext.getPackageName(), PackageManager.GET_META_DATA);
         } catch (PackageManager.NameNotFoundException e) {
             throw new Error(e);
         }
@@ -101,10 +133,27 @@ public class WeiboFunc extends ReactContextBaseJavaModule implements ActivityEve
         }
         appId = appInfo.metaData.get("WB_APPKEY").toString();
         appId = appId.substring(2);
+
+        gModule = this;
+
+        if (mWeiboShareAPI == null) {
+            mWeiboShareAPI = WeiboShareSDK.createWeiboAPI(mReactContext, appId);
+            mWeiboShareAPI.registerApp();
+        }
+
+        mReactContext.addActivityEventListener(this);
     }
 
-    @Override
-    public Map<String, Object> getConstants() {
+
+    void destroy() {
+        gModule = null;
+        mWeiboShareAPI = null;
+        mWeiboSsoHandler = null;
+
+        mReactContext.removeActivityEventListener(this);
+    }
+
+    Map<String, Object> getConstants() {
         final Map<String, Object> constants = new HashMap<>();
         constants.put("SHARE_TYPE_NEWS", SHARE_TYPE_NEWS);
         constants.put("SHARE_TYPE_IMAGE", SHARE_TYPE_IMAGE);
@@ -115,38 +164,8 @@ public class WeiboFunc extends ReactContextBaseJavaModule implements ActivityEve
         return constants;
     }
 
-    @Override
-    public void initialize() {
-        super.initialize();
-        gModule = this;
 
-        mReactContext.addActivityEventListener(this);
-        mEventEmitter = mReactContext.getJSModule(RCTNativeAppEventEmitter.class);
-
-        if (mWeiboShareAPI == null) {
-            mWeiboShareAPI = WeiboShareSDK.createWeiboAPI(mReactContext, appId);
-            mWeiboShareAPI.registerApp();
-        }
-    }
-
-    @Override
-    public void onCatalystInstanceDestroy() {
-        gModule = null;
-        mEventEmitter = null;
-        mWeiboShareAPI = null;
-        mWeiboSsoHandler = null;
-        mReactContext.removeActivityEventListener(this);
-        super.onCatalystInstanceDestroy();
-    }
-
-    @Override
-    public String getName() {
-        return REACT_CLASS_WEIBO_MODULE;
-    }
-
-
-    @ReactMethod
-    public void getApiVersion(Promise promise) {
+    void getApiVersion(Promise promise) {
         if (mWeiboShareAPI == null) {
             promise.reject(CODE_NOT_REGISTERED, MSG_NOT_REGISTERED);
             return;
@@ -154,8 +173,7 @@ public class WeiboFunc extends ReactContextBaseJavaModule implements ActivityEve
         promise.resolve(mWeiboShareAPI.getWeiboAppSupportAPI());
     }
 
-    @ReactMethod
-    public void isAppInstalled(Promise promise) {
+    void isAppInstalled(Promise promise) {
         if (mWeiboShareAPI == null) {
             promise.reject(CODE_NOT_REGISTERED, MSG_NOT_REGISTERED);
             return;
@@ -163,8 +181,7 @@ public class WeiboFunc extends ReactContextBaseJavaModule implements ActivityEve
         promise.resolve(mWeiboShareAPI.isWeiboAppInstalled());
     }
 
-    @ReactMethod
-    public void isAppSupportApi(Promise promise) {
+    void isAppSupportApi(Promise promise) {
         if (mWeiboShareAPI == null) {
             promise.reject(CODE_NOT_REGISTERED, MSG_NOT_REGISTERED);
             return;
@@ -172,8 +189,7 @@ public class WeiboFunc extends ReactContextBaseJavaModule implements ActivityEve
         promise.resolve(mWeiboShareAPI.isWeiboAppSupportAPI());
     }
 
-    @ReactMethod
-    public void login(final ReadableMap config, final Promise promise) {
+    void login(final ReadableMap config, final Promise promise) {
         Log.d(TAG, LogUtils.getTraceInfo() + "微博登陆——— config：" + config.toString());
 
         if (mReactContext.getCurrentActivity() == null) {
@@ -231,8 +247,7 @@ public class WeiboFunc extends ReactContextBaseJavaModule implements ActivityEve
         promise.resolve(null);
     }
 
-    @ReactMethod
-    public void shareToWeibo(final ReadableMap data, final Promise promise) {
+    void shareToWeibo(final ReadableMap data, final Promise promise) {
         Log.d(TAG, LogUtils.getTraceInfo() + "分享到新浪微博 ——— data：" + data.toString());
 
         if (mWeiboShareAPI == null) {
@@ -390,7 +405,7 @@ public class WeiboFunc extends ReactContextBaseJavaModule implements ActivityEve
 //        }else{
 //            success = mWeiboShareAPI.sendRequest(getCurrentActivity(), request, null, token, null);
 //        }
-        success = mWeiboShareAPI.sendRequest(getCurrentActivity(), request);
+        success = mWeiboShareAPI.sendRequest(mReactContext.getCurrentActivity(), request);
 
         if (!success) {
             WritableMap event = Arguments.createMap();

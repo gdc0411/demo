@@ -76,6 +76,7 @@ public class UmengPushModule extends ReactContextBaseJavaModule {
     public void onCatalystInstanceDestroy() {
         if(mUmengPushFunc !=null){
             mUmengPushFunc.destroy();
+            mUmengPushFunc = null;
         }
         mEventEmitter = null;
 

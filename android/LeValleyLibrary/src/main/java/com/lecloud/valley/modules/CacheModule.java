@@ -52,8 +52,10 @@ public class CacheModule extends ReactContextBaseJavaModule {
 
     @Override
     public void onCatalystInstanceDestroy() {
-        if (mCacheFunc != null)
+        if (mCacheFunc != null) {
+            mCacheFunc.destroy();
             mCacheFunc = null;
+        }
 
         mEventEmitter = null;
         super.onCatalystInstanceDestroy();

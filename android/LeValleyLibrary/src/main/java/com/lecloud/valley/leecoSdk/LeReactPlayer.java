@@ -59,7 +59,7 @@ import static com.lecloud.valley.utils.LogUtils.TAG;
 /**
  * Created by raojia on 2016/11/10.
  */
-public class LeReactPlayer extends LeTextureView implements LifecycleEventListener, MediaDataPlayerListener,
+class LeReactPlayer extends LeTextureView implements LifecycleEventListener, MediaDataPlayerListener,
         OnPlayStateListener, AdPlayerListener, MediaPlayer.OnVideoRotateListener {
 
     private ThemedReactContext mThemedReactContext;
