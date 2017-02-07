@@ -33,49 +33,27 @@ import static com.lecloud.valley.utils.LogUtils.TAG;
  * Created by LizaRao on 2016/12/11.
  */
 
-public class OrientationFunc extends ReactContextBaseJavaModule implements LifecycleEventListener {
+class OrientationFunc implements LifecycleEventListener {
+
+    private final ReactApplicationContext mReactContext;
+    private final DeviceEventManagerModule.RCTDeviceEventEmitter mEventEmitter;
+
+    private Handler mOrientationChangeHandler;
 
     private OrientationSensorUtils mOrientationSensorUtils;
     private int mCurrentOritentation;
 
-    private Handler mOrientationChangeHandler;
+    OrientationFunc(ReactApplicationContext reactContext, DeviceEventManagerModule.RCTDeviceEventEmitter eventEmitter) {
+        mReactContext = reactContext;
+        mEventEmitter = eventEmitter;
 
-    @Override
-    public String getName() {
-        return REACT_CLASS_ORIENTATION_MODULE;
+        initialize();
     }
 
+    private void initialize() {
+        Log.d(TAG, LogUtils.getTraceInfo() + "OrientationFunc初始化");
 
-    @Override
-    public
-    @Nullable
-    Map<String, Object> getConstants() {
-        HashMap<String, Object> constants = new HashMap<String, Object>();
-        final Activity activity = getCurrentActivity();
-        int orientationInt = getReactApplicationContext().getResources().getConfiguration().orientation;
-//        int orientationInt = ScreenUtils.getOrientation(activity);
-
-        String orientation = this.getOrientationString(orientationInt);
-        if (orientation.equals("null")) {
-            constants.put("initialOrientation", null);
-        } else {
-            constants.put("initialOrientation", orientation);
-        }
-
-        constants.put("EVENT_ORIENTATION_CHANG", Events.EVENT_ORIENTATION_CHANG.toString());
-        constants.put("ORIENTATION_LANDSCAPE", ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-        constants.put("ORIENTATION_PORTRAIT", ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        constants.put("ORIENTATION_REVERSE_LANDSCAPE", ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE);
-        constants.put("ORIENTATION_REVERSE_PORTRAIT", ActivityInfo.SCREEN_ORIENTATION_REVERSE_PORTRAIT);
-        constants.put("ORIENTATION_UNSPECIFIED", ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
-
-
-        return constants;
-    }
-
-    public OrientationFunc(ReactApplicationContext reactContext) {
-        super(reactContext);
-        final ReactApplicationContext context = reactContext;
+        mReactContext.addLifecycleEventListener(this);
 
         mOrientationChangeHandler = new Handler(Looper.getMainLooper()) {
             @Override
@@ -102,21 +80,50 @@ public class OrientationFunc extends ReactContextBaseJavaModule implements Lifec
 
                 WritableMap event = Arguments.createMap();
                 event.putInt(EVENT_PROP_ORIENTATION, orient);
-                if(context.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)!=null)
-                    context.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class).emit(Events.EVENT_ORIENTATION_CHANG.toString(), event);
+                if (mEventEmitter != null)
+                    mEventEmitter.emit(Events.EVENT_ORIENTATION_CHANG.toString(), event);
 
-                Log.d(TAG, LogUtils.getTraceInfo() + "设备转屏事件——— orientation：" + orient + " 设定方向：" + mCurrentOritentation );
+                Log.d(TAG, LogUtils.getTraceInfo() + "设备转屏事件——— orientation：" + orient + " 设定方向：" + mCurrentOritentation);
 
                 super.handleMessage(msg);
             }
 
         };
-        context.addLifecycleEventListener(this);
     }
 
-    @ReactMethod
-    public void getOrientation(Callback callback) {
-        final Activity activity = getCurrentActivity();
+    void destroy() {
+        if (mOrientationSensorUtils != null) {
+            mOrientationChangeHandler.removeCallbacksAndMessages(null);
+        }
+    }
+
+    Map<String, Object> getConstants() {
+        HashMap<String, Object> constants = new HashMap<String, Object>();
+        final Activity activity = mReactContext.getCurrentActivity();
+        int orientationInt = mReactContext.getResources().getConfiguration().orientation;
+//        int orientationInt = ScreenUtils.getOrientation(activity);
+
+        String orientation = this.getOrientationString(orientationInt);
+        if (orientation.equals("null")) {
+            constants.put("initialOrientation", null);
+        } else {
+            constants.put("initialOrientation", orientation);
+        }
+
+        constants.put("EVENT_ORIENTATION_CHANG", Events.EVENT_ORIENTATION_CHANG.toString());
+        constants.put("ORIENTATION_LANDSCAPE", ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        constants.put("ORIENTATION_PORTRAIT", ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        constants.put("ORIENTATION_REVERSE_LANDSCAPE", ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE);
+        constants.put("ORIENTATION_REVERSE_PORTRAIT", ActivityInfo.SCREEN_ORIENTATION_REVERSE_PORTRAIT);
+        constants.put("ORIENTATION_UNSPECIFIED", ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+
+
+        return constants;
+    }
+
+
+    void getOrientation(Callback callback) {
+        final Activity activity = mReactContext.getCurrentActivity();
         mCurrentOritentation = ScreenUtils.getOrientation(activity);
 
         String orientation = this.getOrientationString(mCurrentOritentation);
@@ -128,11 +135,10 @@ public class OrientationFunc extends ReactContextBaseJavaModule implements Lifec
         }
     }
 
-    @ReactMethod
-    public void setOrientation(int requestedOrientation) {
+    void setOrientation(int requestedOrientation) {
         if (mCurrentOritentation == requestedOrientation) return;
 
-        final Activity activity = getCurrentActivity();
+        final Activity activity = mReactContext.getCurrentActivity();
         if (activity == null) {
             return;
         }
@@ -184,7 +190,7 @@ public class OrientationFunc extends ReactContextBaseJavaModule implements Lifec
 
     @Override
     public void onHostResume() {
-        final Activity activity = getCurrentActivity();
+        final Activity activity = mReactContext.getCurrentActivity();
         assert activity != null;
         if (mOrientationSensorUtils == null) {
             mOrientationSensorUtils = new OrientationSensorUtils(activity, mOrientationChangeHandler);
@@ -194,7 +200,7 @@ public class OrientationFunc extends ReactContextBaseJavaModule implements Lifec
 
     @Override
     public void onHostPause() {
-        final Activity activity = getCurrentActivity();
+        final Activity activity = mReactContext.getCurrentActivity();
         if (activity == null)
             return;
 
@@ -206,7 +212,7 @@ public class OrientationFunc extends ReactContextBaseJavaModule implements Lifec
 
     @Override
     public void onHostDestroy() {
-        final Activity activity = getCurrentActivity();
+        final Activity activity = mReactContext.getCurrentActivity();
         if (activity == null)
             return;
 

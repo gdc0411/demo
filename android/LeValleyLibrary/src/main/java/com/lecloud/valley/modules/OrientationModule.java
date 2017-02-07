@@ -15,6 +15,7 @@ import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
+import com.facebook.react.modules.core.RCTNativeAppEventEmitter;
 import com.lecloud.valley.common.Events;
 import com.lecloud.valley.utils.LogUtils;
 import com.lecloud.valley.utils.OrientationSensorUtils;
@@ -33,12 +34,37 @@ import static com.lecloud.valley.utils.LogUtils.TAG;
  * Created by LizaRao on 2016/12/11.
  */
 
-public class OrientationModule extends ReactContextBaseJavaModule implements LifecycleEventListener {
+public class OrientationModule extends ReactContextBaseJavaModule {
 
-    private OrientationSensorUtils mOrientationSensorUtils;
-    private int mCurrentOritentation;
+    private final ReactApplicationContext mReactContext;
+    private DeviceEventManagerModule.RCTDeviceEventEmitter mEventEmitter;
 
-    private Handler mOrientationChangeHandler;
+    private OrientationFunc mOrientationFunc;
+
+    public OrientationModule(ReactApplicationContext reactContext) {
+        super(reactContext);
+        mReactContext = reactContext;
+    }
+
+    @Override
+    public void initialize() {
+        super.initialize();
+        Log.d(TAG, LogUtils.getTraceInfo() + "Orientation模块初始化");
+
+        mEventEmitter = mReactContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class);
+
+        if(mOrientationFunc == null)
+            mOrientationFunc = new OrientationFunc(mReactContext, mEventEmitter);
+    }
+
+    @Override
+    public void onCatalystInstanceDestroy() {
+        if (mOrientationFunc != null) {
+            mOrientationFunc.destroy();
+        }
+        mEventEmitter = null;
+        super.onCatalystInstanceDestroy();
+    }
 
     @Override
     public String getName() {
@@ -50,168 +76,17 @@ public class OrientationModule extends ReactContextBaseJavaModule implements Lif
     public
     @Nullable
     Map<String, Object> getConstants() {
-        HashMap<String, Object> constants = new HashMap<String, Object>();
-        final Activity activity = getCurrentActivity();
-        int orientationInt = getReactApplicationContext().getResources().getConfiguration().orientation;
-//        int orientationInt = ScreenUtils.getOrientation(activity);
-
-        String orientation = this.getOrientationString(orientationInt);
-        if (orientation.equals("null")) {
-            constants.put("initialOrientation", null);
-        } else {
-            constants.put("initialOrientation", orientation);
-        }
-
-        constants.put("EVENT_ORIENTATION_CHANG", Events.EVENT_ORIENTATION_CHANG.toString());
-        constants.put("ORIENTATION_LANDSCAPE", ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-        constants.put("ORIENTATION_PORTRAIT", ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        constants.put("ORIENTATION_REVERSE_LANDSCAPE", ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE);
-        constants.put("ORIENTATION_REVERSE_PORTRAIT", ActivityInfo.SCREEN_ORIENTATION_REVERSE_PORTRAIT);
-        constants.put("ORIENTATION_UNSPECIFIED", ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
-
-
-        return constants;
+        return mOrientationFunc.getConstants();
     }
 
-    public OrientationModule(ReactApplicationContext reactContext) {
-        super(reactContext);
-        final ReactApplicationContext context = reactContext;
-
-        mOrientationChangeHandler = new Handler(Looper.getMainLooper()) {
-            @Override
-            public void handleMessage(Message msg) {
-                int orient = -1;
-                switch (msg.what) {
-                    case OrientationSensorUtils.ORIENTATION_0:// 正横屏
-                        orient = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
-                        break;
-                    case OrientationSensorUtils.ORIENTATION_1:// 正竖屏
-                        orient = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
-                        break;
-                    case OrientationSensorUtils.ORIENTATION_8:// 反横屏
-                        orient = ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE;
-                        break;
-                    case OrientationSensorUtils.ORIENTATION_9:// 反竖屏
-                        orient = ActivityInfo.SCREEN_ORIENTATION_REVERSE_PORTRAIT;
-                        break;
-                }
-
-                if (orient == -1 || orient == mCurrentOritentation) {
-                    return;
-                }
-
-                WritableMap event = Arguments.createMap();
-                event.putInt(EVENT_PROP_ORIENTATION, orient);
-                if(context.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)!=null)
-                    context.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class).emit(Events.EVENT_ORIENTATION_CHANG.toString(), event);
-
-                Log.d(TAG, LogUtils.getTraceInfo() + "设备转屏事件——— orientation：" + orient + " 设定方向：" + mCurrentOritentation );
-
-                super.handleMessage(msg);
-            }
-
-        };
-        context.addLifecycleEventListener(this);
-    }
 
     @ReactMethod
     public void getOrientation(Callback callback) {
-        final Activity activity = getCurrentActivity();
-        mCurrentOritentation = ScreenUtils.getOrientation(activity);
-
-        String orientation = this.getOrientationString(mCurrentOritentation);
-
-        if (orientation.equals("null")) {
-            callback.invoke(mCurrentOritentation, null);
-        } else {
-            callback.invoke(null, orientation);
-        }
+        mOrientationFunc.getOrientation(callback);
     }
 
     @ReactMethod
     public void setOrientation(int requestedOrientation) {
-        if (mCurrentOritentation == requestedOrientation) return;
-
-        final Activity activity = getCurrentActivity();
-        if (activity == null) {
-            return;
-        }
-
-        switch (requestedOrientation) {
-            case ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE:
-                activity.setRequestedOrientation(requestedOrientation);
-                mCurrentOritentation = requestedOrientation;
-                break;
-
-            case ActivityInfo.SCREEN_ORIENTATION_PORTRAIT:
-                activity.setRequestedOrientation(requestedOrientation);
-                mCurrentOritentation = requestedOrientation;
-                break;
-
-            case ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE:
-                activity.setRequestedOrientation(requestedOrientation);
-                mCurrentOritentation = requestedOrientation;
-                break;
-
-            case ActivityInfo.SCREEN_ORIENTATION_REVERSE_PORTRAIT:
-                activity.setRequestedOrientation(requestedOrientation);
-                mCurrentOritentation = requestedOrientation;
-                break;
-
-            default:
-                requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED;
-                activity.setRequestedOrientation(requestedOrientation);
-                mCurrentOritentation = -1;
-                break;
-        }
-        Log.d(TAG, LogUtils.getTraceInfo() + "外部控制——— 设置方向 orientation:" + requestedOrientation);
-    }
-
-
-    private String getOrientationString(int orientation) {
-        if (orientation == OrientationSensorUtils.ORIENTATION_0) {
-            return "LANDSCAPE-LEFT";
-        } else if (orientation == OrientationSensorUtils.ORIENTATION_1) {
-            return "PORTRAIT";
-        } else if (orientation == OrientationSensorUtils.ORIENTATION_8) {
-            return "LANDSCAPE-RIGHT";
-        } else if (orientation == OrientationSensorUtils.ORIENTATION_9) {
-            return "PORTRAITUPSIDEDOWN";
-        } else {
-            return "null";
-        }
-    }
-
-    @Override
-    public void onHostResume() {
-        final Activity activity = getCurrentActivity();
-        assert activity != null;
-        if (mOrientationSensorUtils == null) {
-            mOrientationSensorUtils = new OrientationSensorUtils(activity, mOrientationChangeHandler);
-        }
-        mOrientationSensorUtils.onResume();
-    }
-
-    @Override
-    public void onHostPause() {
-        final Activity activity = getCurrentActivity();
-        if (activity == null)
-            return;
-
-        if (mOrientationSensorUtils != null) {
-            mOrientationSensorUtils.onPause();
-        }
-
-    }
-
-    @Override
-    public void onHostDestroy() {
-        final Activity activity = getCurrentActivity();
-        if (activity == null)
-            return;
-
-        if (mOrientationSensorUtils != null) {
-            mOrientationChangeHandler.removeCallbacksAndMessages(null);
-        }
+        mOrientationFunc.setOrientation(requestedOrientation);
     }
 }

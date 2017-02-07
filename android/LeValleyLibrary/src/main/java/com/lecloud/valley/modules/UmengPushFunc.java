@@ -23,23 +23,48 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import static com.lecloud.valley.common.Constants.*;
+import static com.lecloud.valley.common.Constants.REACT_CLASS_UMENG_PUSH_MODULE;
 import static com.lecloud.valley.utils.LogUtils.TAG;
 
 /**
- * Created by RaoJia on 2017/1/7.
+ * Created by RaoJia on 2017/2/7.
  */
 
-public class UmengPushFunc extends ReactContextBaseJavaModule implements LifecycleEventListener {
+class UmengPushFunc implements LifecycleEventListener {
 
-    private RCTNativeAppEventEmitter mEventEmitter;
-    private ReactApplicationContext mReactContext;
+    private final ReactApplicationContext mReactContext;
+    private final RCTNativeAppEventEmitter mEventEmitter;
 
     private static UmengPushFunc gModule = null;
 
     private static UMessage tmpMessage;
 
-    public static UmengNotificationClickHandler notificationClickHandler = new UmengNotificationClickHandler() {
+    UmengPushFunc(ReactApplicationContext reactContext , RCTNativeAppEventEmitter eventEmitter) {
+        mReactContext = reactContext;
+        mEventEmitter = eventEmitter;
+
+        initialize();
+    }
+
+    private void initialize() {
+        Log.i(TAG, "PushFunc初始化");
+        gModule = this;
+
+        //添加监听
+        mReactContext.addLifecycleEventListener(this);
+
+//        if (tmpMessage != null) {
+//            gModule.sendEvent(Events.EVENT_UMENG_OPEN_MESSAGE.toString(), tmpMessage);
+//            tmpMessage = null;
+//        }
+    }
+
+    void destroy() {
+        gModule = null;
+        mReactContext.removeLifecycleEventListener(this);
+    }
+
+    static UmengNotificationClickHandler notificationClickHandler = new UmengNotificationClickHandler() {
         @Override
         public void launchApp(Context context, UMessage msg) {
             super.launchApp(context, msg);
@@ -66,7 +91,7 @@ public class UmengPushFunc extends ReactContextBaseJavaModule implements Lifecyc
         }
     };
 
-    public static UmengMessageHandler messageHandler = new UmengMessageHandler() {
+    static UmengMessageHandler messageHandler = new UmengMessageHandler() {
         /**
          * 自定义通知栏样式的回调方法
          * */
@@ -115,11 +140,6 @@ public class UmengPushFunc extends ReactContextBaseJavaModule implements Lifecyc
         }
     };
 
-    @Override
-    public String getName() {
-        return REACT_CLASS_UMENG_PUSH_MODULE;
-    }
-
 
 //    public static synchronized UmengPushModule getInstance(Context context) {
 //        if(gModule == null) {
@@ -128,42 +148,14 @@ public class UmengPushFunc extends ReactContextBaseJavaModule implements Lifecyc
 //        return gModule;
 //    }
 
-    public UmengPushFunc(ReactApplicationContext reactContext) {
-        super(reactContext);
-        mReactContext = reactContext;
-    }
 
-    @Override
-    public Map<String, Object> getConstants() {
+    Map<String, Object> getConstants() {
         final Map<String, Object> constants = new HashMap<>();
         constants.put("EVENT_UMENG_RECV_MESSAGE", Events.EVENT_UMENG_RECV_MESSAGE.toString());
         constants.put("EVENT_UMENG_OPEN_MESSAGE", Events.EVENT_UMENG_OPEN_MESSAGE.toString());
         return constants;
     }
 
-    @Override
-    public void initialize() {
-        super.initialize();
-        Log.i(TAG, "PUSH模块初始化");
-        gModule = this;
-        mEventEmitter = mReactContext.getJSModule(RCTNativeAppEventEmitter.class);
-
-        //添加监听
-        mReactContext.addLifecycleEventListener(this);
-
-//        if (tmpMessage != null) {
-//            gModule.sendEvent(Events.EVENT_UMENG_OPEN_MESSAGE.toString(), tmpMessage);
-//            tmpMessage = null;
-//        }
-    }
-
-    @Override
-    public void onCatalystInstanceDestroy() {
-        gModule = null;
-        mEventEmitter = null;
-        mReactContext.removeLifecycleEventListener(this);
-        super.onCatalystInstanceDestroy();
-    }
 
     /**
      * 点击推送通知触发的事件

@@ -1,11 +1,11 @@
 package com.lecloud.valley.modules;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
-import android.app.Activity;
 
 import com.facebook.react.bridge.ActivityEventListener;
 import com.facebook.react.bridge.Arguments;
@@ -34,17 +34,53 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.lecloud.valley.common.Constants.*;
+import static com.lecloud.valley.common.Constants.AUTH_RESULT_CODE_CANCEL;
+import static com.lecloud.valley.common.Constants.AUTH_RESULT_CODE_FAILED;
+import static com.lecloud.valley.common.Constants.AUTH_RESULT_MSG_CANCEL;
+import static com.lecloud.valley.common.Constants.AUTH_RESULT_MSG_FAILED;
+import static com.lecloud.valley.common.Constants.AUTH_RESULT_MSG_SUCCESSFUL;
+import static com.lecloud.valley.common.Constants.CODE_INVALID_ARGUMENT;
+import static com.lecloud.valley.common.Constants.CODE_INVOKE_FAILED;
+import static com.lecloud.valley.common.Constants.CODE_NOT_REGISTERED;
+import static com.lecloud.valley.common.Constants.CODE_NULL_ACTIVITY;
+import static com.lecloud.valley.common.Constants.EVENT_PROP_SOCIAL_CODE;
+import static com.lecloud.valley.common.Constants.EVENT_PROP_SOCIAL_MSG;
+import static com.lecloud.valley.common.Constants.EVENT_PROP_SOCIAL_TYPE;
+import static com.lecloud.valley.common.Constants.MSG_INVALID_ARGUMENT;
+import static com.lecloud.valley.common.Constants.MSG_INVOKE_FAILED;
+import static com.lecloud.valley.common.Constants.MSG_NOT_REGISTERED;
+import static com.lecloud.valley.common.Constants.MSG_NULL_ACTIVITY;
+import static com.lecloud.valley.common.Constants.REACT_CLASS_QQ_MODULE;
+import static com.lecloud.valley.common.Constants.SHARE_PROP_APPNAME;
+import static com.lecloud.valley.common.Constants.SHARE_PROP_AUDIO;
+import static com.lecloud.valley.common.Constants.SHARE_PROP_DESP;
+import static com.lecloud.valley.common.Constants.SHARE_PROP_IMAGE;
+import static com.lecloud.valley.common.Constants.SHARE_PROP_TARGET;
+import static com.lecloud.valley.common.Constants.SHARE_PROP_THUMB_IMAGE;
+import static com.lecloud.valley.common.Constants.SHARE_PROP_TITLE;
+import static com.lecloud.valley.common.Constants.SHARE_PROP_TYPE;
+import static com.lecloud.valley.common.Constants.SHARE_RESULT_CODE_CANCEL;
+import static com.lecloud.valley.common.Constants.SHARE_RESULT_CODE_FAILED;
+import static com.lecloud.valley.common.Constants.SHARE_RESULT_CODE_SUCCESSFUL;
+import static com.lecloud.valley.common.Constants.SHARE_RESULT_MSG_CANCEL;
+import static com.lecloud.valley.common.Constants.SHARE_RESULT_MSG_FAILED;
+import static com.lecloud.valley.common.Constants.SHARE_RESULT_MSG_SUCCESSFUL;
+import static com.lecloud.valley.common.Constants.SHARE_TYPE_APP;
+import static com.lecloud.valley.common.Constants.SHARE_TYPE_AUDIO;
+import static com.lecloud.valley.common.Constants.SHARE_TYPE_IMAGE;
+import static com.lecloud.valley.common.Constants.SHARE_TYPE_NEWS;
+import static com.lecloud.valley.common.Constants.SHARE_TYPE_TEXT;
+import static com.lecloud.valley.common.Constants.SHARE_TYPE_VIDEO;
 import static com.lecloud.valley.utils.LogUtils.TAG;
 
 /**
  * Created by RaoJia on 2016/12/24.
  */
 
-public class QQFunc extends ReactContextBaseJavaModule implements IUiListener, ActivityEventListener {
+class QQFunc implements IUiListener, ActivityEventListener {
 
     private final ReactApplicationContext mReactContext;
-    private RCTNativeAppEventEmitter mEventEmitter;
+    private final RCTNativeAppEventEmitter mEventEmitter;
 
     private static String appId = null;
     private static String secret = null;
@@ -53,9 +89,14 @@ public class QQFunc extends ReactContextBaseJavaModule implements IUiListener, A
 
     private boolean isLoginOperation;
 
-    public QQFunc(ReactApplicationContext reactContext) {
-        super(reactContext);
+    QQFunc(ReactApplicationContext reactContext, RCTNativeAppEventEmitter eventEmitter) {
         mReactContext = reactContext;
+        mEventEmitter = eventEmitter;
+
+        initialize();
+    }
+
+    private void initialize() {
 
         ApplicationInfo appInfo;
         try {
@@ -72,10 +113,21 @@ public class QQFunc extends ReactContextBaseJavaModule implements IUiListener, A
         }
         secret = appInfo.metaData.get("QQ_APPKEY").toString();
 
+        mReactContext.addActivityEventListener(this);
+
+        if (api == null) {
+            api = Tencent.createInstance(appId, mReactContext.getApplicationContext());
+        }
     }
 
-    @Override
-    public Map<String, Object> getConstants() {
+    void destroy() {
+        if (api != null) {
+            api = null;
+        }
+        mReactContext.removeActivityEventListener(this);
+    }
+
+    Map<String, Object> getConstants() {
         final Map<String, Object> constants = new HashMap<>();
         constants.put("SHARE_TYPE_NEWS", SHARE_TYPE_NEWS);
         constants.put("SHARE_TYPE_IMAGE", SHARE_TYPE_IMAGE);
@@ -87,33 +139,7 @@ public class QQFunc extends ReactContextBaseJavaModule implements IUiListener, A
         return constants;
     }
 
-    @Override
-    public void initialize() {
-        super.initialize();
-        mReactContext.addActivityEventListener(this);
-        mEventEmitter = mReactContext.getJSModule(RCTNativeAppEventEmitter.class);
-        if (api == null) {
-            api = Tencent.createInstance(appId, mReactContext.getApplicationContext());
-        }
-    }
-
-    @Override
-    public void onCatalystInstanceDestroy() {
-        if (api != null) {
-            api = null;
-        }
-        mEventEmitter = null;
-        mReactContext.removeActivityEventListener(this);
-        super.onCatalystInstanceDestroy();
-    }
-
-    @Override
-    public String getName() {
-        return REACT_CLASS_QQ_MODULE;
-    }
-
-    @ReactMethod
-    public void getApiVersion(Promise promise) {
+    void getApiVersion(Promise promise) {
         if (api == null) {
             promise.reject(CODE_NOT_REGISTERED, MSG_NOT_REGISTERED);
             return;
@@ -121,8 +147,7 @@ public class QQFunc extends ReactContextBaseJavaModule implements IUiListener, A
         promise.resolve(Constants.SDK_VERSION_STRING);
     }
 
-    @ReactMethod
-    public void isAppInstalled(Promise promise) {
+    void isAppInstalled(Promise promise) {
         if (api == null) {
             promise.reject(CODE_NOT_REGISTERED, MSG_NOT_REGISTERED);
             return;
@@ -135,8 +160,7 @@ public class QQFunc extends ReactContextBaseJavaModule implements IUiListener, A
                 SystemUtils.getAppVersionName(mReactContext.getCurrentActivity(), Constants.PACKAGE_QZONE) != null);
     }
 
-    @ReactMethod
-    public void isAppSupportApi(Promise promise) {
+    void isAppSupportApi(Promise promise) {
         if (api == null) {
             promise.reject(CODE_NOT_REGISTERED, MSG_NOT_REGISTERED);
             return;
@@ -148,8 +172,7 @@ public class QQFunc extends ReactContextBaseJavaModule implements IUiListener, A
 
     }
 
-    @ReactMethod
-    public void login(String scopes, Promise promise) {
+    void login(String scopes, Promise promise) {
         Log.d(TAG, LogUtils.getTraceInfo() + "QQ登录 ——— scopes：" + scopes);
 
         isLoginOperation = true;
@@ -169,8 +192,7 @@ public class QQFunc extends ReactContextBaseJavaModule implements IUiListener, A
         }
     }
 
-    @ReactMethod
-    public void shareToQQ(ReadableMap data, Promise promise) {
+    void shareToQQ(ReadableMap data, Promise promise) {
         Log.d(TAG, LogUtils.getTraceInfo() + "QQ分享到好友 ——— data：" + data.toString());
 
         isLoginOperation = false;
@@ -193,8 +215,7 @@ public class QQFunc extends ReactContextBaseJavaModule implements IUiListener, A
 
     }
 
-    @ReactMethod
-    public void shareToQzone(ReadableMap data, Promise promise) {
+    void shareToQzone(ReadableMap data, Promise promise) {
         Log.d(TAG, LogUtils.getTraceInfo() + "QQ分享到QZong ——— data：" + data.toString());
 
         isLoginOperation = false;
@@ -218,8 +239,7 @@ public class QQFunc extends ReactContextBaseJavaModule implements IUiListener, A
     }
 
 
-    @ReactMethod
-    public void logout(Promise promise) {
+    void logout(Promise promise) {
         Log.d(TAG, LogUtils.getTraceInfo() + "QQ登录注销 ——— ");
 
         isLoginOperation = true;

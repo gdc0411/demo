@@ -11,7 +11,6 @@ import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.modules.core.RCTNativeAppEventEmitter;
-
 import com.lecloud.sdk.download.info.LeDownloadInfo;
 import com.lecloud.sdk.download.observer.LeDownloadObserver;
 import com.lecloud.valley.common.Events;
@@ -36,7 +35,7 @@ import static com.lecloud.valley.utils.LogUtils.TAG;
  * Created by raojia on 2017/1/23.
  */
 
-public class DownloadFunc extends ReactContextBaseJavaModule implements LifecycleEventListener {
+class DownloadFunc {
 
     private static int maxThreadCount = 5;
 
@@ -52,8 +51,8 @@ public class DownloadFunc extends ReactContextBaseJavaModule implements Lifecycl
     private final static int EVENT_TYPE_EXIST = 10; //已下载
 
 
-    private ReactApplicationContext mReactContext;
-    private RCTNativeAppEventEmitter mEventEmitter;
+    private final ReactApplicationContext mReactContext;
+    private final RCTNativeAppEventEmitter mEventEmitter;
 
     private DowanloadCenterUtils mDownloadCenter;
     private LeDownloadObserver mDownloadObserver;
@@ -61,47 +60,15 @@ public class DownloadFunc extends ReactContextBaseJavaModule implements Lifecycl
 
     private static final Object syncObject = new Object();
 
-    public DownloadFunc(ReactApplicationContext reactContext) {
-        super(reactContext);
+    DownloadFunc(ReactApplicationContext reactContext, RCTNativeAppEventEmitter eventEmitter) {
         mReactContext = reactContext;
+        mEventEmitter = eventEmitter;
+
+        initialize();
     }
 
-    @Override
-    public String getName() {
-        return REACT_CLASS_DOWNLOAD_MODULE;
-    }
-
-    @Override
-    public Map<String, Object> getConstants() {
-        final Map<String, Object> constants = new HashMap<>();
-        constants.put("EVENT_DOWNLOAD_ITEM_UPDATE", Events.EVENT_DOWNLOAD_ITEM_UPDATE.toString());
-        constants.put("EVENT_TYPE_SUCCESS", EVENT_TYPE_SUCCESS);
-        constants.put("EVENT_TYPE_START", EVENT_TYPE_START);
-        constants.put("EVENT_TYPE_PROGRESS", EVENT_TYPE_PROGRESS);
-        constants.put("EVENT_TYPE_FAILED", EVENT_TYPE_FAILED);
-        constants.put("EVENT_TYPE_EXIST", EVENT_TYPE_EXIST);
-
-        constants.put("EVENT_DOWNLOAD_LIST_UPDATE", Events.EVENT_DOWNLOAD_LIST_UPDATE.toString());
-        constants.put("DOWLOAD_STATE_WAITING", LeDownloadObserver.DOWLOAD_STATE_WAITING);
-        constants.put("DOWLOAD_STATE_DOWNLOADING", LeDownloadObserver.DOWLOAD_STATE_DOWNLOADING);
-        constants.put("DOWLOAD_STATE_STOP", LeDownloadObserver.DOWLOAD_STATE_STOP);
-        constants.put("DOWLOAD_STATE_SUCCESS", LeDownloadObserver.DOWLOAD_STATE_SUCCESS);
-        constants.put("DOWLOAD_STATE_FAILED", LeDownloadObserver.DOWLOAD_STATE_FAILED);
-        constants.put("DOWLOAD_STATE_NO_DISPATCH", LeDownloadObserver.DOWLOAD_STATE_NO_DISPATCH);
-        constants.put("DOWLOAD_STATE_NO_PERMISSION", LeDownloadObserver.DOWLOAD_STATE_NO_PERMISSION);
-        constants.put("DOWLOAD_STATE_URL_REQUEST_FAILED", LeDownloadObserver.DOWLOAD_STATE_URL_REQUEST_FAILED);
-        constants.put("DOWLOAD_STATE_DISPATCHING", LeDownloadObserver.DOWLOAD_STATE_DISPATCHING);
-
-        return constants;
-    }
-
-    @Override
-    public void initialize() {
-        super.initialize();
-        Log.d(TAG, LogUtils.getTraceInfo() + "DOWNLOAD模块初始化");
-
-        mReactContext.addLifecycleEventListener(this);
-        mEventEmitter = mReactContext.getJSModule(RCTNativeAppEventEmitter.class);
+    private void initialize() {
+        Log.d(TAG, LogUtils.getTraceInfo() + "DownloadFunc初始化");
 
         if (mDownloadCenter == null) {
             mDownloadCenter = DowanloadCenterUtils.getInstances(mReactContext.getBaseContext().getApplicationContext());
@@ -181,20 +148,38 @@ public class DownloadFunc extends ReactContextBaseJavaModule implements Lifecycl
         }
     }
 
-    @Override
-    public void onCatalystInstanceDestroy() {
+    void destroy() {
         if (mDownloadCenter != null) {
             mDownloadCenter.unregisterDownloadObserver(mDownloadObserver);
             mDownloadObserver = null;
 //            mDownloadInfos = null;
         }
-        mEventEmitter = null;
-        mReactContext.removeLifecycleEventListener(this);
-        super.onCatalystInstanceDestroy();
     }
 
-    @ReactMethod
-    public void download(final ReadableMap src) {
+    Map<String, Object> getConstants() {
+        final Map<String, Object> constants = new HashMap<>();
+        constants.put("EVENT_DOWNLOAD_ITEM_UPDATE", Events.EVENT_DOWNLOAD_ITEM_UPDATE.toString());
+        constants.put("EVENT_TYPE_SUCCESS", EVENT_TYPE_SUCCESS);
+        constants.put("EVENT_TYPE_START", EVENT_TYPE_START);
+        constants.put("EVENT_TYPE_PROGRESS", EVENT_TYPE_PROGRESS);
+        constants.put("EVENT_TYPE_FAILED", EVENT_TYPE_FAILED);
+        constants.put("EVENT_TYPE_EXIST", EVENT_TYPE_EXIST);
+
+        constants.put("EVENT_DOWNLOAD_LIST_UPDATE", Events.EVENT_DOWNLOAD_LIST_UPDATE.toString());
+        constants.put("DOWLOAD_STATE_WAITING", LeDownloadObserver.DOWLOAD_STATE_WAITING);
+        constants.put("DOWLOAD_STATE_DOWNLOADING", LeDownloadObserver.DOWLOAD_STATE_DOWNLOADING);
+        constants.put("DOWLOAD_STATE_STOP", LeDownloadObserver.DOWLOAD_STATE_STOP);
+        constants.put("DOWLOAD_STATE_SUCCESS", LeDownloadObserver.DOWLOAD_STATE_SUCCESS);
+        constants.put("DOWLOAD_STATE_FAILED", LeDownloadObserver.DOWLOAD_STATE_FAILED);
+        constants.put("DOWLOAD_STATE_NO_DISPATCH", LeDownloadObserver.DOWLOAD_STATE_NO_DISPATCH);
+        constants.put("DOWLOAD_STATE_NO_PERMISSION", LeDownloadObserver.DOWLOAD_STATE_NO_PERMISSION);
+        constants.put("DOWLOAD_STATE_URL_REQUEST_FAILED", LeDownloadObserver.DOWLOAD_STATE_URL_REQUEST_FAILED);
+        constants.put("DOWLOAD_STATE_DISPATCHING", LeDownloadObserver.DOWLOAD_STATE_DISPATCHING);
+
+        return constants;
+    }
+
+    void download(final ReadableMap src) {
 
         if (src == null || !src.hasKey(PROP_SRC_VOD_UUID) || !src.hasKey(PROP_SRC_VOD_VUID) || !src.hasKey(PROP_SRC_VOD_BUSINESSLINE)) {
             return;
@@ -227,8 +212,7 @@ public class DownloadFunc extends ReactContextBaseJavaModule implements Lifecycl
 
     }
 
-    @ReactMethod
-    public void list() {
+    void list() {
         if (mDownloadCenter != null) {
             mDownloadInfos = mDownloadCenter.getDownloadInfoList();
             notifyListEvent();
@@ -237,8 +221,7 @@ public class DownloadFunc extends ReactContextBaseJavaModule implements Lifecycl
         Log.d(TAG, LogUtils.getTraceInfo() + "外部控制——— 获取下载列表！");
     }
 
-    @ReactMethod
-    public void pause(final ReadableMap src) {
+    void pause(final ReadableMap src) {
         if (src == null || mDownloadCenter == null || mDownloadInfos == null || !src.hasKey("id"))
             return;
 
@@ -253,8 +236,7 @@ public class DownloadFunc extends ReactContextBaseJavaModule implements Lifecycl
         Log.d(TAG, LogUtils.getTraceInfo() + "外部控制——— 暂停下载:" + src.toString());
     }
 
-    @ReactMethod
-    public void resume(final ReadableMap src) {
+    void resume(final ReadableMap src) {
         if (src == null || mDownloadCenter == null || mDownloadInfos == null || !src.hasKey("id"))
             return;
 
@@ -266,8 +248,7 @@ public class DownloadFunc extends ReactContextBaseJavaModule implements Lifecycl
     }
 
 
-    @ReactMethod
-    public void retry(final ReadableMap src) {
+    void retry(final ReadableMap src) {
         if (src == null || mDownloadCenter == null || mDownloadInfos == null || !src.hasKey("id"))
             return;
 
@@ -278,8 +259,7 @@ public class DownloadFunc extends ReactContextBaseJavaModule implements Lifecycl
         Log.d(TAG, LogUtils.getTraceInfo() + "外部控制——— 重试下载:" + src.toString());
     }
 
-    @ReactMethod
-    public void delete(final ReadableMap src) {
+    void delete(final ReadableMap src) {
         if (src == null || mDownloadCenter == null || mDownloadInfos == null || !src.hasKey("id"))
             return;
 
@@ -290,8 +270,7 @@ public class DownloadFunc extends ReactContextBaseJavaModule implements Lifecycl
         Log.d(TAG, LogUtils.getTraceInfo() + "外部控制——— 删除视频:" + src.toString());
     }
 
-    @ReactMethod
-    public void clear() {
+    void clear() {
         if (mDownloadCenter == null || mDownloadInfos == null)
             return;
 
@@ -370,19 +349,4 @@ public class DownloadFunc extends ReactContextBaseJavaModule implements Lifecycl
         Log.d(TAG, LogUtils.getTraceInfo() + "下载事件——— List更新事件 :" + mDownloadInfos.size());
     }
 
-
-    @Override
-    public void onHostResume() {
-
-    }
-
-    @Override
-    public void onHostPause() {
-
-    }
-
-    @Override
-    public void onHostDestroy() {
-
-    }
 }

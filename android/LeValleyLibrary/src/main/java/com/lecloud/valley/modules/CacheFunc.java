@@ -24,7 +24,7 @@ import static com.lecloud.valley.utils.LogUtils.TAG;
  * Created by RaoJia on 2017/1/27.
  */
 
-public class CacheFunc {
+class CacheFunc {
 
     private final static int EVENT_CALC_PROGRESS = 0; //计算缓存中
     private final static int EVENT_CALC_SUCCESS = 1; //计算缓存成功
@@ -34,64 +34,69 @@ public class CacheFunc {
     private final static int EVENT_CLEAR_FAILED = 5; //清除缓存失败
 
     private final ReactApplicationContext mReactContext;
-    private RCTNativeAppEventEmitter mEventEmitter;
+    private final RCTNativeAppEventEmitter mEventEmitter;
 
-    private Runnable mCalcCacheRunnable = new Runnable() {
+    private Runnable mCalcCacheRunnable;
+    private Runnable mClearCacheRunnable;
 
-        @Override
-        public void run() {
-
-            WritableMap event = Arguments.createMap();
-            String cacheStr = "无法计算";
-            long cacheSize = CacheUtils.getTotalCacheSize(mReactContext);
-            if (cacheSize >= 0) {
-                cacheStr = CacheUtils.getFormatSize(cacheSize);
-                event.putInt("eventType", EVENT_CALC_SUCCESS);
-                event.putString("cacheSize", cacheStr);
-            } else {
-                event.putInt("eventType", EVENT_CALC_FAILED);
-                event.putString("cacheSize", cacheStr);
-            }
-            if (mReactContext.hasActiveCatalystInstance()) {
-                if (mEventEmitter != null)
-                    mEventEmitter.emit(Events.EVENT_CACHE_UPDATE_MESSAGE.toString(), event);
-            } else {
-                Log.e(LogUtils.TAG, LogUtils.getTraceInfo() + "not hasActiveCatalystInstance");
-            }
-
-        }
-    };
-
-    private Runnable mClearCacheRunnable = new Runnable() {
-
-        @Override
-        public void run() {
-
-            WritableMap event = Arguments.createMap();
-            String cacheStr = "清理缓存失败";
-            CacheUtils.clearAllCache(mReactContext);
-            long cacheSize = CacheUtils.getTotalCacheSize(mReactContext);
-            if (cacheSize == 0) {
-                cacheStr = CacheUtils.getFormatSize(cacheSize);
-                event.putInt("eventType", EVENT_CLEAR_SUCCESS);
-                event.putString("cacheSize", cacheStr);
-            } else {
-                event.putInt("eventType", EVENT_CLEAR_FAILED);
-                event.putString("cacheSize", cacheStr);
-            }
-            if (mReactContext.hasActiveCatalystInstance()) {
-                if (mEventEmitter != null)
-                    mEventEmitter.emit(Events.EVENT_CACHE_UPDATE_MESSAGE.toString(), event);
-            } else {
-                Log.e(LogUtils.TAG, LogUtils.getTraceInfo() + "not hasActiveCatalystInstance");
-            }
-
-        }
-    };
-
-    public CacheFunc(ReactApplicationContext reactContext, RCTNativeAppEventEmitter eventEmitter ) {
+    CacheFunc(ReactApplicationContext reactContext, RCTNativeAppEventEmitter eventEmitter) {
         mReactContext = reactContext;
         mEventEmitter = eventEmitter;
+
+        initialize();
+    }
+
+
+    private void initialize() {
+        Log.d(TAG, LogUtils.getTraceInfo() + "CacheFunc初始化");
+
+        mCalcCacheRunnable = new Runnable() {
+            @Override
+            public void run() {
+                WritableMap event = Arguments.createMap();
+                String cacheStr = "无法计算";
+                long cacheSize = CacheUtils.getTotalCacheSize(mReactContext);
+                if (cacheSize >= 0) {
+                    cacheStr = CacheUtils.getFormatSize(cacheSize);
+                    event.putInt("eventType", EVENT_CALC_SUCCESS);
+                    event.putString("cacheSize", cacheStr);
+                } else {
+                    event.putInt("eventType", EVENT_CALC_FAILED);
+                    event.putString("cacheSize", cacheStr);
+                }
+                if (mReactContext.hasActiveCatalystInstance()) {
+                    if (mEventEmitter != null)
+                        mEventEmitter.emit(Events.EVENT_CACHE_UPDATE_MESSAGE.toString(), event);
+                } else {
+                    Log.e(LogUtils.TAG, LogUtils.getTraceInfo() + "not hasActiveCatalystInstance");
+                }
+
+            }
+        };
+
+        mClearCacheRunnable = new Runnable() {
+            @Override
+            public void run() {
+                WritableMap event = Arguments.createMap();
+                String cacheStr = "清理缓存失败";
+                CacheUtils.clearAllCache(mReactContext);
+                long cacheSize = CacheUtils.getTotalCacheSize(mReactContext);
+                if (cacheSize == 0) {
+                    cacheStr = CacheUtils.getFormatSize(cacheSize);
+                    event.putInt("eventType", EVENT_CLEAR_SUCCESS);
+                    event.putString("cacheSize", cacheStr);
+                } else {
+                    event.putInt("eventType", EVENT_CLEAR_FAILED);
+                    event.putString("cacheSize", cacheStr);
+                }
+                if (mReactContext.hasActiveCatalystInstance()) {
+                    if (mEventEmitter != null)
+                        mEventEmitter.emit(Events.EVENT_CACHE_UPDATE_MESSAGE.toString(), event);
+                } else {
+                    Log.e(LogUtils.TAG, LogUtils.getTraceInfo() + "not hasActiveCatalystInstance");
+                }
+            }
+        };
     }
 
 
@@ -107,11 +112,14 @@ public class CacheFunc {
         return constants;
     }
 
+    void destroy() {
+
+    }
 
     /**
      * 计算缓存
      */
-    public void calc() {
+    void calc() {
         Log.d(TAG, LogUtils.getTraceInfo() + "外部控制——— 计算缓存大小！");
 
         WritableMap event = Arguments.createMap();
@@ -132,7 +140,7 @@ public class CacheFunc {
     /**
      * 清除缓存
      */
-    public void clear() {
+    void clear() {
         Log.d(TAG, LogUtils.getTraceInfo() + "外部控制——— 清理缓存！");
 
         WritableMap event = Arguments.createMap();
