@@ -1,0 +1,6 @@
+framework module LECPlayerFoundationDylib {
+  umbrella header "LECPlayerFoundationDylib.h"
+
+  export *
+  module * { export * }
+}
