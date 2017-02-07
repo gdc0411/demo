@@ -30,7 +30,7 @@ import static com.lecloud.valley.utils.LogUtils.TAG;
  * Created by RaoJia on 2017/2/7.
  */
 
-class UmengPushFunc implements LifecycleEventListener {
+class UmengPushFunc implements ReactBaseFunc, LifecycleEventListener {
 
     private final ReactApplicationContext mReactContext;
     private final RCTNativeAppEventEmitter mEventEmitter;
@@ -46,7 +46,7 @@ class UmengPushFunc implements LifecycleEventListener {
         initialize();
     }
 
-    private void initialize() {
+    public void initialize() {
         Log.i(TAG, "PushFunc初始化");
         gModule = this;
 
@@ -59,7 +59,7 @@ class UmengPushFunc implements LifecycleEventListener {
 //        }
     }
 
-    void destroy() {
+    public void destroy() {
         gModule = null;
         mReactContext.removeLifecycleEventListener(this);
     }
@@ -149,7 +149,7 @@ class UmengPushFunc implements LifecycleEventListener {
 //    }
 
 
-    Map<String, Object> getConstants() {
+    public Map<String, Object> getConstants() {
         final Map<String, Object> constants = new HashMap<>();
         constants.put("EVENT_UMENG_RECV_MESSAGE", Events.EVENT_UMENG_RECV_MESSAGE.toString());
         constants.put("EVENT_UMENG_OPEN_MESSAGE", Events.EVENT_UMENG_OPEN_MESSAGE.toString());

@@ -102,7 +102,7 @@ import static com.lecloud.valley.utils.LogUtils.TAG;
 /**
  * Created by raojia on 2017/2/8.
  */
-class WeiboFunc implements ActivityEventListener {
+class WeiboFunc implements ReactBaseFunc, ActivityEventListener {
 
     private final ReactApplicationContext mReactContext;
     private final RCTNativeAppEventEmitter mEventEmitter;
@@ -120,7 +120,7 @@ class WeiboFunc implements ActivityEventListener {
         initialize();
     }
 
-    private void initialize() {
+    public void initialize() {
 
         ApplicationInfo appInfo;
         try {
@@ -145,7 +145,7 @@ class WeiboFunc implements ActivityEventListener {
     }
 
 
-    void destroy() {
+    public void destroy() {
         gModule = null;
         mWeiboShareAPI = null;
         mWeiboSsoHandler = null;
@@ -153,7 +153,7 @@ class WeiboFunc implements ActivityEventListener {
         mReactContext.removeActivityEventListener(this);
     }
 
-    Map<String, Object> getConstants() {
+    public Map<String, Object> getConstants() {
         final Map<String, Object> constants = new HashMap<>();
         constants.put("SHARE_TYPE_NEWS", SHARE_TYPE_NEWS);
         constants.put("SHARE_TYPE_IMAGE", SHARE_TYPE_IMAGE);

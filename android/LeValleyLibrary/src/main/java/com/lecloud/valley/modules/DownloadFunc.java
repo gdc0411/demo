@@ -35,7 +35,7 @@ import static com.lecloud.valley.utils.LogUtils.TAG;
  * Created by raojia on 2017/1/23.
  */
 
-class DownloadFunc {
+class DownloadFunc implements ReactBaseFunc {
 
     private static int maxThreadCount = 5;
 
@@ -67,7 +67,7 @@ class DownloadFunc {
         initialize();
     }
 
-    private void initialize() {
+    public void initialize() {
         Log.d(TAG, LogUtils.getTraceInfo() + "DownloadFunc初始化");
 
         if (mDownloadCenter == null) {
@@ -148,7 +148,7 @@ class DownloadFunc {
         }
     }
 
-    void destroy() {
+    public void destroy() {
         if (mDownloadCenter != null) {
             mDownloadCenter.unregisterDownloadObserver(mDownloadObserver);
             mDownloadObserver = null;
@@ -156,7 +156,7 @@ class DownloadFunc {
         }
     }
 
-    Map<String, Object> getConstants() {
+    public Map<String, Object> getConstants() {
         final Map<String, Object> constants = new HashMap<>();
         constants.put("EVENT_DOWNLOAD_ITEM_UPDATE", Events.EVENT_DOWNLOAD_ITEM_UPDATE.toString());
         constants.put("EVENT_TYPE_SUCCESS", EVENT_TYPE_SUCCESS);

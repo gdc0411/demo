@@ -20,9 +20,10 @@ import static com.lecloud.valley.utils.LogUtils.TAG;
 
 public class ReactBaseModule extends ReactContextBaseJavaModule {
 
-    private final ReactApplicationContext mReactContext;
-    private RCTNativeAppEventEmitter mEventEmitter;
-    private CacheFunc func;
+    protected final ReactApplicationContext mReactContext;
+    protected RCTNativeAppEventEmitter mEventEmitter;
+
+    ReactBaseFunc func;
 
     public ReactBaseModule(ReactApplicationContext reactContext) {
         super(reactContext);
@@ -30,24 +31,13 @@ public class ReactBaseModule extends ReactContextBaseJavaModule {
     }
 
     @Override
-    public String getName() {
-        return REACT_CLASS_CACHE_MODULE;
-    }
-
-
-    @Override
-    public void initialize() {
-        super.initialize();
-        Log.d(TAG, LogUtils.getTraceInfo() + "Cache模块初始化");
-        mEventEmitter = mReactContext.getJSModule(RCTNativeAppEventEmitter.class);
-        if (func == null) {
-            func = new CacheFunc(mReactContext, mEventEmitter);
-        }
-    }
-
-    @Override
     public Map<String, Object> getConstants() {
-        return func.getConstants();
+        return func != null ? func.getConstants() : null;
+    }
+
+    @Override
+    public String getName() {
+        return "NONAME";
     }
 
     @Override
@@ -60,21 +50,4 @@ public class ReactBaseModule extends ReactContextBaseJavaModule {
         mEventEmitter = null;
         super.onCatalystInstanceDestroy();
     }
-
-    /**
-     * 计算缓存
-     */
-    @ReactMethod
-    public void calc() {
-        func.calc();
-    }
-
-    /**
-     * 清除缓存
-     */
-    @ReactMethod
-    public void clear() {
-        func.clear();
-    }
-
 }

@@ -34,37 +34,19 @@ import static com.lecloud.valley.utils.LogUtils.TAG;
  * Created by LizaRao on 2016/12/11.
  */
 
-public class OrientationModule extends ReactContextBaseJavaModule {
-
-    private final ReactApplicationContext mReactContext;
-    private DeviceEventManagerModule.RCTDeviceEventEmitter mEventEmitter;
-
-    private OrientationFunc mOrientationFunc;
+public class OrientationModule extends ReactBaseModule {
 
     public OrientationModule(ReactApplicationContext reactContext) {
         super(reactContext);
-        mReactContext = reactContext;
     }
 
     @Override
     public void initialize() {
         super.initialize();
-        Log.d(TAG, LogUtils.getTraceInfo() + "Orientation模块初始化");
-
-        mEventEmitter = mReactContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class);
-
-        if(mOrientationFunc == null)
-            mOrientationFunc = new OrientationFunc(mReactContext, mEventEmitter);
-    }
-
-    @Override
-    public void onCatalystInstanceDestroy() {
-        if (mOrientationFunc != null) {
-            mOrientationFunc.destroy();
-            mOrientationFunc = null;
-        }
-        mEventEmitter = null;
-        super.onCatalystInstanceDestroy();
+        Log.d(TAG, LogUtils.getTraceInfo() + "DOWNLOAD模块初始化");
+        mEventEmitter = mReactContext.getJSModule(RCTNativeAppEventEmitter.class);
+        if (func == null)
+            func = new OrientationFunc(mReactContext, mEventEmitter);
     }
 
     @Override
@@ -73,21 +55,13 @@ public class OrientationModule extends ReactContextBaseJavaModule {
     }
 
 
-    @Override
-    public
-    @Nullable
-    Map<String, Object> getConstants() {
-        return mOrientationFunc.getConstants();
-    }
-
-
     @ReactMethod
     public void getOrientation(Callback callback) {
-        mOrientationFunc.getOrientation(callback);
+        ((OrientationFunc) func).getOrientation(callback);
     }
 
     @ReactMethod
     public void setOrientation(int requestedOrientation) {
-        mOrientationFunc.setOrientation(requestedOrientation);
+        ((OrientationFunc) func).setOrientation(requestedOrientation);
     }
 }

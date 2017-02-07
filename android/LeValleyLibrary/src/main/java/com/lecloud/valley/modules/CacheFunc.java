@@ -24,7 +24,7 @@ import static com.lecloud.valley.utils.LogUtils.TAG;
  * Created by RaoJia on 2017/1/27.
  */
 
-class CacheFunc {
+class CacheFunc implements ReactBaseFunc {
 
     private final static int EVENT_CALC_PROGRESS = 0; //计算缓存中
     private final static int EVENT_CALC_SUCCESS = 1; //计算缓存成功
@@ -47,7 +47,7 @@ class CacheFunc {
     }
 
 
-    private void initialize() {
+    public void initialize() {
         Log.d(TAG, LogUtils.getTraceInfo() + "CacheFunc初始化");
 
         mCalcCacheRunnable = new Runnable() {
@@ -112,7 +112,7 @@ class CacheFunc {
         return constants;
     }
 
-    void destroy() {
+    public void destroy() {
 
     }
 

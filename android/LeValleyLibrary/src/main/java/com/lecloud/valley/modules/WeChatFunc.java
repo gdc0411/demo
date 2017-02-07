@@ -94,7 +94,7 @@ import static com.lecloud.valley.utils.LogUtils.TAG;
 /**
  * Created by raojia on 2017/2/8.
  */
-class WeChatFunc implements IWXAPIEventHandler {
+class WeChatFunc implements ReactBaseFunc, IWXAPIEventHandler {
 
     private final ReactApplicationContext mReactContext;
     private final RCTNativeAppEventEmitter mEventEmitter;
@@ -108,14 +108,14 @@ class WeChatFunc implements IWXAPIEventHandler {
     private static final int TIMELINE_SUPPORTED_VERSION = 0x21020001;
 
 
-    public WeChatFunc(ReactApplicationContext reactContext, RCTNativeAppEventEmitter eventEmitter) {
+    WeChatFunc(ReactApplicationContext reactContext, RCTNativeAppEventEmitter eventEmitter) {
         mReactContext = reactContext;
         mEventEmitter = eventEmitter;
 
         initialize();
     }
 
-    private void initialize() {
+    public void initialize() {
 
         if (appId == null) {
             ApplicationInfo appInfo;

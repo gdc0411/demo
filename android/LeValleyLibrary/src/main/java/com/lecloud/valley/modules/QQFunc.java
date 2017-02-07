@@ -77,7 +77,7 @@ import static com.lecloud.valley.utils.LogUtils.TAG;
  * Created by RaoJia on 2016/12/24.
  */
 
-class QQFunc implements IUiListener, ActivityEventListener {
+class QQFunc implements ReactBaseFunc, IUiListener, ActivityEventListener {
 
     private final ReactApplicationContext mReactContext;
     private final RCTNativeAppEventEmitter mEventEmitter;
@@ -96,7 +96,7 @@ class QQFunc implements IUiListener, ActivityEventListener {
         initialize();
     }
 
-    private void initialize() {
+    public void initialize() {
 
         ApplicationInfo appInfo;
         try {
@@ -120,14 +120,14 @@ class QQFunc implements IUiListener, ActivityEventListener {
         }
     }
 
-    void destroy() {
+    public void destroy() {
         if (api != null) {
             api = null;
         }
         mReactContext.removeActivityEventListener(this);
     }
 
-    Map<String, Object> getConstants() {
+    public Map<String, Object> getConstants() {
         final Map<String, Object> constants = new HashMap<>();
         constants.put("SHARE_TYPE_NEWS", SHARE_TYPE_NEWS);
         constants.put("SHARE_TYPE_IMAGE", SHARE_TYPE_IMAGE);

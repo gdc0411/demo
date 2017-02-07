@@ -15,6 +15,7 @@ import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
+import com.facebook.react.modules.core.RCTNativeAppEventEmitter;
 import com.lecloud.valley.common.Events;
 import com.lecloud.valley.utils.LogUtils;
 import com.lecloud.valley.utils.OrientationSensorUtils;
@@ -33,24 +34,24 @@ import static com.lecloud.valley.utils.LogUtils.TAG;
  * Created by LizaRao on 2016/12/11.
  */
 
-class OrientationFunc implements LifecycleEventListener {
+class OrientationFunc implements ReactBaseFunc, LifecycleEventListener {
 
     private final ReactApplicationContext mReactContext;
-    private final DeviceEventManagerModule.RCTDeviceEventEmitter mEventEmitter;
+    private final RCTNativeAppEventEmitter mEventEmitter;
 
     private Handler mOrientationChangeHandler;
 
     private OrientationSensorUtils mOrientationSensorUtils;
     private int mCurrentOritentation;
 
-    OrientationFunc(ReactApplicationContext reactContext, DeviceEventManagerModule.RCTDeviceEventEmitter eventEmitter) {
+    OrientationFunc(ReactApplicationContext reactContext, RCTNativeAppEventEmitter eventEmitter) {
         mReactContext = reactContext;
         mEventEmitter = eventEmitter;
 
         initialize();
     }
 
-    private void initialize() {
+    public void initialize() {
         Log.d(TAG, LogUtils.getTraceInfo() + "OrientationFunc初始化");
 
         mReactContext.addLifecycleEventListener(this);
@@ -91,13 +92,13 @@ class OrientationFunc implements LifecycleEventListener {
         };
     }
 
-    void destroy() {
+    public void destroy() {
         if (mOrientationSensorUtils != null) {
             mOrientationChangeHandler.removeCallbacksAndMessages(null);
         }
     }
 
-    Map<String, Object> getConstants() {
+    public Map<String, Object> getConstants() {
         HashMap<String, Object> constants = new HashMap<String, Object>();
         final Activity activity = mReactContext.getCurrentActivity();
         int orientationInt = mReactContext.getResources().getConfiguration().orientation;

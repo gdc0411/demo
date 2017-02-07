@@ -18,15 +18,10 @@ import static com.lecloud.valley.utils.LogUtils.TAG;
  * Created by RaoJia on 2017/1/27.
  */
 
-public class CacheModule extends ReactContextBaseJavaModule {
-
-    private final ReactApplicationContext mReactContext;
-    private RCTNativeAppEventEmitter mEventEmitter;
-    private CacheFunc mCacheFunc;
+public class CacheModule extends ReactBaseModule {
 
     public CacheModule(ReactApplicationContext reactContext) {
         super(reactContext);
-        mReactContext = reactContext;
     }
 
     @Override
@@ -38,35 +33,20 @@ public class CacheModule extends ReactContextBaseJavaModule {
     @Override
     public void initialize() {
         super.initialize();
-        Log.d(TAG, LogUtils.getTraceInfo() + "Cache模块初始化");
+        Log.d(TAG, LogUtils.getTraceInfo() + "Func模块初始化");
         mEventEmitter = mReactContext.getJSModule(RCTNativeAppEventEmitter.class);
-        if (mCacheFunc == null) {
-            mCacheFunc = new CacheFunc(mReactContext, mEventEmitter);
+        if (func == null) {
+            func = new CacheFunc(mReactContext, mEventEmitter);
         }
     }
 
-    @Override
-    public Map<String, Object> getConstants() {
-        return mCacheFunc.getConstants();
-    }
-
-    @Override
-    public void onCatalystInstanceDestroy() {
-        if (mCacheFunc != null) {
-            mCacheFunc.destroy();
-            mCacheFunc = null;
-        }
-
-        mEventEmitter = null;
-        super.onCatalystInstanceDestroy();
-    }
 
     /**
      * 计算缓存
      */
     @ReactMethod
     public void calc() {
-        mCacheFunc.calc();
+        ((CacheFunc) func).calc();
     }
 
     /**
@@ -74,7 +54,7 @@ public class CacheModule extends ReactContextBaseJavaModule {
      */
     @ReactMethod
     public void clear() {
-        mCacheFunc.clear();
+        ((CacheFunc) func).clear();
     }
 
 }
