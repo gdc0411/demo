@@ -136,7 +136,7 @@
         <!--android:exported="false" />-->
 
         <activity
-            android:name=".modules.WeiboModule$SinaEntryActivity"
+            android:name=".modules.WeiboFunc$SinaEntryActivity"
             android:configChanges="keyboardHidden|orientation"
             android:screenOrientation="portrait">
             <intent-filter>
