@@ -815,7 +815,7 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
         NSMutableArray *ratesList = [NSMutableArray arrayWithCapacity: [_ratesList count]];
         for(LECStreamRateItem *element in _ratesList){
             if((NSNull *)element != [NSNull null] && element.isEnabled){
-                [ratesList addObject: @{@"rateKey": element.code?element.code?:[NSNull null],
+                [ratesList addObject: @{@"rateKey": element.code?element.code:[NSNull null],
                                         @"rateValue": element.name?element.name:[NSNull null] }];
             }
         }

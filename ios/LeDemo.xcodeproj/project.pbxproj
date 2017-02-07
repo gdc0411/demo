@@ -33,13 +33,11 @@
 		2D2FC8651E48A4B6004D0462 /* LECPlayerUIResource.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 2D2FC85E1E48A4B6004D0462 /* LECPlayerUIResource.bundle */; };
 		2D2FC8661E48A4B6004D0462 /* LCStreamingBundle.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 2D2FC85F1E48A4B6004D0462 /* LCStreamingBundle.bundle */; };
 		2D2FC8A91E48A5AB004D0462 /* libUMessage_Sdk_1.4.0.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D2FC89A1E48A5AB004D0462 /* libUMessage_Sdk_1.4.0.a */; };
-		2D2FC8AC1E48A5AB004D0462 /* libLeCloudStreaming.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D2FC89D1E48A5AB004D0462 /* libLeCloudStreaming.a */; };
 		2D2FC8AE1E48A5AB004D0462 /* libReachbility.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D2FC89F1E48A5AB004D0462 /* libReachbility.a */; };
 		2D2FC8AF1E48A5AB004D0462 /* libZipArchive.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D2FC8A01E48A5AB004D0462 /* libZipArchive.a */; };
 		2D2FC8B01E48A5AB004D0462 /* libWeChatSDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D2FC8A11E48A5AB004D0462 /* libWeChatSDK.a */; };
 		2D2FC8B11E48A5AB004D0462 /* libWeiboSDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D2FC8A21E48A5AB004D0462 /* libWeiboSDK.a */; };
 		2D2FC8B21E48A5AB004D0462 /* libLECPlayerUIKit.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D2FC8A31E48A5AB004D0462 /* libLECPlayerUIKit.a */; };
-		2D2FC8B31E48A5AB004D0462 /* libLECPlayerFoundation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D2FC8A41E48A5AB004D0462 /* libLECPlayerFoundation.a */; };
 		2D2FC8B41E48A5AB004D0462 /* libLECLivePlayerUISDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D2FC8A51E48A5AB004D0462 /* libLECLivePlayerUISDK.a */; };
 		2D2FC8B51E48A5AB004D0462 /* libLECLivePlayerSDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D2FC8A61E48A5AB004D0462 /* libLECLivePlayerSDK.a */; };
 		2D2FC8B61E48A5AB004D0462 /* libLECVodPlayerSDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D2FC8A71E48A5AB004D0462 /* libLECVodPlayerSDK.a */; };
@@ -48,6 +46,8 @@
 		2D2FC8BB1E48A640004D0462 /* libiconv.2.4.0.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D2FC8BA1E48A640004D0462 /* libiconv.2.4.0.tbd */; };
 		2D2FC8BD1E48A82F004D0462 /* libAFNetworking.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D2FC8BC1E48A82F004D0462 /* libAFNetworking.a */; };
 		2D2FC8E61E48AC30004D0462 /* libCodePush.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D1C9A441DC1EAB60020E496 /* libCodePush.a */; };
+		2D502D491E498B7800073C55 /* libLeCloudStreaming.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D2FC89D1E48A5AB004D0462 /* libLeCloudStreaming.a */; };
+		2D502D4A1E498B8400073C55 /* libLECPlayerFoundation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D2FC8A41E48A5AB004D0462 /* libLECPlayerFoundation.a */; };
 		2D8D220A1E0328F2004EC569 /* libLECValleyUIKit.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D8D21F61E0328B6004EC569 /* libLECValleyUIKit.a */; };
 		2DA206F71DE8B89B0004CE1D /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2DA206F51DE8B89B0004CE1D /* AdSupport.framework */; };
 		2DA206F81DE8B89B0004CE1D /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2DA206F61DE8B89B0004CE1D /* MediaPlayer.framework */; };
@@ -371,6 +371,7 @@
 				2DA206F71DE8B89B0004CE1D /* AdSupport.framework in Frameworks */,
 				2D2FC8B91E48A616004D0462 /* AVFoundation.framework in Frameworks */,
 				2DA207021DE8B9950004CE1D /* CoreData.framework in Frameworks */,
+				2D502D491E498B7800073C55 /* libLeCloudStreaming.a in Frameworks */,
 				2DFDF5B91E0FF1BB00B58523 /* CoreGraphics.framework in Frameworks */,
 				2DA207031DE8B9950004CE1D /* CoreLocation.framework in Frameworks */,
 				2DA207051DE8B9950004CE1D /* CoreTelephony.framework in Frameworks */,
@@ -385,7 +386,6 @@
 				2D2FC8B51E48A5AB004D0462 /* libLECLivePlayerSDK.a in Frameworks */,
 				2D2FC8B01E48A5AB004D0462 /* libWeChatSDK.a in Frameworks */,
 				2D2FC8AE1E48A5AB004D0462 /* libReachbility.a in Frameworks */,
-				2D2FC8AC1E48A5AB004D0462 /* libLeCloudStreaming.a in Frameworks */,
 				2D2FC8B11E48A5AB004D0462 /* libWeiboSDK.a in Frameworks */,
 				2D2FC8B41E48A5AB004D0462 /* libLECLivePlayerUISDK.a in Frameworks */,
 				2D2FC8B21E48A5AB004D0462 /* libLECPlayerUIKit.a in Frameworks */,
@@ -393,7 +393,6 @@
 				2D2FC8A91E48A5AB004D0462 /* libUMessage_Sdk_1.4.0.a in Frameworks */,
 				2D2FC8AF1E48A5AB004D0462 /* libZipArchive.a in Frameworks */,
 				2D2FC8B61E48A5AB004D0462 /* libLECVodPlayerSDK.a in Frameworks */,
-				2D2FC8B31E48A5AB004D0462 /* libLECPlayerFoundation.a in Frameworks */,
 				146834051AC3E58100842450 /* libReact.a in Frameworks */,
 				2D19AC981DF3DCF100D21BDC /* libRCTAnimation.a in Frameworks */,
 				00C302E51ABCBA2D00DB3ED1 /* libRCTActionSheet.a in Frameworks */,
@@ -405,6 +404,7 @@
 				832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */,
 				00C302EA1ABCBA2D00DB3ED1 /* libRCTVibration.a in Frameworks */,
 				139FDEF61B0652A700C62182 /* libRCTWebSocket.a in Frameworks */,
+				2D502D4A1E498B8400073C55 /* libLECPlayerFoundation.a in Frameworks */,
 				2D8D220A1E0328F2004EC569 /* libLECValleyUIKit.a in Frameworks */,
 				2D2FC8E61E48AC30004D0462 /* libCodePush.a in Frameworks */,
 			);
@@ -1156,6 +1156,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/framework/**",
+					"$(PROJECT_DIR)/framework",
 				);
 				GCC_PREFIX_HEADER = "";
 				HEADER_SEARCH_PATHS = (
@@ -1195,6 +1196,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/framework/**",
+					"$(PROJECT_DIR)/framework",
 				);
 				GCC_PREFIX_HEADER = "";
 				HEADER_SEARCH_PATHS = (
