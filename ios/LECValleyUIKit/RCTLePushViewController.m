@@ -22,11 +22,16 @@
     [super viewWillDisappear:animated];
 }
 
-- (void)viewWillLayoutSubviews
-{
-//    [_viewControllerDelegate pushViewShouldRotateToOrientation:self];
-    [super viewWillLayoutSubviews];
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
 }
+
+//- (void)viewWillLayoutSubviews
+//{
+//    [_viewControllerDelegate pushViewShouldRotateToOrientation:self];
+//    [super viewWillLayoutSubviews];
+//}
 
 
 @end

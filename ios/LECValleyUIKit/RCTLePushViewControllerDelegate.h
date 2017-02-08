@@ -14,6 +14,6 @@
 
 - (void)pushViewControllerDidDismiss:(UIViewController *)viewViewController;
 
-- (void)pushViewShouldRotateToOrientation:(UIViewController *)viewViewController;
+//- (void)pushViewShouldRotateToOrientation:(UIViewController *)viewViewController;
 
 @end

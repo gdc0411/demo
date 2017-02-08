@@ -71,7 +71,7 @@
     BOOL _fullscreenPresented; //是否全屏
 }
 
-#pragma mark 初始化
+#pragma mark 初始化和销毁
 /*实例化桥*/
 - (instancetype)initWithBridge:(RCTBridge *)bridge
 {
@@ -101,7 +101,7 @@
 }
 
 
-#pragma mark 销毁
+/*销毁*/
 - (void)dealloc
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
@@ -112,7 +112,7 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
 
 #pragma mark 创建viewController
 - (RCTLePushViewController*)createPushViewController:(LCStreamingManager*) manager {
-    //    self.frame                       = LCRect_PlayerFullFrame;
+    
     RCTLePushViewController* pushController= [[RCTLePushViewController alloc] init];
     pushController.viewControllerDelegate  = self; //实现协议
     pushController.view                    = manager.videoView;
@@ -154,13 +154,15 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
         UIView *subview = [self viewWithTag:PushViewTag];
         subview?[subview removeFromSuperview]:nil;
         
+        [_manager stopStreaming];
+        [_manager cleanSession];
         _manager.delegate = nil;
         
-        if(_pushType == PUSH_TYPE_MOBILE_URI){
-            [_manager cleanSession];
-        }
         
-        _pushViewController?_pushViewController = nil:nil;
+        if(_pushViewController){
+            _pushViewController.viewControllerDelegate = nil;
+            _pushViewController = nil;
+        }
     }
 }
 
@@ -223,56 +225,56 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
 - (void)pushItemForTarget:(NSDictionary *)bundle
 {
     _pushPara = bundle;
-
+    
     int playMode = [RCTConvert int:[bundle objectForKey:@"type"]];
     BOOL isLandscape = [RCTConvert BOOL:[bundle objectForKey:@"landscape"]];
     
-    switch (playMode) {
-        case PUSH_TYPE_MOBILE_URI: //移动直播有地址
-            
-            if (!_manager) {
-                _manager = [[LCStreamingManager alloc] init];
-                _manager.delegate = self;
-                //        _manager = [LCStreamingManager sharedManager];
-            }
-            
-            //配置推流正方
-            _manager.pushOrientation = isLandscape? UIInterfaceOrientationLandscapeRight: UIInterfaceOrientationPortrait;
-            
-            CGSize size = UIInterfaceOrientationLandscapeRight == _manager.pushOrientation ?
-            CGSizeMake([UIScreen mainScreen].bounds.size.height,[UIScreen mainScreen].bounds.size.width) :
-            CGSizeMake([UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height);
-            
-            //配置推流参数
-            [_manager configVCSessionWithVideoSize:size
-                                         frameRate:24
-                                           bitrate:1000000
-                           useInterfaceOrientation:YES];
-            
-            //配置预览视图的frame
-            [_manager configVideoViewFrame:[UIScreen mainScreen].bounds];
-            [_manager enableManulFocus:YES];
-            
-            [self usePushViewController:_manager]; // 创建controller
-            
-            _playUrl;
-            _pushUrl;
-            break;
-            
-        case PUSH_TYPE_MOBILE: //移动直播无地址
-            _manager = [LCStreamingManager sharedManager];
-            
-            _playUrl;
-            _pushUrl;
-            break;
-            
-        case PUSH_TYPE_LECLOUD: //云直播
-            
-            break;
-            
-        default:
-            break;
+    if (!_manager) {
+        _manager = [[LCStreamingManager alloc] init];
+        _manager.delegate = self;
+        //        _manager = [LCStreamingManager sharedManager];
     }
+    
+    //配置推流正方
+    _manager.pushOrientation = isLandscape? UIInterfaceOrientationLandscapeRight: UIInterfaceOrientationPortrait;
+    
+    self.frame = LCRect_PlayerFullFrame; //全屏预览
+    
+    CGSize size = UIInterfaceOrientationLandscapeRight == _manager.pushOrientation ?
+    CGSizeMake(self.bounds.size.height,self.bounds.size.width) :
+    CGSizeMake(self.bounds.size.width, self.bounds.size.height);
+    
+    //配置推流参数
+    [_manager configVCSessionWithVideoSize:size
+                                 frameRate:24
+                                   bitrate:1000000
+                   useInterfaceOrientation:YES];
+    
+    //配置预览视图的frame
+    [_manager configVideoViewFrame:self.bounds]; //默认占满整个屏幕
+    [_manager enableManulFocus:YES]; //允许手动对焦
+    
+    [self usePushViewController:_manager]; // 创建controller
+    
+    
+    if(playMode == PUSH_TYPE_MOBILE_URI){ //移动直播有地址
+        
+        _playUrl  = [bundle objectForKey:@"url"];
+        _pushUrl  = _playUrl?[_playUrl stringByReplacingOccurrencesOfString:@"push" withString:@"pull"]:nil;
+        
+    }else if(playMode == PUSH_TYPE_MOBILE){ //移动直播无地址
+        
+        //        NSString *pullDomain = [self.textDomainName.text stringByReplacingOccurrencesOfString:@"push" withString:@"pull"];
+        //        self.labelGeneratedUrl.text = [self rtmpAddressWithDomain:[pullDomain stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] streamName:[self.textStreamName.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] appKey:[NSString stringWithFormat:@"%@lecloud", [self.textAppKey.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]]]];
+        
+    }else if(playMode == PUSH_TYPE_LECLOUD){ //云直播
+        
+    }
+    
+    //数据源回显
+    _onPushTargetLoad? _onPushTargetLoad(@{@"para": [[self class] returnJSONStringWithDictionary:bundle useSystem:YES],
+                                           @"playUrl": _playUrl,
+                                           @"pushUrl": _pushUrl,}):nil;
     
 }
 
@@ -326,23 +328,23 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
     switch (sessionState) {
         case LCStreamingSessionStateStarted:
             [_manager setGain:1.3];
-//            [self.btnPush setTitle:@"STOP" forState:UIControlStateNormal];
+            //            [self.btnPush setTitle:@"STOP" forState:UIControlStateNormal];
             break;
         case LCStreamingSessionStateStarting:
-//            [self.btnPush setTitle:@"STARTING" forState:UIControlStateNormal];
+            //            [self.btnPush setTitle:@"STARTING" forState:UIControlStateNormal];
             break;
         case LCStreamingSessionStatePreviewStarted:
         case LCStreamingSessionStateNone:
-//            [self.btnPush setTitle:@"PUSH" forState:UIControlStateNormal];
+            //            [self.btnPush setTitle:@"PUSH" forState:UIControlStateNormal];
             break;
         case LCStreamingSessionStateEnded:
-//            [self.btnPush setTitle:@"PUSH" forState:UIControlStateNormal];
+            //            [self.btnPush setTitle:@"PUSH" forState:UIControlStateNormal];
             break;
         default:
-//            [self.btnPush setTitle:@"ERROR" forState:UIControlStateNormal];
+            //            [self.btnPush setTitle:@"ERROR" forState:UIControlStateNormal];
             break;
     }
-//    [self.btnPush.titleLabel sizeToFit];
+    //    [self.btnPush.titleLabel sizeToFit];
 }
 
 //推流管理器状态通知，主要用于错误信息的通知
@@ -355,7 +357,7 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
 //视频帧处理回调，参数为原始视频帧，需返回处理后的视频帧
 //- (CVPixelBufferRef)newPixelBufferFromPixelBuffer:(const CVPixelBufferRef)pixelBuffer
 //{
-//    
+//
 //}
 
 #pragma mark - RCTLePushViewControllerDelegate
@@ -381,30 +383,6 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
     }
 }
 
-/*转屏处理逻辑*/
--(void)pushViewShouldRotateToOrientation:(UIViewController *)viewController{
-    
-    UIDeviceOrientation orientation = (UIDeviceOrientation)[UIApplication sharedApplication].statusBarOrientation;
-    if (orientation == UIDeviceOrientationPortrait ||orientation == UIDeviceOrientationPortraitUpsideDown) {
-        // 竖屏
-        _fullscreenPresented = NO;
-        //self.frame = LCRect_PlayerFullFrame;
-        
-    }else {
-        // 横屏
-        CGFloat width = [UIScreen mainScreen].bounds.size.width;
-        CGFloat height = [UIScreen mainScreen].bounds.size.height;
-        
-        if (width < height){
-            CGFloat tmp = width;
-            width = height;
-            height = tmp;
-        }
-        _fullscreenPresented = YES;
-        self.frame = CGRectMake(0, 0, width, height);
-        
-    }
-}
 
 #pragma mark - util methods
 /*
@@ -471,7 +449,7 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
     NSLog(@"layoutSubviews消息");
     
     [super layoutSubviews];
-//    _pushViewController.view.frame = self.bounds;
+    _pushViewController.view.frame = self.bounds;
     
     // also adjust all subviews of contentOverlayView
     //      for (UIView* subview in _playerViewController.contentOverlayView.subviews) {
@@ -497,8 +475,8 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
 
 - (void)applicationWillResignActive:(NSNotification *)notification
 {
-//    if (_paused) return;
-//    [self pause];
+    //    if (_paused) return;
+    //    [self pause];
 }
 
 - (void)applicationDidEnterBackground:(NSNotification *)notification
@@ -508,7 +486,7 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
 - (void)applicationWillEnterForeground:(NSNotification *)notification
 {
     //  [self applyModifiers];
-//    [self resume];
+    //    [self resume];
 }
 
 @end

@@ -211,7 +211,7 @@ class push extends Component {
                     <TouchableOpacity disabled={this.state.cameraDirection === 1 ? true : false} onPress={() => { this.setState({ flash: !this.state.flash }); }}>
                         <Text style={styles.controlOption} >{this.state.cameraDirection === 1 ? '无闪光' : this.state.flashFlag ? '关闪光' : '开闪光'}</Text>
                     </TouchableOpacity>
-                    <View style={styles.controlOption}>
+                    <View style={styles.controlOptionView}>
                         <Picker style={[{ width: 35, height: 10, backgroundColor: 'red', }]}
                             selectedValue={this.state.filter}
                             onValueChange={(filter) => this.setState({ filter: filter })}>
@@ -224,7 +224,7 @@ class push extends Component {
                         <Text style={styles.controlOption} >滤镜</Text>
                     </View>
                     <TouchableOpacity onPress={() => { this.setState({ volume: this.state.volume === 1 ? 0 : 1 }); }}>
-                        <Text style={styles.controlOption} >{this.state.volume?'静音':'开启声音'}</Text>
+                        <Text style={styles.controlOption} >{this.state.volume ? '静音' : '开启声音'}</Text>
                     </TouchableOpacity>
                 </View>
             </View >
@@ -255,6 +255,11 @@ const styles = StyleSheet.create({
         bottom: 50,
         left: 20,
         right: 20,
+    },
+    controlOptionView: {
+        alignSelf: 'center',
+        paddingLeft: 2,
+        paddingRight: 2,
     },
     controlOption: {
         alignSelf: 'center',
