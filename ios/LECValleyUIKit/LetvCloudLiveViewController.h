@@ -6,8 +6,8 @@
 //  Copyright © 2017年 Facebook. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 
-@interface LetvCloudLiveViewController : NSObject
+@interface LetvCloudLiveViewController : UIViewController
 
 @end

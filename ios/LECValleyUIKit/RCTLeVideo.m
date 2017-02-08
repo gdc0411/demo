@@ -8,7 +8,6 @@
 #import "RCTLeVideo.h"
 #import "LECValley.h"
 
-
 #import <React/RCTConvert.h>
 #import <React/UIView+React.h>
 
@@ -29,10 +28,7 @@
 #import <AVFoundation/AVFoundation.h>
 
 
-#define LCRect_PlayerFullFrame    CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height);
-
-
-static const NSInteger *PlayerViewTag = 8888;
+//#define LCRect_PlayerFullFrame    CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height);
 
 @interface RCTLeVideo ()<LECPlayerDelegate, LCActivityManagerDelegate>
 {
@@ -241,7 +237,7 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
     
     [self play];
     
-    NSLog(@"外部控制——— 重播：%@", repeat?@"YES":@"NO");
+    NSLog(@"外部控制——— 重播");
 }
 
 

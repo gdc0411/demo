@@ -7,6 +7,7 @@
 //
 
 #import <React/RCTView.h>
+#import "RCTLePushViewControllerDelegate.h"
 
 @class RCTBridge;
 @class RCTEventDispatcher;
@@ -18,7 +19,7 @@ typedef NS_ENUM (int,LCPushType){
     PUSH_TYPE_NONE = -1
 };
 
-@interface RCTLePush : UIView
+@interface RCTLePush : UIView <RCTLePushViewControllerDelegate>
 
 - (instancetype)initWithBridge:(RCTBridge *)bridge NS_DESIGNATED_INITIALIZER;
 

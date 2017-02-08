@@ -27,4 +27,11 @@
 
 #define PlayerImage(file)                 [UIImage imageNamed:PlayerSrcName(file)] ? :[UIImage imageNamed:PlayerFrameworkSrcName(file)]
 
+
+#define LCRect_PlayerFullFrame            CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height)
+
+#define PlayerViewTag                     8888
+
+#define PushViewTag                       6666
+
 #endif /* LECValley_h */
