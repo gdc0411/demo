@@ -10,6 +10,9 @@
 #define LECValley_h
 
 #define iPhone4s ([UIScreen instancesRespondToSelector:@selector(currentMode)] ? CGSizeEqualToSize(CGSizeMake(640, 960), [[UIScreen mainScreen] currentMode].size) : NO)
+
+#define REACT_JS_EVENT_WAIT               1
+
 // 监听TableView的contentOffset
 #define kPlayerViewContentOffset          @"contentOffset"
 // player的单例

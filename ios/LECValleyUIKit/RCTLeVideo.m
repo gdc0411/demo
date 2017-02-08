@@ -487,7 +487,11 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
 
             
         }else{
-            self.onVideoError?self.onVideoError(@{@"errorCode":@"-1",@"errorMsg":@"播放器注册失败,UU/VU/P不能为空"}):nil;
+            dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+            dispatch_async(queue, ^{
+                sleep(REACT_JS_EVENT_WAIT);
+                self.onVideoError?self.onVideoError(@{@"errorCode":@"-1",@"errorMsg":@"播放器注册失败,UU/VU/P不能为空"}):nil;
+            });
         }
         
     }else if( playMode == LCPlayerActionLive) { //活动直播
@@ -571,7 +575,11 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
         }else{
             
             NSLog(@"直播活动注册失败");
-            self.onVideoError?self.onVideoError(@{@"errorCode":@"-1",@"errorMsg":@"直播活动注册失败,activityId/customId/p不能为空"}):nil;
+            dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+            dispatch_async(queue, ^{
+                sleep(REACT_JS_EVENT_WAIT);
+                self.onVideoError?self.onVideoError(@{@"errorCode":@"-1",@"errorMsg":@"直播活动注册失败,activityId/customId/p不能为空"}):nil;
+            });
         }
         
     }else{ //普通URL
@@ -604,7 +612,12 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
                 }
             }];
         }else{
-            self.onVideoError? self.onVideoError(@{@"errorCode":@"-1",@"errorMsg":@"URL不能为空"}):nil;
+            NSLog(@"直播活动注册失败");
+            dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+            dispatch_async(queue, ^{
+                sleep(REACT_JS_EVENT_WAIT);
+                self.onVideoError? self.onVideoError(@{@"errorCode":@"-1",@"errorMsg":@"URL不能为空"}):nil;
+            });
         }
     }
 }

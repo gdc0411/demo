@@ -96,8 +96,6 @@
                                                      name:UIApplicationWillEnterForegroundNotification
                                                    object:nil];
         
-        self.frame = LCRect_PlayerFullFrame; //全屏预览
-        
     }
     return self;
 }
@@ -143,7 +141,9 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
     
     //根据必要参数创建推流端
     [self pushItemForTarget:bundle];
-        
+    
+
+    
 }
 
 
@@ -272,6 +272,15 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
         
     }
     
+    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+    dispatch_async(queue, ^{
+        sleep(REACT_JS_EVENT_WAIT);
+        self.onPushTargetLoad? self.onPushTargetLoad(@{@"para": [[self class] returnJSONStringWithDictionary:_pushPara useSystem:YES],
+                                                       @"playUrl": _playUrl,
+                                                       @"pushUrl": _pushUrl,}):nil;
+
+    });
+
 }
 
 
@@ -370,6 +379,7 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
 - (void)pushViewControllerDidDismiss:(UIViewController *)viewController
 {
     NSLog(@"previewViewControllerDidDismiss消息");
+    
     
     if (_pushViewController == viewController && _fullscreenPresented){
         _fullscreenPresented = NO;

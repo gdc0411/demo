@@ -229,7 +229,12 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
 //                                               }];
         
     }else{
-        self.onSubVideoError? self.onSubVideoError(@{@"errorCode":@"-1",@"errorMsg":@"播放器注册失败,请检查URL"}):nil;
+        NSLog(@"直播活动注册失败");
+        dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+        dispatch_async(queue, ^{
+            sleep(REACT_JS_EVENT_WAIT);
+            self.onSubVideoError? self.onSubVideoError(@{@"errorCode":@"-1",@"errorMsg":@"播放器注册失败,请检查StreamURL"}):nil;
+        });
     }
     
 }
