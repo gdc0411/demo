@@ -7,6 +7,7 @@
 //
 
 #import "RCTLeSubVideo.h"
+#import "LECValley.h"
 
 #import <React/RCTConvert.h>
 #import <React/UIView+React.h>
@@ -23,9 +24,7 @@
 #import <MediaPlayer/MediaPlayer.h>
 #import <AVFoundation/AVFoundation.h>
 
-#define LCRect_PlayerHalfFrame    CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height);
-
-static const NSInteger *PlayerViewTag = 6666;
+//#define LCRect_PlayerHalfFrame    CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height);
 
 @interface RCTLeSubVideo ()<LECPlayerDelegate, LCActivityManagerDelegate>
 {
@@ -107,7 +106,7 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
     
     playerController.rctDelegate           = self; //实现协议
     playerController.view                  = player.videoView;
-    playerController.view.tag              = PlayerViewTag;
+    playerController.view.tag              = SubPlayerViewTag;
     playerController.view.frame            = self.bounds; //CGRectMake(0, 0, 0, 0);
     //    playerController.view.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleWidth;
     playerController.view.contentMode      = UIViewContentModeScaleAspectFit;
@@ -250,7 +249,7 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
     if (_lePlayer) {
         [self stop];
         
-        UIView *subview = [self viewWithTag:PlayerViewTag];
+        UIView *subview = [self viewWithTag:SubPlayerViewTag];
         subview?[subview removeFromSuperview]:nil;
         
         [_lePlayer unregister];

@@ -13,18 +13,18 @@
 - (void)viewDidDisappear:(BOOL)animated
 {
     [super viewDidDisappear:animated];
-    [_viewControllerDelegate videoPlayerViewControllerDidDismiss:self];
+    [_viewControllerDelegate pushViewControllerDidDismiss:self];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
 {
-    [_viewControllerDelegate videoPlayerViewControllerWillDismiss:self];
+    [_viewControllerDelegate pushViewControllerWillDismiss:self];
     [super viewWillDisappear:animated];
 }
 
 - (void)viewWillLayoutSubviews
 {
-    [_viewControllerDelegate videoPlayerViewShouldRotateToOrientation:self];
+//    [_viewControllerDelegate pushViewShouldRotateToOrientation:self];
     [super viewWillLayoutSubviews];
 }
 

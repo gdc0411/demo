@@ -14,9 +14,9 @@
 
 typedef NS_ENUM (int,LCPushType){
     PUSH_TYPE_MOBILE_URI = 0,
-    PUSH_TYPE_MOBILE = 1,
-    PUSH_TYPE_LECLOUD = 2,
-    PUSH_TYPE_NONE = -1
+    PUSH_TYPE_MOBILE     = 1,
+    PUSH_TYPE_LECLOUD    = 2,
+    PUSH_TYPE_NONE       = -1
 };
 
 @interface RCTLePush : UIView <RCTLePushViewControllerDelegate>

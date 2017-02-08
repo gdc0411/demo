@@ -9,7 +9,11 @@
 #import <Foundation/Foundation.h>
 
 @protocol RCTLePushViewControllerDelegate <NSObject>
-- (void)videoPlayerViewControllerWillDismiss:(UIViewController *)playerViewController;
-- (void)videoPlayerViewControllerDidDismiss:(UIViewController *)playerViewController;
-- (void)videoPlayerViewShouldRotateToOrientation:(UIViewController *)playerViewController;
+
+- (void)pushViewControllerWillDismiss:(UIViewController *)viewViewController;
+
+- (void)pushViewControllerDidDismiss:(UIViewController *)viewViewController;
+
+- (void)pushViewShouldRotateToOrientation:(UIViewController *)viewViewController;
+
 @end

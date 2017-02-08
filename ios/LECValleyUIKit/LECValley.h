@@ -31,6 +31,7 @@
 #define LCRect_PlayerFullFrame            CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height)
 
 #define PlayerViewTag                     8888
+#define SubPlayerViewTag                  8866
 
 #define PushViewTag                       6666
 

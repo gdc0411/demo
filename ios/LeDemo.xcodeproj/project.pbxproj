@@ -47,7 +47,6 @@
 		2D2FC8BD1E48A82F004D0462 /* libAFNetworking.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D2FC8BC1E48A82F004D0462 /* libAFNetworking.a */; };
 		2D2FC8E61E48AC30004D0462 /* libCodePush.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D1C9A441DC1EAB60020E496 /* libCodePush.a */; };
 		2D502D491E498B7800073C55 /* libLeCloudStreaming.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D2FC89D1E48A5AB004D0462 /* libLeCloudStreaming.a */; };
-		2D502D4A1E498B8400073C55 /* libLECPlayerFoundation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D2FC8A41E48A5AB004D0462 /* libLECPlayerFoundation.a */; };
 		2D65C6D41E4B001D0036E29B /* LECLivePlayerSDK in Resources */ = {isa = PBXBuildFile; fileRef = 2D65C6CA1E4B001D0036E29B /* LECLivePlayerSDK */; };
 		2D65C6D51E4B001D0036E29B /* LECLivePlayerUISDK in Resources */ = {isa = PBXBuildFile; fileRef = 2D65C6CB1E4B001D0036E29B /* LECLivePlayerUISDK */; };
 		2D65C6D61E4B001D0036E29B /* LeCloudStreaming in Resources */ = {isa = PBXBuildFile; fileRef = 2D65C6CC1E4B001D0036E29B /* LeCloudStreaming */; };
@@ -58,6 +57,7 @@
 		2D65C6DB1E4B001D0036E29B /* UMessage_Sdk_1.4.0 in Resources */ = {isa = PBXBuildFile; fileRef = 2D65C6D11E4B001D0036E29B /* UMessage_Sdk_1.4.0 */; };
 		2D65C6DC1E4B001D0036E29B /* WechatOpenSDK in Resources */ = {isa = PBXBuildFile; fileRef = 2D65C6D21E4B001D0036E29B /* WechatOpenSDK */; };
 		2D65C6DD1E4B001D0036E29B /* WeiboSDK in Resources */ = {isa = PBXBuildFile; fileRef = 2D65C6D31E4B001D0036E29B /* WeiboSDK */; };
+		2D8CB7031E4B603700C3F578 /* libLECPlayerFoundation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D2FC8A41E48A5AB004D0462 /* libLECPlayerFoundation.a */; };
 		2D8D220A1E0328F2004EC569 /* libLECValleyUIKit.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D8D21F61E0328B6004EC569 /* libLECValleyUIKit.a */; };
 		2DA206F71DE8B89B0004CE1D /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2DA206F51DE8B89B0004CE1D /* AdSupport.framework */; };
 		2DA206F81DE8B89B0004CE1D /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2DA206F61DE8B89B0004CE1D /* MediaPlayer.framework */; };
@@ -340,6 +340,8 @@
 		2D65C6D11E4B001D0036E29B /* UMessage_Sdk_1.4.0 */ = {isa = PBXFileReference; lastKnownFileType = folder; name = UMessage_Sdk_1.4.0; path = inc/UMessage_Sdk_1.4.0; sourceTree = "<group>"; };
 		2D65C6D21E4B001D0036E29B /* WechatOpenSDK */ = {isa = PBXFileReference; lastKnownFileType = folder; name = WechatOpenSDK; path = inc/WechatOpenSDK; sourceTree = "<group>"; };
 		2D65C6D31E4B001D0036E29B /* WeiboSDK */ = {isa = PBXFileReference; lastKnownFileType = folder; name = WeiboSDK; path = inc/WeiboSDK; sourceTree = "<group>"; };
+		2D8CB6E41E4B601A00C3F578 /* libLCLog.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libLCLog.a; path = Libs/libLCLog.a; sourceTree = "<group>"; };
+		2D8CB6E51E4B601A00C3F578 /* librtmp.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = librtmp.a; path = Libs/librtmp.a; sourceTree = "<group>"; };
 		2D8D21CB1E03240E004EC569 /* LECValleyUIKit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = LECValleyUIKit.xcodeproj; path = LECValleyUIKit/LECValleyUIKit.xcodeproj; sourceTree = "<group>"; };
 		2DA206F51DE8B89B0004CE1D /* AdSupport.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AdSupport.framework; path = System/Library/Frameworks/AdSupport.framework; sourceTree = SDKROOT; };
 		2DA206F61DE8B89B0004CE1D /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
@@ -378,6 +380,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2DA207051DE8B9950004CE1D /* CoreTelephony.framework in Frameworks */,
+				2DA207071DE8B9950004CE1D /* SystemConfiguration.framework in Frameworks */,
 				392D188B09B145E0B6613D6D /* libz.tbd in Frameworks */,
 				2D0E62AE1E0B0112005A68AA /* libsqlite3.0.tbd in Frameworks */,
 				2D0E62AC1E0B0101005A68AA /* libc++.tbd in Frameworks */,
@@ -391,17 +395,16 @@
 				2DA206F71DE8B89B0004CE1D /* AdSupport.framework in Frameworks */,
 				2D2FC8B91E48A616004D0462 /* AVFoundation.framework in Frameworks */,
 				2DA207021DE8B9950004CE1D /* CoreData.framework in Frameworks */,
-				2D502D491E498B7800073C55 /* libLeCloudStreaming.a in Frameworks */,
 				2DFDF5B91E0FF1BB00B58523 /* CoreGraphics.framework in Frameworks */,
 				2DA207031DE8B9950004CE1D /* CoreLocation.framework in Frameworks */,
-				2DA207051DE8B9950004CE1D /* CoreTelephony.framework in Frameworks */,
 				2DA207041DE8B9950004CE1D /* CoreMedia.framework in Frameworks */,
 				2DA207061DE8B9950004CE1D /* JavaScriptCore.framework in Frameworks */,
 				2DA206F81DE8B89B0004CE1D /* MediaPlayer.framework in Frameworks */,
 				2DFDF5B71E0FF13100B58523 /* Security.framework in Frameworks */,
-				2DA207071DE8B9950004CE1D /* SystemConfiguration.framework in Frameworks */,
 				2DFDF5C21E0FF96E00B58523 /* TencentOpenAPI.framework in Frameworks */,
 				2DA207081DE8B9950004CE1D /* VideoToolbox.framework in Frameworks */,
+				2D8CB7031E4B603700C3F578 /* libLECPlayerFoundation.a in Frameworks */,
+				2D502D491E498B7800073C55 /* libLeCloudStreaming.a in Frameworks */,
 				2D2FC8BD1E48A82F004D0462 /* libAFNetworking.a in Frameworks */,
 				2D2FC8B51E48A5AB004D0462 /* libLECLivePlayerSDK.a in Frameworks */,
 				2D2FC8B01E48A5AB004D0462 /* libWeChatSDK.a in Frameworks */,
@@ -424,7 +427,6 @@
 				832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */,
 				00C302EA1ABCBA2D00DB3ED1 /* libRCTVibration.a in Frameworks */,
 				139FDEF61B0652A700C62182 /* libRCTWebSocket.a in Frameworks */,
-				2D502D4A1E498B8400073C55 /* libLECPlayerFoundation.a in Frameworks */,
 				2D8D220A1E0328F2004EC569 /* libLECValleyUIKit.a in Frameworks */,
 				2D2FC8E61E48AC30004D0462 /* libCodePush.a in Frameworks */,
 			);
@@ -581,6 +583,8 @@
 		2D8D20941E031A00004EC569 /* Libs */ = {
 			isa = PBXGroup;
 			children = (
+				2D8CB6E41E4B601A00C3F578 /* libLCLog.a */,
+				2D8CB6E51E4B601A00C3F578 /* librtmp.a */,
 				2D2FC8BC1E48A82F004D0462 /* libAFNetworking.a */,
 				2D2FC89A1E48A5AB004D0462 /* libUMessage_Sdk_1.4.0.a */,
 				2D2FC89D1E48A5AB004D0462 /* libLeCloudStreaming.a */,
@@ -1198,7 +1202,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer: Jia Rao (28CSR2E38H)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CURRENT_PROJECT_VERSION = 1;
-				DEAD_CODE_STRIPPING = NO;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = ULW82G2846;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -1239,6 +1243,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer: Jia Rao (28CSR2E38H)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = ULW82G2846;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
