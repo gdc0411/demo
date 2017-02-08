@@ -131,9 +131,6 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
     //重置所有状态
     [self initFieldParaStates];
     
-    [_playerViewController.view removeFromSuperview];
-    _playerViewController = nil;
-    
     //根据必要参数创建播放器
     [self playerItemForSource:source];
     

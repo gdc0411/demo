@@ -96,6 +96,8 @@
                                                      name:UIApplicationWillEnterForegroundNotification
                                                    object:nil];
         
+        self.frame = LCRect_PlayerFullFrame; //全屏预览
+        
     }
     return self;
 }
@@ -130,9 +132,8 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
 #pragma mark - 设置属性
 - (void)setPara:(NSDictionary *)bundle
 {
-    if(bundle == nil) return;
-    
     NSLog(@"外部控制——— 推流参数: %@", bundle);
+    if(bundle == nil) return;
     
     //重置播放器
     [self resetViewAndController];
@@ -142,7 +143,7 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
     
     //根据必要参数创建推流端
     [self pushItemForTarget:bundle];
-    
+        
 }
 
 
@@ -270,11 +271,6 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
     }else if(playMode == PUSH_TYPE_LECLOUD){ //云直播
         
     }
-    
-    //数据源回显
-    _onPushTargetLoad? _onPushTargetLoad(@{@"para": [[self class] returnJSONStringWithDictionary:bundle useSystem:YES],
-                                           @"playUrl": _playUrl,
-                                           @"pushUrl": _pushUrl,}):nil;
     
 }
 
