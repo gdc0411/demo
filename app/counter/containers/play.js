@@ -408,6 +408,9 @@ class play extends Component {
             case '7': //活动直播 自己推流
                 source = { playMode: Video.PLAYER_MODE_ACTION_LIVE, actionId: "A20170124000008m", usehls: false, customerId: "", businessline: "", cuid: "", utoken: "", pano: false };
                 break;
+            case '8': //移动直播 播放
+                source = { playMode: Video.PLAYER_MODE_MOBILE_LIVE, uri: "rtmp://216.mpull.live.lecloud.com/live/camerView", pano: false };
+                break;
             default: //本地地址
                 let download = JSON.parse(key);
                 if (download)

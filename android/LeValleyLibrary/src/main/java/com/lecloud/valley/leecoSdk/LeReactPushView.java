@@ -105,7 +105,6 @@ class LeReactPushView extends CameraSurfaceView implements ISurfaceCreatedListen
 
     private boolean isBack = false;//后台标志,在进入后台之前正在推流设置为true。判断是否在后台回来时继续推流
     private boolean mLandscape;  //是否横屏
-    private boolean mTorch;  //是否开启闪光灯功能
     private boolean mFrontCamera;  //是否采用前置摄像头
     private boolean mTouchfocus; //是否开启触摸对焦
 
@@ -149,7 +148,6 @@ class LeReactPushView extends CameraSurfaceView implements ISurfaceCreatedListen
 
         //开启默认前置摄像头
         if (mFrontCamera) {
-            mTorch = false;
             cameraParams.setCameraId(Camera.CameraInfo.CAMERA_FACING_FRONT);
         } else {
             cameraParams.setCameraId(Camera.CameraInfo.CAMERA_FACING_BACK);
@@ -195,7 +193,6 @@ class LeReactPushView extends CameraSurfaceView implements ISurfaceCreatedListen
         }
         //开启默认前置摄像头
         if(mFrontCamera) {
-            mTorch = false; //如果前置不可开闪光
             cameraParams.setCameraId(Camera.CameraInfo.CAMERA_FACING_FRONT);
         } else {
             cameraParams.setCameraId(Camera.CameraInfo.CAMERA_FACING_BACK);
@@ -236,7 +233,6 @@ class LeReactPushView extends CameraSurfaceView implements ISurfaceCreatedListen
 
         mLandscape = mPushPara.containsKey("landscape") && mPushPara.getBoolean("landscape");
         mFrontCamera = mPushPara.containsKey("frontCamera") && mPushPara.getBoolean("frontCamera");
-        mTorch = mPushPara.containsKey("torch") && mPushPara.getBoolean("torch");
         mTouchfocus = mPushPara.containsKey("focus") && mPushPara.getBoolean("focus");
 
         switch (mPushType) {
@@ -265,7 +261,7 @@ class LeReactPushView extends CameraSurfaceView implements ISurfaceCreatedListen
         event.putString(PROP_PUSH_PARA, bundle.toString());
         event.putString(EVENT_PROP_PUSH_PUSH_URL, mPushUrl);
         event.putString(EVENT_PROP_PUSH_PLAY_URL, mPlayUrl);
-        event.putBoolean("canTorch", mTorch);
+        event.putBoolean("canTorch", !mFrontCamera);
         Log.d(TAG, getTraceInfo() + "播放地址：" + mPlayUrl);
 
         mEventEmitter.receiveEvent(getId(), Events.EVENT_PUSH_LOAD_TARGET.toString(), event);
@@ -473,14 +469,12 @@ class LeReactPushView extends CameraSurfaceView implements ISurfaceCreatedListen
         int cameraID;
         if (cameraParams.getCameraId() == Camera.CameraInfo.CAMERA_FACING_FRONT) {
             mFrontCamera = false;
-            mTorch = true;
             cameraID = Camera.CameraInfo.CAMERA_FACING_BACK;
         } else {
             mFrontCamera = true;
             cameraID = Camera.CameraInfo.CAMERA_FACING_FRONT;
             if (mFlashFlag) {//切换前置摄像头会自动关闭闪光灯
                 mFlashFlag = false;
-                mTorch = false;
 
                 WritableMap flash = Arguments.createMap();
                 flash.putBoolean(EVENT_PROP_PUSH_FLASH_FLAG, mFlashFlag);
@@ -497,7 +491,7 @@ class LeReactPushView extends CameraSurfaceView implements ISurfaceCreatedListen
 
         event.putInt(EVENT_PROP_PUSH_CAMERA_DIRECTION, cameraID);
         event.putBoolean("frontCamera", mFrontCamera);
-        event.putBoolean("canTorch", mTorch);
+        event.putBoolean("canTorch", !mFrontCamera);
         event.putBoolean(EVENT_PROP_PUSH_CAMERA_FLAG, mSwitchFlag);
         event.putInt(EVENT_PROP_ERROR_CODE, 0);
         event.putString(EVENT_PROP_ERROR_MSG, "摄像头切换完毕");
@@ -523,24 +517,25 @@ class LeReactPushView extends CameraSurfaceView implements ISurfaceCreatedListen
                 mLECPublisher.getVideoRecordDevice().setFlashFlag(mFlashFlag);
             }
 
-            if (mFlashFlag)
+            event.putInt(EVENT_PROP_ERROR_CODE, 0);
+            if (mFlashFlag) {
                 event.putString(EVENT_PROP_ERROR_MSG, "闪关灯已打开");
-            else
+            }else {
                 event.putString(EVENT_PROP_ERROR_MSG, "闪光灯已关闭");
+            }
 
         } else {
-//            Toast.makeText(getContext(), "前置摄像头不能打开闪关灯", Toast.LENGTH_LONG).show();
+            event.putInt(EVENT_PROP_ERROR_CODE, -1);
             event.putString(EVENT_PROP_ERROR_MSG, "前置摄像头无法打开闪关灯");
         }
 
         event.putBoolean(EVENT_PROP_PUSH_FLASH_FLAG, mFlashFlag);
-        event.putInt(EVENT_PROP_ERROR_CODE, 0);
         mEventEmitter.receiveEvent(getId(), Events.EVENT_PUSH_FLASH_UPDATE.toString(), event);
     }
 
     /**
      * 切换滤镜,设置为0为关闭滤镜
-     * <p>
+     *
      * FILTER_VIDEO_NONE = 0;
      * FILTER_VIDEO_DEFAULT = 1;
      * FILTER_VIDEO_WARM = 2;

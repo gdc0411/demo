@@ -15,6 +15,7 @@
 #import "BrightnessModule.h"
 
 #import "LECVODPlayer.h"
+#import "LECMobilePlayer.h"
 #import "LECActivityPlayer.h"
 #import "LECActivityInfoManager.h"
 #import "LECActivityLiveItem.h"
@@ -582,7 +583,45 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
             });
         }
         
-    }else{ //普通URL
+    }else if( playMode == LCPlayerMobileLive) { //移动直播
+        NSLog(@"RTMP数据源");
+        
+        NSString* url = [source objectForKey:@"uri"];
+        _repeat  = [RCTConvert BOOL:[source objectForKey:@"repeat"]];
+        
+        if (url.length != 0 ) {
+            _playMode           = LCPlayerMobileLive;
+            
+            // 创建播放器
+            _lePlayer           = [[LECMobilePlayer alloc] init];
+            _lePlayer.delegate  = self;
+            
+            [self usePlayerViewController:_lePlayer]; // 创建controller
+            _playerViewController.url = url;
+            
+            __weak typeof(self) wSelf = self;
+            [(LECMobilePlayer *)_lePlayer registerMobilePlayerWithURLString:url completion:^(BOOL result) {
+                //数据源回显
+                wSelf.onVideoSourceLoad?wSelf.onVideoSourceLoad(@{@"src": [[wSelf class] returnJSONStringWithDictionary:source useSystem:YES]}):nil;
+                
+                if (result){
+                    NSLog(@"播放器注册成功");
+                    [wSelf play];//注册完成后自动播放
+                    
+                }else{
+                    wSelf.onVideoError? wSelf.onVideoError(@{@"errorCode":@"-1",@"errorMsg":@"播放器注册失败,请检查URL"}):nil;
+                }
+            }];
+        }else{
+            NSLog(@"播放器注册失败");
+            dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+            dispatch_async(queue, ^{
+                sleep(REACT_JS_EVENT_WAIT);
+                self.onVideoError? self.onVideoError(@{@"errorCode":@"-1",@"errorMsg":@"URL不能为空"}):nil;
+            });
+        }
+        
+    }else { //普通URL
         NSLog(@"URL数据源");
         
         NSString* url = [source objectForKey:@"uri"];
@@ -612,7 +651,7 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
                 }
             }];
         }else{
-            NSLog(@"直播活动注册失败");
+            NSLog(@"播放器注册失败");
             dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
             dispatch_async(queue, ^{
                 sleep(REACT_JS_EVENT_WAIT);
@@ -705,6 +744,10 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
             wSelf.onVideoResume?wSelf.onVideoResume(@{@"beginTime":[NSNumber numberWithLong:_beginTime],
                                                       @"serverTime":[NSNumber numberWithLong:_serverTime],
                                                       @"currentTime":[NSNumber numberWithLong:_currentTime],}):nil;
+        if( _playMode == LCPlayerMobileLive)
+            wSelf.onVideoResume?wSelf.onVideoResume(@{@"duration":[NSNumber numberWithLong:_duration],
+                                                      @"currentTime":[NSNumber numberWithLong:_currentTime],}):nil;
+        
         _paused = NO;
         _isPlaying = YES;
     }];
@@ -724,6 +767,10 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
         else if(_playMode == LCPlayerActionLive)
             wSelf.onVideoResume?wSelf.onVideoResume(@{@"beginTime":[NSNumber numberWithLong:_beginTime],
                                                       @"serverTime":[NSNumber numberWithLong:_serverTime],
+                                                      @"currentTime":[NSNumber numberWithLong:_currentTime],}):nil;
+        
+        else if( _playMode == LCPlayerMobileLive)
+            wSelf.onVideoResume?wSelf.onVideoResume(@{@"duration":[NSNumber numberWithLong:_duration],
                                                       @"currentTime":[NSNumber numberWithLong:_currentTime],}):nil;
         _paused = NO;
         _isPlaying = YES;
@@ -750,6 +797,10 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
         _onVideoResume?_onVideoResume(@{@"beginTime":[NSNumber numberWithLong:_beginTime],
                                         @"serverTime":[NSNumber numberWithLong:_serverTime],
                                         @"currentTime":[NSNumber numberWithLong:_currentTime],}):nil;
+    else if( _playMode == LCPlayerMobileLive)
+        _onVideoResume?_onVideoResume(@{@"duration":[NSNumber numberWithLong:_duration],
+                                        @"currentTime":[NSNumber numberWithLong:_currentTime],}):nil;
+    
     _paused = NO;
     _isPlaying = YES;
 }
@@ -782,6 +833,10 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
         _onVideoPause?_onVideoPause(@{@"beginTime":[NSNumber numberWithLong:_beginTime],
                                       @"serverTime":[NSNumber numberWithLong:_serverTime],
                                       @"currentTime":[NSNumber numberWithLong:_currentTime],}):nil;
+    else if( _playMode == LCPlayerMobileLive)
+        _onVideoPause?_onVideoPause(@{@"duration":[NSNumber numberWithLong:_duration],
+                                      @"currentTime":[NSNumber numberWithLong:_currentTime],}):nil;
+    
     _paused = YES;
     _isPlaying = NO;
 }
@@ -796,6 +851,8 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
         _playMode = LCPlayerVod;
     }else if( [player isMemberOfClass: [LECActivityPlayer class]] ){ //活动模式
         _playMode = LCPlayerActionLive;
+    }else if( [player isMemberOfClass: [LECMobilePlayer class]] ){ //移动直播模式
+        _playMode = LCPlayerMobileLive;
     }
     
     //当前播放模式, 当前屏幕方向
@@ -818,6 +875,8 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
         _ratesList = ((LECVODPlayer*)player).streamRatesList;
     else if(_playMode == LCPlayerActionLive)
         _ratesList = ((LECActivityPlayer*)player).streamRatesList;
+    else if(_playMode == LCPlayerMobileLive)
+        _ratesList = ((LECMobilePlayer*)player).streamRatesList;
     
     
     if(_ratesList && [_ratesList count] > 0 ){
@@ -855,6 +914,14 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
                          ((LECVODPlayer*)player).isPanorama:NO] forKey:@"isPano"]; //是否全景（VOD）
         [event setValue:[NSNumber numberWithBool:[((LECVODPlayer*)player) respondsToSelector:@selector(allowDownload)]?
                          ((LECVODPlayer*)player).allowDownload:NO] forKey:@"isDownload"]; //是否可以下载（VOD）
+        
+    }else if (_playMode == LCPlayerMobileLive) { //移动直播模式下参数
+        [event setValue:[NSNumber numberWithLong:(_duration==0)?player.duration:_duration] forKey:@"duration"]; //视频总长度（Mobile）
+        [event setValue:[NSNumber numberWithLong:_lastPosition] forKey:@"currentTime"]; //当前播放位置（Mobile）
+        [event setValue:[NSNumber numberWithBool:[((LECVODPlayer*)player) respondsToSelector:@selector(isPanorama)]?
+                         ((LECVODPlayer*)player).isPanorama:NO] forKey:@"isPano"]; //是否全景（Mobile）
+        [event setValue:[NSNumber numberWithBool:[((LECVODPlayer*)player) respondsToSelector:@selector(allowDownload)]?
+                         ((LECVODPlayer*)player).allowDownload:NO] forKey:@"isDownload"]; //是否可以下载（Mobile）
         
     } else if(_playMode == LCPlayerActionLive ) { //ACTION模式参数
         
@@ -957,7 +1024,8 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
 {
     _width =  player.actualVideoWidth;
     _height = player.actualVideoHeight;
-    _onVideoSizeChange?_onVideoSizeChange(@{@"width": [NSNumber numberWithInt:_width],@"height": [NSNumber numberWithInt:_height],}):nil;
+    _onVideoSizeChange?_onVideoSizeChange(@{@"width": [NSNumber numberWithInt:_width],
+                                            @"height": [NSNumber numberWithInt:_height],}):nil;
     
 }
 
@@ -977,7 +1045,8 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
     NSString * error = [NSString stringWithFormat:@"%@:%@",player.errorCode,player.errorDescription];
     NSLog(@"播放器错误:%@",error);
     //[_playerViewController showTips:error]; //弹出提示
-    _onVideoError?_onVideoError(@{@"errorCode": player.errorCode,@"errorMsg": player.errorDescription}):nil;
+    _onVideoError?_onVideoError(@{@"errorCode": player.errorCode?player.errorCode:[NSNull null],
+                                  @"errorMsg": player.errorDescription? player.errorDescription:[NSNull null]}):nil;
     
 }
 
@@ -1027,6 +1096,17 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
     //  _volume = [VolumeModule getVolumeLevel] * 100;
     
     if(_playMode == LCPlayerVod){
+        _currentTime = _lastPosition = position;
+        _duration = duration;
+        _cacheDuration = cacheDuration;
+        
+        _onVideoProgress?_onVideoProgress(@{@"currentTime": [NSNumber numberWithLong:_currentTime],
+                                            @"duration": [NSNumber numberWithLong:_duration],
+                                            @"playableDuration": [NSNumber numberWithLong:_cacheDuration],}):nil;
+        _onVideoBufferPercent?
+        _onVideoBufferPercent(@{@"bufferpercent": [NSNumber numberWithInt:(int) ((((float)position + (float)cacheDuration)/(float)duration) * 100) ]}):nil;
+        
+    }else if(_playMode == LCPlayerMobileLive){
         _currentTime = _lastPosition = position;
         _duration = duration;
         _cacheDuration = cacheDuration;

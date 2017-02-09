@@ -57,8 +57,10 @@
     BOOL _pushFlag; //推流是否关闭
     
     int _pushType; //当前推流类型
-    int _currentOritentation; //当前屏幕方向
+    BOOL _isLandscape; //当前屏幕方向是否横向
     BOOL _isFrontCamera; //摄像头是否为前置
+    
+    BOOL _isTorch; //闪光灯设置状态
     
     NSDictionary *_pushPara; //推流参数
     NSString *_pushUrl; //推流地址
@@ -82,8 +84,6 @@
     NSLog(@"初始化桥……");
     if ((self = [super init])) {
         _bridge = bridge;
-        
-        _currentOritentation = 1;
         
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(applicationWillResignActive:)
@@ -152,9 +152,8 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
         sleep(REACT_JS_EVENT_WAIT);
         self.onPushTargetLoad? self.onPushTargetLoad(@{@"para": [[self class] returnJSONStringWithDictionary:_pushPara useSystem:YES],
                                                        @"playUrl": _playUrl?_playUrl:[NSNull null],
-                                                       @"pushUrl": _pushUrl?_pushUrl:[NSNull null],}):nil;
-        
-    });
+                                                       @"pushUrl": _pushUrl?_pushUrl:[NSNull null],
+                                                       @"canTorch": [NSNumber numberWithBool:!_isFrontCamera],}):nil;});
 }
 
 
@@ -240,11 +239,11 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
 {
     _pushPara = bundle;
     
-    int playMode = [RCTConvert int:[bundle objectForKey:@"type"]];
-    BOOL isLandscape = [RCTConvert BOOL:[bundle objectForKey:@"landscape"]];
-    _isFrontCamera = [RCTConvert BOOL:[bundle objectForKey:@"frontCamera"]];
-    BOOL isTorch = [RCTConvert BOOL:[bundle objectForKey:@"torch"]];
-    BOOL isFocus = [RCTConvert BOOL:[bundle objectForKey:@"focus"]];
+    _pushType        = [RCTConvert int:[bundle objectForKey:@"type"]];
+    _isLandscape     = [RCTConvert BOOL:[bundle objectForKey:@"landscape"]];
+    _isFrontCamera   = [RCTConvert BOOL:[bundle objectForKey:@"frontCamera"]];
+    _isTorch         = [RCTConvert BOOL:[bundle objectForKey:@"torch"]];
+    BOOL isFocus     = [RCTConvert BOOL:[bundle objectForKey:@"focus"]];
     
     if (!_manager) {
         _manager = [[LCStreamingManager alloc] init];
@@ -253,10 +252,9 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
     }
     
     //配置推流正方
-    _manager.pushOrientation = isLandscape? UIInterfaceOrientationLandscapeRight: UIInterfaceOrientationPortrait;
+    _manager.pushOrientation = _isLandscape? UIInterfaceOrientationLandscapeRight: UIInterfaceOrientationPortrait;
     
     self.frame = LCRect_PlayerFullFrame; //全屏预览
-    
     CGSize size = UIInterfaceOrientationLandscapeRight == _manager.pushOrientation ?
     CGSizeMake(self.bounds.size.height,self.bounds.size.width) :
     CGSizeMake(self.bounds.size.width, self.bounds.size.height);
@@ -269,7 +267,6 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
     
     //配置预览视图的frame
     [_manager configVideoViewFrame:self.bounds]; //默认占满整个屏幕
-    [_manager setTorchOpenState:isTorch]; //设置闪光灯是否启用
     [_manager enableManulFocus:isFocus]; //设置是否对焦
     
     _camerOrientation = _isFrontCamera? LCCamareOrientationStateFront : LCCamareOrientationStateBack;
@@ -278,18 +275,27 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
     
     [self usePushViewController:_manager]; // 创建controller
     
-    if(playMode == PUSH_TYPE_MOBILE_URI){ //移动直播有地址
+    if(_pushType == PUSH_TYPE_MOBILE_URI){ //移动直播有地址
         
         _pushUrl  = [bundle objectForKey:@"url"];
         _playUrl  = _pushUrl?[_pushUrl stringByReplacingOccurrencesOfString:@"push" withString:@"pull"]:nil;
         
-    }else if(playMode == PUSH_TYPE_MOBILE){ //移动直播无地址
+    }else if(_pushType == PUSH_TYPE_MOBILE){ //移动直播无地址
         
-        //        NSString *pullDomain = [self.textDomainName.text stringByReplacingOccurrencesOfString:@"push" withString:@"pull"];
-        //        self.labelGeneratedUrl.text = [self rtmpAddressWithDomain:[pullDomain stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] streamName:[self.textStreamName.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] appKey:[NSString stringWithFormat:@"%@lecloud", [self.textAppKey.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]]]];
+        NSString *streamName = [bundle objectForKey:@"streamName"];
+        NSString *domainName = [bundle objectForKey:@"domainName"];
+        NSString *appkey     = [bundle objectForKey:@"appkey"];
         
-    }else if(playMode == PUSH_TYPE_LECLOUD){ //云直播
+        _pushUrl =  [self rtmpAddressWithDomain:[domainName stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]]
+                                     streamName:[streamName stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]]
+                                         appKey:[NSString stringWithFormat:@"%@lecloud", [appkey stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]]]];
         
+        _playUrl  = _pushUrl?[_pushUrl stringByReplacingOccurrencesOfString:@"push" withString:@"pull"]:nil;
+        
+    }else if(_pushType == PUSH_TYPE_LECLOUD){ //云直播
+//        NSString *activityId    = [bundle objectForKey:@"activityId"];
+//        NSString *userId        = [bundle objectForKey:@"userId"];
+//        NSString *secretKey     = [bundle objectForKey:@"secretKey"];
     }
     
     _initedValid = YES;
@@ -321,11 +327,70 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
 
             __weak typeof(self) wSelf = self;
             [self notifyEventWithState:PUSH_STATE_CONNECTING code:0 msg:@"正在连接……" complete:^(){
+                
                 _pushTime = 0;
+                
                 if (_pushType == PUSH_TYPE_MOBILE_URI || _pushType == PUSH_TYPE_MOBILE) { //移动直播
+                    
                     [wSelf.manager startStreamingWithRtmpAdress:_pushUrl];
+                    
                 } else if (_pushType == PUSH_TYPE_LECLOUD) { //乐视云直播
                     
+                    NSString *activityId    = [_pushPara objectForKey:@"activityId"];
+                    NSString *userId        = [_pushPara objectForKey:@"userId"];
+                    NSString *secretKey     = [_pushPara objectForKey:@"secretKey"];
+                    
+                    __weak typeof(self) wSelf2 = wSelf;
+                    [wSelf.manager requestVidiconInfoWithID:activityId
+                                                userId:userId
+                                             secretKey:secretKey
+                                             completed:^(BOOL isSuccess, NSArray *items, NSString *errorCode, NSString *errorMsg) {
+                                                 if (isSuccess) {
+                                                     int i = 0;
+                                                     for (; i < items.count; i ++) {
+                                                         LCVidiconItem *vidiconItem = items[i];
+                                                         if (vidiconItem.enable) {
+                                                             [wSelf2.manager startStreamingWithLCVidiconItem:vidiconItem];
+                                                             NSLog(@"success");
+                                                             [wSelf2 notifyEventWithState:PUSH_STATE_OPENED code:0 msg:@"推流已打开" complete:^(){
+                                                                 if (!_pushTimeFlag && _timer == nil) {
+                                                                     _timer = [NSTimer scheduledTimerWithTimeInterval:1.0
+                                                                                                               target:self
+                                                                                                             selector:@selector(scrollTimer)
+                                                                                                             userInfo:nil
+                                                                                                              repeats:YES];
+                                                                 }
+                                                                 _pushTimeFlag = YES;
+                                                             }];
+                                                             break;
+                                                         }
+                                                     }
+                                                     if (i == items.count) {
+                                                         NSLog(@"无可用机位");
+                                                         [self notifyEventWithState:PUSH_STATE_CLOSED code:-1
+                                                                                msg:[NSString stringWithFormat:@"无可用机位:%d，%@",errorCode,errorMsg]
+                                                                           complete:^(){
+                                                                               if( _timer ){
+                                                                                   [_timer invalidate];
+                                                                                   _timer = nil;
+                                                                               }
+                                                                               _pushTimeFlag = NO;
+                                                                           }];
+                                                     }
+                                                 } else {
+                                                     NSLog(@"error");
+                                                     NSLog(@"出错了！%@", errorCode);
+                                                     [self notifyEventWithState:PUSH_STATE_CLOSED code:-1
+                                                                            msg:[NSString stringWithFormat:@"出错:%d，%@",errorCode,errorMsg]
+                                                                       complete:^(){
+                                                         if( _timer ){
+                                                             [_timer invalidate];
+                                                             _timer = nil;
+                                                         }
+                                                         _pushTimeFlag = NO;
+                                                     }];
+                                                 }
+                                             }];
                 }    
             }];
             
@@ -360,8 +425,7 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
     
     self.onPushStateUpdate? self.onPushStateUpdate(@{@"state": [NSNumber numberWithInt:pushState],
                                                      @"errorCode": [NSNumber numberWithInt:errCode],
-                                                     @"errorMsg": errMsg? errMsg: [NSNull null],
-                                                     }):nil;
+                                                     @"errorMsg": errMsg? errMsg: [NSNull null],}):nil;
     
     //    sleep(5);
     handler? handler():nil;
@@ -388,6 +452,7 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
             if(_flashFlag){//切换前置摄像头会关闭闪光灯
                 _flashFlag = NO;
                 
+                
                 self.onPushFlashUpdate? self.onPushFlashUpdate(@{}):nil;
                 
             }
@@ -401,7 +466,8 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
                                                       @"frontCamera":[NSNumber numberWithBool:_isFrontCamera],
                                                       @"cameraFlag":[NSNumber numberWithBool:_switchFlag],
                                                       @"errorCode":[NSNumber numberWithInt:0],
-                                                      @"errorMsg":@"摄像头切换完毕"}):nil;
+                                                      @"errorMsg":@"摄像头切换完毕",
+                                                      @"canTorch": [NSNumber numberWithBool:!_isFrontCamera]}):nil;
 }
 
 
@@ -412,21 +478,77 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
     }
     NSLog(@"外部控制——— 开始/关闭闪光灯:", flash?@"YES":@"NO");
     
-    if(_isFrontCamera){ //前置摄像头
+    NSMutableDictionary *event = [NSMutableDictionary dictionary];
+    if(!_isFrontCamera){ //后置摄像头
+        _flashFlag = flash;
+        [_manager setTorchOpenState:_flashFlag];
         
+        [event setValue:[NSNumber numberWithInt:0] forKey:@"errorCode"];
+        if(_flashFlag){
+            [event setValue:@"闪光灯已打开" forKey:@"errorMsg"];
+        }else{
+            [event setValue:@"闪光灯已关闭" forKey:@"errorMsg"];
+        }
+        
+    }else{
+        [event setValue:[NSNumber numberWithInt:-1] forKey:@"errorCode"];
+        [event setValue:@"前置摄像头无法打开闪光灯" forKey:@"errorMsg"];
     }
+    
+    [event setValue:[NSNumber numberWithBool:_flashFlag] forKey:@"flashFlag"];
+    self.onPushFlashUpdate? self.onPushFlashUpdate(event):nil;
     
 }
 
-- (void)setFilter:(int)filter
+- (void)setFilter:(int)filterModel
 {
-    NSLog(@"外部控制——— 设置滤镜: %d", filter);
+    if (!_initedValid || _filterModel == filterModel || _pushPara == nil) {
+        return;
+    }
+    NSLog(@"外部控制——— 设置滤镜: %d", filterModel);
+    
+    NSMutableDictionary *event = [NSMutableDictionary dictionary];
+    if (filterModel == LCVideoFilterNone
+        || filterModel == LCVideoFilterBeautyFace
+        || filterModel == LCVideoFilterWarm
+        || filterModel == LCVideoFilterCalm
+        || filterModel == LCVideoFilterRomantic) {
+        
+        _filterModel = filterModel;
+        
+        [_manager setFilter:filterModel];
+        
+        [event setValue:[NSNumber numberWithInt:0] forKey:@"errorCode"];
+        [event setValue:@"切换滤镜成功" forKey:@"errorMsg"];
+        
+    } else {
+        [event setValue:[NSNumber numberWithInt:-1] forKey:@"errorCode"];
+        [event setValue:@"滤镜参数错误!" forKey:@"errorMsg"];
+    }
+    
+    [event setValue:[NSNumber numberWithInt:_filterModel] forKey:@"filter"];
+    self.onPushFilterUpdate? self.onPushFilterUpdate(event):nil;
+    
 }
 
 
 - (void)setVolume:(int)volume
 {
+    if (!_initedValid || _volume == volume || _pushPara == nil) {
+        return;
+    }
     NSLog(@"外部控制——— 设置音量: %d", volume);
+    
+    _volume = volume;
+    
+    NSMutableDictionary *event = [NSMutableDictionary dictionary];
+    [_manager setMute:[NSNumber numberWithBool:_volume]]; //设置音量
+    
+    [event setValue:[NSNumber numberWithInt:0] forKey:@"errorCode"];
+    [event setValue:@"设置音量成功" forKey:@"errorMsg"];
+    [event setValue:[NSNumber numberWithInt:_volume] forKey:@"volume"];
+    
+    self.onPushVolumeUpdate? self.onPushVolumeUpdate(event):nil;
 }
 
 
@@ -468,14 +590,13 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
         }];
         
     } else if(sessionState == LCStreamingSessionStateError ){
-        [self notifyEventWithState:PUSH_STATE_ERROR code:-1 msg:@"出现错误" complete:^(){
-            [self notifyEventWithState:PUSH_STATE_CLOSED code:0 msg:@"出现错误" complete:^(){
-                if( _timer ){
-                    [_timer invalidate];
-                    _timer = nil;
-                }
-                _pushTimeFlag = NO;
-            }];
+        
+        [self notifyEventWithState:PUSH_STATE_CLOSED code:-1 msg:@"出现错误" complete:^(){
+            if( _timer ){
+                [_timer invalidate];
+                _timer = nil;
+            }
+            _pushTimeFlag = NO;
         }];
     }
 }

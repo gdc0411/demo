@@ -76,13 +76,13 @@ class push extends Component {
         let newTarget = '';
         switch (para) {
             case '1': //推流-有地址
-                newTarget = { type: Push.PUSH_TYPE_MOBILE_URI, url: "rtmp://216.mpush.live.lecloud.com/live/camerView", landscape: false, torch: true, frontCamera: true, focus: true };
+                newTarget = { type: Push.PUSH_TYPE_MOBILE_URI, url: "rtmp://216.mpush.live.lecloud.com/live/camerView", landscape: false, frontCamera: true, focus: true };
                 break;
             case '2': //推流-无地址
                 newTarget = { type: Push.PUSH_TYPE_MOBILE, domainName: "216.mpush.live.lecloud.com", streamName: '358239059415259', appkey: 'KIVK8X67PSPU9518B1WA', landscape: false };
                 break;
             case '3': //推流-乐视云
-                newTarget = { type: Push.PUSH_TYPE_LECLOUD, activityId: "A2016120500000gx", userId: '800053', secretKey: '60ca65970dc1a15ad421d46f524b99b7', landscape: false };
+                newTarget = { type: Push.PUSH_TYPE_LECLOUD, activityId: "A20170206000000e", userId: '818537', secretKey: '87f9072dc23d98c185d1bed59562c48f', landscape: false };
                 break;
             default:
                 newTarget = { type: Push.PUSH_TYPE_NONE };

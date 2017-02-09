@@ -88,7 +88,6 @@ export default class Push extends Component {
                 url: PropTypes.string,
                 landscape: PropTypes.bool,
                 frontCamera: PropTypes.bool,
-                torch: PropTypes.bool,
                 focus: PropTypes.bool,
             }),
             //移动直播（无地址）
@@ -99,7 +98,6 @@ export default class Push extends Component {
                 appkey: PropTypes.string,
                 landscape: PropTypes.bool,
                 frontCamera: PropTypes.bool,
-                torch: PropTypes.bool,
                 focus: PropTypes.bool,
             }),
             //乐视云直播
@@ -110,7 +108,6 @@ export default class Push extends Component {
                 secretKey: PropTypes.string,
                 landscape: PropTypes.bool,
                 frontCamera: PropTypes.bool,
-                torch: PropTypes.bool,
                 focus: PropTypes.bool,
             }),
         ]).isRequired,
@@ -155,7 +152,6 @@ export default class Push extends Component {
                 secretKey: target.secretKey || null,
                 landscape: target.landscape || false,
                 frontCamera: target.frontCamera || false,
-                torch: target.torch || true,
                 focus: target.focus || true,
             },
             /*回调函数属性赋值*/

@@ -100,7 +100,6 @@ public class LeReactPushViewManager extends SimpleViewManager<LeReactPushView> {
                 bundle.putString("url", para.hasKey("url") ? para.getString("url") : "");
                 bundle.putBoolean("landscape", para.hasKey("landscape") && para.getBoolean("landscape"));
                 bundle.putBoolean("frontCamera", para.hasKey("frontCamera") && para.getBoolean("frontCamera"));
-                bundle.putBoolean("torch", para.hasKey("torch") && para.getBoolean("torch"));
                 bundle.putBoolean("focus", para.hasKey("focus") && para.getBoolean("focus"));
                 pushView.setTarget(bundle);
                 break;
@@ -113,7 +112,6 @@ public class LeReactPushViewManager extends SimpleViewManager<LeReactPushView> {
                 bundle.putString("appkey", para.hasKey("appkey") ? para.getString("appkey") : "");
                 bundle.putBoolean("landscape", para.hasKey("landscape") && para.getBoolean("landscape"));
                 bundle.putBoolean("frontCamera", para.hasKey("frontCamera") && para.getBoolean("frontCamera"));
-                bundle.putBoolean("torch", para.hasKey("torch") && para.getBoolean("torch"));
                 bundle.putBoolean("focus", para.hasKey("focus") && para.getBoolean("focus"));
                 pushView.setTarget(bundle);
                 break;
@@ -126,7 +124,6 @@ public class LeReactPushViewManager extends SimpleViewManager<LeReactPushView> {
                 bundle.putString("secretKey", para.hasKey("secretKey") ? para.getString("secretKey") : "");
                 bundle.putBoolean("landscape", para.hasKey("landscape") && para.getBoolean("landscape"));
                 bundle.putBoolean("frontCamera", para.hasKey("frontCamera") && para.getBoolean("frontCamera"));
-                bundle.putBoolean("torch", para.hasKey("torch") && para.getBoolean("torch"));
                 bundle.putBoolean("focus", para.hasKey("focus") && para.getBoolean("focus"));
                 pushView.setTarget(bundle);
                 break;
