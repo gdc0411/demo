@@ -30,7 +30,6 @@
 		2D2FC8621E48A4B6004D0462 /* TencentOpenApi_IOS_Bundle.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 2D2FC85B1E48A4B6004D0462 /* TencentOpenApi_IOS_Bundle.bundle */; };
 		2D2FC8631E48A4B6004D0462 /* WeiboSDK.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 2D2FC85C1E48A4B6004D0462 /* WeiboSDK.bundle */; };
 		2D2FC8641E48A4B6004D0462 /* LECPlayerResource.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 2D2FC85D1E48A4B6004D0462 /* LECPlayerResource.bundle */; };
-		2D2FC8651E48A4B6004D0462 /* LECPlayerUIResource.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 2D2FC85E1E48A4B6004D0462 /* LECPlayerUIResource.bundle */; };
 		2D2FC8661E48A4B6004D0462 /* LCStreamingBundle.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 2D2FC85F1E48A4B6004D0462 /* LCStreamingBundle.bundle */; };
 		2D2FC8A91E48A5AB004D0462 /* libUMessage_Sdk_1.4.0.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D2FC89A1E48A5AB004D0462 /* libUMessage_Sdk_1.4.0.a */; };
 		2D2FC8AE1E48A5AB004D0462 /* libReachbility.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D2FC89F1E48A5AB004D0462 /* libReachbility.a */; };
@@ -53,12 +52,6 @@
 		2D65C6DD1E4B001D0036E29B /* WeiboSDK in Resources */ = {isa = PBXBuildFile; fileRef = 2D65C6D31E4B001D0036E29B /* WeiboSDK */; };
 		2D8CB7031E4B603700C3F578 /* libLECPlayerFoundation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D2FC8A41E48A5AB004D0462 /* libLECPlayerFoundation.a */; };
 		2D8CB7501E4CAA3400C3F578 /* libLECMobilePlayerSDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D8CB74F1E4CAA3400C3F578 /* libLECMobilePlayerSDK.a */; };
-		2D8CB76F1E4CADB600C3F578 /* LECLivePlayerUISDK in Resources */ = {isa = PBXBuildFile; fileRef = 2D8CB76C1E4CADB600C3F578 /* LECLivePlayerUISDK */; };
-		2D8CB7701E4CADB600C3F578 /* LECPlayerUIKit in Resources */ = {isa = PBXBuildFile; fileRef = 2D8CB76D1E4CADB600C3F578 /* LECPlayerUIKit */; };
-		2D8CB7711E4CADB600C3F578 /* LECVodPlayerUISDK in Resources */ = {isa = PBXBuildFile; fileRef = 2D8CB76E1E4CADB600C3F578 /* LECVodPlayerUISDK */; };
-		2D8CB7751E4CADCC00C3F578 /* libLECLivePlayerUISDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D8CB7721E4CADCC00C3F578 /* libLECLivePlayerUISDK.a */; };
-		2D8CB7761E4CADCC00C3F578 /* libLECPlayerUIKit.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D8CB7731E4CADCC00C3F578 /* libLECPlayerUIKit.a */; };
-		2D8CB7771E4CADCC00C3F578 /* libLECVodPlayerUISDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D8CB7741E4CADCC00C3F578 /* libLECVodPlayerUISDK.a */; };
 		2D8D220A1E0328F2004EC569 /* libLECValleyUIKit.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D8D21F61E0328B6004EC569 /* libLECValleyUIKit.a */; };
 		2DA206F71DE8B89B0004CE1D /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2DA206F51DE8B89B0004CE1D /* AdSupport.framework */; };
 		2DA206F81DE8B89B0004CE1D /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2DA206F61DE8B89B0004CE1D /* MediaPlayer.framework */; };
@@ -313,7 +306,6 @@
 		2D2FC85B1E48A4B6004D0462 /* TencentOpenApi_IOS_Bundle.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = TencentOpenApi_IOS_Bundle.bundle; path = bundle/TencentOpenApi_IOS_Bundle.bundle; sourceTree = "<group>"; };
 		2D2FC85C1E48A4B6004D0462 /* WeiboSDK.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = WeiboSDK.bundle; path = bundle/WeiboSDK.bundle; sourceTree = "<group>"; };
 		2D2FC85D1E48A4B6004D0462 /* LECPlayerResource.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = LECPlayerResource.bundle; path = bundle/LECPlayerResource.bundle; sourceTree = "<group>"; };
-		2D2FC85E1E48A4B6004D0462 /* LECPlayerUIResource.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = LECPlayerUIResource.bundle; path = bundle/LECPlayerUIResource.bundle; sourceTree = "<group>"; };
 		2D2FC85F1E48A4B6004D0462 /* LCStreamingBundle.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = LCStreamingBundle.bundle; path = bundle/LCStreamingBundle.bundle; sourceTree = "<group>"; };
 		2D2FC89A1E48A5AB004D0462 /* libUMessage_Sdk_1.4.0.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libUMessage_Sdk_1.4.0.a; path = Libs/libUMessage_Sdk_1.4.0.a; sourceTree = "<group>"; };
 		2D2FC89D1E48A5AB004D0462 /* libLeCloudStreaming.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libLeCloudStreaming.a; path = Libs/libLeCloudStreaming.a; sourceTree = "<group>"; };
@@ -336,12 +328,6 @@
 		2D65C6D21E4B001D0036E29B /* WechatOpenSDK */ = {isa = PBXFileReference; lastKnownFileType = folder; name = WechatOpenSDK; path = inc/WechatOpenSDK; sourceTree = "<group>"; };
 		2D65C6D31E4B001D0036E29B /* WeiboSDK */ = {isa = PBXFileReference; lastKnownFileType = folder; name = WeiboSDK; path = inc/WeiboSDK; sourceTree = "<group>"; };
 		2D8CB74F1E4CAA3400C3F578 /* libLECMobilePlayerSDK.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libLECMobilePlayerSDK.a; path = Libs/libLECMobilePlayerSDK.a; sourceTree = "<group>"; };
-		2D8CB76C1E4CADB600C3F578 /* LECLivePlayerUISDK */ = {isa = PBXFileReference; lastKnownFileType = folder; name = LECLivePlayerUISDK; path = inc/LECLivePlayerUISDK; sourceTree = "<group>"; };
-		2D8CB76D1E4CADB600C3F578 /* LECPlayerUIKit */ = {isa = PBXFileReference; lastKnownFileType = folder; name = LECPlayerUIKit; path = inc/LECPlayerUIKit; sourceTree = "<group>"; };
-		2D8CB76E1E4CADB600C3F578 /* LECVodPlayerUISDK */ = {isa = PBXFileReference; lastKnownFileType = folder; name = LECVodPlayerUISDK; path = inc/LECVodPlayerUISDK; sourceTree = "<group>"; };
-		2D8CB7721E4CADCC00C3F578 /* libLECLivePlayerUISDK.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libLECLivePlayerUISDK.a; path = Libs/libLECLivePlayerUISDK.a; sourceTree = "<group>"; };
-		2D8CB7731E4CADCC00C3F578 /* libLECPlayerUIKit.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libLECPlayerUIKit.a; path = Libs/libLECPlayerUIKit.a; sourceTree = "<group>"; };
-		2D8CB7741E4CADCC00C3F578 /* libLECVodPlayerUISDK.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libLECVodPlayerUISDK.a; path = Libs/libLECVodPlayerUISDK.a; sourceTree = "<group>"; };
 		2D8D21CB1E03240E004EC569 /* LECValleyUIKit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = LECValleyUIKit.xcodeproj; path = LECValleyUIKit/LECValleyUIKit.xcodeproj; sourceTree = "<group>"; };
 		2DA206F51DE8B89B0004CE1D /* AdSupport.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AdSupport.framework; path = System/Library/Frameworks/AdSupport.framework; sourceTree = SDKROOT; };
 		2DA206F61DE8B89B0004CE1D /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
@@ -411,14 +397,12 @@
 				2D8CB7501E4CAA3400C3F578 /* libLECMobilePlayerSDK.a in Frameworks */,
 				2D2FC8AE1E48A5AB004D0462 /* libReachbility.a in Frameworks */,
 				2D2FC8B11E48A5AB004D0462 /* libWeiboSDK.a in Frameworks */,
-				2D8CB7761E4CADCC00C3F578 /* libLECPlayerUIKit.a in Frameworks */,
 				2D2FC8A91E48A5AB004D0462 /* libUMessage_Sdk_1.4.0.a in Frameworks */,
 				2D2FC8AF1E48A5AB004D0462 /* libZipArchive.a in Frameworks */,
 				2D2FC8B61E48A5AB004D0462 /* libLECVodPlayerSDK.a in Frameworks */,
 				146834051AC3E58100842450 /* libReact.a in Frameworks */,
 				2D19AC981DF3DCF100D21BDC /* libRCTAnimation.a in Frameworks */,
 				00C302E51ABCBA2D00DB3ED1 /* libRCTActionSheet.a in Frameworks */,
-				2D8CB7771E4CADCC00C3F578 /* libLECVodPlayerUISDK.a in Frameworks */,
 				00C302E71ABCBA2D00DB3ED1 /* libRCTGeolocation.a in Frameworks */,
 				00C302E81ABCBA2D00DB3ED1 /* libRCTImage.a in Frameworks */,
 				133E29F31AD74F7200F7D852 /* libRCTLinking.a in Frameworks */,
@@ -428,7 +412,6 @@
 				00C302EA1ABCBA2D00DB3ED1 /* libRCTVibration.a in Frameworks */,
 				139FDEF61B0652A700C62182 /* libRCTWebSocket.a in Frameworks */,
 				2D8D220A1E0328F2004EC569 /* libLECValleyUIKit.a in Frameworks */,
-				2D8CB7751E4CADCC00C3F578 /* libLECLivePlayerUISDK.a in Frameworks */,
 				2D2FC8E61E48AC30004D0462 /* libCodePush.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -567,9 +550,6 @@
 		2D65C6AE1E4AFFF60036E29B /* inc */ = {
 			isa = PBXGroup;
 			children = (
-				2D8CB76C1E4CADB600C3F578 /* LECLivePlayerUISDK */,
-				2D8CB76D1E4CADB600C3F578 /* LECPlayerUIKit */,
-				2D8CB76E1E4CADB600C3F578 /* LECVodPlayerUISDK */,
 				2D65C6CA1E4B001D0036E29B /* LECLivePlayerSDK */,
 				2D65C6CC1E4B001D0036E29B /* LeCloudStreaming */,
 				2D65C6CD1E4B001D0036E29B /* LECPlayerFoundation */,
@@ -592,9 +572,6 @@
 				2D2FC8A21E48A5AB004D0462 /* libWeiboSDK.a */,
 				2D2FC89D1E48A5AB004D0462 /* libLeCloudStreaming.a */,
 				2D8CB74F1E4CAA3400C3F578 /* libLECMobilePlayerSDK.a */,
-				2D8CB7721E4CADCC00C3F578 /* libLECLivePlayerUISDK.a */,
-				2D8CB7731E4CADCC00C3F578 /* libLECPlayerUIKit.a */,
-				2D8CB7741E4CADCC00C3F578 /* libLECVodPlayerUISDK.a */,
 				2D2FC8A41E48A5AB004D0462 /* libLECPlayerFoundation.a */,
 				2D2FC8A61E48A5AB004D0462 /* libLECLivePlayerSDK.a */,
 				2D2FC8A71E48A5AB004D0462 /* libLECVodPlayerSDK.a */,
@@ -618,7 +595,6 @@
 				2D2FC85B1E48A4B6004D0462 /* TencentOpenApi_IOS_Bundle.bundle */,
 				2D2FC85C1E48A4B6004D0462 /* WeiboSDK.bundle */,
 				2D2FC85D1E48A4B6004D0462 /* LECPlayerResource.bundle */,
-				2D2FC85E1E48A4B6004D0462 /* LECPlayerUIResource.bundle */,
 				2D2FC85F1E48A4B6004D0462 /* LCStreamingBundle.bundle */,
 			);
 			name = Bundles;
@@ -1067,14 +1043,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				2DFAE4B71E046743008937FD /* assets in Resources */,
-				2D8CB7711E4CADB600C3F578 /* LECVodPlayerUISDK in Resources */,
 				2D2FC8601E48A4B6004D0462 /* LECVodPlayerResource.bundle in Resources */,
 				2D65C6DB1E4B001D0036E29B /* UMessage_Sdk_1.4.0 in Resources */,
 				2D2FC8611E48A4B6004D0462 /* LECValleyUIResource.bundle in Resources */,
 				2D2FC8621E48A4B6004D0462 /* TencentOpenApi_IOS_Bundle.bundle in Resources */,
-				2D8CB7701E4CADB600C3F578 /* LECPlayerUIKit in Resources */,
-				2D8CB76F1E4CADB600C3F578 /* LECLivePlayerUISDK in Resources */,
-				2D2FC8651E48A4B6004D0462 /* LECPlayerUIResource.bundle in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */,
 				2D2FC8641E48A4B6004D0462 /* LECPlayerResource.bundle in Resources */,
