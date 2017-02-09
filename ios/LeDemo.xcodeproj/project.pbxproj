@@ -366,8 +366,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2DA207051DE8B9950004CE1D /* CoreTelephony.framework in Frameworks */,
-				2DA207071DE8B9950004CE1D /* SystemConfiguration.framework in Frameworks */,
 				392D188B09B145E0B6613D6D /* libz.tbd in Frameworks */,
 				2D0E62AE1E0B0112005A68AA /* libsqlite3.0.tbd in Frameworks */,
 				2D0E62AC1E0B0101005A68AA /* libc++.tbd in Frameworks */,
@@ -381,12 +379,14 @@
 				2DA206F71DE8B89B0004CE1D /* AdSupport.framework in Frameworks */,
 				2D2FC8B91E48A616004D0462 /* AVFoundation.framework in Frameworks */,
 				2DA207021DE8B9950004CE1D /* CoreData.framework in Frameworks */,
+				2DA207051DE8B9950004CE1D /* CoreTelephony.framework in Frameworks */,
 				2DFDF5B91E0FF1BB00B58523 /* CoreGraphics.framework in Frameworks */,
 				2DA207031DE8B9950004CE1D /* CoreLocation.framework in Frameworks */,
 				2DA207041DE8B9950004CE1D /* CoreMedia.framework in Frameworks */,
 				2DA207061DE8B9950004CE1D /* JavaScriptCore.framework in Frameworks */,
 				2DA206F81DE8B89B0004CE1D /* MediaPlayer.framework in Frameworks */,
 				2DFDF5B71E0FF13100B58523 /* Security.framework in Frameworks */,
+				2DA207071DE8B9950004CE1D /* SystemConfiguration.framework in Frameworks */,
 				2DFDF5C21E0FF96E00B58523 /* TencentOpenAPI.framework in Frameworks */,
 				2DA207081DE8B9950004CE1D /* VideoToolbox.framework in Frameworks */,
 				2D8CB7031E4B603700C3F578 /* libLECPlayerFoundation.a in Frameworks */,
