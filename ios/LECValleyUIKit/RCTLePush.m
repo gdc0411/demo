@@ -28,7 +28,9 @@
 
 @interface RCTLePush () <LCStreamingManagerDelegate>
 {
-    __block BOOL _lePushValid; //当前初始化状态
+    __block int  _pushState;  //PUSH状态
+    __block int  _pushTime; //推流计时
+    __block BOOL _pushTimeFlag; //推流计时是否开始
     __block BOOL _isBack; //后台标志,在进入后台之前正在推流设置为true。判断是否在后台回来时继续推流
 }
 
@@ -51,20 +53,22 @@
     
     RCTLePushViewController *_pushViewController;
     
+    BOOL _initedValid; //参数初始化状态
+    BOOL _pushFlag; //推流是否关闭
+    
     int _pushType; //当前推流类型
     int _currentOritentation; //当前屏幕方向
+    BOOL _isFrontCamera; //摄像头是否为前置
     
     NSDictionary *_pushPara; //推流参数
     NSString *_pushUrl; //推流地址
     NSString *_playUrl; //播放地址
     
-    int  _pushTime; //推流计时
-    BOOL _pushFlag; //推流计时是否开始
-    
-    int  _pushState;  //PUSH操作状态：0：closed，1：opening，2：opened，3:closing, 4:error
+    NSTimer *_timer; //计时器
     
     BOOL _flashFlag;  //是否打开闪光灯
-    BOOL _switchFlag; //是否正在切换摄像
+    BOOL _switchFlag; //是否正在切换摄像头
+    LCCamareOrientationState _camerOrientation; //摄像头方向
     int  _filterModel; //当前滤镜选择
     int  _volume; //音量设置
     
@@ -142,15 +146,24 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
     //根据必要参数创建推流端
     [self pushItemForTarget:bundle];
     
-
     
+    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+    dispatch_async(queue, ^{
+        sleep(REACT_JS_EVENT_WAIT);
+        self.onPushTargetLoad? self.onPushTargetLoad(@{@"para": [[self class] returnJSONStringWithDictionary:_pushPara useSystem:YES],
+                                                       @"playUrl": _playUrl?_playUrl:[NSNull null],
+                                                       @"pushUrl": _pushUrl?_pushUrl:[NSNull null],}):nil;
+        
+    });
 }
+
+
 
 
 /*重置播放器*/
 - (void) resetViewAndController
 {
-    if (_lePushValid) {
+    if (_initedValid) {
         
         UIView *subview = [self viewWithTag:PushViewTag];
         subview?[subview removeFromSuperview]:nil;
@@ -170,7 +183,7 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
 /*重置状态量*/
 - (void) initFieldParaStates
 {
-    _lePushValid = NO;
+    _initedValid = NO;
     
     _pushTime = 0;
     _pushFlag = NO;
@@ -229,6 +242,9 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
     
     int playMode = [RCTConvert int:[bundle objectForKey:@"type"]];
     BOOL isLandscape = [RCTConvert BOOL:[bundle objectForKey:@"landscape"]];
+    _isFrontCamera = [RCTConvert BOOL:[bundle objectForKey:@"frontCamera"]];
+    BOOL isTorch = [RCTConvert BOOL:[bundle objectForKey:@"torch"]];
+    BOOL isFocus = [RCTConvert BOOL:[bundle objectForKey:@"focus"]];
     
     if (!_manager) {
         _manager = [[LCStreamingManager alloc] init];
@@ -253,15 +269,19 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
     
     //配置预览视图的frame
     [_manager configVideoViewFrame:self.bounds]; //默认占满整个屏幕
-    [_manager enableManulFocus:YES]; //允许手动对焦
+    [_manager setTorchOpenState:isTorch]; //设置闪光灯是否启用
+    [_manager enableManulFocus:isFocus]; //设置是否对焦
+    
+    _camerOrientation = _isFrontCamera? LCCamareOrientationStateFront : LCCamareOrientationStateBack;
+    [_manager setCamareOrientationState:_camerOrientation]; //设置摄像头方向
+    
     
     [self usePushViewController:_manager]; // 创建controller
     
-    
     if(playMode == PUSH_TYPE_MOBILE_URI){ //移动直播有地址
         
-        _playUrl  = [bundle objectForKey:@"url"];
-        _pushUrl  = _playUrl?[_playUrl stringByReplacingOccurrencesOfString:@"push" withString:@"pull"]:nil;
+        _pushUrl  = [bundle objectForKey:@"url"];
+        _playUrl  = _pushUrl?[_pushUrl stringByReplacingOccurrencesOfString:@"push" withString:@"pull"]:nil;
         
     }else if(playMode == PUSH_TYPE_MOBILE){ //移动直播无地址
         
@@ -272,33 +292,130 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
         
     }
     
-    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
-    dispatch_async(queue, ^{
-        sleep(REACT_JS_EVENT_WAIT);
-        self.onPushTargetLoad? self.onPushTargetLoad(@{@"para": [[self class] returnJSONStringWithDictionary:_pushPara useSystem:YES],
-                                                       @"playUrl": _playUrl,
-                                                       @"pushUrl": _pushUrl,}):nil;
-
-    });
-
+    _initedValid = YES;
+    
 }
 
 
 - (void)setPush:(BOOL)push
 {
+    if (!_initedValid || _pushFlag == push || _pushPara == nil) {
+        return;
+    }
     NSLog(@"外部控制——— 开始/停止推流: %@", push?@"YES":@"NO");
+    
+    [self setPushedModifier:push];
 }
+
+/** 设置推送开始或停止*/
+- (void) setPushedModifier:(BOOL) pushed {
+    
+    _pushFlag = pushed;
+    
+    //    if (!_lePushValid) {
+    //        return;
+    //    }
+    
+    if (_pushFlag) { //启动推流
+        if (PUSH_STATE_OPENED != _pushState && _initedValid ) {//初始化已完成，未推流状态
+
+            __weak typeof(self) wSelf = self;
+            [self notifyEventWithState:PUSH_STATE_CONNECTING code:0 msg:@"正在连接……" complete:^(){
+                _pushTime = 0;
+                if (_pushType == PUSH_TYPE_MOBILE_URI || _pushType == PUSH_TYPE_MOBILE) { //移动直播
+                    [wSelf.manager startStreamingWithRtmpAdress:_pushUrl];
+                } else if (_pushType == PUSH_TYPE_LECLOUD) { //乐视云直播
+                    
+                }    
+            }];
+            
+        } else if (PUSH_STATE_OPENED == _pushState) {//正在推送，不做处理
+            [self notifyEventWithState:PUSH_STATE_OPENED code:0 msg:@"无需重复推流!" complete:nil];
+            
+        } else if (!_initedValid) {//初始化未完成，无法推流
+            [self notifyEventWithState:PUSH_STATE_ERROR code:-1 msg:@"初始化未完成，无法推流！" complete:nil];
+        }
+        
+    } else { //关闭推流
+        if (PUSH_STATE_OPENED == _pushState) { //正在推流，停止推流
+            __weak typeof(self) wSelf = self;
+            [self notifyEventWithState:PUSH_STATE_DISCONNECTING code:0 msg:@"正在断开……" complete:^(){
+                [wSelf.manager stopStreaming];//结束推流
+            }];
+            
+        } else { //未推送，不做处理
+            [self notifyEventWithState:PUSH_STATE_CLOSED code:0 msg:@"无推流，无需关闭！" complete:nil];
+        }
+    }
+}
+
+
+- (void) notifyEventWithState:(int) pushState
+                code:(int) errCode
+                 msg:(NSString*) errMsg
+             complete:(void (^)()) handler
+{
+    NSLog(@"%@", errMsg);
+    _pushState = pushState;
+    
+    self.onPushStateUpdate? self.onPushStateUpdate(@{@"state": [NSNumber numberWithInt:pushState],
+                                                     @"errorCode": [NSNumber numberWithInt:errCode],
+                                                     @"errorMsg": errMsg? errMsg: [NSNull null],
+                                                     }):nil;
+    
+    //    sleep(5);
+    handler? handler():nil;
+}
+
 
 
 - (void)setCamera:(int)times
 {
+    if (!_initedValid || times == 0) {
+        return;
+    }
     NSLog(@"外部控制——— 切换摄像头方向");
+    
+    _switchFlag = YES;
+    if(_manager){
+        if( _camerOrientation == LCCamareOrientationStateFront){
+            _camerOrientation = LCCamareOrientationStateBack;
+            _isFrontCamera = NO;
+        }else if(_camerOrientation==LCCamareOrientationStateBack){
+            _camerOrientation = LCCamareOrientationStateFront;
+            _isFrontCamera = YES;
+            
+            if(_flashFlag){//切换前置摄像头会关闭闪光灯
+                _flashFlag = NO;
+                
+                self.onPushFlashUpdate? self.onPushFlashUpdate(@{}):nil;
+                
+            }
+        }
+        //摄像头方向
+        [_manager setCamareOrientationState:_camerOrientation];
+    }
+    
+    _switchFlag = NO;
+    self.onPushCameraUpdate?self.onPushCameraUpdate(@{@"cameraDirection": [NSNumber numberWithInt:_camerOrientation],
+                                                      @"frontCamera":[NSNumber numberWithBool:_isFrontCamera],
+                                                      @"cameraFlag":[NSNumber numberWithBool:_switchFlag],
+                                                      @"errorCode":[NSNumber numberWithInt:0],
+                                                      @"errorMsg":@"摄像头切换完毕"}):nil;
 }
 
 
 - (void)setFlash:(BOOL)flash
 {
+    if (!_initedValid || _flashFlag == flash || _pushPara == nil) {
+        return;
+    }
     NSLog(@"外部控制——— 开始/关闭闪光灯:", flash?@"YES":@"NO");
+    
+    if(_isFrontCamera){ //前置摄像头
+        
+    }
+    
 }
 
 - (void)setFilter:(int)filter
@@ -317,10 +434,6 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
 {
     if( manager ){
         _pushViewController = [self createPushViewController: manager];
-        
-        // to prevent video from being animated when resizeMode is 'cover'
-        // resize mode must be set before subview is added
-        //    [self addSubview:_playerViewController.view];
     }
 }
 
@@ -330,33 +443,58 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
 //推流状态变化通知
 - (void)connectionStatusChanged:(LCStreamingSessionState)sessionState
 {
-    switch (sessionState) {
-        case LCStreamingSessionStateStarted:
-            [_manager setGain:1.3];
-            //            [self.btnPush setTitle:@"STOP" forState:UIControlStateNormal];
-            break;
-        case LCStreamingSessionStateStarting:
-            //            [self.btnPush setTitle:@"STARTING" forState:UIControlStateNormal];
-            break;
-        case LCStreamingSessionStatePreviewStarted:
-        case LCStreamingSessionStateNone:
-            //            [self.btnPush setTitle:@"PUSH" forState:UIControlStateNormal];
-            break;
-        case LCStreamingSessionStateEnded:
-            //            [self.btnPush setTitle:@"PUSH" forState:UIControlStateNormal];
-            break;
-        default:
-            //            [self.btnPush setTitle:@"ERROR" forState:UIControlStateNormal];
-            break;
+    if( sessionState == LCStreamingSessionStateStarted ){
+        [_manager setGain:1.3];
+        [self notifyEventWithState:PUSH_STATE_OPENED code:0 msg:@"推流已打开" complete:^(){
+            if (!_pushTimeFlag && _timer == nil) {
+                _timer = [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(scrollTimer) userInfo:nil repeats:YES];
+            }
+            _pushTimeFlag = YES;
+        }];
+        
+    } else if(sessionState == LCStreamingSessionStateStarting ){
+        [self notifyEventWithState:PUSH_STATE_CONNECTING code:0 msg:@"正在连接……" complete:nil];
+        
+    } else if(sessionState == LCStreamingSessionStatePreviewStarted || sessionState == LCStreamingSessionStateNone ){
+        [self notifyEventWithState:PUSH_STATE_CLOSED code:0 msg:@"" complete:nil];
+        
+    } else if(sessionState == LCStreamingSessionStateEnded ){
+        [self notifyEventWithState:PUSH_STATE_CLOSED code:0 msg:@"推流已关闭" complete:^(){
+            if( _timer ){
+                [_timer invalidate];
+                _timer = nil;
+            }
+            _pushTimeFlag = NO;
+        }];
+        
+    } else if(sessionState == LCStreamingSessionStateError ){
+        [self notifyEventWithState:PUSH_STATE_ERROR code:-1 msg:@"出现错误" complete:^(){
+            [self notifyEventWithState:PUSH_STATE_CLOSED code:0 msg:@"出现错误" complete:^(){
+                if( _timer ){
+                    [_timer invalidate];
+                    _timer = nil;
+                }
+                _pushTimeFlag = NO;
+            }];
+        }];
     }
-    //    [self.btnPush.titleLabel sizeToFit];
+}
+
+
+- (void) scrollTimer
+{
+    if ( _initedValid && PUSH_STATE_OPENED == _pushState) {
+        _pushTime++;
+        
+        self.onPushTimeUpdate? self.onPushTimeUpdate(@{@"timeFlag":[NSNumber numberWithBool: _pushTimeFlag],
+                                                       @"time":[NSNumber numberWithInt: _pushTime],}):nil;
+    }
 }
 
 //推流管理器状态通知，主要用于错误信息的通知
 - (void)notifyManagerStatus:(LCStreamingManagerStatus)managerStatus withMessage:(NSString *)msg
 {
     NSLog(@"错误提示：%@", msg);
-    
 }
 
 //视频帧处理回调，参数为原始视频帧，需返回处理后的视频帧

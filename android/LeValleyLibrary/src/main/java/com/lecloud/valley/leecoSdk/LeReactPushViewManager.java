@@ -99,6 +99,9 @@ public class LeReactPushViewManager extends SimpleViewManager<LeReactPushView> {
                 bundle.putInt(PROP_PUSH_TYPE, PUSH_TYPE_MOBILE_URI);
                 bundle.putString("url", para.hasKey("url") ? para.getString("url") : "");
                 bundle.putBoolean("landscape", para.hasKey("landscape") && para.getBoolean("landscape"));
+                bundle.putBoolean("frontCamera", para.hasKey("frontCamera") && para.getBoolean("frontCamera"));
+                bundle.putBoolean("torch", para.hasKey("torch") && para.getBoolean("torch"));
+                bundle.putBoolean("focus", para.hasKey("focus") && para.getBoolean("focus"));
                 pushView.setTarget(bundle);
                 break;
 
@@ -109,6 +112,9 @@ public class LeReactPushViewManager extends SimpleViewManager<LeReactPushView> {
                 bundle.putString("streamName", para.hasKey("streamName") ? para.getString("streamName") : "");
                 bundle.putString("appkey", para.hasKey("appkey") ? para.getString("appkey") : "");
                 bundle.putBoolean("landscape", para.hasKey("landscape") && para.getBoolean("landscape"));
+                bundle.putBoolean("frontCamera", para.hasKey("frontCamera") && para.getBoolean("frontCamera"));
+                bundle.putBoolean("torch", para.hasKey("torch") && para.getBoolean("torch"));
+                bundle.putBoolean("focus", para.hasKey("focus") && para.getBoolean("focus"));
                 pushView.setTarget(bundle);
                 break;
 
@@ -119,6 +125,9 @@ public class LeReactPushViewManager extends SimpleViewManager<LeReactPushView> {
                 bundle.putString("userId", para.hasKey("userId") ? para.getString("userId") : "");
                 bundle.putString("secretKey", para.hasKey("secretKey") ? para.getString("secretKey") : "");
                 bundle.putBoolean("landscape", para.hasKey("landscape") && para.getBoolean("landscape"));
+                bundle.putBoolean("frontCamera", para.hasKey("frontCamera") && para.getBoolean("frontCamera"));
+                bundle.putBoolean("torch", para.hasKey("torch") && para.getBoolean("torch"));
+                bundle.putBoolean("focus", para.hasKey("focus") && para.getBoolean("focus"));
                 pushView.setTarget(bundle);
                 break;
 

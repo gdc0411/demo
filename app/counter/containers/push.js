@@ -52,8 +52,10 @@ class push extends Component {
             camera: 0,
             /* 摄像头切换标识*/
             cameraFlag: false,
-            /* 摄像头方向：0为后置，1为前置*/
-            cameraDirection: 1,
+            /* 摄像头方向*/
+            frontCamera: false,
+            /* 是否有闪光 */
+            canTorch: true,
             /* 闪光灯操作 */
             flash: false,
             /* 闪光灯打开标识*/
@@ -74,7 +76,7 @@ class push extends Component {
         let newTarget = '';
         switch (para) {
             case '1': //推流-有地址
-                newTarget = { type: Push.PUSH_TYPE_MOBILE_URI, url: "rtmp://216.mpush.live.lecloud.com/live/camerView", landscape: false };
+                newTarget = { type: Push.PUSH_TYPE_MOBILE_URI, url: "rtmp://216.mpush.live.lecloud.com/live/camerView", landscape: false, torch: true, frontCamera: true, focus: true };
                 break;
             case '2': //推流-无地址
                 newTarget = { type: Push.PUSH_TYPE_MOBILE, domainName: "216.mpush.live.lecloud.com", streamName: '358239059415259', appkey: 'KIVK8X67PSPU9518B1WA', landscape: false };
@@ -174,10 +176,10 @@ class push extends Component {
                     flash={this.state.flash}
                     filter={this.state.filter}
                     volume={this.state.volume}
-                    onPushTargetLoad={(data) => { this.setState({ targetInfo: `参数: ${data.para}\r\n推流地址: ${data.pushUrl}\r\n播放地址: ${data.playUrl}` }); }}
+                    onPushTargetLoad={(data) => { this.setState({ targetInfo: `参数: ${data.para}\r\n推流地址: ${data.pushUrl}\r\n播放地址: ${data.playUrl}`, canTorch: data.canTorch }); }}
                     onPushStateUpdate={(data) => { this.setState({ state: data.state, timeFlag: data.timeFlag, errorCode: data.errorCode, errorMsg: data.errorMsg }); }}
                     onPushTimeUpdate={(data) => { this.setState({ time: data.time, timeFlag: data.timeFlag, errorCode: data.errorCode, errorMsg: data.errorMsg }); }}
-                    onPushCameraUpdate={(data) => { this.setState({ cameraFlag: data.cameraFlag, cameraDirection: data.cameraDirection, errorCode: data.errorCode, errorMsg: data.errorMsg }); }}
+                    onPushCameraUpdate={(data) => { this.setState({ cameraFlag: data.cameraFlag, frontCamera: data.frontCamera, canTorch: data.canTorch, errorCode: data.errorCode, errorMsg: data.errorMsg }); }}
                     onPushFlashUpdate={(data) => { this.setState({ flashFlag: data.flashFlag, errorCode: data.errorCode, errorMsg: data.errorMsg }); }}
                     onPushFilterUpdate={(data) => { this.setState({ errorCode: data.errorCode, errorMsg: data.errorMsg }); }}
                     onPushVolumeUpdate={(data) => { this.setState({ errorCode: data.errorCode, errorMsg: data.errorMsg }); }}
@@ -208,8 +210,8 @@ class push extends Component {
                     <TouchableOpacity disabled={this.state.cameraFlag} onPress={() => { this.setState({ camera: this.state.camera + 1 }); }}>
                         <Text style={styles.controlOption} >{this.state.cameraFlag ? '请稍后' : '切换镜头'}</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity disabled={this.state.cameraDirection === 1 ? true : false} onPress={() => { this.setState({ flash: !this.state.flash }); }}>
-                        <Text style={styles.controlOption} >{this.state.cameraDirection === 1 ? '无闪光' : this.state.flashFlag ? '关闪光' : '开闪光'}</Text>
+                    <TouchableOpacity disabled={this.state.canTorch ? false : true} onPress={() => { this.setState({ flash: !this.state.flash }); }}>
+                        <Text style={styles.controlOption} >{this.state.canTorch? (this.state.flashFlag ? '关闪光' : '开闪光'):'无闪光'}</Text>
                     </TouchableOpacity>
                     <View style={styles.controlOptionView}>
                         <Picker style={[{ width: 35, height: 10, backgroundColor: 'red', }]}

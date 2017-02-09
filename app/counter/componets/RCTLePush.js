@@ -87,6 +87,9 @@ export default class Push extends Component {
                 type: PropTypes.number.isRequired,
                 url: PropTypes.string,
                 landscape: PropTypes.bool,
+                frontCamera: PropTypes.bool,
+                torch: PropTypes.bool,
+                focus: PropTypes.bool,
             }),
             //移动直播（无地址）
             PropTypes.shape({
@@ -95,6 +98,9 @@ export default class Push extends Component {
                 domainName: PropTypes.string,
                 appkey: PropTypes.string,
                 landscape: PropTypes.bool,
+                frontCamera: PropTypes.bool,
+                torch: PropTypes.bool,
+                focus: PropTypes.bool,
             }),
             //乐视云直播
             PropTypes.shape({
@@ -103,6 +109,9 @@ export default class Push extends Component {
                 userId: PropTypes.string,
                 secretKey: PropTypes.string,
                 landscape: PropTypes.bool,
+                frontCamera: PropTypes.bool,
+                torch: PropTypes.bool,
+                focus: PropTypes.bool,
             }),
         ]).isRequired,
 
@@ -144,7 +153,10 @@ export default class Push extends Component {
                 activityId: target.activityId || null,
                 userId: target.userId || null,
                 secretKey: target.secretKey || null,
-                landscape: target.landscape,
+                landscape: target.landscape || false,
+                frontCamera: target.frontCamera || false,
+                torch: target.torch || true,
+                focus: target.focus || true,
             },
             /*回调函数属性赋值*/
             onPushTargetLoad: (event) => { this.props.onPushTargetLoad && this.props.onPushTargetLoad(event.nativeEvent); },
