@@ -120,6 +120,12 @@ public class LeReactVideoViewManager extends SimpleViewManager<LeReactVideoView>
                 break;
 
             case PlayerParams.VALUE_PLAYER_MOBILE_LIVE:
+                bundle = new Bundle();
+                bundle.putInt(PlayerParams.KEY_PLAY_MODE, PlayerParams.VALUE_PLAYER_VOD);
+                bundle.putString("path", src.hasKey(PROP_SRC_URI) ? src.getString(PROP_SRC_URI) :"");
+                bundle.putBoolean("pano", src.hasKey(PROP_SRC_IS_PANO) && src.getBoolean(PROP_SRC_IS_PANO));
+                bundle.putString("rate", src.hasKey(PROP_RATE) ? src.getString(PROP_RATE) : "");
+                videoView.setSrc(bundle);
                 break;
 
             default:
