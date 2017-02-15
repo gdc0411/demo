@@ -135,7 +135,7 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
 - (void)setPara:(NSDictionary *)bundle
 {
     NSLog(@"外部控制——— 推流参数: %@", bundle);
-    if(bundle == nil) return;
+    if(bundle == nil || bundle.count == 0 ) return;
     
     //重置播放器
     [self resetViewAndController];
