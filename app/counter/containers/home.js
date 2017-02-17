@@ -117,6 +117,7 @@ class home extends Component {
                             <Text style={{ fontSize: 18, fontWeight: 'bold', color: `orange` }} onPress={() => navigator.push({ location: '/orient' })} >转屏</Text>
                             <Text style={{ fontSize: 18, fontWeight: 'bold', color: `orange` }} onPress={() => navigator.push({ location: '/social' })} >分享</Text>
                             <Text style={{ fontSize: 18, fontWeight: 'bold', color: `black` }} onPress={() => navigator.push({ location: '/download' })} >下载</Text>
+                            <Text style={{ fontSize: 18, fontWeight: 'bold', color: `black` }} onPress={() => navigator.push({ location: '/image' })} >相册</Text>
                         </View>
                         <View style={{ flexDirection: 'row', justifyContent: 'space-around' }} >
                             <PlayItem source={0} imgUrl={img1} desc={'第三方URL'} color={'black'} onPlay={this.skipToPlayer} />

@@ -13,6 +13,7 @@
 		2D124EFE1E262EE90041DFD0 /* RCTUmengPushModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D124EFD1E262EE90041DFD0 /* RCTUmengPushModule.m */; };
 		2D2FC82E1E48380E004D0462 /* RCTLePush.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D2FC82D1E48380E004D0462 /* RCTLePush.m */; };
 		2D2FC8311E48382A004D0462 /* RCTLePushManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D2FC8301E48382A004D0462 /* RCTLePushManager.m */; };
+		2D3914FD1E579D760060B5F0 /* RCTImagePickerModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D3914FC1E579D760060B5F0 /* RCTImagePickerModule.m */; };
 		2D65C6E81E4B1FA50036E29B /* RCTLePushViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D65C6E71E4B1FA50036E29B /* RCTLePushViewController.m */; };
 		2D8D22271E032DB1004EC569 /* RCTLinearGradient.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D8D22241E032DB1004EC569 /* RCTLinearGradient.m */; };
 		2D8D22281E032DB1004EC569 /* RCTLinearGradientManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D8D22261E032DB1004EC569 /* RCTLinearGradientManager.m */; };
@@ -74,6 +75,8 @@
 		2D2FC82D1E48380E004D0462 /* RCTLePush.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCTLePush.m; sourceTree = "<group>"; };
 		2D2FC82F1E48382A004D0462 /* RCTLePushManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCTLePushManager.h; sourceTree = "<group>"; };
 		2D2FC8301E48382A004D0462 /* RCTLePushManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCTLePushManager.m; sourceTree = "<group>"; };
+		2D3914FB1E579D760060B5F0 /* RCTImagePickerModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCTImagePickerModule.h; sourceTree = "<group>"; };
+		2D3914FC1E579D760060B5F0 /* RCTImagePickerModule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCTImagePickerModule.m; sourceTree = "<group>"; };
 		2D65C6E51E4B1CAE0036E29B /* RCTLePushViewControllerDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RCTLePushViewControllerDelegate.h; sourceTree = "<group>"; };
 		2D65C6E61E4B1FA50036E29B /* RCTLePushViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCTLePushViewController.h; sourceTree = "<group>"; };
 		2D65C6E71E4B1FA50036E29B /* RCTLePushViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCTLePushViewController.m; sourceTree = "<group>"; };
@@ -212,6 +215,8 @@
 			children = (
 				2D8D22291E032DC9004EC569 /* RCTDeviceModule.h */,
 				2D8D222A1E032DC9004EC569 /* RCTDeviceModule.m */,
+				2D3914FB1E579D760060B5F0 /* RCTImagePickerModule.h */,
+				2D3914FC1E579D760060B5F0 /* RCTImagePickerModule.m */,
 				2D8D222B1E032DC9004EC569 /* KeyChainStore.h */,
 				2D8D222C1E032DC9004EC569 /* KeyChainStore.m */,
 				2D8D222D1E032DC9004EC569 /* RCTOrientationModule.h */,
@@ -355,6 +360,7 @@
 				2D8D22451E032DD3004EC569 /* RCTLeVideoManager.m in Sources */,
 				2DDA3FEF1E3BB8A300BAF4AE /* SDWebImageManager.m in Sources */,
 				2DDA3FEB1E3BB8A300BAF4AE /* SDWebImageCompat.m in Sources */,
+				2D3914FD1E579D760060B5F0 /* RCTImagePickerModule.m in Sources */,
 				2DDA3FF01E3BB8A300BAF4AE /* SDWebImagePrefetcher.m in Sources */,
 				2DDA3FF51E3BB8A300BAF4AE /* UIImageView+WebCache.m in Sources */,
 				2D0C97721E06CD1100FB5279 /* BrightnessView.m in Sources */,

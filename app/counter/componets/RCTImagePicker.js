@@ -11,7 +11,7 @@ const { NativeModules } = require('react-native');
 const ImagePickerAPI = NativeModules.ImagePickerModule;
 
 const DEFAULT_OPTIONS = {
-  title: '选取图片',
+  title: '选取图片或视频',
   cancelButtonTitle: '取消',
   takePhotoButtonTitle: '拍摄',
   chooseFromLibraryButtonTitle: '从手机相册选择',

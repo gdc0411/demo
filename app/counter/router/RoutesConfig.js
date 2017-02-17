@@ -10,6 +10,7 @@ import device from '../containers/device';
 import social from '../containers/social';
 import orient from '../containers/orient';
 import download from '../containers/download';
+import image from '../containers/image';
 
 export default module.exports = {
     path: '/',
@@ -28,6 +29,10 @@ export default module.exports = {
         {
             path: '/orient',
             component: orient
+        },
+        {
+            path: '/image',
+            component: image
         },
         {
             path: '/download',
