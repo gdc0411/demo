@@ -36,6 +36,7 @@ import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.WritableMap;
+import com.facebook.react.modules.core.RCTNativeAppEventEmitter;
 import com.lecloud.valley.utils.RealPathUtil;
 
 import java.io.ByteArrayOutputStream;
@@ -55,13 +56,16 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.TimeZone;
 import java.util.UUID;
+
+import static com.lecloud.valley.utils.LogUtils.TAG;
 
 /**
  * Created by LizaRao on 2017/2/18.
  */
-public class ImagePickerFunc extends ReactContextBaseJavaModule implements ActivityEventListener {
+public class ImagePickerFunc implements ReactBaseFunc, ActivityEventListener {
 
     static final int REQUEST_LAUNCH_IMAGE_CAPTURE = 13001;
     static final int REQUEST_LAUNCH_IMAGE_LIBRARY = 13002;
@@ -69,6 +73,10 @@ public class ImagePickerFunc extends ReactContextBaseJavaModule implements Activ
     static final int REQUEST_LAUNCH_VIDEO_CAPTURE = 13004;
 
     private final ReactApplicationContext mReactContext;
+    private final RCTNativeAppEventEmitter mEventEmitter;
+
+    private Runnable mCalcCacheRunnable;
+    private Runnable mClearCacheRunnable;
 
     private Uri mCameraCaptureURI;
     private Callback mCallback;
@@ -82,22 +90,34 @@ public class ImagePickerFunc extends ReactContextBaseJavaModule implements Activ
     private int videoDurationLimit = 0;
     WritableMap response;
 
-    public ImagePickerFunc(ReactApplicationContext reactContext) {
-        super(reactContext);
-
+    ImagePickerFunc(ReactApplicationContext reactContext, RCTNativeAppEventEmitter eventEmitter) {
         mReactContext = reactContext;
+        mEventEmitter = eventEmitter;
 
-        reactContext.addActivityEventListener(this);
+        initialize();
+    }
+
+
+    public void initialize() {
+        Log.i(TAG, "ImagePickerFunc初始化");
+
+        //添加监听
+        mReactContext.addActivityEventListener(this);
     }
 
     @Override
-    public String getName() {
-        return "ImagePickerManager";
+    public Map<String, Object> getConstants() {
+        return null;
     }
 
-    @ReactMethod
-    public void showImagePicker(final ReadableMap options, final Callback callback) {
-        Activity currentActivity = getCurrentActivity();
+    @Override
+    public void destroy() {
+        mReactContext.removeActivityEventListener(this);
+    }
+
+
+    void showImagePicker(final ReadableMap options, final Callback callback) {
+        Activity currentActivity = mReactContext.getCurrentActivity();
 
         if (currentActivity == null) {
             response = Arguments.createMap();
@@ -186,8 +206,7 @@ public class ImagePickerFunc extends ReactContextBaseJavaModule implements Activ
     }
 
     // NOTE: Currently not reentrant / doesn't support concurrent requests
-    @ReactMethod
-    public void launchCamera(final ReadableMap options, final Callback callback) {
+    void launchCamera(final ReadableMap options, final Callback callback) {
         response = Arguments.createMap();
 
         if (!isCameraAvailable()) {
@@ -196,7 +215,7 @@ public class ImagePickerFunc extends ReactContextBaseJavaModule implements Activ
             return;
         }
 
-        Activity currentActivity = getCurrentActivity();
+        Activity currentActivity = mReactContext.getCurrentActivity();
         if (currentActivity == null) {
             response.putString("error", "can't find current Activity");
             callback.invoke(response);
@@ -247,11 +266,10 @@ public class ImagePickerFunc extends ReactContextBaseJavaModule implements Activ
     }
 
     // NOTE: Currently not reentrant / doesn't support concurrent requests
-    @ReactMethod
-    public void launchImageLibrary(final ReadableMap options, final Callback callback) {
+    void launchImageLibrary(final ReadableMap options, final Callback callback) {
         response = Arguments.createMap();
 
-        Activity currentActivity = getCurrentActivity();
+        Activity currentActivity = mReactContext.getCurrentActivity();
         if (currentActivity == null) {
             response.putString("error", "can't find current Activity");
             callback.invoke(response);

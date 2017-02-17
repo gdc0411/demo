@@ -33,6 +33,8 @@ public interface Constants {
 
     String REACT_CLASS_DOWNLOAD_MODULE = "RCTDownloadModule";
 
+    String REACT_CLASS_IMAGE_PICKER_MODULE = "RCTImagePickerModule";
+
 //============== REACT_METHOD ======================
 
     //方法

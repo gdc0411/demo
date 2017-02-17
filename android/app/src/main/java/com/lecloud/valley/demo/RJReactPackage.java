@@ -5,6 +5,7 @@ import com.lecloud.valley.leecoSdk.LeReactSubVideoViewManager;
 import com.lecloud.valley.leecoSdk.LeReactVideoViewManager;
 import com.lecloud.valley.modules.CacheModule;
 import com.lecloud.valley.modules.DownloadModule;
+import com.lecloud.valley.modules.ImagePickerModule;
 import com.lecloud.valley.modules.OrientationModule;
 import com.lecloud.valley.demo.sample.CallbackModule;
 import com.lecloud.valley.demo.sample.CheckItemViewManager;
@@ -57,6 +58,7 @@ public class RJReactPackage implements ReactPackage {
         modules.add(new UmengPushModule(reactContext));
         modules.add(new DownloadModule(reactContext));
         modules.add(new CacheModule(reactContext));
+        modules.add(new ImagePickerModule(reactContext));
         return modules;
     }
 
