@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.WindowManager;
 
 import com.facebook.react.bridge.Arguments;
+import com.facebook.react.bridge.LifecycleEventListener;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.uimanager.ThemedReactContext;
 import com.facebook.react.uimanager.events.RCTEventEmitter;
@@ -62,7 +63,7 @@ import static com.lecloud.valley.utils.LogUtils.getTraceInfo;
  * Created by RaoJia on 2017/2/5.
  */
 
-class LeReactPushView extends CameraSurfaceView implements ISurfaceCreatedListener {
+class LeReactPushView extends CameraSurfaceView implements ISurfaceCreatedListener, LifecycleEventListener {
 
     private ThemedReactContext mThemedReactContext;
     private RCTEventEmitter mEventEmitter;
@@ -114,6 +115,8 @@ class LeReactPushView extends CameraSurfaceView implements ISurfaceCreatedListen
     public LeReactPushView(ThemedReactContext context) {
         super(context);
         mThemedReactContext = context;
+        mThemedReactContext.addLifecycleEventListener(this);
+
         mEventEmitter = mThemedReactContext.getJSModule(RCTEventEmitter.class);
 
         ((Activity) mThemedReactContext.getBaseContext()).getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
@@ -156,7 +159,7 @@ class LeReactPushView extends CameraSurfaceView implements ISurfaceCreatedListen
         cameraParams.setVideoBitrate(1000 * 1000); //设置码率
         audioParams.setEnableVolumeGain(true);//开启音量调节,注意,这一点会影响性能,如果没有必要,设置为false
         cameraParams.setFocusOnTouch(mTouchfocus);//开启对焦功能
-        if(mTouchfocus){
+        if (mTouchfocus) {
             cameraParams.setFocusOnAnimation(true);//开启对焦动画
             cameraParams.setOpenGestureZoom(true);//开启拉近拉远手势
             cameraParams.setFrontCameraMirror(true);//开启镜像
@@ -192,7 +195,7 @@ class LeReactPushView extends CameraSurfaceView implements ISurfaceCreatedListen
             cameraParams.setHeight(640);
         }
         //开启默认前置摄像头
-        if(mFrontCamera) {
+        if (mFrontCamera) {
             cameraParams.setCameraId(Camera.CameraInfo.CAMERA_FACING_FRONT);
         } else {
             cameraParams.setCameraId(Camera.CameraInfo.CAMERA_FACING_BACK);
@@ -200,7 +203,7 @@ class LeReactPushView extends CameraSurfaceView implements ISurfaceCreatedListen
         cameraParams.setVideoBitrate(1000 * 1000); //设置码率
         audioParams.setEnableVolumeGain(true);//开启音量调节,注意,这一点会影响性能,如果没有必要,设置为false
         cameraParams.setFocusOnTouch(mTouchfocus);//开启对焦功能
-        if(mTouchfocus){
+        if (mTouchfocus) {
             cameraParams.setFocusOnAnimation(true);//开启对焦动画
             cameraParams.setOpenGestureZoom(true);//开启拉近拉远手势
             cameraParams.setFrontCameraMirror(true);//开启镜像
@@ -520,7 +523,7 @@ class LeReactPushView extends CameraSurfaceView implements ISurfaceCreatedListen
             event.putInt(EVENT_PROP_ERROR_CODE, 0);
             if (mFlashFlag) {
                 event.putString(EVENT_PROP_ERROR_MSG, "闪关灯已打开");
-            }else {
+            } else {
                 event.putString(EVENT_PROP_ERROR_MSG, "闪光灯已关闭");
             }
 
@@ -535,7 +538,7 @@ class LeReactPushView extends CameraSurfaceView implements ISurfaceCreatedListen
 
     /**
      * 切换滤镜,设置为0为关闭滤镜
-     *
+     * <p>
      * FILTER_VIDEO_NONE = 0;
      * FILTER_VIDEO_DEFAULT = 1;
      * FILTER_VIDEO_WARM = 2;
@@ -654,11 +657,13 @@ class LeReactPushView extends CameraSurfaceView implements ISurfaceCreatedListen
             switch (msg.what) {
                 case RecorderConstance.RECORDER_OPEN_URL_SUCESS:
                     mPushState = PUSH_STATE_CONNECTED;
+                    mPushFlag = true;
                     errMsg = "推流已打开";
                     break;
 
                 case RecorderConstance.RECORDER_OPEN_URL_FAILED:
                     mPushState = PUSH_STATE_ERROR;
+                    mPushFlag = false;
                     errCode = -1;
                     errMsg = "推流连接失败:推流地址不可用或网络问题";
                     break;
@@ -675,66 +680,78 @@ class LeReactPushView extends CameraSurfaceView implements ISurfaceCreatedListen
 
                 case RecorderConstance.RECORDER_PUSH_AUDIO_PACKET_LOSS_RATE:
                     mPushState = PUSH_STATE_WARNING;
-                    errCode = -1;
+                    errCode = 1;
                     errMsg = "音频丢帧，1分钟内5次以上，请诊断网络";
                     break;
 
                 case RecorderConstance.RECORDER_PUSH_VIDEO_PACKET_LOSS_RATE:
                     mPushState = PUSH_STATE_WARNING;
-                    errCode = -1;
+                    errCode = 1;
                     errMsg = "视频丢帧，1分钟内5次以上，请诊断网络";
                     break;
 
                 case RecorderConstance.RECORDER_PUSH_ERROR:
                     mPushState = PUSH_STATE_ERROR;
+                    mPushFlag = false;
                     errCode = -1;
                     errMsg = "推流失败,原因:网络较差,编码出错,推流崩溃,第一针数据发送失败...等";
                     break;
 
                 case RecorderConstance.RECORDER_PUSH_STOP_SUCCESS:
                     mPushState = PUSH_STATE_CLOSED;
+                    mPushFlag = false;
                     errMsg = "推流已关闭";
 
+                    if (mTimeFlag) {
+                        timerHandler.removeCallbacks(timerRunnable);
+                    }
                     mTimeFlag = false;
                     break;
 
                 //*********************乐视云直播有一部分属于自己的回调事件*****************
                 case RecorderConstance.LIVE_STATE_END_ERROR:
                     mPushState = PUSH_STATE_ERROR;
+                    mPushFlag = false;
                     errCode = -1;
                     errMsg = RecorderConstance.LIVE_STATE_END_ERROR + "：直播已结束";
                     break;
 
                 case RecorderConstance.LIVE_STATE_CANCEL_ERROR:
                     mPushState = PUSH_STATE_ERROR;
+                    mPushFlag = false;
                     errCode = -1;
                     errMsg = RecorderConstance.LIVE_STATE_CANCEL_ERROR + "：直播已取消";
                     break;
 
                 case RecorderConstance.LIVE_STATE_NEED_RECORD:
                     mPushState = PUSH_STATE_CONNECTING;
+                    mPushFlag = true;
                     errMsg = RecorderConstance.LIVE_STATE_NEED_RECORD + "：直播开启转点播功能";
                     break;
 
                 case RecorderConstance.LIVE_STATE_NOT_STARTED_ERROR:
                     mPushState = PUSH_STATE_ERROR;
+                    mPushFlag = false;
                     errCode = -1;
                     errMsg = RecorderConstance.LIVE_STATE_NOT_STARTED_ERROR + "：直播时间未到";
                     break;
 
                 case RecorderConstance.LIVE_STATE_OTHER_ERROR:
                     mPushState = PUSH_STATE_ERROR;
+                    mPushFlag = false;
                     errCode = -1;
                     errMsg = RecorderConstance.LIVE_STATE_OTHER_ERROR + "：其他直播错误";
                     break;
 
                 case RecorderConstance.LIVE_STATE_PUSH_COMPLETE:
                     mPushState = PUSH_STATE_OPENED;
+                    mPushFlag = false;
                     errMsg = RecorderConstance.LIVE_STATE_PUSH_COMPLETE + "：推流已完成";
                     break;
 
                 case RecorderConstance.LIVE_STATE_TIME_REMAINING:
                     mPushState = PUSH_STATE_OPENED;
+                    mPushFlag = true;
                     errMsg = RecorderConstance.LIVE_STATE_TIME_REMAINING + "：直播剩余时间:在剩余5分钟和30分钟时都会回调";
                     break;
             }
@@ -778,6 +795,7 @@ class LeReactPushView extends CameraSurfaceView implements ISurfaceCreatedListen
                 event.putBoolean(EVENT_PROP_PUSH_TIME_FLAG, mTimeFlag);
                 event.putInt(EVENT_PROP_PUSH_TIME, mTime);
                 mEventEmitter.receiveEvent(getId(), Events.EVENT_PUSH_TIME_UPDATE.toString(), event);
+
                 timerHandler.postDelayed(timerRunnable, 1000);
             }
         }
@@ -849,7 +867,7 @@ class LeReactPushView extends CameraSurfaceView implements ISurfaceCreatedListen
         mInitedValid = true;
         if (isBack) {
             isBack = false;
-            setPush(false);
+            setPush(mPushFlag);
         }
 
     }
@@ -873,24 +891,24 @@ class LeReactPushView extends CameraSurfaceView implements ISurfaceCreatedListen
 
     }
 
-//    @Override
-//    public void onHostResume() {
-//        Log.d(TAG, LogUtils.getTraceInfo() + "生命周期事件 onHostResume 调起！");
-//        if (mInitedValid)
-//            onResume();
-//    }
-//
-//    @Override
-//    public void onHostPause() {
-//        Log.d(TAG, LogUtils.getTraceInfo() + "生命周期事件 onHostPause 调起！");
-//        if (mInitedValid)
-//            onPause();
-//    }
-//
-//    @Override
-//    public void onHostDestroy() {
-//        Log.d(TAG, LogUtils.getTraceInfo() + "生命周期事件 onHostDestroy 调起！");
-//        if (mInitedValid)
-//            onDestroy();
-//    }
+    @Override
+    public void onHostResume() {
+        Log.d(TAG, LogUtils.getTraceInfo() + "生命周期事件 onHostResume 调起！");
+        if (mInitedValid)
+            onResume();
+    }
+
+    @Override
+    public void onHostPause() {
+        Log.d(TAG, LogUtils.getTraceInfo() + "生命周期事件 onHostPause 调起！");
+        if (mInitedValid)
+            onPause();
+    }
+
+    @Override
+    public void onHostDestroy() {
+        Log.d(TAG, LogUtils.getTraceInfo() + "生命周期事件 onHostDestroy 调起！");
+        if (mInitedValid)
+            onDestroy();
+    }
 }
