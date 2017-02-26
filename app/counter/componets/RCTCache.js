@@ -44,7 +44,7 @@ module.exports = {
     calc() {
         CacheAPI.calc();
     },
-    clear(src) {
+    clear() {
         CacheAPI.clear();
     },
     addCacheUpdateListener(handler: Function) {

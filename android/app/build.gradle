@@ -85,12 +85,12 @@ def enableProguardInReleaseBuilds = true
 
 android {
     compileSdkVersion 23
-    buildToolsVersion "23.0.1"
+    buildToolsVersion "23.0.3"
 
     defaultConfig {
         applicationId "com.lecloud.valley.demo"
         minSdkVersion 16
-        targetSdkVersion 22
+        targetSdkVersion 23
         versionCode 1
         versionName "1.0"
         ndk {
@@ -114,6 +114,11 @@ android {
                 UMENG_CHANNEL       : "LeValley"
         ]
     }
+
+    dexOptions {
+        jumboMode = true
+    }
+
     splits {
         abi {
             reset()

@@ -11,6 +11,7 @@ import social from '../containers/social';
 import orient from '../containers/orient';
 import download from '../containers/download';
 import image from '../containers/image';
+import picker from '../containers/croppick';
 
 export default module.exports = {
     path: '/',
@@ -33,6 +34,10 @@ export default module.exports = {
         {
             path: '/image',
             component: image
+        },
+        {
+            path: '/picker',
+            component: picker
         },
         {
             path: '/download',

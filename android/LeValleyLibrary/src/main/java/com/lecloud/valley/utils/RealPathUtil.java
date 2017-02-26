@@ -19,10 +19,7 @@ import java.io.File;
 
 public class RealPathUtil {
 
-    public static
-    @Nullable
-    String getRealPathFromURI(@NonNull final Context context,
-                              @NonNull final Uri uri) {
+    public static @Nullable String getRealPathFromURI(@NonNull final Context context, @NonNull final Uri uri) {
 
         final boolean isKitKat = Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
 
