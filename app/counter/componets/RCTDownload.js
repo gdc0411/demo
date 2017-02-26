@@ -53,7 +53,7 @@ module.exports = {
     download(src) {
         DownloadAPI.download(src);
     },
-    list(src) {
+    list() {
         DownloadAPI.list();
     },
     pause(src) {
