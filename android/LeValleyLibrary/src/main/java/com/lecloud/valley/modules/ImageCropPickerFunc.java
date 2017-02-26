@@ -54,7 +54,7 @@ import static com.lecloud.valley.utils.LogUtils.TAG;
 /**
  * Created by RaoJia on 2017/2/27.
  */
-class CropPickerFunc implements ReactBaseFunc, ActivityEventListener {
+class ImageCropPickerFunc implements ReactBaseFunc, ActivityEventListener {
 
     private static final int IMAGE_PICKER_REQUEST = 61110;
     private static final int CAMERA_PICKER_REQUEST = 61111;
@@ -96,7 +96,7 @@ class CropPickerFunc implements ReactBaseFunc, ActivityEventListener {
     private Compression compression;
 
 
-    CropPickerFunc(ReactApplicationContext reactContext, RCTNativeAppEventEmitter eventEmitter) {
+    ImageCropPickerFunc(ReactApplicationContext reactContext, RCTNativeAppEventEmitter eventEmitter) {
         mReactContext = reactContext;
         mEventEmitter = eventEmitter;
 
@@ -153,7 +153,7 @@ class CropPickerFunc implements ReactBaseFunc, ActivityEventListener {
         Log.d(TAG, LogUtils.getTraceInfo() + "外部控制——— CleanAll");
 
         final Activity activity = mReactContext.getCurrentActivity();
-        final CropPickerFunc module = this;
+        final ImageCropPickerFunc module = this;
 
         if (activity == null) {
             promise.reject(E_ACTIVITY_DOES_NOT_EXIST, "Activity doesn't exist");
@@ -189,7 +189,7 @@ class CropPickerFunc implements ReactBaseFunc, ActivityEventListener {
         }
 
         final Activity activity = mReactContext.getCurrentActivity();
-        final CropPickerFunc module = this;
+        final ImageCropPickerFunc module = this;
 
         if (activity == null) {
             promise.reject(E_ACTIVITY_DOES_NOT_EXIST, "Activity doesn't exist");

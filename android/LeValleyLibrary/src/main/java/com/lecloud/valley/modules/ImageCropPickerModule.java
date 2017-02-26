@@ -13,9 +13,9 @@ import static com.lecloud.valley.common.Constants.REACT_CLASS_IMAGE_CROP_PICKER_
  * Created by RaoJia on 2017/2/27.
  */
 
-public class CropPickerModule extends ReactBaseModule {
+public class ImageCropPickerModule extends ReactBaseModule {
 
-    public CropPickerModule(ReactApplicationContext reactContext) {
+    public ImageCropPickerModule(ReactApplicationContext reactContext) {
         super(reactContext);
     }
 
@@ -29,36 +29,36 @@ public class CropPickerModule extends ReactBaseModule {
         super.initialize();
         mEventEmitter = mReactContext.getJSModule(RCTNativeAppEventEmitter.class);
         if (func == null) {
-            func = new CropPickerFunc(mReactContext, mEventEmitter);
+            func = new ImageCropPickerFunc(mReactContext, mEventEmitter);
         }
     }
 
 
     @ReactMethod
     public void clean(final Promise promise) {
-        ((CropPickerFunc)func).clean(promise);
+        ((ImageCropPickerFunc)func).clean(promise);
     }
 
     @ReactMethod
     public void cleanSingle(final String pathToDelete, final Promise promise) {
-        ((CropPickerFunc)func).cleanSingle(pathToDelete, promise);
+        ((ImageCropPickerFunc)func).cleanSingle(pathToDelete, promise);
     }
 
 
     @ReactMethod
     public void openCamera(final ReadableMap options, final Promise promise) {
-        ((CropPickerFunc)func).openCamera(options, promise);
+        ((ImageCropPickerFunc)func).openCamera(options, promise);
     }
 
 
     @ReactMethod
     public void openPicker(final ReadableMap options, final Promise promise) {
-        ((CropPickerFunc)func).openPicker(options, promise);
+        ((ImageCropPickerFunc)func).openPicker(options, promise);
     }
 
     @ReactMethod
     public void openCropper(final ReadableMap options, final Promise promise) {
-        ((CropPickerFunc)func).openCropper(options, promise);
+        ((ImageCropPickerFunc)func).openCropper(options, promise);
     }
 
 }
