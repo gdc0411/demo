@@ -105,7 +105,7 @@ class ImageCropPickerFunc implements ReactBaseFunc, ActivityEventListener {
 
     @Override
     public void initialize() {
-        Log.d(TAG, LogUtils.getTraceInfo() + "CropPickerFunc初始化");
+        Log.d(TAG, LogUtils.getTraceInfo() + "ImageCropPickerFunc初始化");
         compression = new Compression();
         mReactContext.addActivityEventListener(this);
     }
@@ -117,7 +117,7 @@ class ImageCropPickerFunc implements ReactBaseFunc, ActivityEventListener {
 
     @Override
     public void destroy() {
-        Log.d(TAG, LogUtils.getTraceInfo() + "CropPickerFunc销毁");
+        Log.d(TAG, LogUtils.getTraceInfo() + "ImageCropPickerFunc销毁");
         mReactContext.removeActivityEventListener(this);
     }
 

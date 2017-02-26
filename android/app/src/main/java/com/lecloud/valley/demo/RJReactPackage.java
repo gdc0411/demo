@@ -4,7 +4,7 @@ import com.lecloud.valley.leecoSdk.LeReactPushViewManager;
 import com.lecloud.valley.leecoSdk.LeReactSubVideoViewManager;
 import com.lecloud.valley.leecoSdk.LeReactVideoViewManager;
 import com.lecloud.valley.modules.CacheModule;
-import com.lecloud.valley.modules.CropPickerModule;
+import com.lecloud.valley.modules.ImageCropPickerModule;
 import com.lecloud.valley.modules.DownloadModule;
 import com.lecloud.valley.modules.ImagePickerModule;
 import com.lecloud.valley.modules.OrientationModule;
@@ -60,7 +60,7 @@ public class RJReactPackage implements ReactPackage {
         modules.add(new DownloadModule(reactContext));
         modules.add(new CacheModule(reactContext));
         modules.add(new ImagePickerModule(reactContext));
-        modules.add(new CropPickerModule(reactContext));
+        modules.add(new ImageCropPickerModule(reactContext));
         return modules;
     }
 
