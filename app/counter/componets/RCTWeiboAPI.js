@@ -55,7 +55,7 @@ function waitForResponse(type) {
             //     err.errCode = result.errCode;
             //     reject(err);
             // } else {
-                resolve(result);
+            resolve(result);
             // }
         };
     });

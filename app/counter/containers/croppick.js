@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, ScrollView, Alert, Image, TouchableOpacity, NativeModules, Dimensions} from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Alert, Image, TouchableOpacity, NativeModules, Dimensions } from 'react-native';
 
 // import Video from 'react-native-video';
 
 var ImagePicker = NativeModules.ImageCropPickerModule;
+
+import * as ImageCropPicker from '../componets/RCTImageCropPicker';
 
 const styles = StyleSheet.create({
     container: {
@@ -33,51 +35,55 @@ export default class App extends Component {
     }
 
     pickSingleWithCamera(cropping) {
-        ImagePicker.openCamera({
+        ImageCropPicker.openCamera({
             cropping: cropping,
             width: 500,
             height: 500,
-        }).then(image => {
+        }, image => {
             console.log('received image', image);
             this.setState({
                 image: { uri: image.path, width: image.width, height: image.height },
                 images: null
             });
-        }).catch(e => alert(e));
+        }, e => alert(e));
+
     }
 
     pickSingleBase64(cropit) {
-        ImagePicker.openPicker({
+        ImageCropPicker.openPicker({
             width: 300,
             height: 300,
             cropping: cropit,
             includeBase64: true
-        }).then(image => {
+        }, image => {
             console.log('received base64 image');
             this.setState({
                 image: { uri: `data:${image.mime};base64,` + image.data, width: image.width, height: image.height },
                 images: null
             });
-        }).catch(e => alert(e));
+        }, e => alert(e));
     }
 
     cleanupImages() {
-        ImagePicker.clean().then(() => {
-            console.log('removed tmp images from tmp directory');
-        }).catch(e => {
-            alert(e);
-        });
+        // ImagePicker.clean().then(() => {
+        //     console.log('removed tmp images from tmp directory');
+        // }).catch(e => {
+        //     alert(e);
+        // });
+        ImageCropPicker.clean(() => console.log('removed tmp images from tmp directory'), e => alert(e));
     }
 
     cleanupSingleImage() {
         let image = this.state.image || (this.state.images && this.state.images.length ? this.state.images[0] : null);
         console.log('will cleanup image', image);
 
-        ImagePicker.cleanSingle(image ? image.uri : null).then(() => {
-            console.log(`removed tmp image ${image.uri} from tmp directory`);
-        }).catch(e => {
-            alert(e);
-        })
+        // ImagePicker.cleanSingle(image ? image.uri : null).then(() => {
+        //     console.log(`removed tmp image ${image.uri} from tmp directory`);
+        // }).catch(e => {
+        //     alert(e);
+        // });
+        ImageCropPicker.cleanSingle(image ? image.uri : null,
+            () => console.log(`removed tmp image ${image.uri} from tmp directory`), e => alert(e));
     }
 
     cropLast() {
@@ -85,24 +91,24 @@ export default class App extends Component {
             return Alert.alert('No image', 'Before open cropping only, please select image');
         }
 
-        ImagePicker.openCropper({
+        ImageCropPicker.openCropper({
             path: this.state.image.uri,
             width: 200,
             height: 200
-        }).then(image => {
+        }, image => {
             console.log('received cropped image', image);
             this.setState({
                 image: { uri: image.path, width: image.width, height: image.height, mime: image.mime },
                 images: null
             });
-        }).catch(e => {
+        }, e => {
             console.log(e);
             Alert.alert(e.message ? e.message : e);
         });
     }
 
     pickSingle(cropit, circular = false) {
-        ImagePicker.openPicker({
+        ImageCropPicker.openPicker({
             width: 300,
             height: 300,
             cropping: cropit,
@@ -111,22 +117,22 @@ export default class App extends Component {
             compressImageMaxHeight: 480,
             compressImageQuality: 0.5,
             compressVideoPreset: 'MediumQuality',
-        }).then(image => {
+        }, image => {
             console.log('received image', image);
             this.setState({
                 image: { uri: image.path, width: image.width, height: image.height, mime: image.mime },
                 images: null
             });
-        }).catch(e => {
+        }, e => {
             console.log(e);
             Alert.alert(e.message ? e.message : e);
         });
     }
 
     pickMultiple() {
-        ImagePicker.openPicker({
+        ImageCropPicker.openPicker({
             multiple: true
-        }).then(images => {
+        }, images => {
             this.setState({
                 image: null,
                 images: images.map(i => {
@@ -134,7 +140,7 @@ export default class App extends Component {
                     return { uri: i.path, width: i.width, height: i.height, mime: i.mime };
                 })
             });
-        }).catch(e => alert(e));
+        }, e => alert(e));
     }
 
     scaledHeight(oldW, oldH, newW) {
