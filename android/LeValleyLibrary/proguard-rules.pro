@@ -403,12 +403,24 @@
 
 # LEVALLEY
 -keep class com.lecloud.valley.handler.CrashHandler {*;}
+-keep class com.lecloud.valley.handler.CrashHandlerEx {*;}
 -keep class com.lecloud.valley.utils.LogUtils {*;}
--keep class com.yalantis.ucrop.UCropActivity {*;}
 #-keep class com.lecloud.valley.modules.** {*;}
 #-keep class com.lecloud.valley.leecoSdk.LeReactPushViewManager {*;}
 #-keep class com.lecloud.valley.leecoSdk.LeReactSubVideoViewManager {*;}
 #-keep class com.lecloud.valley.leecoSdk.LeReactVideoViewManager {*;}
 #-keep class com.lecloud.valley.views.LinearGradientManager {*;}
+
+# Yalantis/uCrop
+-dontwarn com.yalantis.ucrop**
+-keep class com.yalantis.ucrop** { *; }
+-keep interface com.yalantis.ucrop** { *; }
+
+
+# zetbaitsu/Compressor
+-dontwarn id.zelory.compressor**
+-keep class id.zelory.compressor** {*;}
+-keep interface id.zelory.compressor** {*;}
+
 
 -keep public class **.R$*{*;}

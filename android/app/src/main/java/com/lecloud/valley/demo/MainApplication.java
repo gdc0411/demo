@@ -9,6 +9,7 @@ import android.os.Handler;
 import android.util.Log;
 
 import com.lecloud.valley.handler.CrashHandler;
+import com.lecloud.valley.handler.CrashHandlerEx;
 import com.lecloud.valley.modules.UmengPushModule;
 import com.lecloud.valley.utils.LogUtils;
 import com.facebook.react.ReactApplication;
@@ -103,6 +104,9 @@ public class MainApplication extends Application implements ReactApplication {
 
             //TODO CrashHandler是一个抓取崩溃log的工具类（可选）
             CrashHandler.getInstance(this);
+//            CrashHandlerEx crashHandler = CrashHandlerEx.getInstance();
+//            crashHandler.init(getApplicationContext());
+
             try {
                 Class<?> clazzRuntime = Class.forName("dalvik.system.VMRuntime", false, ClassLoader.getSystemClassLoader());
                 Method methodGetRuntime = clazzRuntime.getDeclaredMethod("getRuntime");
