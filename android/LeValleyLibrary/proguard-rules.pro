@@ -404,6 +404,7 @@
 # LEVALLEY
 -keep class com.lecloud.valley.handler.CrashHandler {*;}
 -keep class com.lecloud.valley.utils.LogUtils {*;}
+-keep class com.yalantis.ucrop.UCropActivity {*;}
 #-keep class com.lecloud.valley.modules.** {*;}
 #-keep class com.lecloud.valley.leecoSdk.LeReactPushViewManager {*;}
 #-keep class com.lecloud.valley.leecoSdk.LeReactSubVideoViewManager {*;}

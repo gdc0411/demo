@@ -46,7 +46,6 @@ export default class App extends Component {
                 images: null
             });
         }, e => alert(e));
-
     }
 
     pickSingleBase64(cropit) {
