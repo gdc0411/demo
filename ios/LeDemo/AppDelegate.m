@@ -8,7 +8,7 @@
  */
 
 #import "AppDelegate.h"
-#import "CodePush.h"
+#import <CodePush/CodePush.h>
 
 #import "UMessage.h"
 #if __IPHONE_OS_VERSION_MAX_ALLOWED >= 100000

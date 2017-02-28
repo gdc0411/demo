@@ -3,13 +3,8 @@
  */
 'use strict';
 
-import React, {Component} from 'react';
-import {
-    Navigator,
-    Platform,
-    BackAndroid,
-    ToastAndroid,
-} from 'react-native';
+import React, { Component } from 'react';
+import { Navigator, Platform, BackAndroid, ToastAndroid, } from 'react-native';
 
 import Home from './app/swiper';
 
@@ -49,7 +44,6 @@ class App extends Component {
                 return top.ref.handleBack();
             }
 
-
             navigator.pop();
             return true;//应用来接管默认行为
         }
@@ -82,10 +76,10 @@ class App extends Component {
                 renderScene={
                     (route, navigator) => {
                         let Component = route.component;
-                        return <Component ref={r => route.ref = r}  {...route.params} navigator={navigator}/>;
+                        return <Component ref={r => route.ref = r}  {...route.params} navigator={navigator} />;
                     }
                 }
-                />
+            />
         );
     }
 }
