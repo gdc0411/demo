@@ -742,6 +742,12 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
 {
     //    if (_paused) return;
     //    [self pause];
+    
+    __weak typeof(self) wSelf = self;
+    [self notifyEventWithState:PUSH_STATE_DISCONNECTING code:0 msg:@"正在断开……" complete:^(){
+        [wSelf.manager stopStreaming];//结束推流
+    }];
+    
 }
 
 - (void)applicationDidEnterBackground:(NSNotification *)notification
