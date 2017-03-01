@@ -13,12 +13,14 @@ import {
 
 import CodePush from "react-native-code-push";
 
+
 //import App from './app';
 //import App from './app/simpleRedux/app';
 //import App from './app/simpleRedux2/app';
 //import App from './app/simpleRedux3/app';
-// import App from './counter/index';
+import App from './counter/index';
 
+const enableHotUpdate = !__DEV__;
 
 class LeDemo extends Component {
   constructor() {
@@ -27,7 +29,7 @@ class LeDemo extends Component {
   }
 
   codePushStatusDidChange(syncStatus) {
-    switch(syncStatus) {
+    switch (syncStatus) {
       case CodePush.SyncStatus.CHECKING_FOR_UPDATE:
         this.setState({ syncMessage: "检查更新." });
         break;
@@ -88,15 +90,49 @@ class LeDemo extends Component {
   /** Update pops a confirmation dialog, and then immediately reboots the app */
   syncImmediate() {
     CodePush.sync(
-      { installMode: CodePush.InstallMode.IMMEDIATE, updateDialog: true },
+      {
+        updateDialog: {
+          appendReleaseDescription: true,
+          descriptionPrefix: "\n\n更新日志:\n",
+          title: "更新提示",
+          optionalIgnoreButtonLabel: "忽略",
+          optionalInstallButtonLabel: "安装",
+          optionalUpdateMessage: "新版本已发布，是否安装？",
+          mandatoryContinueButtonLabel: "继续",
+          mandatoryUpdateMessage: "请安装必要的更新",
+        },
+        installMode: CodePush.InstallMode.IMMEDIATE,
+      },
       this.codePushStatusDidChange.bind(this),
       this.codePushDownloadDidProgress.bind(this),
     );
   }
 
+
+  componentDidMount() {
+    if (enableHotUpdate) {
+      alert('开启热更新');
+      CodePush.sync(
+        {
+          updateDialog: {
+            appendReleaseDescription: true,
+            descriptionPrefix: "\n\n更新日志:\n",
+            title: "更新提示",
+            optionalInstallButtonLabel: "立即安装",
+            optionalIgnoreButtonLabel: "忽略",
+            optionalUpdateMessage: "新版本已发布，是否安装？",
+            mandatoryContinueButtonLabel: "继续",
+            mandatoryUpdateMessage: "请安装必要的更新",
+          },
+          installMode: CodePush.InstallMode.IMMEDIATE,
+
+        },
+      );
+    }
+  }
+
   render() {
     let progressView;
-
     if (this.state.progress) {
       progressView = (
         <Text style={styles.messages}>{this.state.progress.receivedBytes} of {this.state.progress.totalBytes} bytes received</Text>
@@ -104,7 +140,7 @@ class LeDemo extends Component {
     }
 
     return (
-      <View style={styles.container}>
+      /*<View style={styles.container}>
         <Text style={styles.welcome}>
           热更新测试(双平台)
         </Text>
@@ -115,15 +151,16 @@ class LeDemo extends Component {
           <Text style={styles.syncButton}>点击对话框更新</Text>
         </TouchableOpacity>
         {progressView}
-        <Image style={styles.image} resizeMode={Image.resizeMode.contain} source={require("./img/laptop_phone_howitworks.png")}/>
+        <Image style={styles.image} resizeMode={Image.resizeMode.contain} source={require("./img/laptop_phone_howitworks.png")} />
         <TouchableOpacity onPress={this.toggleAllowRestart.bind(this)}>
-          <Text style={styles.restartToggleButton}>重启 { this.state.restartAllowed ? "允许" : "禁止"}</Text>
+          <Text style={styles.restartToggleButton}>重启 {this.state.restartAllowed ? "允许" : "禁止"}</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={this.getUpdateMetadata.bind(this)}>
-          <Text style={styles.syncButton}>点击更新Metadata</Text>
+          <Text style={styles.syncButton}>点击更新Metadata，哈哈</Text>
         </TouchableOpacity>
         <Text style={styles.messages}>{this.state.syncMessage || ""}</Text>
-      </View>
+      </View>*/
+      <App />
     );
   }
 }
@@ -159,13 +196,15 @@ const styles = StyleSheet.create({
   },
 });
 
-/**
- * Configured with a MANUAL check frequency for easy testing. For production apps, it is recommended to configure a
- * different check frequency, such as ON_APP_START, for a 'hands-off' approach where CodePush.sync() does not
- * need to be explicitly called. All options of CodePush.sync() are also available in this decorator.
- */
-let codePushOptions = { checkFrequency: CodePush.CheckFrequency.MANUAL };
 
-LeDemo = CodePush(codePushOptions)(LeDemo);
+if (enableHotUpdate) {
+  /**
+   * Configured with a MANUAL check frequency for easy testing. For production apps, it is recommended to configure a
+   * different check frequency, such as ON_APP_START, for a 'hands-off' approach where CodePush.sync() does not
+   * need to be explicitly called. All options of CodePush.sync() are also available in this decorator.
+  */
+  let codePushOptions = { checkFrequency: CodePush.CheckFrequency.MANUAL };
+  LeDemo = CodePush(codePushOptions)(LeDemo);
+}
 
 AppRegistry.registerComponent("LeDemo", () => LeDemo);
