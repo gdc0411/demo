@@ -74,7 +74,7 @@ export default class App extends Component {
 
     cleanupSingleImage() {
         let image = this.state.image || (this.state.images && this.state.images.length ? this.state.images[0] : null);
-        console.log('will cleanup image', image);
+        // console.log('will cleanup image', image);
 
         // ImagePicker.cleanSingle(image ? image.uri : null).then(() => {
         //     console.log(`removed tmp image ${image.uri} from tmp directory`);
