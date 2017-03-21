@@ -24,7 +24,7 @@ class PageContainer extends Component {
         }
     }
     doMatch(props) {
-        const { location } = props;
+        const { location } = props;        
         match({
             location,
             routes: RoutesConfig,

@@ -88,30 +88,24 @@ android {
     buildToolsVersion "23.0.3"
 
     defaultConfig {
-        applicationId "com.lecloud.valley.demo"
+        applicationId APPLICATION_ID
         minSdkVersion 16
         targetSdkVersion 22
         versionCode 1
         versionName "1.0"
         ndk {
-            abiFilters "armeabi" , "armeabi-v7a", "x86"
+            abiFilters "armeabi", "armeabi-v7a", "x86"
         }
 
         manifestPlaceholders = [
-                //微信的APPID
-                WX_APPID            : "wxa9cc420610dce2cb",
-                WX_SECRET           : "a2239a7e15f0b19fad9f9d711f66ad70",
-                //QQ的APPID
-                QQ_APPID            : "1105823147",
-                QQ_APPKEY           : "gidCGpumCa7CfnZs",
-                //微博APPID
-                WB_APPKEY           : "wb3843617848",
-                //友盟APPKEY
-                UMENG_APPKEY        : "5867813b45297d1cf6000d96",
-                //UMENG_SECRET
-                UMENG_MESSAGE_SECRET: "849963720d0ccd1e477a97c660cb962b",
-                //UMENG_CHANNEL
-                UMENG_CHANNEL       : "LeValley"
+                WX_APPID            : WX_APPID,
+                WX_SECRET           : WX_SECRET,
+                QQ_APPID            : QQ_APPID,
+                QQ_APPKEY           : QQ_APPKEY,
+                WB_APPKEY           : WB_APPKEY,
+                UMENG_APPKEY        : UMENG_APPKEY,
+                UMENG_MESSAGE_SECRET: UMENG_MESSAGE_SECRET,
+                UMENG_CHANNEL       : UMENG_CHANNEL
         ]
     }
 
@@ -144,15 +138,16 @@ android {
     }
 
     buildTypes {
+        debug {
+            buildConfigField "String", "CODEPUSH_KEY", STAGING_CODEPUSH_KEY
+        }
         release {
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
-            buildConfigField "String", "CODEPUSH_KEY", STAGING_CODEPUSH_KEY
+            buildConfigField "String", "CODEPUSH_KEY", RELEASE_CODEPUSH_KEY
             signingConfig signingConfigs.release
         }
-        debug {
-            buildConfigField "String", "CODEPUSH_KEY", RELEASE_CODEPUSH_KEY
-        }
+
     }
 
     sourceSets {
