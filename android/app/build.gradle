@@ -131,15 +131,15 @@ android {
     signingConfigs {
         debug {
             storeFile file(MYAPP_RELEASE_STORE_FILE)
-            storePassword "123456"
+            storePassword MYAPP_RELEASE_STORE_PASSWORD
             keyAlias MYAPP_RELEASE_KEY_ALIAS
-            keyPassword "123456"
+            keyPassword MYAPP_RELEASE_KEY_PASSWORD
         }
         release {
             storeFile file(MYAPP_RELEASE_STORE_FILE)
-            storePassword "123456"
+            storePassword MYAPP_RELEASE_STORE_PASSWORD
             keyAlias MYAPP_RELEASE_KEY_ALIAS
-            keyPassword "123456"
+            keyPassword MYAPP_RELEASE_KEY_PASSWORD
         }
     }
 
@@ -147,11 +147,11 @@ android {
         release {
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
-            buildConfigField "String", "CODEPUSH_KEY", '"EuiztC9zZ9XDmPTc6ycrbP1reIP6VJilRTKJf"'
+            buildConfigField "String", "CODEPUSH_KEY", STAGING_CODEPUSH_KEY
             signingConfig signingConfigs.release
         }
         debug {
-            buildConfigField "String", "CODEPUSH_KEY", '"p0A3zqrR_GVRy0BH7-bHaazW2UfsVJilRTKJf"'
+            buildConfigField "String", "CODEPUSH_KEY", RELEASE_CODEPUSH_KEY
         }
     }
 
