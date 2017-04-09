@@ -116,6 +116,26 @@ RCT_EXPORT_METHOD(getDeviceToken:(RCTResponseSenderBlock)callback)
     callback(@[deviceToken]);
 }
 
+RCT_EXPORT_METHOD(isPushEnabled:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
+{
+    resolve(@(YES));
+}
+
+
+RCT_EXPORT_METHOD(switchPush:(int)umengPushState
+                  resolve:(RCTPromiseResolveBlock)resolve
+                  reject:(RCTPromiseRejectBlock)reject)
+{
+    NSLog(@"外部控制——— 设置友盟推送状态 umengPushState: %d", umengPushState);
+    if(umengPushState==1){
+        [UMessage registerForRemoteNotifications];
+        resolve(@(YES));
+    }else{
+        [UMessage unregisterForRemoteNotifications];
+        resolve(@(YES));
+    }
+}
+
 /**
  *  初始化UM的一些配置
  */
