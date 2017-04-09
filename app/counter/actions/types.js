@@ -20,3 +20,7 @@ export const INVALIDATE_DEVICE = 'INVALIDATE_DEVICE';
 export const REQUEST_POSTS = 'REQUEST_POSTS';
 /** 接收设备信息 */
 export const RECEIVE_POSTS = 'RECEIVE_POSTS';
+
+
+/** 写入配置 */
+export const SET_CONFIG = 'SET_CONFIG';

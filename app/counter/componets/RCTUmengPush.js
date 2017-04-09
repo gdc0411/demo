@@ -37,7 +37,16 @@ function getKey(listener, META) {
     return listener[META];
 };
 
+
 module.exports = {
+
+    isPushEnabled() {
+        return UmengPush.isPushEnabled();
+    },
+
+    switchPush(enable) {
+        return UmengPush.switchPush(enable ? 1 : 0);
+    },
 
     addReceiveMessageListener(handler: Function) {
         var key = getKey(handler, META_1);

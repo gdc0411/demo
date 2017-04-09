@@ -7,12 +7,15 @@ import android.util.Log;
 
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.LifecycleEventListener;
+import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.modules.core.RCTNativeAppEventEmitter;
 import com.lecloud.valley.common.Events;
 import com.lecloud.valley.utils.LogUtils;
+import com.umeng.message.IUmengCallback;
+import com.umeng.message.PushAgent;
 import com.umeng.message.UmengMessageHandler;
 import com.umeng.message.UmengNotificationClickHandler;
 import com.umeng.message.entity.UMessage;
@@ -23,6 +26,10 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import static com.lecloud.valley.common.Constants.CODE_INVOKE_FAILED;
+import static com.lecloud.valley.common.Constants.CODE_NOT_REGISTERED;
+import static com.lecloud.valley.common.Constants.MSG_INVOKE_FAILED;
+import static com.lecloud.valley.common.Constants.MSG_NOT_REGISTERED;
 import static com.lecloud.valley.common.Constants.REACT_CLASS_UMENG_PUSH_MODULE;
 import static com.lecloud.valley.utils.LogUtils.TAG;
 
@@ -39,7 +46,7 @@ class UmengPushFunc implements ReactBaseFunc, LifecycleEventListener {
 
     private static UMessage tmpMessage;
 
-    UmengPushFunc(ReactApplicationContext reactContext , RCTNativeAppEventEmitter eventEmitter) {
+    UmengPushFunc(ReactApplicationContext reactContext, RCTNativeAppEventEmitter eventEmitter) {
         mReactContext = reactContext;
         mEventEmitter = eventEmitter;
 
@@ -62,6 +69,58 @@ class UmengPushFunc implements ReactBaseFunc, LifecycleEventListener {
     public void destroy() {
         gModule = null;
         mReactContext.removeLifecycleEventListener(this);
+    }
+
+    /**
+     * 通知是否开启
+     */
+    void isPushEnabled(final Promise promise) {
+
+        final PushAgent mPushAgent = PushAgent.getInstance(mReactContext.getApplicationContext());
+        if (mPushAgent == null) {
+            promise.reject(CODE_NOT_REGISTERED, MSG_NOT_REGISTERED);
+            return;
+        }
+        promise.resolve(mPushAgent.isPushCheck());
+    }
+
+    /**
+     * 关闭推送
+     */
+    void switchPush(int state, final Promise promise) {
+
+        final PushAgent mPushAgent = PushAgent.getInstance(mReactContext.getApplicationContext());
+        if (mPushAgent == null) {
+            promise.reject(CODE_NOT_REGISTERED, MSG_NOT_REGISTERED);
+            return;
+        }
+        if (state == 1) {
+            mPushAgent.enable(new IUmengCallback() {
+                @Override
+                public void onSuccess() {
+                    promise.resolve(true);
+                }
+
+                @Override
+                public void onFailure(String s, String s1) {
+                    promise.reject(CODE_INVOKE_FAILED, MSG_INVOKE_FAILED);
+                }
+            });
+        } else {
+            mPushAgent.disable(new IUmengCallback() {
+                @Override
+                public void onSuccess() {
+                    promise.resolve(true);
+                }
+
+                @Override
+                public void onFailure(String s, String s1) {
+                    promise.reject(CODE_INVOKE_FAILED, MSG_INVOKE_FAILED);
+                }
+            });
+        }
+
+
     }
 
     static UmengNotificationClickHandler notificationClickHandler = new UmengNotificationClickHandler() {
@@ -212,12 +271,12 @@ class UmengPushFunc implements ReactBaseFunc, LifecycleEventListener {
 //        WritableMap params = convertToWriteMap(msg);
         WritableMap event = Arguments.createMap();
 
-        Map<String,String> map = msg.extra;
-        if(map!=null && map.size()>0){
+        Map<String, String> map = msg.extra;
+        if (map != null && map.size() > 0) {
             WritableMap para = Arguments.createMap();
-            for(Map.Entry<String, String> entry:map.entrySet()){
+            for (Map.Entry<String, String> entry : map.entrySet()) {
 //                System.out.println(entry.getKey()+"--->"+entry.getValue());
-                para.putString(entry.getKey(),entry.getValue());
+                para.putString(entry.getKey(), entry.getValue());
             }
             event.putMap("extra", para);
         }

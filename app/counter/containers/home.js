@@ -12,6 +12,7 @@ import {
     Text,
     Image,
     TouchableOpacity,
+    Switch,
     Dimensions,
 } from 'react-native';
 import { bindActionCreators } from 'redux';
@@ -21,13 +22,22 @@ import Orientation from '../componets/RCTOrientation';
 import UmengPush from '../componets/RCTUmengPush';
 
 import * as calcActions from '../actions/calcAction';
+import * as settingActions from '../actions/settingAction';
 
 import Counter from '../componets/Counter';
 import PlayItem from '../componets/PlayItem';
 import InfoItem from '../componets/InfoItem';
 
 //取得屏幕宽高
-const {height: SCREEN_HEIGHT, width: SCREEN_WIDTH} = Dimensions.get('window');
+const { height: SCREEN_HEIGHT, width: SCREEN_WIDTH } = Dimensions.get('window');
+
+const img1 = "../asserts/images/lecloud.png";
+const img2 = "../asserts/images/rmb.jpg";
+const img3 = "../asserts/images/rmb.jpg";
+const plusPara = 1;
+const minusPara = 2;
+const timesPara = 2;
+const dividePara = 2;
 
 /**
  * 首页的根容器组件，负责控制首页内的木偶组件
@@ -36,10 +46,17 @@ const {height: SCREEN_HEIGHT, width: SCREEN_WIDTH} = Dimensions.get('window');
  */
 class home extends Component {
 
+    constructor(props) {
+        super(props);
+        this.props.settingActions.loadConfig("LEDEMO_CFG");
+    }
+
     componentWillMount() {
         Orientation.setOrientation(Orientation.ORIENTATION_PORTRAIT);
         UmengPush.addReceiveMessageListener(this.handleRecvMessage);
         UmengPush.addOpenMessageListener(this.handleOpenMessage);
+        // this.isPushEnabled();
+        // this.switchPush(true);                
     }
 
     componentWillUnmount() {
@@ -61,48 +78,68 @@ class home extends Component {
         }
     }
 
+    isPushEnabled = () => {
+        UmengPush.isPushEnabled()
+            .then((isEnabled) => {
+                if (isEnabled) {
+                    alert('推送开启');
+                } else {
+                    alert('推送关闭');
+                }
+            });
+    }
+
+    switchPush = (enable) => {
+
+        let config_data = this.props.setting;
+        UmengPush.switchPush(enable)
+            .then((result) => {
+                if (result) {
+                    enable ? alert('推送开启成功') : alert('推送关闭成功');
+                    config_data.acceptPush = enable ? true : false;
+                    // alert(JSON.stringify(config_data));
+                    this.props.settingActions.setConfig("LEDEMO_CFG", config_data);
+                } else {
+                    enable ? alert('推送开启失败') : alert('推送关闭失败');
+                }
+            }).catch((error) => {
+                alert('接口请求失败！');
+            });
+    }
+
     //跳转到播放页
     skipToPlayer = (source) => {
-        const {navigator} = this.props;
+        const { navigator } = this.props;
         // this.props.actions.play(source);
         this.props.navigator.push({ location: '/play/' + source, });
     }
 
     //跳转到推流页面
     skipToPush = (source) => {
-        const {navigator} = this.props;
+        const { navigator } = this.props;
         // this.props.actions.play(source);
         this.props.navigator.push({ location: '/push/' + source, });
     }
 
     //加
     operatePlus = (data) => {
-        this.props.actions.plus(data);
+        this.props.calcActions.plus(data);
     }
     //减
     operateMinus = (data) => {
-        this.props.actions.minus(data);
+        this.props.calcActions.minus(data);
     }
     //乘
     operateTimes = (data) => {
-        this.props.actions.times(data);
+        this.props.calcActions.times(data);
     }
     //除
     operateDivide = (data) => {
-        this.props.actions.divide(data);
+        this.props.calcActions.divide(data);
     }
 
     render() {
-        const { value, navigator } = this.props;
-
-        const img1 = "../asserts/images/lecloud.png";
-        const img2 = "../asserts/images/rmb.jpg";
-        const img3 = "../asserts/images/rmb.jpg";
-
-        let plusPara = 1;
-        let minusPara = 2;
-        let timesPara = 2;
-        let dividePara = 2;
+        const { value, navigator, setting } = this.props;
 
         return (
             (this.props.getState) ?
@@ -144,6 +181,14 @@ class home extends Component {
                             <PlayItem source={3} imgUrl={img2} desc={'移动推流-云直播'} color={'green'} onPlay={this.skipToPush} />
                         </View>
                     </View>
+                    <View style={{ flexDirection: 'row', alignItems: 'center' }} >
+                        <Text>{'是否接收推送'}</Text>
+                        <Switch value={setting.acceptPush} onValueChange={(value) => {
+                            {/*this.setState({ pushEnable: value });*/ }
+                            this.switchPush(value);
+                        }} />
+                    </View>
+
                     {/*
                     <Counter value={value} para={plusPara} oper={`加`} onChange={this.operatePlus} />
                     <Counter value={value} para={minusPara} oper={`减`} onChange={this.operateMinus} />
@@ -159,11 +204,13 @@ class home extends Component {
 const mapStateToProps = state => ({
     //state.xxx必须与reducer同名
     value: state.calculate.value,
+    setting: state.setting,
 });
 
 
 const mapDispatchToProps = dispatch => ({
-    actions: bindActionCreators(calcActions, dispatch)
+    calcActions: bindActionCreators(calcActions, dispatch),
+    settingActions: bindActionCreators(settingActions, dispatch),
 });
 
 //连接Redux

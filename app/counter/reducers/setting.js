@@ -1,18 +1,18 @@
 /**
- * Reducer
+ * Setting Reducer
  */
 import * as types from '../actions/types';
 
-const play = (state = {}, action) => {
+const setting = (state = {}, action) => {
     switch (action.type) {
-        case types.PLAY_TODO:
+        case types.SET_CONFIG:
             return Object.assign({}, state, {
-                ...state,
-                datasouce: action.datasource,
+                ...state,                
+                ...action.data
             });
         default:
             return state;
     }
 };
 
-export default play;
+export default setting;

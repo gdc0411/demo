@@ -99,6 +99,7 @@ public class MainApplication extends Application implements ReactApplication {
         //统计应用启动数据
         mPushAgent.onAppStart();
 
+
         String processName = getProcessName(this, android.os.Process.myPid());
         if (getApplicationInfo().packageName.equals(processName)) {
 
