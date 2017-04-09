@@ -23,7 +23,7 @@ import * as WeChat from '../componets/RCTWechatAPI';
 import * as QQ from '../componets/RCTQQAPI';
 import * as Weibo from '../componets/RCTWeiboAPI';
 
-const {width, height} = Dimensions.get('window');
+const { width, height } = Dimensions.get('window');
 
 class social extends Component {
     constructor(props) {
@@ -76,24 +76,34 @@ class social extends Component {
 
     //微博登陆
     loginToWeibo = () => {
-        Weibo.isAppInstalled()
-            .then((isInstalled) => {
-                if (isInstalled) {
-                    Weibo.login({
-                        scope: 'all', // 默认 'all'
-                    })
-                        .catch(error => {
-                            console.log(error.message);
-                        }).then(resp => {
-                            console.log(resp);
-                            this.setState({
-                                callbackStr: JSON.stringify(resp)
-                            });
-                        });
-                } else {
-                    console.log('没有安装微博，请您安装微博之后再试');
-                }
+        Weibo.login({
+            scope: 'all', // 默认 'all'
+        }).catch(error => {
+            console.log(error.message);
+        }).then(resp => {
+            console.log(resp);
+            this.setState({
+                callbackStr: JSON.stringify(resp)
             });
+        });
+        // Weibo.isAppInstalled()
+        //     .then((isInstalled) => {
+        //         if (isInstalled) {
+        //             Weibo.login({
+        //                 scope: 'all', // 默认 'all'
+        //             })
+        //                 .catch(error => {
+        //                     console.log(error.message);
+        //                 }).then(resp => {
+        //                     console.log(resp);
+        //                     this.setState({
+        //                         callbackStr: JSON.stringify(resp)
+        //                     });
+        //                 });
+        //         } else {
+        //             alert('没有安装微博，请您安装微博之后再试');
+        //         }
+        //     });
     }
 
     //微博分享
@@ -119,29 +129,41 @@ class social extends Component {
                     });
 
                 } else {
-                    console.log('没有安装微博，请您安装微博之后再试');
+                    alert('没有安装微博，请您安装微博之后再试');
                 }
             });
     }
 
     //QQ登陆
     loginToQQ = () => {
-        QQ.isAppInstalled()
-            .then((isInstalled) => {
-                if (isInstalled) {
-                    QQ.login('get_simple_userinfo')
-                        .catch(error => {
-                            console.log(error.message);
-                        }).then(resp => {
-                            console.log(resp);
-                            this.setState({
-                                callbackStr: JSON.stringify(resp)
-                            });
-                        });
-                } else {
-                    console.log('没有安装QQ，请您安装QQ之后再试');
-                }
+
+        QQ.login('get_simple_userinfo')
+            .catch(error => {
+                console.log(error.message);
+            }).then(resp => {
+                console.log(resp);
+                this.setState({
+                    callbackStr: JSON.stringify(resp)
+                });
             });
+
+
+        // QQ.isAppInstalled()
+        //     .then((isInstalled) => {
+        //         if (isInstalled) {
+        //             QQ.login('get_simple_userinfo')
+        //                 .catch(error => {
+        //                     console.log(error.message);
+        //                 }).then(resp => {
+        //                     console.log(resp);
+        //                     this.setState({
+        //                         callbackStr: JSON.stringify(resp)
+        //                     });
+        //                 });
+        //         } else {
+        //             alert('没有安装QQ，请您安装QQ之后再试');
+        //         }
+        //     });
     }
 
 
@@ -168,7 +190,7 @@ class social extends Component {
                     });
 
                 } else {
-                    console.log('没有安装QQ，请您安装QQ之后再试');
+                    alert('没有安装QQ，请您安装QQ之后再试');
                 }
             });
 
@@ -198,7 +220,7 @@ class social extends Component {
                     });
 
                 } else {
-                    console.log('没有安装QQ，请您安装QQ之后再试');
+                    alert('没有安装QQ，请您安装QQ之后再试');
                 }
             });
     }
@@ -230,9 +252,10 @@ class social extends Component {
                     });
 
                 } else {
-                    console.log('没有安装微信，请您安装微信之后再试');
+                    alert('没有安装微信，请您安装微信之后再试');
                 }
             });
+            
     }
 
     //微信分享给朋友
@@ -256,7 +279,7 @@ class social extends Component {
                     });
 
                 } else {
-                    console.log('没有安装微信，请您安装微信之后再试');
+                    alert('没有安装微信，请您安装微信之后再试');
                 }
             });
 
@@ -283,7 +306,7 @@ class social extends Component {
                         });
                     });
                 } else {
-                    console.log('没有安装微信，请您安装微信之后再试');
+                    alert('没有安装微信，请您安装微信之后再试');
                 }
             });
     }
@@ -293,14 +316,14 @@ class social extends Component {
         const { selectedDevice, posts, isFetching, lastUpdated } = this.props;
         const isEmpty = posts === null;
 
-        let {deviceInfo} = this.props;
+        let { deviceInfo } = this.props;
         return (
             <View style={[styles.container]}>
 
                 <View style={{ top: 20, left: 10, right: 10, position: 'absolute' }}>
-                    <Text>微博：SDK版本{this.state.wbApiVersion} |{String(this.state.isWBInstalled?'已安装':'未安装')} |{String(this.state.isWBSupportApi?'支持':'不支持')}</Text>
-                    <Text>QQ ：SDK版本{this.state.qqApiVersion} |{String(this.state.isQQInstalled?'已安装':'未安装')} |{String(this.state.isQQSupportApi?'支持':'不支持')}</Text>
-                    <Text>微信：SDK版本{this.state.wxApiVersion} |{String(this.state.isWXAppInstalled?'已安装':'未安装')} |{String(this.state.isWXAppSupportApi?'支持':'不支持')}</Text>
+                    <Text>微博：SDK版本{this.state.wbApiVersion} |{String(this.state.isWBInstalled ? '已安装' : '未安装')} |{String(this.state.isWBSupportApi ? '支持' : '不支持')}</Text>
+                    <Text>QQ ：SDK版本{this.state.qqApiVersion} |{String(this.state.isQQInstalled ? '已安装' : '未安装')} |{String(this.state.isQQSupportApi ? '支持' : '不支持')}</Text>
+                    <Text>微信：SDK版本{this.state.wxApiVersion} |{String(this.state.isWXAppInstalled ? '已安装' : '未安装')} |{String(this.state.isWXAppSupportApi ? '支持' : '不支持')}</Text>
                     {this.state.callbackStr ? <Text>回调结果：{'\r\n'}{String(this.state.callbackStr)}</Text> : null}
                 </View>
 
