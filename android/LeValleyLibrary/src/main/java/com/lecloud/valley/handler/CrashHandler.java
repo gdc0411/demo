@@ -13,7 +13,7 @@ import java.lang.Thread.UncaughtExceptionHandler;
 /**
  * 崩溃时写入日志工具类
  *
- * @author pys
+ * @author raojia
  */
 public class CrashHandler implements UncaughtExceptionHandler {
     public static final String TAG = CrashHandler.class.getSimpleName();

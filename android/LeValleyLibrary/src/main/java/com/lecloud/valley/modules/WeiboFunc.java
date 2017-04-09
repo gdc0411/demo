@@ -146,11 +146,14 @@ class WeiboFunc implements ReactBaseFunc, ActivityEventListener {
 
 
     public void destroy() {
-        gModule = null;
+        Log.d(TAG, LogUtils.getTraceInfo() + "微博sdk销毁");
+
         mWeiboShareAPI = null;
         mWeiboSsoHandler = null;
 
         mReactContext.removeActivityEventListener(this);
+
+        gModule = null;
     }
 
     public Map<String, Object> getConstants() {
@@ -196,54 +199,54 @@ class WeiboFunc implements ReactBaseFunc, ActivityEventListener {
             promise.reject(CODE_NULL_ACTIVITY, MSG_NULL_ACTIVITY);
             return;
         }
-        if (mWeiboSsoHandler == null) {
-            AuthInfo sinaAuthInfo = _genAuthInfo(config);
-            mWeiboSsoHandler = new SsoHandler(mReactContext.getCurrentActivity(), sinaAuthInfo);
-            mWeiboSsoHandler.authorize(new WeiboAuthListener() {
-                @Override
-                public void onComplete(Bundle bundle) {
+//        if (mWeiboSsoHandler == null) {
+        AuthInfo sinaAuthInfo = _genAuthInfo(config);
+        mWeiboSsoHandler = new SsoHandler(mReactContext.getCurrentActivity(), sinaAuthInfo);
+        mWeiboSsoHandler.authorize(new WeiboAuthListener() {
+            @Override
+            public void onComplete(Bundle bundle) {
 
-                    final Oauth2AccessToken token = Oauth2AccessToken.parseAccessToken(bundle);
-                    AccessTokenKeeper.writeAccessToken(mReactContext.getApplicationContext(), token);
-                    WritableMap event = Arguments.createMap();
-                    if (token.isSessionValid()) {
-                        event.putString("access_token", token.getToken());
-                        event.putDouble("expires_in", token.getExpiresTime());
-                        event.putString("openid", token.getUid());
-                        event.putString("refresh_token", token.getRefreshToken());
-                        event.putInt(EVENT_PROP_SOCIAL_CODE, SHARE_RESULT_CODE_SUCCESSFUL);
-                    } else {
+                final Oauth2AccessToken token = Oauth2AccessToken.parseAccessToken(bundle);
+                AccessTokenKeeper.writeAccessToken(mReactContext.getApplicationContext(), token);
+                WritableMap event = Arguments.createMap();
+                if (token.isSessionValid()) {
+                    event.putString("access_token", token.getToken());
+                    event.putDouble("expires_in", token.getExpiresTime());
+                    event.putString("openid", token.getUid());
+                    event.putString("refresh_token", token.getRefreshToken());
+                    event.putInt(EVENT_PROP_SOCIAL_CODE, SHARE_RESULT_CODE_SUCCESSFUL);
+                } else {
 //                    String code = bundle.getString("code", "");
-                        event.putInt(EVENT_PROP_SOCIAL_CODE, SHARE_RESULT_CODE_CANCEL);
-                        event.putString(EVENT_PROP_SOCIAL_MSG, SHARE_RESULT_MSG_CANCEL);
-                    }
-                    event.putString(EVENT_PROP_SOCIAL_TYPE, "WBAuthorizeResponse");
-
-                    if (mEventEmitter != null)
-                        mEventEmitter.emit(Events.EVENT_WEIBO_RESP.toString(), event);
+                    event.putInt(EVENT_PROP_SOCIAL_CODE, SHARE_RESULT_CODE_CANCEL);
+                    event.putString(EVENT_PROP_SOCIAL_MSG, SHARE_RESULT_MSG_CANCEL);
                 }
+                event.putString(EVENT_PROP_SOCIAL_TYPE, "WBAuthorizeResponse");
 
-                @Override
-                public void onWeiboException(WeiboException e) {
-                    WritableMap event = Arguments.createMap();
-                    event.putString(EVENT_PROP_SOCIAL_TYPE, "WBAuthorizeResponse");
-                    event.putInt(EVENT_PROP_SOCIAL_CODE, SHARE_RESULT_CODE_FAILED);
-                    event.putString(EVENT_PROP_SOCIAL_MSG, SHARE_RESULT_MSG_FAILED + "：" + e.getMessage());
-                    if (mEventEmitter != null)
-                        mEventEmitter.emit(Events.EVENT_WEIBO_RESP.toString(), event);
-                }
+                if (mEventEmitter != null)
+                    mEventEmitter.emit(Events.EVENT_WEIBO_RESP.toString(), event);
+            }
 
-                @Override
-                public void onCancel() {
-                    WritableMap event = Arguments.createMap();
-                    event.putString(EVENT_PROP_SOCIAL_TYPE, "WBAuthorizeResponse");
-                    event.putInt(EVENT_PROP_SOCIAL_MSG, SHARE_RESULT_CODE_CANCEL);
-                    event.putString(EVENT_PROP_SOCIAL_CODE, SHARE_RESULT_MSG_CANCEL);
-                    if (mEventEmitter != null)
-                        mEventEmitter.emit(Events.EVENT_WEIBO_RESP.toString(), event);
-                }
-            });
-        }
+            @Override
+            public void onWeiboException(WeiboException e) {
+                WritableMap event = Arguments.createMap();
+                event.putString(EVENT_PROP_SOCIAL_TYPE, "WBAuthorizeResponse");
+                event.putInt(EVENT_PROP_SOCIAL_CODE, SHARE_RESULT_CODE_FAILED);
+                event.putString(EVENT_PROP_SOCIAL_MSG, SHARE_RESULT_MSG_FAILED + "：" + e.getMessage());
+                if (mEventEmitter != null)
+                    mEventEmitter.emit(Events.EVENT_WEIBO_RESP.toString(), event);
+            }
+
+            @Override
+            public void onCancel() {
+                WritableMap event = Arguments.createMap();
+                event.putString(EVENT_PROP_SOCIAL_TYPE, "WBAuthorizeResponse");
+                event.putInt(EVENT_PROP_SOCIAL_CODE, SHARE_RESULT_CODE_CANCEL);
+                event.putString(EVENT_PROP_SOCIAL_MSG, SHARE_RESULT_MSG_CANCEL);
+                if (mEventEmitter != null)
+                    mEventEmitter.emit(Events.EVENT_WEIBO_RESP.toString(), event);
+            }
+        });
+//        }
         promise.resolve(null);
     }
 
@@ -307,7 +310,7 @@ class WeiboFunc implements ReactBaseFunc, ActivityEventListener {
     private void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (mWeiboSsoHandler != null) {
             mWeiboSsoHandler.authorizeCallBack(requestCode, resultCode, data);
-            mWeiboSsoHandler = null;
+//            mWeiboSsoHandler = null;
         }
     }
 
