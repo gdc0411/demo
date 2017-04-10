@@ -719,7 +719,7 @@ const styles = StyleSheet.create({
 //配置Map映射表，拿到自己关心的数据
 const mapStateToProps = state => ({
     //state.xxx必须与reducer同名
-    datasource: state.play.datasource,
+    // datasource: state.play.datasource,
 });
 
 
