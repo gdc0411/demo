@@ -59,7 +59,7 @@ RCT_EXPORT_METHOD(calc:(RCTPromiseResolveBlock)resolve
     dispatch_async(queue, ^{
         [self calcCachesWithComplete: ^(int eventType, NSString *cacheText){
             
-            NSMutableDictionary* eventPara = [NSMutableDictionary dictionaryWithCapacity:19];
+            NSMutableDictionary* eventPara = [NSMutableDictionary dictionaryWithCapacity:2];
             if(eventType == EVENT_CALC_SUCCESS ){
                 [eventPara setValue:[NSNumber numberWithInt:EVENT_CALC_SUCCESS] forKey:@"eventType"];
                 [eventPara setValue:cacheText forKey:@"cacheSize"];
@@ -88,7 +88,7 @@ RCT_EXPORT_METHOD(clear:(RCTPromiseResolveBlock)resolve
     dispatch_async(queue, ^{
         [self clearCachesWithComplete: ^(int eventType, NSString *cacheText){
             
-            NSMutableDictionary* eventPara = [NSMutableDictionary dictionaryWithCapacity:19];
+            NSMutableDictionary* eventPara = [NSMutableDictionary dictionaryWithCapacity:2];
             if(eventType == EVENT_CLEAR_SUCCESS ){
                 [eventPara setValue:[NSNumber numberWithInt:EVENT_CLEAR_SUCCESS] forKey:@"eventType"];
                 [eventPara setValue:cacheText forKey:@"cacheSize"];
@@ -101,7 +101,7 @@ RCT_EXPORT_METHOD(clear:(RCTPromiseResolveBlock)resolve
         }];
     });
     
-    NSMutableDictionary* eventPara = [NSMutableDictionary dictionaryWithCapacity:19];
+    NSMutableDictionary* eventPara = [NSMutableDictionary dictionaryWithCapacity:2];
     [eventPara setValue:[NSNumber numberWithInt:EVENT_CLEAR_PROGRESS] forKey:@"eventType"];
     [eventPara setValue:@"正在清理缓存" forKey:@"cacheSize"];
     [self sendEventWithName:EVENT_CACHE_UPDATE_MESSAGE body:eventPara];
@@ -117,7 +117,7 @@ RCT_EXPORT_METHOD(clear:(RCTPromiseResolveBlock)resolve
     for(NSString *path in paths){
         NSLog(@"path: %@",path);
         totalSize += [RCTCacheModule folderSizeAtPath:path];
-        NSLog(@"size: %d", totalSize);
+        NSLog(@"size: %lld", totalSize);
     }
     NSString* sizeText = [RCTCacheModule getFormatSize:totalSize];
     NSLog(@"sizeText: %@", sizeText);
@@ -137,7 +137,7 @@ RCT_EXPORT_METHOD(clear:(RCTPromiseResolveBlock)resolve
         [RCTCacheModule clearCache:path];
         
         totalSize += [RCTCacheModule folderSizeAtPath:path];
-        NSLog(@"size: %d", totalSize);
+        NSLog(@"size: %lld", totalSize);
     }
     NSString* sizeText = [RCTCacheModule getFormatSize:totalSize];
     NSLog(@"sizeText: %@", sizeText);
@@ -161,7 +161,7 @@ RCT_EXPORT_METHOD(clear:(RCTPromiseResolveBlock)resolve
 + (long long) folderSizeAtPath:(NSString *)path
 {
     NSFileManager *fileManager=[NSFileManager defaultManager];
-    float folderSize;
+    float folderSize = 0.0;
     if ([fileManager fileExistsAtPath:path]) {
         NSArray *childerFiles=[fileManager subpathsAtPath:path];
         for (NSString *fileName in childerFiles) {
