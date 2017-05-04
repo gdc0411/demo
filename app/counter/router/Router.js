@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import {
-    Navigator,
     Platform,
     BackAndroid,
     ToastAndroid,
 } from 'react-native';
+import { Navigator } from 'react-native-deprecated-custom-components';
 import { Provider } from 'react-redux';
 
 import PageContainer from './PageContainer';
@@ -87,7 +87,7 @@ class Router extends Component {
             location={route.location}
             navigator={navigator}
             rootBackAndroid={this.onBackAndroid}
-            />
+        />
     );
 
     render() {
@@ -99,7 +99,7 @@ class Router extends Component {
                     initialRoute={INITIAL_ROUTE}
                     configureScene={this.configureScene}
                     renderScene={this.renderScene}
-                    />
+                />
             </Provider>
         );
     }
