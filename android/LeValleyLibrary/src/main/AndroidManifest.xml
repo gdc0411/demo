@@ -26,7 +26,6 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.RECEIVE_USER_PRESENT" />
 
-    <uses-permission android:name="android.permission.RECEIVE_USER_PRESENT" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_UPDATES" />
     <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" />
     <uses-permission android:name="android.permission.CALL_PHONE" />
@@ -55,6 +54,14 @@
 
     <permission android:name="android.permission.INTERACT_ACROSS_USERS_FULL" />
     <permission android:name="android.permission.WRITE_APN_SETTINGS" />
+
+    <!-- LePay支付 -->
+    <uses-permission android:name="lepay.permission.ACCESS_SERVICE" />
+    <uses-permission android:name="android.permission.READ_SMS" />
+    <uses-permission android:name="android.permission.WRITE_SMS" />
+    <uses-permission android:name="android.permission.READ_SETTINGS" />
+    <uses-permission android:name="android.permission.KILL_BACKGROUND_PROCESSES"/>
+
 
     <application
         android:allowBackup="true"
@@ -295,6 +302,11 @@
             android:name="com.yalantis.ucrop.UCropActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+
+
+        <!-- lePay -->
+
+
 
     </application>
 

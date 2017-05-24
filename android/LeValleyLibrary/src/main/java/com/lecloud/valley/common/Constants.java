@@ -256,4 +256,7 @@ public interface Constants {
     String MSG_INVOKE_FAILED = "INVOKE_FAILED";
     String MSG_INVALID_ARGUMENT = "INVALID_ARGUMENT";
 
+
+    //================= REACT_LEPAY ====================
+
 }
