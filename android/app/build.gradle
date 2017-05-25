@@ -96,6 +96,7 @@ android {
         applicationId APPLICATION_ID
         minSdkVersion 16
         targetSdkVersion 22
+        multiDexEnabled true
         versionCode 1
         versionName "1.0"
         ndk {

@@ -13,7 +13,6 @@ import {
     Image,
     AsyncStorage,
     TouchableOpacity,
-    BackAndroid,
     Dimensions,
     View,
 } from 'react-native';

@@ -12,6 +12,7 @@ import orient from '../containers/orient';
 import download from '../containers/download';
 import image from '../containers/image';
 import picker from '../containers/croppick';
+import pay from '../containers/pay';
 
 export default module.exports = {
     path: '/',
@@ -42,6 +43,10 @@ export default module.exports = {
         {
             path: '/download',
             component: download
+        },
+        {
+            path: '/pay',
+            component: pay
         },
         {
             path: '/play/:src',

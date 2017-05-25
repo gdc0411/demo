@@ -1,6 +1,6 @@
 
 /**
- * 查看Device信息
+ * 第三方分享和登录
  */
 'use strict';
 
@@ -255,7 +255,7 @@ class social extends Component {
                     alert('没有安装微信，请您安装微信之后再试');
                 }
             });
-            
+
     }
 
     //微信分享给朋友

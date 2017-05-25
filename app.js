@@ -4,7 +4,7 @@
 'use strict';
 
 import React, { Component } from 'react';
-import { Navigator, Platform, BackAndroid, ToastAndroid, } from 'react-native';
+import { Navigator, Platform, BackHandler, ToastAndroid, } from 'react-native';
 
 import Home from './app/swiper';
 
@@ -12,12 +12,12 @@ class App extends Component {
 
     componentWillMount() {
         if (Platform.OS === 'android') {
-            BackAndroid.addEventListener('hardwareBackPress', this.onBackAndroid);
+            BackHandler.addEventListener('hardwareBackPress', this.onBackAndroid);
         }
     }
     componentWillUnmount() {
         if (Platform.OS === 'android') {
-            BackAndroid.removeEventListener('hardwareBackPress', this.onBackAndroid);
+            BackHandler.removeEventListener('hardwareBackPress', this.onBackAndroid);
         }
     }
     /**

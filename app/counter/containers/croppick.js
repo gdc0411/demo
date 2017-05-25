@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, ScrollView, Alert, Image, TouchableOpacity, Nat
 
 // import Video from 'react-native-video';
 
-var ImagePicker = NativeModules.ImageCropPickerModule;
+// var ImagePicker = NativeModules.ImageCropPickerModule;
 
 import * as ImageCropPicker from '../componets/RCTImageCropPicker';
 
