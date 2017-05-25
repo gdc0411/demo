@@ -6,7 +6,7 @@ import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.modules.core.RCTNativeAppEventEmitter;
 
-import static com.lecloud.valley.common.Constants.REACT_CLASS_QQ_MODULE;
+import static com.lecloud.valley.common.Constants.REACT_CLASS_PAY_MODULE;
 
 /**
  * Created by RaoJia on 2017/05/24.
@@ -30,12 +30,12 @@ public class LePayModule extends ReactBaseModule {
 
     @Override
     public String getName() {
-        return REACT_CLASS_QQ_MODULE;
+        return REACT_CLASS_PAY_MODULE;
     }
 
 
     @ReactMethod
-    public void pay(ReadableMap payData, Promise promise) {
+    public void doPay(ReadableMap payData, Promise promise) {
         ((LePayFunc) func).doPay(payData, promise);
     }
 

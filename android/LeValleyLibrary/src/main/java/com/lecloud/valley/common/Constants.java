@@ -15,6 +15,8 @@ public interface Constants {
 
     String REACT_CLASS_PUSH_VIEW = "RCTLePush";
 
+    String REACT_CLASS_PAY_MODULE = "RCTLePayModule";
+
     String REACT_CLASS_LINEAR_GRADIENT_VIEW = "RCTLinearGradient";
 
     String REACT_CLASS_DEVICE_MODULE = "RCTDeviceModule";

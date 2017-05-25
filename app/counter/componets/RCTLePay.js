@@ -20,6 +20,6 @@ const LePayAPI = NativeModules.LePayModule;
  * @param {Function} error 失败回调
  */
 export function pay(data = {}, success: Function, error: Function) {
-    return LePayAPI.pay(data).then((resp) => success && success(resp)).catch(e => error && error(e));
+    return LePayAPI.doPay(data).then((resp) => success && success(resp)).catch(e => error && error(e));
 }
 

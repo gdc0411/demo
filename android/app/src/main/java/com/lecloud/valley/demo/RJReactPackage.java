@@ -7,6 +7,7 @@ import com.lecloud.valley.modules.CacheModule;
 import com.lecloud.valley.modules.ImageCropPickerModule;
 import com.lecloud.valley.modules.DownloadModule;
 import com.lecloud.valley.modules.ImagePickerModule;
+import com.lecloud.valley.modules.LePayModule;
 import com.lecloud.valley.modules.OrientationModule;
 import com.lecloud.valley.demo.sample.CallbackModule;
 import com.lecloud.valley.demo.sample.CheckItemViewManager;
@@ -61,6 +62,7 @@ public class RJReactPackage implements ReactPackage {
         modules.add(new CacheModule(reactContext));
         modules.add(new ImagePickerModule(reactContext));
         modules.add(new ImageCropPickerModule(reactContext));
+        modules.add(new LePayModule(reactContext));
         return modules;
     }
 

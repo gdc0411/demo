@@ -56,7 +56,7 @@ class home extends Component {
         UmengPush.addReceiveMessageListener(this.handleRecvMessage);
         UmengPush.addOpenMessageListener(this.handleOpenMessage);
         // this.isPushEnabled();
-        // this.switchPush(true);                
+        // this.switchPush(true);
     }
 
     componentWillUnmount() {
@@ -150,11 +150,12 @@ class home extends Component {
                 <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }} >
                     <View style={{ flexDirection: 'column', width: SCREEN_WIDTH }} >
                         <View style={{ flexDirection: 'row', justifyContent: 'space-around' }} >
-                            <InfoItem imgUrl={img1} desc={'设备信息'} color={'green'} onViewInfo={() => navigator.push({ location: '/device' })} />
+                            <InfoItem imgUrl={img1} desc={'设备'} color={'green'} onViewInfo={() => navigator.push({ location: '/device' })} />
                             <Text style={{ fontSize: 18, fontWeight: 'bold', color: `orange` }} onPress={() => navigator.push({ location: '/orient' })} >转屏</Text>
                             <Text style={{ fontSize: 18, fontWeight: 'bold', color: `orange` }} onPress={() => navigator.push({ location: '/social' })} >分享</Text>
                             <Text style={{ fontSize: 18, fontWeight: 'bold', color: `black` }} onPress={() => navigator.push({ location: '/download' })} >下载</Text>
                             <Text style={{ fontSize: 18, fontWeight: 'bold', color: `black` }} onPress={() => navigator.push({ location: '/picker' })} >相册</Text>
+                            <Text style={{ fontSize: 18, fontWeight: 'bold', color: `red` }} onPress={() => navigator.push({ location: '/pay' })} >支付</Text>
                         </View>
                         <View style={{ flexDirection: 'row', justifyContent: 'space-around' }} >
                             <PlayItem source={0} imgUrl={img1} desc={'第三方URL'} color={'black'} onPlay={this.skipToPlayer} />
