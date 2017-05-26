@@ -1,6 +1,7 @@
 package com.lecloud.valley.modules;
 
 import android.util.Log;
+import android.widget.Toast;
 
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
@@ -87,6 +88,7 @@ public class LePayFunc implements ReactBaseFunc {
             return;
         }
 
+        Toast.makeText(mReactContext, data.toString(), Toast.LENGTH_SHORT).show();
         String componentName = mReactContext.getCurrentActivity().getComponentName().toString();
         promise.resolve(componentName);
 

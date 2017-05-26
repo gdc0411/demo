@@ -53,7 +53,8 @@ class social extends Component {
         }).catch((error) => {
             console.log(error.message);
         }).then(resp => {
-            console.log(resp);
+            // console.log(resp);
+            alert(resp);
             this.setState({
                 callbackStr: JSON.stringify(resp)
             });
