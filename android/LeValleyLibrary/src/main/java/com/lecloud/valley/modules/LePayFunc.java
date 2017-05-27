@@ -88,29 +88,29 @@ public class LePayFunc implements ReactBaseFunc {
             return;
         }
 
-        Toast.makeText(mReactContext, data.toString(), Toast.LENGTH_SHORT).show();
-        String componentName = mReactContext.getCurrentActivity().getComponentName().toString();
-        promise.resolve(componentName);
+//        Toast.makeText(mReactContext, data.toString(), Toast.LENGTH_SHORT).show();
+//        String componentName = mReactContext.getCurrentActivity().getComponentName().toString();
+//        promise.resolve(componentName);
 
-//        LePayApi.doPay(mReactContext.getCurrentActivity(), tradeInfo, new LePay.ILePayCallback() {
-//            @Override
-//            public void payResult(ELePayState status, String message) {
-//                if (ELePayState.CANCEL == status) {
-//                    //支付取消
-//                } else if (ELePayState.FAILT == status) {
-//                    //支付失败
-//                } else if (ELePayState.OK == status) {
-//                    //支付成功
-//                } else if (ELePayState.WAITTING == status) {
-//                    //支付中
-//                } else if (ELePayState.NONETWORK == status) {
-//                    //网络异常
-//                }else{
-//                }
-//                promise.resolve(status);
-//            }
-//        });
-
+        LePayApi.doPay(mReactContext.getCurrentActivity(), tradeInfo, new LePay.ILePayCallback() {
+            @Override
+            public void payResult(ELePayState status, String message) {
+                if (ELePayState.CANCEL == status) {
+                    //支付取消
+                } else if (ELePayState.FAILT == status) {
+                    //支付失败
+                } else if (ELePayState.OK == status) {
+                    //支付成功
+                } else if (ELePayState.WAITTING == status) {
+                    //支付中
+                } else if (ELePayState.NONETWORK == status) {
+                    //网络异常
+                }else{
+                }
+                Toast.makeText(mReactContext, status.toString(), Toast.LENGTH_SHORT).show();
+                promise.resolve(status);
+            }
+        });
 //        promise.resolve(null);
     }
 

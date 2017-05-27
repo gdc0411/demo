@@ -86,7 +86,7 @@ def enableSeparateBuildPerCPUArchitecture = false
 /**
  * Run Proguard to shrink the Java bytecode in release builds.
  */
-def enableProguardInReleaseBuilds = false
+def enableProguardInReleaseBuilds = true
 
 android {
     compileSdkVersion 23
@@ -145,6 +145,7 @@ android {
 
     buildTypes {
         debug {
+            minifyEnabled false
             buildConfigField "String", "CODEPUSH_KEY", STAGING_CODEPUSH_KEY
         }
         release {
@@ -196,11 +197,11 @@ android {
     }
 }
 
-repositories {
-    flatDir {
-        dirs 'libs'   // aar目录
-    }
-}
+//repositories {
+//    flatDir {
+//        dirs 'libs'   // aar目录
+//    }
+//}
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')

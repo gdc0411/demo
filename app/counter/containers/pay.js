@@ -50,14 +50,15 @@ class social extends Component {
             webpageUrl: 'http://www.lecloud.com/zh-cn/',
             appName: '应用工厂演示',
             cflag: 2
-        }).catch((error) => {
-            console.log(error.message);
-        }).then(resp => {
+        }, resp => {
             // console.log(resp);
             alert(resp);
             this.setState({
                 callbackStr: JSON.stringify(resp)
             });
+        }, error => {
+            alert(resp);
+            console.log(error.message);
         });
     }
 
