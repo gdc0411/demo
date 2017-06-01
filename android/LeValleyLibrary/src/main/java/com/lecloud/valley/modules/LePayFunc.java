@@ -54,7 +54,7 @@ public class LePayFunc implements ReactBaseFunc {
             lePayConfig.hasHalfPay = false;  //半屏支付， true（半屏）,false（全屏，默认）
         }
 
-        LePayApi.initConfig(mReactContext.getCurrentActivity(), lePayConfig);
+        LePayApi.initConfig(mReactContext, lePayConfig);
     }
 
     @Override
@@ -92,7 +92,7 @@ public class LePayFunc implements ReactBaseFunc {
 //        String componentName = mReactContext.getCurrentActivity().getComponentName().toString();
 //        promise.resolve(componentName);
 
-        LePayApi.doPay(mReactContext.getCurrentActivity(), tradeInfo, new LePay.ILePayCallback() {
+        LePayApi.doPay(mReactContext, tradeInfo, new LePay.ILePayCallback() {
             @Override
             public void payResult(ELePayState status, String message) {
                 if (ELePayState.CANCEL == status) {
@@ -108,7 +108,7 @@ public class LePayFunc implements ReactBaseFunc {
                 }else{
                 }
                 Toast.makeText(mReactContext, status.toString(), Toast.LENGTH_SHORT).show();
-                promise.resolve(status);
+                promise.resolve(status.toString());
             }
         });
 //        promise.resolve(null);
