@@ -41,15 +41,31 @@ class social extends Component {
     }
 
 
-    //QQ分享给好友
+    //乐视支付
     doPay = () => {
         LePay.pay({
-            title: '乐视云开放框架介绍',
-            thumbImage: 'http://cdn.huodongxing.com/file/20160426/11E69610D2AC0F75D7EB61C48EDEA840FB/30132422640007503.jpg',
-            description: '应用工厂演示QQ分享实例，LeValley框架值得期待',
-            webpageUrl: 'http://www.lecloud.com/zh-cn/',
-            appName: '应用工厂演示',
-            cflag: 2
+            version: '2.0',
+            service: 'lepay.tv.api.show.cashier',
+            merchant_business_id: '78',
+            user_id: '178769661',
+            user_name: 'Union',
+            notify_url: 'http://trade.letv.com/',
+            merchant_no: '1311313131',
+            out_trade_no: '261836519',
+            price: '0.01',
+            currency: 'RMB',
+            pay_expire: '21600',
+            product_id: '8888',
+            product_name: 'LeTV',
+            product_desc: 'TV60',
+            product_urls: 'http://f.hiphotos.baidu.com/image/pic/item/91ef76c6a7efce1b687b6bc2ad51f3deb48f6562.jpg',
+            timestamp: '2017-06-06 14:05:47',
+            key_index: '1',
+            input_charset: 'UTF-8',
+            ip: '10.72.108.52',
+            sign: '03ddfd352b57d5748270afe5850c7e1c',
+            sign_type: 'MD5',
+            isquick:'0'
         }, resp => {
             // console.log(resp);
             alert(resp);

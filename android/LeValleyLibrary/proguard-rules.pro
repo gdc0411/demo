@@ -293,6 +293,14 @@
 -dontwarn com.le.utils.format.**
 
 
+# LePay SDK 3.50
+-keep class com.letv.lepaysdk.** { *; }
+-keep class pl.droidsonroids.gif.** { *; }
+-keep class com.letv.tracker.** { *; }
+-keep class com.letv.tracker2.** { *; }
+-keep class com.google.protobuf.** { *; }
+
+
 # WeChat+QQ
 
 -keep class com.tencent.** {*;}

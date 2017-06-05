@@ -105,7 +105,7 @@ public class LePayFunc implements ReactBaseFunc {
                     //支付中
                 } else if (ELePayState.NONETWORK == status) {
                     //网络异常
-                }else{
+                } else {
                 }
                 Toast.makeText(mReactContext, status.toString(), Toast.LENGTH_SHORT).show();
                 promise.resolve(status.toString());
@@ -115,9 +115,79 @@ public class LePayFunc implements ReactBaseFunc {
     }
 
 
-    private String _makeLePayInfo(ReadableMap data){
-        String str = "version=2.0&service=lepay.tv.api.show.cashier&merchant_business_id=78&user_id=178769661&user_name=Union&notify_url=http://trade.letv.com/&merchant_no=1311313131&out_trade_no=261836519&price=0.01&currency=RMB&pay_expire=21600&product_id=8888&product_name=LeTV&product_desc=TV60&product_urls=http://f.hiphotos.baidu.com/image/pic/item/91ef76c6a7efce1b687b6bc2ad51f3deb48f6562.jpg&timestamp=2016-06-06 14:05:47&key_index=1&input_charset=UTF-8&ip=10.72.108.52&sign=03ddfd352b57d5748270afe5850c7e1c&sign_type=MD5&d_ram=57090805760&d_terminal=PHONE&d_app_version=2.2.0&d_os_version=23&d_net=WIFI&d_wifi_mac=02%3A00%3A00%3A00%3A00%3A00&d_imei=868918020071944&d_display=1440*2560&d_package_version=2&d_sdk_version=2.2.0&d_imsi=unknown&d_model=Letv+X910&d_package_name=2.0";
-        return str;
+    private String _makeLePayInfo(ReadableMap options) {
+        String strRequest = null;
+        if (options.hasKey("version")) {
+            strRequest = "version=" + options.getString("version");
+        }
+        if (options.hasKey("service")) {
+            strRequest += "&service=" + options.getString("service");
+        }
+        if (options.hasKey("merchant_business_id")) {
+            strRequest += "&merchant_business_id=" + options.getString("merchant_business_id");
+        }
+        if (options.hasKey("user_id")) {
+            strRequest += "&user_id=" + options.getString("user_id");
+        }
+        if (options.hasKey("user_name")) {
+            strRequest += "&user_name=" + options.getString("user_name");
+        }
+        if (options.hasKey("notify_url")) {
+            strRequest += "&notify_url=" + options.getString("notify_url");
+        }
+        if (options.hasKey("merchant_no")) {
+            strRequest += "&merchant_no=" + options.getString("merchant_no");
+        }
+        if (options.hasKey("out_trade_no")) {
+            strRequest += "&out_trade_no=" + options.getString("out_trade_no");
+        }
+        if (options.hasKey("price")) {
+            strRequest += "&price=" + options.getString("price");
+        }
+        if (options.hasKey("currency")) {
+            strRequest += "&currency=" + options.getString("currency");
+        }
+        if (options.hasKey("pay_expire")) {
+            strRequest += "&pay_expire=" + options.getString("pay_expire");
+        }
+        if (options.hasKey("product_id")) {
+            strRequest += "&product_id=" + options.getString("product_id");
+        }
+        if (options.hasKey("product_name")) {
+            strRequest += "&product_name=" + options.getString("product_name");
+        }
+        if (options.hasKey("product_desc")) {
+            strRequest += "&product_desc=" + options.getString("product_desc");
+        }
+        if (options.hasKey("product_urls")) {
+            strRequest += "&product_urls=" + options.getString("product_urls");
+        }
+        if (options.hasKey("timestamp")) {
+            strRequest += "&timestamp=" + options.getString("timestamp");
+        }
+        if (options.hasKey("key_index")) {
+            strRequest += "&key_index=" + options.getString("key_index");
+        }
+        if (options.hasKey("input_charset")) {
+            strRequest += "&input_charset=" + options.getString("input_charset");
+        }
+        if (options.hasKey("ip")) {
+            strRequest += "&ip=" + options.getString("ip");
+        }
+        if (options.hasKey("sign")) {
+            strRequest += "&sign=" + options.getString("sign");
+        }
+        if (options.hasKey("sign_type")) {
+            strRequest += "&sign_type=" + options.getString("sign_type");
+        }
+        if (options.hasKey("isquick")) {
+            strRequest += "&isquick=" + options.getString("isquick");
+        }
+
+        Log.d(TAG, LogUtils.getTraceInfo() + "LePay支付 ——— url：" + strRequest);
+//        String str = "version=2.0&service=lepay.tv.api.show.cashier&merchant_business_id=78&user_id=178769661&user_name=Union&notify_url=http://trade.letv.com/&merchant_no=1311313131&out_trade_no=261836519&price=0.01&currency=RMB&pay_expire=21600&product_id=8888&product_name=LeTV&product_desc=TV60&product_urls=http://f.hiphotos.baidu.com/image/pic/item/91ef76c6a7efce1b687b6bc2ad51f3deb48f6562.jpg&timestamp=2016-06-06 14:05:47&key_index=1&input_charset=UTF-8&ip=10.72.108.52&sign=03ddfd352b57d5748270afe5850c7e1c&sign_type=MD5&d_ram=57090805760&d_terminal=PHONE&d_app_version=2.2.0&d_os_version=23&d_net=WIFI&d_wifi_mac=02%3A00%3A00%3A00%3A00%3A00&d_imei=868918020071944&d_display=1440*2560&d_package_version=2&d_sdk_version=2.2.0&d_imsi=unknown&d_model=Letv+X910&d_package_name=2.0";
+
+        return strRequest;
     }
 
 }
