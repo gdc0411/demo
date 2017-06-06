@@ -54,6 +54,7 @@ ios/bundle/*
 ios/bundle/assets/*
 !.empty
 libLECPlayerFoundation.a
+libprotobuf.a
 android/app/src/main/res/drawable*
 index.android.jsbundle
 index.android.jsbundle.meta

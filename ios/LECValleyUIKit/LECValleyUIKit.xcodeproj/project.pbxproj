@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2D06F9E21EE6DB9700DC33DD /* RCTLePayModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D06F9E11EE6DB9700DC33DD /* RCTLePayModule.m */; };
 		2D0C97721E06CD1100FB5279 /* BrightnessView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D0C97711E06CD1100FB5279 /* BrightnessView.m */; };
 		2D0C97991E07056500FB5279 /* BrightnessModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D0C97981E07056500FB5279 /* BrightnessModule.m */; };
 		2D0E62AA1E0AFF75005A68AA /* RCTWeChatModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D0E62A91E0AFF75005A68AA /* RCTWeChatModule.m */; };
@@ -64,6 +65,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		2D06F9E01EE6DB9700DC33DD /* RCTLePayModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCTLePayModule.h; sourceTree = "<group>"; };
+		2D06F9E11EE6DB9700DC33DD /* RCTLePayModule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCTLePayModule.m; sourceTree = "<group>"; };
 		2D0C97701E06CD1100FB5279 /* BrightnessView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BrightnessView.h; sourceTree = "<group>"; };
 		2D0C97711E06CD1100FB5279 /* BrightnessView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BrightnessView.m; sourceTree = "<group>"; };
 		2D0C978B1E06DC6200FB5279 /* LECValley.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LECValley.h; sourceTree = "<group>"; };
@@ -173,6 +176,15 @@
 			children = (
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		2D06F9DF1EE6DB4100DC33DD /* RCTLePay */ = {
+			isa = PBXGroup;
+			children = (
+				2D06F9E01EE6DB9700DC33DD /* RCTLePayModule.h */,
+				2D06F9E11EE6DB9700DC33DD /* RCTLePayModule.m */,
+			);
+			name = RCTLePay;
 			sourceTree = "<group>";
 		};
 		2D2FC82B1E4837CB004D0462 /* RCTLePush */ = {
@@ -320,6 +332,7 @@
 				2D8D21991E032331004EC569 /* pch */,
 				2D8D219A1E032338004EC569 /* RCTLeVideo */,
 				2D2FC82B1E4837CB004D0462 /* RCTLePush */,
+				2D06F9DF1EE6DB4100DC33DD /* RCTLePay */,
 				2D8D219B1E032341004EC569 /* Modules */,
 				2D8D219C1E03234C004EC569 /* Views */,
 				2D33A6C01E635A7800D97E68 /* UIImage-Resize */,
@@ -401,6 +414,7 @@
 				2D0E62AA1E0AFF75005A68AA /* RCTWeChatModule.m in Sources */,
 				2DDA3FF21E3BB8A300BAF4AE /* UIImage+GIF.m in Sources */,
 				2D8D22271E032DB1004EC569 /* RCTLinearGradient.m in Sources */,
+				2D06F9E21EE6DB9700DC33DD /* RCTLePayModule.m in Sources */,
 				2DDA3FF61E3BB8A300BAF4AE /* UIView+WebCacheOperation.m in Sources */,
 				2DA294981E39453C0006B391 /* RCTDownloadModule.m in Sources */,
 				2DDA3FF31E3BB8A300BAF4AE /* UIImage+MultiFormat.m in Sources */,

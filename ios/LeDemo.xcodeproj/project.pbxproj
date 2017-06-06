@@ -21,6 +21,21 @@
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		140ED2AC1D01E1AD002B40FF /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 146834041AC3E56700842450 /* libReact.a */; };
 		146834051AC3E58100842450 /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 146834041AC3E56700842450 /* libReact.a */; };
+		2D06F9A71EE6D37400DC33DD /* AlipaySDK.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 2D06F9A61EE6D37400DC33DD /* AlipaySDK.bundle */; };
+		2D06F9C51EE6D39100DC33DD /* LePaySDK in Resources */ = {isa = PBXBuildFile; fileRef = 2D06F9C31EE6D39100DC33DD /* LePaySDK */; };
+		2D06F9C61EE6D39100DC33DD /* letracker in Resources */ = {isa = PBXBuildFile; fileRef = 2D06F9C41EE6D39100DC33DD /* letracker */; };
+		2D06F9C81EE6D3AD00DC33DD /* AlipaySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D06F9C71EE6D3AD00DC33DD /* AlipaySDK.framework */; };
+		2D06F9CC1EE6D3C600DC33DD /* libagnestracker.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D06F9C91EE6D3C600DC33DD /* libagnestracker.a */; };
+		2D06F9CD1EE6D3C600DC33DD /* libLepaySDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D06F9CA1EE6D3C600DC33DD /* libLepaySDK.a */; };
+		2D06F9CE1EE6D3C600DC33DD /* libprotobuf.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D06F9CB1EE6D3C600DC33DD /* libprotobuf.a */; };
+		2D06F9D01EE6D5FF00DC33DD /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D06F9CF1EE6D5FF00DC33DD /* CFNetwork.framework */; };
+		2D06F9D21EE6D64C00DC33DD /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D06F9D11EE6D64C00DC33DD /* CoreMotion.framework */; };
+		2D06F9D41EE6D88300DC33DD /* LepaySDK.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 2D06F9D31EE6D88300DC33DD /* LepaySDK.bundle */; };
+		2D06F9D61EE6D99100DC33DD /* APOpenSdk in Resources */ = {isa = PBXBuildFile; fileRef = 2D06F9D51EE6D99100DC33DD /* APOpenSdk */; };
+		2D06F9D81EE6D99B00DC33DD /* libAPOpenSdk.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D06F9D71EE6D99B00DC33DD /* libAPOpenSdk.a */; };
+		2D06F9DA1EE6D9CC00DC33DD /* JDPAuthResource.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 2D06F9D91EE6D9CC00DC33DD /* JDPAuthResource.bundle */; };
+		2D06F9DC1EE6D9D800DC33DD /* JDPay in Resources */ = {isa = PBXBuildFile; fileRef = 2D06F9DB1EE6D9D800DC33DD /* JDPay */; };
+		2D06F9DE1EE6D9E100DC33DD /* libJDPay.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D06F9DD1EE6D9E100DC33DD /* libJDPay.a */; };
 		2D0E62AC1E0B0101005A68AA /* libc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D0E62AB1E0B0101005A68AA /* libc++.tbd */; };
 		2D0E62AE1E0B0112005A68AA /* libsqlite3.0.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D0E62AD1E0B0112005A68AA /* libsqlite3.0.tbd */; };
 		2D19AC981DF3DCF100D21BDC /* libRCTAnimation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D19AC861DF3DBA600D21BDC /* libRCTAnimation.a */; };
@@ -316,6 +331,21 @@
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = LeDemo/main.m; sourceTree = "<group>"; };
 		146833FF1AC3E56700842450 /* React.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = React.xcodeproj; path = "../node_modules/react-native/React/React.xcodeproj"; sourceTree = "<group>"; };
 		17750468756A4148AF35D158 /* CodePush.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = CodePush.xcodeproj; path = "../node_modules/react-native-code-push/ios/CodePush.xcodeproj"; sourceTree = "<group>"; };
+		2D06F9A61EE6D37400DC33DD /* AlipaySDK.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = AlipaySDK.bundle; path = bundle/AlipaySDK.bundle; sourceTree = "<group>"; };
+		2D06F9C31EE6D39100DC33DD /* LePaySDK */ = {isa = PBXFileReference; lastKnownFileType = folder; name = LePaySDK; path = inc/LePaySDK; sourceTree = "<group>"; };
+		2D06F9C41EE6D39100DC33DD /* letracker */ = {isa = PBXFileReference; lastKnownFileType = folder; name = letracker; path = inc/letracker; sourceTree = "<group>"; };
+		2D06F9C71EE6D3AD00DC33DD /* AlipaySDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AlipaySDK.framework; path = framework/AlipaySDK.framework; sourceTree = "<group>"; };
+		2D06F9C91EE6D3C600DC33DD /* libagnestracker.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libagnestracker.a; path = Libs/libagnestracker.a; sourceTree = "<group>"; };
+		2D06F9CA1EE6D3C600DC33DD /* libLepaySDK.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libLepaySDK.a; path = Libs/libLepaySDK.a; sourceTree = "<group>"; };
+		2D06F9CB1EE6D3C600DC33DD /* libprotobuf.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libprotobuf.a; path = Libs/libprotobuf.a; sourceTree = "<group>"; };
+		2D06F9CF1EE6D5FF00DC33DD /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
+		2D06F9D11EE6D64C00DC33DD /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = System/Library/Frameworks/CoreMotion.framework; sourceTree = SDKROOT; };
+		2D06F9D31EE6D88300DC33DD /* LepaySDK.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = LepaySDK.bundle; path = bundle/LepaySDK.bundle; sourceTree = "<group>"; };
+		2D06F9D51EE6D99100DC33DD /* APOpenSdk */ = {isa = PBXFileReference; lastKnownFileType = folder; name = APOpenSdk; path = inc/APOpenSdk; sourceTree = "<group>"; };
+		2D06F9D71EE6D99B00DC33DD /* libAPOpenSdk.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libAPOpenSdk.a; path = Libs/libAPOpenSdk.a; sourceTree = "<group>"; };
+		2D06F9D91EE6D9CC00DC33DD /* JDPAuthResource.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = JDPAuthResource.bundle; path = bundle/JDPAuthResource.bundle; sourceTree = "<group>"; };
+		2D06F9DB1EE6D9D800DC33DD /* JDPay */ = {isa = PBXFileReference; lastKnownFileType = folder; name = JDPay; path = inc/JDPay; sourceTree = "<group>"; };
+		2D06F9DD1EE6D9E100DC33DD /* libJDPay.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libJDPay.a; path = Libs/libJDPay.a; sourceTree = "<group>"; };
 		2D0E62AB1E0B0101005A68AA /* libc++.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libc++.tbd"; path = "usr/lib/libc++.tbd"; sourceTree = SDKROOT; };
 		2D0E62AD1E0B0112005A68AA /* libsqlite3.0.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.0.tbd; path = usr/lib/libsqlite3.0.tbd; sourceTree = SDKROOT; };
 		2D19AC801DF3DBA600D21BDC /* RCTAnimation.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTAnimation.xcodeproj; path = "../node_modules/react-native/Libraries/NativeAnimation/RCTAnimation.xcodeproj"; sourceTree = "<group>"; };
@@ -388,6 +418,12 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2D06F9D21EE6D64C00DC33DD /* CoreMotion.framework in Frameworks */,
+				2DA207071DE8B9950004CE1D /* SystemConfiguration.framework in Frameworks */,
+				2D06F9D01EE6D5FF00DC33DD /* CFNetwork.framework in Frameworks */,
+				2D06F9CD1EE6D3C600DC33DD /* libLepaySDK.a in Frameworks */,
+				2D06F9CC1EE6D3C600DC33DD /* libagnestracker.a in Frameworks */,
+				2D06F9CE1EE6D3C600DC33DD /* libprotobuf.a in Frameworks */,
 				392D188B09B145E0B6613D6D /* libz.tbd in Frameworks */,
 				2D0E62AE1E0B0112005A68AA /* libsqlite3.0.tbd in Frameworks */,
 				2D0E62AC1E0B0101005A68AA /* libc++.tbd in Frameworks */,
@@ -408,13 +444,15 @@
 				2DA207061DE8B9950004CE1D /* JavaScriptCore.framework in Frameworks */,
 				2DA206F81DE8B89B0004CE1D /* MediaPlayer.framework in Frameworks */,
 				2DFDF5B71E0FF13100B58523 /* Security.framework in Frameworks */,
-				2DA207071DE8B9950004CE1D /* SystemConfiguration.framework in Frameworks */,
+				2D06F9C81EE6D3AD00DC33DD /* AlipaySDK.framework in Frameworks */,
 				2DFDF5C21E0FF96E00B58523 /* TencentOpenAPI.framework in Frameworks */,
 				2DA207081DE8B9950004CE1D /* VideoToolbox.framework in Frameworks */,
 				2D33A6D51E6362EB00D97E68 /* QBImagePicker.framework in Frameworks */,
+				2D06F9DE1EE6D9E100DC33DD /* libJDPay.a in Frameworks */,
 				2D33A6D71E6362EB00D97E68 /* RSKImageCropper.framework in Frameworks */,
 				2D8CB7031E4B603700C3F578 /* libLECPlayerFoundation.a in Frameworks */,
 				2D502D491E498B7800073C55 /* libLeCloudStreaming.a in Frameworks */,
+				2D06F9D81EE6D99B00DC33DD /* libAPOpenSdk.a in Frameworks */,
 				2D2FC8BD1E48A82F004D0462 /* libAFNetworking.a in Frameworks */,
 				2D2FC8B51E48A5AB004D0462 /* libLECLivePlayerSDK.a in Frameworks */,
 				2D2FC8B01E48A5AB004D0462 /* libWeChatSDK.a in Frameworks */,
@@ -558,7 +596,7 @@
 			isa = PBXGroup;
 			children = (
 				2D19AC861DF3DBA600D21BDC /* libRCTAnimation.a */,
-				2D19AC881DF3DBA600D21BDC /* libRCTAnimation-tvOS.a */,
+				2D19AC881DF3DBA600D21BDC /* libRCTAnimation.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -574,6 +612,10 @@
 		2D65C6AE1E4AFFF60036E29B /* inc */ = {
 			isa = PBXGroup;
 			children = (
+				2D06F9DB1EE6D9D800DC33DD /* JDPay */,
+				2D06F9D51EE6D99100DC33DD /* APOpenSdk */,
+				2D06F9C31EE6D39100DC33DD /* LePaySDK */,
+				2D06F9C41EE6D39100DC33DD /* letracker */,
 				2D65C6CA1E4B001D0036E29B /* LECLivePlayerSDK */,
 				2D65C6CC1E4B001D0036E29B /* LeCloudStreaming */,
 				2D65C6CD1E4B001D0036E29B /* LECPlayerFoundation */,
@@ -588,6 +630,11 @@
 		2D8D20941E031A00004EC569 /* Libs */ = {
 			isa = PBXGroup;
 			children = (
+				2D06F9DD1EE6D9E100DC33DD /* libJDPay.a */,
+				2D06F9D71EE6D99B00DC33DD /* libAPOpenSdk.a */,
+				2D06F9C91EE6D3C600DC33DD /* libagnestracker.a */,
+				2D06F9CA1EE6D3C600DC33DD /* libLepaySDK.a */,
+				2D06F9CB1EE6D3C600DC33DD /* libprotobuf.a */,
 				2D2FC8BC1E48A82F004D0462 /* libAFNetworking.a */,
 				2D2FC89A1E48A5AB004D0462 /* libUMessage_Sdk_1.4.0.a */,
 				2D2FC89F1E48A5AB004D0462 /* libReachbility.a */,
@@ -614,6 +661,9 @@
 		2DA206ED1DE8B7B10004CE1D /* Bundles */ = {
 			isa = PBXGroup;
 			children = (
+				2D06F9D91EE6D9CC00DC33DD /* JDPAuthResource.bundle */,
+				2D06F9D31EE6D88300DC33DD /* LepaySDK.bundle */,
+				2D06F9A61EE6D37400DC33DD /* AlipaySDK.bundle */,
 				2D2FC8591E48A4B6004D0462 /* LECVodPlayerResource.bundle */,
 				2D2FC85A1E48A4B6004D0462 /* LECValleyUIResource.bundle */,
 				2D2FC85B1E48A4B6004D0462 /* TencentOpenApi_IOS_Bundle.bundle */,
@@ -627,6 +677,8 @@
 		2DA206F41DE8B89A0004CE1D /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				2D06F9D11EE6D64C00DC33DD /* CoreMotion.framework */,
+				2D06F9CF1EE6D5FF00DC33DD /* CFNetwork.framework */,
 				2D2FC8BA1E48A640004D0462 /* libiconv.2.4.0.tbd */,
 				2DFDF5BA1E0FF1F700B58523 /* libstdc++.tbd */,
 				2D0E62AD1E0B0112005A68AA /* libsqlite3.0.tbd */,
@@ -636,6 +688,7 @@
 				2DA2070D1DE8BA8C0004CE1D /* libstdc++.6.0.9.tbd */,
 				2DA207091DE8BA510004CE1D /* libiconv.tbd */,
 				930FF21BCF8F403D8916C7DE /* libz.tbd */,
+				2D06F9C71EE6D3AD00DC33DD /* AlipaySDK.framework */,
 				2D33A6CF1E6361FF00D97E68 /* QBImagePicker.framework */,
 				2D33A6D01E6361FF00D97E68 /* RSKImageCropper.framework */,
 				2D2FC8B81E48A616004D0462 /* AVFoundation.framework */,
@@ -929,10 +982,10 @@
 			remoteRef = 2D19AC851DF3DBA600D21BDC /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		2D19AC881DF3DBA600D21BDC /* libRCTAnimation-tvOS.a */ = {
+		2D19AC881DF3DBA600D21BDC /* libRCTAnimation.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
-			path = "libRCTAnimation-tvOS.a";
+			path = libRCTAnimation.a;
 			remoteRef = 2D19AC871DF3DBA600D21BDC /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
@@ -1069,9 +1122,12 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2D06F9A71EE6D37400DC33DD /* AlipaySDK.bundle in Resources */,
 				2DFAE4B71E046743008937FD /* assets in Resources */,
+				2D06F9C51EE6D39100DC33DD /* LePaySDK in Resources */,
 				2D2FC8601E48A4B6004D0462 /* LECVodPlayerResource.bundle in Resources */,
 				2D65C6DB1E4B001D0036E29B /* UMessage_Sdk_1.4.0 in Resources */,
+				2D06F9DA1EE6D9CC00DC33DD /* JDPAuthResource.bundle in Resources */,
 				2D2FC8611E48A4B6004D0462 /* LECValleyUIResource.bundle in Resources */,
 				2D2FC8621E48A4B6004D0462 /* TencentOpenApi_IOS_Bundle.bundle in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
@@ -1081,10 +1137,14 @@
 				2D65C6D71E4B001D0036E29B /* LECPlayerFoundation in Resources */,
 				2D65C6D91E4B001D0036E29B /* LECVodPlayerSDK in Resources */,
 				2D65C6DD1E4B001D0036E29B /* WeiboSDK in Resources */,
+				2D06F9C61EE6D39100DC33DD /* letracker in Resources */,
 				2D2AFC391E17C5BF00D0231B /* index.ios.jsbundle in Resources */,
 				2D2FC8661E48A4B6004D0462 /* LCStreamingBundle.bundle in Resources */,
 				2D65C6DC1E4B001D0036E29B /* WechatOpenSDK in Resources */,
+				2D06F9D41EE6D88300DC33DD /* LepaySDK.bundle in Resources */,
 				2D65C6D61E4B001D0036E29B /* LeCloudStreaming in Resources */,
+				2D06F9DC1EE6D9D800DC33DD /* JDPay in Resources */,
+				2D06F9D61EE6D99100DC33DD /* APOpenSdk in Resources */,
 				2D65C6D41E4B001D0036E29B /* LECLivePlayerSDK in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1209,7 +1269,6 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/framework/**",
-					"$(PROJECT_DIR)/framework",
 				);
 				GCC_PREFIX_HEADER = "";
 				HEADER_SEARCH_PATHS = (
@@ -1251,7 +1310,6 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/framework/**",
-					"$(PROJECT_DIR)/framework",
 				);
 				GCC_PREFIX_HEADER = "";
 				HEADER_SEARCH_PATHS = (
@@ -1344,7 +1402,6 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/framework/**",
-					"$(PROJECT_DIR)/framework",
 				);
 				GCC_PREFIX_HEADER = "";
 				HEADER_SEARCH_PATHS = (
