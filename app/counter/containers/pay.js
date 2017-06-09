@@ -19,56 +19,89 @@ import {
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
+// import * as deviceActions from '../actions/deviceAction';
+
 import * as LePay from '../componets/RCTLePay';
 
 const { width, height } = Dimensions.get('window');
 
-class social extends Component {
+class pay extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            wbApiVersion: 'waiting...',
-            isWBInstalled: 'waiting...',
-            isWBSupportApi: 'waiting...',
-            qqApiVersion: 'waiting...',
-            isQQInstalled: 'waiting...',
-            isQQSupportApi: 'waiting...',
-            wxApiVersion: 'waiting...',
-            isWXAppSupportApi: 'waiting...',
-            isWXAppInstalled: 'waiting...',
             callbackStr: '',
+            payResp: null,
         };
     }
 
+    getBossInfo = () => {
+        //url
+        let url = "http://saasapi.lecloud.com/albumOrderCreate?tenantId=400001&userId=219834&albumId=200013247&version=1.0.0";
+        //header
+        let headers = {
+            // 'Content-Type': 'application/x-www-form-urlencoded;',
+            did: "22595632-6B66-426F-BC93-C8BEBA29584D",
+            network: "wifi",
+            mobile: "iPhone",
+            version: "1.0.0",
+            sv: "1.0",
+            language: "zh-CN",
+            channe: "",
+            authtoken: "164f1cb96fc94b3f25a850dfc89c8af8",
+            jb: "0",
+            packagname: "com.lecloud.valley.demo",
+        };
+        fetch(url, {
+            headers: {
+                'Content-type': 'application:/x-www-form-urlencoded;charset=utf-8',
+                ...headers
+            }
+        }).then((response) => response.json())
+            .then((resp) => {
+                // alert(JSON.stringify(resp));
+                if (resp.state == 0) {
+                    this.setState({ payInfo: resp.content.data, });
+                }
+            })
+            .catch((error) => {
+                err(error);
+            });
+    }
 
-    //乐视支付
-    doPay = () => {
+    componentDidMount() {
+        this.getBossInfo();
+    }
+
+    //LePay支付
+    doPay = (payInfo) => {
+        // alert(JSON.stringify(payInfo));
+        // return;
         LePay.pay({
-            version: '2.0',
-            service: 'lepay.tv.api.show.cashier',
-            merchant_business_id: '78',
-            user_id: '178769661',
-            user_name: 'Union',
-            notify_url: 'http://trade.letv.com/',
-            merchant_no: '1311313131',
-            out_trade_no: '261836519',
-            price: '0.01',
-            currency: 'RMB',
-            pay_expire: '21600',
-            product_id: '8888',
-            product_name: 'LeTV',
-            product_desc: 'TV60',
-            product_urls: 'http://f.hiphotos.baidu.com/image/pic/item/91ef76c6a7efce1b687b6bc2ad51f3deb48f6562.jpg',
-            timestamp: '2017-06-06 14:05:47',
-            key_index: '1',
-            input_charset: 'UTF-8',
-            ip: '10.72.108.52',
-            sign: '03ddfd352b57d5748270afe5850c7e1c',
-            sign_type: 'MD5',
-            isquick:'0'
+            version: payInfo.version,
+            service: payInfo.service,
+            merchant_business_id: payInfo.merchant_business_id,
+            user_id: payInfo.user_id,
+            user_name: payInfo.user_id,
+            notify_url: payInfo.notify_url,
+            merchant_no: payInfo.merchant_no,
+            out_trade_no: payInfo.out_trade_no,
+            price: String(payInfo.price),
+            currency: payInfo.currency,
+            pay_expire: payInfo.pay_expire,
+            product_id: payInfo.product_id,
+            product_name: payInfo.product_name,
+            product_desc: payInfo.product_desc,
+            product_urls: payInfo.mProductUrls,
+            timestamp: String(payInfo.timestamp),
+            key_index: payInfo.key_index,
+            input_charset: payInfo.input_charset,
+            ip: payInfo.ip,
+            sign: payInfo.sign,
+            sign_type: payInfo.sign_type,
+            isquick: '0'
         }, resp => {
             // console.log(resp);
-            alert(resp);
+            // alert(resp);
             this.setState({
                 callbackStr: JSON.stringify(resp)
             });
@@ -79,23 +112,31 @@ class social extends Component {
     }
 
     render() {
-        const { selectedDevice, posts, isFetching, lastUpdated } = this.props;
+        const { posts, isFetching, lastUpdated } = this.props;
+        const { payInfo } = this.state;
+        const isEmpty = posts === null;
 
-        let { deviceInfo } = this.props;
         return (
             <View style={[styles.container]}>
-                <View style={{ top: 20, left: 10, right: 10, position: 'absolute' }}></View>
+                <View style={{ top: 20, left: 10, right: 10, position: 'absolute' }}>
+                    {isEmpty ?
+                        (isFetching ? <Text>加载中...</Text> : <Text>没有数据.</Text>)
+                        : <Text >支付信息:{'\r\n'}
+                            ======================================{'\r\n'}
+                            PayInfo:{JSON.stringify(payInfo)} {'\r\n'}
+                            IP：{posts.IPAddress} {'\r\n'}
+                            ======================================{'\r\n'}
+                        </Text>}
+                </View>
                 <View style={[styles.wbContainer]}>
-                    <TouchableOpacity onPress={this.doPay}>
+                    <TouchableOpacity onPress={(json) => this.doPay({ ...payInfo, ip: posts.IPAddress })}>
                         <View style={{ alignItems: 'center' }}>
-                            <Image source={require('../../img/loginWeibo.png')} style={styles.bigcodeimage} />
-                            <Text>微信支付</Text>
+                            <Image source={require('../../img/wxpay.png')} style={styles.bigcodeimage} />
                         </View>
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={this.doPay}>
+                    <TouchableOpacity onPress={(json) => this.doPay({ ...payInfo, ip: posts.IPAddress })}>
                         <View style={{ alignItems: 'center' }}>
-                            <Image source={require('../../img/shareWeibo.png')} style={styles.bigcodeimage} />
-                            <Text>支付宝</Text>
+                            <Image source={require('../../img/alipay.png')} style={styles.bigcodeimage} />
                         </View>
                     </TouchableOpacity>
                 </View>
@@ -113,17 +154,17 @@ const styles = StyleSheet.create({
     wbContainer: {
         borderRadius: 10,
         justifyContent: 'space-around',
-        alignItems: 'center',
+        alignItems: 'flex-start',
         width: width / 3 * 2,
         height: height / 5,
         flexDirection: 'row',
         position: 'absolute',
-        bottom: 200,
+        bottom: 80,
         left: width / 6
     },
     bigcodeimage: {
-        width: width / 6,
-        height: width / 6,
+        width: width / 4,
+        height: width / 4,
         marginBottom: 6
     },
     instructions: {
@@ -147,6 +188,23 @@ const styles = StyleSheet.create({
 });
 
 
+//配置Map映射表，拿到自己关心的数据
+const mapStateToProps = state => {
+    const { selectedDevice, postsByDevice } = state;
+    const {
+        isFetching,
+        lastUpdated,
+        items: posts
+    } = postsByDevice[selectedDevice] || {
+            isFetching: true,
+            items: {},
+        };
+    return {
+        posts,
+        isFetching,
+        lastUpdated
+    };
+};
 
 //连接Redux
-export default social;
+export default connect(mapStateToProps)(pay);

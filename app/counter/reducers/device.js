@@ -21,17 +21,17 @@ const posts = (state = { isFetching: false, didInvalidate: false, items: {} }, a
             };
         case types.REQUEST_POSTS:
             return {
-                    ...state,
-                    isFetching: true,
-                    didInvalidate: false
+                ...state,
+                isFetching: true,
+                didInvalidate: false
             };
         case types.RECEIVE_POSTS:
             return {
-                    ...state,
-                    isFetching: false,
-                    didInvalidate: false,
-                    items: action.posts,
-                    lastUpdated: action.receivedAt
+                ...state,
+                isFetching: false,
+                didInvalidate: false,
+                items: action.posts,
+                lastUpdated: action.receivedAt
             };
         default:
             return state;
@@ -49,5 +49,5 @@ export const postsByDevice = (state = {}, action) => {
             };
         default:
             return state;
-  }
+    }
 };

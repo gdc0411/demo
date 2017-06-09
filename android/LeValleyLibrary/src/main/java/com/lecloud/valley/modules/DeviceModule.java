@@ -13,6 +13,11 @@ import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.WritableMap;
 
+import java.net.Inet4Address;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
+import java.util.Enumeration;
 import java.util.Locale;
 
 import static com.lecloud.valley.common.Constants.REACT_CLASS_DEVICE_MODULE;
@@ -56,6 +61,7 @@ public class DeviceModule extends ReactContextBaseJavaModule {
             map.putString("PackageName", mReactContext.getPackageName());         //包名
             map.putString("Language", Locale.getDefault().getLanguage());  //语言
             map.putString("Country", Locale.getDefault().getCountry());  //国家
+            map.putString("IPAddress", getHostIp());  //IP
 
             promise.resolve(map);
 //            Log.d(TAG, LogUtils.getTraceInfo() + "获取设备唯一ID——— getDeviceIdentifier：" + map.toString());
@@ -64,6 +70,28 @@ public class DeviceModule extends ReactContextBaseJavaModule {
         }
     }
 
+
+    /***
+     * 获取网关IP地址
+     * @return
+     */
+    private static String getHostIp() {
+        String address = "";
+        try {
+            for (Enumeration<NetworkInterface> en = NetworkInterface.getNetworkInterfaces(); en.hasMoreElements(); ) {
+                NetworkInterface intf = en.nextElement();
+                for (Enumeration<InetAddress> ipAddr = intf.getInetAddresses(); ipAddr.hasMoreElements(); ) {
+                    InetAddress inetAddress = ipAddr.nextElement();
+                    if (inetAddress instanceof Inet4Address && !inetAddress.isLoopbackAddress()) {
+                        address = inetAddress.getHostAddress();
+                    }
+                }
+            }
+        } catch (Exception e) {
+            address = "an error occurred when obtaining ip address";
+        }
+        return address;
+    }
 
     private static PackageInfo getPackageInfo(Context context) {
         PackageInfo pi = null;

@@ -57,20 +57,20 @@ RCT_EXPORT_METHOD(doPay:(NSDictionary *)data
     [leTradeInfo setValue:@"8888" forKey:@"product_id"];
     [leTradeInfo setValue:@"LeTV" forKey:@"product_name"];
     [leTradeInfo setValue:@"TV60" forKey:@"product_desc"];
-//    [leTradeInfo setValue:[self deviceIPAdress] forKey:@"ip”]; //ip地址
-     // 以下参数传固定值可以了了
-     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-     [dateFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
-     NSString *currentDateStr = [dateFormatter stringFromDate:[NSDate date]];
-     [leTradeInfo setValue:currentDateStr forKey:@"timestamp"];
-     [leTradeInfo setValue:@"1" forKey:@"key_index"];
-     [leTradeInfo setValue:@"UTF-8" forKey:@"input_charset"];
-     [leTradeInfo setValue:@"MD5" forKey:@"sign_type"];
-     [leTradeInfo setValue:@"2.0" forKey:@"version"];// ⽀支付SDK版本号
-     [leTradeInfo setValue:@"lepay.app.api.show.cashier" forKey:@"service"];
+    //    [leTradeInfo setValue:[self deviceIPAdress] forKey:@"ip”]; //ip地址
+    // 以下参数传固定值可以了了
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
+    NSString *currentDateStr = [dateFormatter stringFromDate:[NSDate date]];
+    [leTradeInfo setValue:currentDateStr forKey:@"timestamp"];
+    [leTradeInfo setValue:@"1" forKey:@"key_index"];
+    [leTradeInfo setValue:@"UTF-8" forKey:@"input_charset"];
+    [leTradeInfo setValue:@"MD5" forKey:@"sign_type"];
+    [leTradeInfo setValue:@"2.0" forKey:@"version"];// ⽀支付SDK版本号
+    [leTradeInfo setValue:@"lepay.app.api.show.cashier" forKey:@"service"];
     
     //连续包⽉月，⽀支付宝代扣（⾮非必填，不不传，就不不展示）
-//    [leTradeInfo setValue:@(self.isContinuousmonth) forKey:@"isContinuousmonth"]; //是否是连续包⽉月⽀支付⽅方式 1-是 0-否
+    //    [leTradeInfo setValue:@(self.isContinuousmonth) forKey:@"isContinuousmonth"]; //是否是连续包⽉月⽀支付⽅方式 1-是 0-否
     [leTradeInfo setValue:@"http://trade.letv.com/" forKey:@"renew_url"];//如果isContinuousmonth = 1需要传renew_url
     //产品详情传参格式 数组⾥里里可穿多个产品，product_url 产品图⽚片，product_count，该产品购买数量量
     //[{"product_count":"5","product_url":"http:\/\/f.hiphotos.baidu.com\/image\/pic\/item\/91ef76c6a7efce1b687b6bc2ad51f3deb48f6562.jpg"}]

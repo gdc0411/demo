@@ -18,6 +18,8 @@ import {
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
+import * as deviceActions from '../actions/deviceAction';
+
 import Orientation from '../componets/RCTOrientation';
 import UmengPush from '../componets/RCTUmengPush';
 
@@ -63,6 +65,17 @@ class home extends Component {
         Orientation.setOrientation(Orientation.ORIENTATION_UNSPECIFIED);
         UmengPush.removeReceiveMessageListener(this.handleRecvMessage);
         UmengPush.removeOpenMessageListener(this.handleOpenMessage);
+    }
+
+    componentDidMount() {
+        this.props.deviceActions.fetchPostsIfNeeded(this.props.selectedDevice);
+    }
+
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.selectedDevice !== this.props.selectedDevice) {
+            const { selectedDevice } = nextProps;
+            this.props.deviceActions.fetchPostsIfNeeded(selectedDevice);
+        }
     }
 
     handleRecvMessage = (message) => {
@@ -202,14 +215,30 @@ class home extends Component {
 }
 
 //配置Map映射表，拿到自己关心的数据
-const mapStateToProps = state => ({
-    //state.xxx必须与reducer同名
-    value: state.calculate.value,
-    setting: state.setting,
-});
-
+const mapStateToProps = state => {
+    const { selectedDevice, postsByDevice } = state;
+    const {
+        isFetching,
+        lastUpdated,
+        items: posts
+    } = postsByDevice[selectedDevice] || {
+        isFetching: true,
+        items: {},
+    };
+    const value = state.calculate.value;
+    const setting = state.setting;
+    return {
+        selectedDevice,
+        posts,
+        isFetching,
+        lastUpdated,
+        value,
+        setting,
+    };
+};
 
 const mapDispatchToProps = dispatch => ({
+    deviceActions: bindActionCreators(deviceActions, dispatch),
     calcActions: bindActionCreators(calcActions, dispatch),
     settingActions: bindActionCreators(settingActions, dispatch),
 });

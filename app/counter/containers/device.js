@@ -31,6 +31,7 @@ class device extends Component {
             PackageName: PropTypes.string,
             Language: PropTypes.string,
             Country: PropTypes.string,
+            IPAddress: PropTypes.string,
         }).isRequired,
         isFetching: PropTypes.bool.isRequired,
         lastUpdated: PropTypes.number,
@@ -70,7 +71,8 @@ class device extends Component {
                     包名：{posts.PackageName} {'\r\n'}
                     语言：{posts.Language} {'\r\n'}
                     国家：{posts.Country} {'\r\n'}
-                    ======================================={'\r\n'}
+                    IP：{posts.IPAddress} {'\r\n'}
+                    ======================================{'\r\n'}
                     </Text>}
                 {lastUpdated &&
                     <Text>
