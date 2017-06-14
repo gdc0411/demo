@@ -30,6 +30,7 @@ import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.modules.core.RCTNativeAppEventEmitter;
 import com.lecloud.valley.common.Events;
 import com.lecloud.valley.utils.LogUtils;
+import com.letv.lepaysdk.wxpay.WXPay;
 import com.tencent.mm.sdk.constants.ConstantsAPI;
 import com.tencent.mm.sdk.modelbase.BaseReq;
 import com.tencent.mm.sdk.modelbase.BaseResp;
@@ -102,6 +103,7 @@ class WeChatFunc implements ReactBaseFunc, IWXAPIEventHandler {
     private static String appId = null;
     private static String secret = null;
     private static IWXAPI api = null;
+    private static WXPay wxPay;
     private static WeChatFunc gModule = null;
     private static boolean gIsAppRegistered = false;
 
@@ -133,7 +135,6 @@ class WeChatFunc implements ReactBaseFunc, IWXAPIEventHandler {
                 throw new Error("meta-data WX_SECRET not f ound in AndroidManifest.xml");
             }
             secret = appInfo.metaData.get("WX_SECRET").toString();
-
         }
 
         if (!gIsAppRegistered) {
@@ -141,6 +142,7 @@ class WeChatFunc implements ReactBaseFunc, IWXAPIEventHandler {
             api = WXAPIFactory.createWXAPI(mReactContext, appId, false);
             // 将该app注册到微信
             gIsAppRegistered = api.registerApp(appId);
+
         }
         gModule = this;
     }
@@ -373,6 +375,8 @@ class WeChatFunc implements ReactBaseFunc, IWXAPIEventHandler {
             PayResp resp = (PayResp) (baseResp);
             map.putString(EVENT_PROP_SOCIAL_TYPE, "Pay.Resp");
             map.putString("returnKey", resp.returnKey);
+
+            wxPay.setResp(resp);
         }
 
         if (mEventEmitter != null)
@@ -385,6 +389,13 @@ class WeChatFunc implements ReactBaseFunc, IWXAPIEventHandler {
         if (gModule != null) {
             api.handleIntent(intent, gModule);
         }
+    }
+
+    public static void getPayInstance(Context context) {
+//        if (gModule != null) {
+        // 创建WXPay接口
+        wxPay = WXPay.getInstance(context);
+//        }
     }
 
     private String _getErrorMsg(int errCode) {

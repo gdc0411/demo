@@ -87,7 +87,9 @@ RCT_EXPORT_METHOD(doPay:(NSDictionary *)data
     [LepaySDK createPayViewController:self
                           LeTradeInfo:leTradeInfo
                            fromScheme:@"wx**************"
-                             callback:^(LepayResultStatus result, NSString *message) {}];
+                             callback:^(LepayResultStatus result, NSString *message) {
+                                 
+                             }];
 }
 
 @end

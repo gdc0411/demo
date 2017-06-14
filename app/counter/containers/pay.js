@@ -14,7 +14,8 @@ import {
     Image,
     TouchableOpacity,
     Modal,
-    TouchableHighlight
+    TouchableHighlight,
+    Platform
 } from 'react-native';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -35,14 +36,16 @@ class pay extends Component {
     }
 
     getBossInfo = () => {
+        const { posts } = this.props;
         //url
-        let url = "http://saasapi.lecloud.com/albumOrderCreate?tenantId=400001&userId=219834&albumId=200013247&version=1.0.0";
+        // let url = "http://saasapi.lecloud.com/albumOrderCreate?tenantId=400001&userId=219834&albumId=200013247&version=1.0.0";
+        let url = "http://saasapi.lecloud.com/albumOrderCreate?tenantId=400001&userId=219834&albumId=200001477&version=1.0.0";
         //header
         let headers = {
             // 'Content-Type': 'application/x-www-form-urlencoded;',
             did: "22595632-6B66-426F-BC93-C8BEBA29584D",
             network: "wifi",
-            mobile: "iPhone",
+            mobile: Platform.OS === 'ios' ? "iPhone" : "Android",
             version: "1.0.0",
             sv: "1.0",
             language: "zh-CN",
@@ -50,6 +53,7 @@ class pay extends Component {
             authtoken: "164f1cb96fc94b3f25a850dfc89c8af8",
             jb: "0",
             packagname: "com.lecloud.valley.demo",
+            ip: posts.IPAddress
         };
         fetch(url, {
             headers: {
@@ -76,32 +80,17 @@ class pay extends Component {
     doPay = (payInfo) => {
         // alert(JSON.stringify(payInfo));
         // return;
-        LePay.pay({
-            version: payInfo.version,
-            service: payInfo.service,
-            merchant_business_id: payInfo.merchant_business_id,
-            user_id: payInfo.user_id,
-            user_name: payInfo.user_id,
-            notify_url: payInfo.notify_url,
-            merchant_no: payInfo.merchant_no,
-            out_trade_no: payInfo.out_trade_no,
-            price: String(payInfo.price),
-            currency: payInfo.currency,
-            pay_expire: payInfo.pay_expire,
-            product_id: payInfo.product_id,
-            product_name: payInfo.product_name,
-            product_desc: payInfo.product_desc,
-            product_urls: payInfo.mProductUrls,
-            timestamp: String(payInfo.timestamp),
-            key_index: payInfo.key_index,
-            input_charset: payInfo.input_charset,
-            ip: payInfo.ip,
-            sign: payInfo.sign,
-            sign_type: payInfo.sign_type,
-            isquick: '0'
-        }, resp => {
+        // let tradeInfo = "";
+        // for (let key in payInfo) {
+        //     if (tradeInfo === "")
+        //         tradeInfo = key + "=" + payInfo[key];
+        //     else
+        //         tradeInfo += "&" + key + "=" + payInfo[key];
+        // }
+        // alert(tradeInfo);
+        LePay.pay(payInfo, resp => {
             // console.log(resp);
-            // alert(resp);
+            alert(resp);
             this.setState({
                 callbackStr: JSON.stringify(resp)
             });
@@ -109,6 +98,40 @@ class pay extends Component {
             alert(resp);
             console.log(error.message);
         });
+
+        // LePay.pay({
+        //     version: payInfo.version,
+        //     service: payInfo.service,
+        //     merchant_business_id: payInfo.merchant_business_id,
+        //     user_id: payInfo.user_id,
+        //     user_name: payInfo.user_name,
+        //     notify_url: payInfo.notify_url,
+        //     merchant_no: payInfo.merchant_no,
+        //     out_trade_no: payInfo.out_trade_no,
+        //     price: String(payInfo.price),
+        //     currency: payInfo.currency,
+        //     pay_expire: payInfo.pay_expire,
+        //     product_id: payInfo.product_id,
+        //     product_name: payInfo.product_name,
+        //     product_desc: payInfo.product_desc,
+        //     product_urls: payInfo.mProductUrls,
+        //     timestamp: String(payInfo.timestamp),
+        //     key_index: payInfo.key_index,
+        //     input_charset: payInfo.input_charset,
+        //     ip: payInfo.ip,
+        //     sign: payInfo.sign,
+        //     sign_type: payInfo.sign_type,
+        //     isquick: '0'
+        // }, resp => {
+        //     // console.log(resp);
+        //     // alert(resp);
+        //     this.setState({
+        //         callbackStr: JSON.stringify(resp)
+        //     });
+        // }, error => {
+        //     alert(resp);
+        //     console.log(error.message);
+        // });
     }
 
     render() {
@@ -129,12 +152,12 @@ class pay extends Component {
                         </Text>}
                 </View>
                 <View style={[styles.wbContainer]}>
-                    <TouchableOpacity onPress={(json) => this.doPay({ ...payInfo, ip: posts.IPAddress })}>
+                    <TouchableOpacity onPress={(json) => this.doPay(payInfo)}>
                         <View style={{ alignItems: 'center' }}>
                             <Image source={require('../../img/wxpay.png')} style={styles.bigcodeimage} />
                         </View>
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={(json) => this.doPay({ ...payInfo, ip: posts.IPAddress })}>
+                    <TouchableOpacity onPress={(json) => this.doPay(payInfo)}>
                         <View style={{ alignItems: 'center' }}>
                             <Image source={require('../../img/alipay.png')} style={styles.bigcodeimage} />
                         </View>

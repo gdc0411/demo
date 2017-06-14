@@ -1,5 +1,6 @@
 package com.lecloud.valley.modules;
 
+import android.content.Context;
 import android.content.Intent;
 
 import com.facebook.react.bridge.Promise;
@@ -104,6 +105,11 @@ public class WeChatModule extends ReactBaseModule {
 
     public static void handleIntent(Intent intent) {
         WeChatFunc.handleIntent(intent);
+    }
+
+
+    public static void getPayInstance(Context context) {
+        WeChatFunc.getPayInstance(context);
     }
 
 }
