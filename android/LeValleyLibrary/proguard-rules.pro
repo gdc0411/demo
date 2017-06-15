@@ -300,10 +300,28 @@
 -keep class com.letv.tracker2.** { *; }
 -keep class com.google.protobuf.** { *; }
 
+# AliPay
+-dontwarn com.alipay.**
+-dontwarn HttpUtils.HttpFetcher
+-dontwarn com.ta.utdid2.**
+-dontwarn com.ut.device.**
+-keep class com.alipay.android.app.IAlixPay{*;}
+-keep class com.alipay.android.app.IAlixPay$Stub{*;}
+-keep class com.alipay.android.app.IRemoteServiceCallback{*;}
+-keep class com.alipay.android.app.IRemoteServiceCallback$Stub{*;}
+-keep class com.alipay.sdk.app.PayTask{ public *;}
+-keep class com.alipay.sdk.app.AuthTask{ public *;}
+-keep class com.alipay.mobilesecuritysdk.*
+-keep class com.ut.*
+
 
 # WeChat+QQ
-
+-dontwarn com.tencent.**
 -keep class com.tencent.** {*;}
+-keep class org.dom4j.** {*;}
+
+
+
 # Wechat
 #-keep class com.tencent.mm.sdk.** {*;}
 # QQ
@@ -317,7 +335,9 @@
 
 
 # Weibo
-
+-dontwarn android.support.v4.**
+-dontwarn com.tencent.**s
+-dontwarn com.baidu.**
 -keep class com.sina.** { *; }
 -keep interface com.sina.** { *; }
 #-keep class com.sina.weibo.sdk.** {*;}

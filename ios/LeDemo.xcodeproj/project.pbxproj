@@ -827,7 +827,7 @@
 					};
 					13B07F861A680F5B00A75B9A = {
 						DevelopmentTeam = ULW82G2846;
-						ProvisioningStyle = Manual;
+						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.GameCenter = {
 								enabled = 0;
@@ -1286,8 +1286,8 @@
 				OTHER_LDFLAGS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = com.lecloud.valley.demo;
 				PRODUCT_NAME = LeDemo;
-				PROVISIONING_PROFILE = "18960990-8369-4ca1-b34c-756fe306cbc0";
-				PROVISIONING_PROFILE_SPECIFIER = LeValleyDemo;
+				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				TEST_HOST = "";
 				VALID_ARCHS = "arm64 armv7 armv7s";
 				VERSIONING_SYSTEM = "apple-generic";
@@ -1327,8 +1327,8 @@
 				OTHER_LDFLAGS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = com.lecloud.valley.demo;
 				PRODUCT_NAME = LeDemo;
-				PROVISIONING_PROFILE = "3b40b986-eced-4de7-ad3d-55174cf78d41";
-				PROVISIONING_PROFILE_SPECIFIER = LeValleyDemo;
+				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				TEST_HOST = "";
 				VALID_ARCHS = "arm64 armv7 armv7s";
 				VERSIONING_SYSTEM = "apple-generic";
@@ -1419,8 +1419,8 @@
 				OTHER_LDFLAGS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = com.lecloud.valley.demo;
 				PRODUCT_NAME = LeDemo;
-				PROVISIONING_PROFILE = "3b40b986-eced-4de7-ad3d-55174cf78d41";
-				PROVISIONING_PROFILE_SPECIFIER = LeValleyDemo;
+				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				TEST_HOST = "";
 				VALID_ARCHS = "arm64 armv7 armv7s";
 				VERSIONING_SYSTEM = "apple-generic";
