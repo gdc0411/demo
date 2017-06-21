@@ -39,13 +39,13 @@ class pay extends Component {
         const { posts } = this.props;
         //url
         // let url = "http://saasapi.lecloud.com/albumOrderCreate?tenantId=400001&userId=219834&albumId=200013247&version=1.0.0";
-        let url = "http://saasapi.lecloud.com/albumOrderCreate?tenantId=400001&userId=219834&albumId=200012674&version=1.0.0";
+        let url = "http://saasapi.lecloud.com/albumOrderCreate?tenantId=400001&userId=219834&albumId=200001414&version=1.0.0";
         //header
         let headers = {
             // 'Content-Type': 'application/x-www-form-urlencoded;',
             did: "22595632-6B66-426F-BC93-C8BEBA29584D",
             network: "wifi",
-            mobile: Platform.OS === 'ios' ? "iPhone" : "Android",
+            mobile: Platform.OS === 'ios' ? "iOS" : "Android",
             version: "1.0.0",
             sv: "1.0",
             language: "zh-CN",
@@ -55,6 +55,7 @@ class pay extends Component {
             packagname: "com.lecloud.valley.demo",
             ip: posts.IPAddress
         };
+        // alert(JSON.stringify(headers));
         fetch(url, {
             headers: {
                 'Content-type': 'application:/x-www-form-urlencoded;charset=utf-8',

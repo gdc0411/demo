@@ -18,6 +18,7 @@
 		2D33A6C61E635B1C00D97E68 /* Compression.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D33A6C51E635B1C00D97E68 /* Compression.m */; };
 		2D33A6C91E635B8800D97E68 /* RCTImageCropPickerModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D33A6C81E635B8800D97E68 /* RCTImageCropPickerModule.m */; };
 		2D3914FD1E579D760060B5F0 /* RCTImagePickerModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D3914FC1E579D760060B5F0 /* RCTImagePickerModule.m */; };
+		2D57C9B91EF7CB3800C9ECC1 /* RCTLePayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D57C9B81EF7CB3800C9ECC1 /* RCTLePayViewController.m */; };
 		2D65C6E81E4B1FA50036E29B /* RCTLePushViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D65C6E71E4B1FA50036E29B /* RCTLePushViewController.m */; };
 		2D8D22271E032DB1004EC569 /* RCTLinearGradient.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D8D22241E032DB1004EC569 /* RCTLinearGradient.m */; };
 		2D8D22281E032DB1004EC569 /* RCTLinearGradientManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D8D22261E032DB1004EC569 /* RCTLinearGradientManager.m */; };
@@ -89,6 +90,9 @@
 		2D33A6C81E635B8800D97E68 /* RCTImageCropPickerModule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCTImageCropPickerModule.m; sourceTree = "<group>"; };
 		2D3914FB1E579D760060B5F0 /* RCTImagePickerModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCTImagePickerModule.h; sourceTree = "<group>"; };
 		2D3914FC1E579D760060B5F0 /* RCTImagePickerModule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCTImagePickerModule.m; sourceTree = "<group>"; };
+		2D57C9B71EF7CB3800C9ECC1 /* RCTLePayViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCTLePayViewController.h; sourceTree = "<group>"; };
+		2D57C9B81EF7CB3800C9ECC1 /* RCTLePayViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCTLePayViewController.m; sourceTree = "<group>"; };
+		2D57C9BC1EF7CC6B00C9ECC1 /* RCTLePayViewControllerDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCTLePayViewControllerDelegate.h; sourceTree = "<group>"; };
 		2D65C6E51E4B1CAE0036E29B /* RCTLePushViewControllerDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RCTLePushViewControllerDelegate.h; sourceTree = "<group>"; };
 		2D65C6E61E4B1FA50036E29B /* RCTLePushViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCTLePushViewController.h; sourceTree = "<group>"; };
 		2D65C6E71E4B1FA50036E29B /* RCTLePushViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCTLePushViewController.m; sourceTree = "<group>"; };
@@ -183,6 +187,9 @@
 			children = (
 				2D06F9E01EE6DB9700DC33DD /* RCTLePayModule.h */,
 				2D06F9E11EE6DB9700DC33DD /* RCTLePayModule.m */,
+				2D57C9B71EF7CB3800C9ECC1 /* RCTLePayViewController.h */,
+				2D57C9B81EF7CB3800C9ECC1 /* RCTLePayViewController.m */,
+				2D57C9BC1EF7CC6B00C9ECC1 /* RCTLePayViewControllerDelegate.h */,
 			);
 			name = RCTLePay;
 			sourceTree = "<group>";
@@ -427,6 +434,7 @@
 				2D65C6E81E4B1FA50036E29B /* RCTLePushViewController.m in Sources */,
 				2D124EFE1E262EE90041DFD0 /* RCTUmengPushModule.m in Sources */,
 				2D8D22441E032DD3004EC569 /* RCTLeVideo.m in Sources */,
+				2D57C9B91EF7CB3800C9ECC1 /* RCTLePayViewController.m in Sources */,
 				2DE3D3631E11A30000C39FB9 /* RCTWeiboModule.m in Sources */,
 				2D8D22421E032DD3004EC569 /* LCBaseViewController.m in Sources */,
 				2DDA3FED1E3BB8A300BAF4AE /* SDWebImageDownloader.m in Sources */,

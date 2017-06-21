@@ -214,10 +214,8 @@ RCT_EXPORT_METHOD(pay:(NSDictionary *)data
     
     if ([type isEqualToString:SHARE_TYPE_TEXT]) {
         NSString *text = aData[SHARE_PROP_DESP];
-        [self shareToWeixinWithTextMessage:aScene
-                                      Text:text
-                                   resolve:resolve
-                                    reject:reject];
+        [self shareToWeixinWithTextMessage:aScene Text:text resolve:resolve reject:reject];
+        
     } else {
         NSString * title = aData[SHARE_PROP_TITLE];
         NSString * description = aData[SHARE_PROP_DESP];

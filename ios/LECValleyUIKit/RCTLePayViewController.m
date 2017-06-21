@@ -3,7 +3,7 @@
 //  LECValleyUIKit
 //
 //  Created by RaoJia on 2017/6/19.
-//  Copyright © 2017年 Facebook. All rights reserved.
+//  Copyright © 2017年 LeCloud. All rights reserved.
 //
 
 #import "RCTLePayViewController.h"
@@ -14,10 +14,18 @@
 
 @implementation RCTLePayViewController
 
-- (void)viewDidLoad {
-    [super viewDidLoad];
-    // Do any additional setup after loading the view.
+- (void)viewDidDisappear:(BOOL)animated
+{
+    [super viewDidDisappear:animated];
+    [_viewControllerDelegate payViewControllerDidDismiss:self];
 }
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [_viewControllerDelegate payViewControllerWillDismiss:self];
+    [super viewWillDisappear:animated];
+}
+
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
